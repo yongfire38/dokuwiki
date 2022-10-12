@@ -1,0 +1,132 @@
+====== 공통컴포넌트 4.0 환경설정 ======
+
+표준프레임워크 4.0 에서는 web.xml 및 context-egovuserdetailshelper.xml의 파일을 설정하여 데이터베이스와 권한방식을 변경할 수 있다.
+
+그리고 Servlet3.1 기능으로 globals.properties를 통한 설정 간소화로 데이터베이스와 인증/권한방식을 변경할 수 있다.
+
+  1. 데이터베이스 설정
+  2. 인증/권한방식 설정
+  3. 로그인 인증 제한
+
+===== 1. 데이터베이스 설정 ======
+1) globals.properties 설정파일 기준으로 spring profile 서비스를 이용하여 데이터베이스 환경 설정을 한다. \\
+2) DbType별 데이터베이스 정보를 설정 한다.\\
+* Globals.DbType 기준으로 context-datasource.xml 파일에 설정되어 있는 Spring Pofile기능에 의하여 dataSource 빈이 활성화 된다. \\
+* 해당 기능을 활용하여 테스트DB, 검증DB, 운영DB로 분리 가능하다.\\  
+
+<code xml>
+# DB서버 타입(mysql, oracle, altibase, tibero, cubrid, mariadb, postgres) - datasource 및 sqlMap 파일 지정에 사용됨
+Globals.DbType = mysql
+
+#mysql
+Globals.mysql.DriverClassName=net.sf.log4jdbc.DriverSpy
+Globals.mysql.Url=jdbc:log4jdbc:mysql://127.0.0.1:3336/com
+Globals.mysql.UserName = com
+Globals.mysql.Password = 
+
+                        .
+                        .
+                        .
+#oracle
+#altibase
+#tibero
+#cubrid
+#mariadb
+#postgres
+</code>
+
+사용하는 데이터베이스를 변경하였을 경우에는 pom.xml의 jdbc 드라이버에 대한 Dependency를 설정해야 한다. 3rd party library의 경우에는 직접 Local Repository에 library를 넣어 주거나 Nexus서버를 구성하여 다운로드 받을 수 있다. Nexus에 대한 자세한 설정은 개발환경의 [[eGovframework:DEV:DEP:Nexus]]페이지를 참조한다.
+
+<EXAMPLE>
+<code xml>
+	<!--  mysql -->
+	<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.31</version>
+	</dependency>
+         <!-- oracle 11g driver -->
+        <dependency>
+            <groupId>ojdbc</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>6-11</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/ojdbc6-11.2.0.3.jar</systemPath>
+        </dependency>
+	<!-- altibase driver -->
+        <dependency>
+            <groupId>altibase</groupId>
+            <artifactId>altibase-jdbc-driver</artifactId>
+            <version>7.1.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/Altibase.jar</systemPath>
+        </dependency>
+	<!-- tibero driver -->
+        <dependency>
+            <groupId>com.tmax.tibero</groupId>
+            <artifactId>tibero-jdbc</artifactId>
+            <version>5.0</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/tibero5-jdbc.jar</systemPath>
+        </dependency>
+        <!-- cubrid driver -->
+        <dependency>
+            <groupId>cubrid</groupId>
+            <artifactId>cubrid-jdbc</artifactId>
+            <version>10.2</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/src/main/webapp/WEB-INF/lib/JDBC-10.2-latest-cubrid.jar</systemPath>
+        </dependency>
+        <!-- mariadb driver -->
+        <dependency>
+            <groupId>org.mariadb.jdbc</groupId>
+            <artifactId>mariadb-java-client</artifactId>
+            <version>2.2.5</version>
+        </dependency>
+        <!-- postgres driver -->
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>9.4.1208</version>
+        </dependency>
+</code>
+
+===== 2. 인증/권한방식 설정 =====
+인증/권한 방식은 표준프레임워크 3.5 이하 버전에서 개발자가 수동으로 관련 XML 설정하던 불편한 점을 \\
+표준프레임워크 3.6 이상 버전에서 개선 및 간소화가 되어서 globals.properties 설정만으로 사용가능 합니다. \\
+간소화 방식은 크게 세가지 방식으로 제공합니다. \\
+- dummy : 더미 방식으로 사용자 권한을 인증함 \\
+- session : 세션 방식으로 사용자의 권한을 인증함 \\
+- security : spring security 방식으로 사용자 권한을 인증함 \\
+
+\\
+Servlet 3.1 도입으로 web.xml을 dynamic하게 설정 가능하여 간소화가 가능해 졌습니다.\\
+WebApplicationInitializer를 통해 egovframework.com.cmm.config.EgovWebApplicationInitializer 클래스에 의하여 설정 파일이 동적으로 설정 됩니다. \\
+security 모드일때 DelegatingFilterProxy, EgovSpringSecurityLoginFilter, EgovSpringSecurityLogoutFilter의 설정내역이 FilterRegistration 빈에 등록 됩니다. \\
+Spring Profile 기능으로 인증/권한방식에 따라서 egovUserDetailsHelper 빈을 동적으로 생성 합니다. \\
+<code xml>
+# 인증/권한 인증방식(dummy, session, security) - 사용자의 로그인 시 인증 방식을 결정함
+# dummy : 더미 방식으로 사용자 권한을 인증함
+# session : 세션 방식으로 사용자 권한을 인증함
+# security : spring security 방식으로 사용자 권한을 인증함
+Globals.Auth = session
+</code>
+
+===== 3. 로그인 인증 제한 =====
+표준프레임워크 공통컴포넌트 4.0은 무차별적인 로그인 시도에 대해 개인계정 취약점 강화를 위한 차단 기능을 제공한다.
+Globals.login.Lock에 true/false를 통해 사용/미사용 적용이 가능하며, 인증 시도 횟수 또한 Globals.login.LockCount에 value를 입력하여 설정이 가능하다.
+  * Globals.login.Lock 의 default value = true
+  * Globals.login.LockCount 의 default value = 5
+
+<code xml>
+# 로그인 인증 제한(login authentication limit)
+# (사용 여부 설정값 : true, false)
+Globals.login.Lock = true
+# -인증 재시도 횟수
+Globals.login.LockCount = 5
+</code>
+
+
+
+
+

@@ -1,0 +1,186 @@
+====== 개요 ======
+
+**Wiki기능**는 사용자가 위키를 서비스를 이용하기 위해서 JAVA/JSP기반의 오픈소스 JspWiki를 제공합니다.
+
+JspWiki는 Apache License 2.0 라이센스 채택하여 라이센스 정책을 읽어보시고 JspWiki을 사용하시기 바랍니다.
+
+JspWiki 특징
+<code>
+* WikiMarkup/구조적 텍스트 
+	o 텍스트 효과: 굵게, 기울임꼴, monotyped, CSS 스타일 o Bracketed 하이퍼링크 및 좋은 오래된 표기법 사용.
+          o 글머리 기호 목록, 번호 매기기 및 정의 o 테이블 및 정렬 테이블을 o 각주 [1] o 3 수준의 제목.
+          o 인터 위키 연결 입니다.
+          o 탭 및 축소 가능 목록을 * 첨부 파일 * 템플릿 지원 - 그래서 자신만의 테마 또는 레이아웃을 디자인할 수 있습니다. ContributedTemplate 목록을 참조하십시오.
+* 데이터 저장소: JSPWiki 세 WikiPageProviders 함께 와서 다른 사람이 연결할 수 있습니다.
+    o MySQL 또는 기타 데이터베이스 서버 필요하지 않습니다! Wiki 페이지 일반 텍스트 파일을 - 중-기본 파일로 저장됩니다.
+    o 데이터베이스 공급자 별로  사용할 수 있고, 타사 ContributedProviders 통해 페이지를 사용할수 있습니다.
+* 보안 o 위키 및 페이지 권한 제어.
+    o 보안 개별 사용자가 아니라 전체 그룹에 적용할 수 있습니다.
+    o 인증: 간단한 XML 파일 기반 데이터베이스 기반, 컨테이너 관리, 사용자 지정 인증 모듈을 사용할 수 있습니다.
+    o 인증: 보안 정책 및 ACL 적용할 수 (익명, 쿠키 기반, 인증된) 인증 상태, 컨테이너 역할 또는 임시 위키 그룹 위로 자신을 설정할 * 자신의 추가 쓰기 쉬운 플러그인 인터페이스를.
+    o 일부 핵심 JSPWiki 함께 배포되는 플러그인 있습니다: 카운터, CurrentTimePlugin, 이미지, InsertPage, TableOfContentsPlugin, VotePlugin, WikiFormsPlugin, 및 블로깅: WeblogArchivePlugin, WeblogEntryPlugin, WeblogPlugin.
+    o 몇 사용할 수 있는 많은 ContributedPlugins A: CalendarPlugin, ColorCodePlugin, EmailNotifierPlugin, GoogleMapsPlugin, ImageGenJFreeChart, QuotationPlugin, TasksPlugin. 
+* UTF-8을 지원 합니다.
+* JavaServerPages 기반 * (이제까지 있는:-) 다른 JSP-기반 응용 프로그램, 설치된 경우 Easy-ish 설치
+* 페이지 편집 않도록 잠금 충돌 
+* 여러 위키 지원
+</code>
+
+====== JSPWiki 설치 ======
+===== 다운로드 =====
+아래 JSPWIKI 사이트에 접속하여 JSPWiki X.X.X 버전(최신버전)을 다운로드한다. \\
+http://www.apache.org/dist/jspwiki/
+
+===== UNIX 계열 설치 =====
+
+1. 다운로드한 JSPWiki.war 배포 파일을 해당 WAS에 설치한다.
+
+2. WEB-INF\jspwiki.properties 변경(http://common.egovframe.go.kr/JSPWiki/Install.jsp에서 수정할 수 있음)
+	자신의 환경에 맞게 수정해야 할 속성
+	jspwiki.applicationName = JSPWiki
+	jspwiki.baseURL=http://common.egovframe.go.kr/JSPWiki/
+	jspwiki.fileSystemProvider.pageDir = /product/jeus2/jspwiki/
+	jspwiki.basicAttachmentProvider.storageDir = /product/jeus2/jspwiki/
+	log4j.appender.FileLog.File = /product/jeus2/tmp/jspwiki.log
+	jspwiki.workDir = /product/jeus2/tmp/
+
+{{:egovframework:com:uss:ion:jspwiki_installer.jpg|}}
+
+3. 접속 URL
+	http://common.egovframe.go.kr/JSPWiki
+	
+===== TOMCAT/WINDOWS 설치 =====
+
+아래 사이트 에 접속하여 톰캣 최신버전을 다운 받는다.\\
+http://tomcat.apache.org/download-70.cgi\\
+
+1. 다운받은 톰캣을 우선 설치한다.\\
+2. 다운받은 JSPWIKI를 앞축을 해제 한다.\\
+3. 설치된 톰캣 C:\Program Files\Apache Software Foundation\Tomcat X.X\webapps\ 폴더에 JSPWiki.war복자 \\
+4. WEB-INF\jspwiki.properties 변경 또는 설치 페이지(Install.jsp)에서 다음을 입력한다.
+
+<code>
+  jspwiki.applicationName = JSPWiki
+  jspwiki.baseURL==http://127.0.0.1:8080/JSPWiki/
+  jspwiki.fileSystemProvider.pageDir =  C:\\jspwiki\\pages 
+  jspwiki.basicAttachmentProvider.storageDir = C:\\jspwiki\\data 
+  log4j.appender.FileLog.File = C:\\jspwiki\\log\\jspwiki.log
+  jspwiki.workDir = C:\\jspwiki\\tmp\\
+</code>
+
+5. C:\에 위키 관련 파일을 보관하기 위한 jspwiki 디렉토리를 생성함 \\
+6. C:\Program Files\Apache Software Foundation\Tomcat 6.0\conf\server.xml 파일수정
+===== 수정내역 =====
+<code>
+    <Connector port="8080" protocol="HTTP/1.1" 
+               connectionTimeout="20000" 
+               redirectPort="8443" />
+			▼
+    <Connector port="8080" protocol="HTTP/1.1" 
+               connectionTimeout="20000" 
+               redirectPort="8443" URIEncoding="UTF-8"/>
+</code>
+
+7. 톰캣 시작\\
+C:\Program Files\Apache Software Foundation\Tomcat X.0\bin\startup.bat
+
+8. 테스트 URL
+http://127.0.0.1:8080/JSPWiki
+
+====== JSPWiki관리 ======
+===== JSPWiki관리-Main 화면  =====
+
+JSPWiki설치후 http://xxxxx.xxx:xxxx/jspwiki/Wiki.jsp?page=Main 접속하면 아래와 같은 화면을 볼수 있습니다.
+
+{{:egovframework:com:uss:ion:wiki:main_1_2_3.jpg|}}
+
+1 : 1번항목 클릭시 [JSPWiki관리-Main 화면 수정] 화면으로 이동합니다.
+
+2 : 2번항목 클릭시 [JSPWiki관리-Left Menu 화면  수정] 화면으로 이동합니다.
+
+3 : 3번항목 클릭시 [JSPWiki관리-Left Footer 화면 수정] 화면으로 이동합니다.
+
+===== JSPWiki관리-Main 화면 수정 =====
+
+JSPWiki관리 Main 화면을 등록 및 수정 할수 있는화면을 제공합니다.\\
+
+위키 작성시 아래 위키 문법을 준수하여 작성 하셔야 합니다. \\
+http://www.jspwiki.org/wiki/TextFormattingRules#section-TextFormattingRules-InterWikiLinks \\
+
+{{:egovframework:com:uss:ion:wiki:main_save.jpg|}}
+
+Save : 작성된 내용을 저장합니다.\\
+Preview : 작성된 내용을 미리 볼수 있습니다.\\
+Cancel : [JSPWiki관리-Main 화면]으로 이동합니다.\\
+--
+===== JSPWiki관리-Left Menu 화면 수정 =====
+
+JSPWiki관리-Left Menu 화면을 등록 및 수정 할수 있는화면을 제공합니다.
+
+위키 작성시 아래 위키 문법을 준수하여 작성 하셔야 합니다. \\
+http://www.jspwiki.org/wiki/TextFormattingRules#section-TextFormattingRules-InterWikiLinks \\
+
+{{:egovframework:com:uss:ion:wiki:left_save.jpg|}}
+
+Save : 작성된 내용을 저장합니다.\\
+Preview : 작성된 내용을 미리 볼수 있습니다.\\
+Cancel : [JSPWiki관리-Main 화면]으로 이동합니다.\\
+--
+===== JSPWiki관리-Left Menu Footer 화면 수정 =====
+
+JSPWiki관리-Left Menu Footer 화면을 등록 및 수정 할수 있는화면을 제공합니다.
+
+위키 작성시 아래 위키 문법을 준수하여 작성 하셔야 합니다. \\
+http://www.jspwiki.org/wiki/TextFormattingRules \\
+
+{{:egovframework:com:uss:ion:wiki:left_footer.jpg|}}
+
+Save : 작성된 내용을 저장합니다.\\
+Preview : 작성된 내용을 미리 볼수 있습니다.\\
+Cancel : [JSPWiki관리-Main 화면]으로 이동합니다.\\
+--
+===== JSPWiki관리-Bookmark =====
+
+JSPWiki를 북마크 하는 화면
+
+** 오픈 소스 수정 내역 **
+
+경로 : /templates/default/PageActionsTop.jsp \\
+추가 되는 코드 \\
+<code>
+<wiki:UserCheck status="authenticated">
+	<li>
+	<a href="javascript:bookmark();" class="action edit">Bookmark</a>
+	</li>
+</wiki:UserCheck>
+
+<script language=javascript>
+<!--
+function bookmark() {
+	document.formHidden.action="http://common.egovframe.go.kr/uss/ion/wik/bmk/registWikiBookmark.do";
+	document.formHidden.usid.value ="<wiki:UserName />";
+	document.formHidden.bookMark.value ="<wiki:PageName />";
+	document.formHidden.wikiBkmkNm.value ="<wiki:PageName />";
+	document.formHidden.submit();
+}
+//-->
+</script>
+</code>
+
+경로 :/templates/default/Footer.jsp \\
+추가 되는 코드 \\
+<code>
+<iframe name="ifr_hidden" id="ifr_hidden" src="about:blank;" border="1" style="width:0%;height:0px;visibility:hidden"></iframe>
+<form name="formHidden" id="formHidden" action="" method="post" target="ifr_hidden" >
+<input name="usid" type="hidden" value="">
+<input name="bookMark" type="hidden" value="">
+<input name="wikiBkmkNm" type="hidden" value="">
+</form>
+</code>
+
+{{:egovframework:com:uss:ion:wiki:wiki북마크_화면.jpg|}}
+
+Bookmark: 현재 Wiki화면을 북마크에 추가 합니다.\\
+
+--
+

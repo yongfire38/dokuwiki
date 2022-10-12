@@ -1,0 +1,143 @@
+====== 개요 ======
+회원가입으로 입력된 사용자정보가 관리되고 필요한 경우 관리자권한으로 사용자정보를 등록, 수정될 수 있도록 한다.
+
+====== 기능 설명 ======
+  - 사용자정보를 등록할 수 있다.
+  - 사용자정보를 수정할 수 있다.
+  - 사용자정보를 조회할 수 있다.
+  - 사용자정보 중 비밀번호를 변경할 수 있다.
+===== 관련소스 =====
+
+^유형^대상소스명^비고^
+|Controller|egovframework.bopr.uam.web.EgovUserManageController.java|사용자관리 Controller Class|
+|Service|egovframework.bopr.uam.service.EgovUserManageService.java|사용자관리 Service Class|
+|ServiceImpl|egovframework.bopr.uam.service.impl.EgovUserManageServiceImpl.java|사용자관리 ServiceImpl Class|
+|VO|egovframework.bopr.uam.service.UserManageVO.java|사용자관리 VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|DAO|egovframework.bopr.uam.service.impl.UserManageDAO.java|사용자관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/bopr/uam/EgovUserList.jsp|사용자관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/uam/EgovJobDlbrtRegist.jsp|사용자관리 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/uam/EgovUserUpdt.jsp|사용자관리 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/uam/EgovUserDetail.jsp|사용자관리 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/bopr/uam/UserManage_SQL_Mysql.xml|사용자관리 MySQL용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/uam/UserManage_SQL_Oracle.xml|사용자관리 Oracle용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/uam/UserManage_SQL_Tibero.xml|사용자관리 Tibero용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/uam/UserManage_SQL_Altibase.xml|사용자관리 Altibase용 QUERY XML| 
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/bopr/uam/UserManage.xml|사용자관리 Validator XML|
+|Message properties|resources/egovframework/message/com/message-common_ko_KR.properties|사용자관리 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|사용자관리 Id생성 Idgen XML|
+
+===== 관련테이블 =====
+
+^테이블명^테이블명(영문)^비고^
+|사용자정보|TN_USERS|사용자정보를 관리한다.|
+
+\\
+
+====== 화면 설명 ======
+===== 목록 화면 =====
+^Action^URL^Controller method^QueryID^
+|사용자관리 등록화면 호출|/bopr/uam/EgovUserInsertView.do|insertUserView|N/A|
+|사용자관리 상세화면 호출|/bopr/uam/EgovUser.do|selectUser|"userManageDAO.selectUser"|
+|사용자관리 사용불가 전환|/bopr/uam/EgovUserListDelete.do|deleteUserList|"userManageDAO.deleteUser"|
+
+{{:egovframework:bopr:가이드:관리자메뉴:egovuserlist.png|}}
+  * 목록 검색
+    - 검색조건①을 선택한다.
+    - 검색어②를 입력한다.
+    - 검색버튼③을 클릭하여 검색 기능을 실행한다.
+
+  * 등록 화면 이동
+    - '등록' 버튼④을 클릭한다
+
+  * 사용불가로 전환 기능 수행
+    - 사용자를 전체선택(체크박스⑥클릭) 또는 개별선택(체크박스⑦클릭) 한다.
+    - 사용불가로 전환버튼⑤을 클릭하여 해당 사용자의 사용여부를 사용불가로 전환한다.
+
+  * 상세정보보기로 이동
+    - 해당 사용자ID⑧를 클릭하여 상세보기로 이동한다.
+
+
+===== 등록 화면 =====
+^Action^URL^Controller method^QueryID^
+|사용자관리 목록화면 호출|/bopr/uam/EgovUserList.do|selectUserList|"userManageDAO.selectUserAllList"|
+|사용자관리 등록|/bopr/uam/EgovUserInsert.do|insertUser|"userManageDAO.insertUser"|
+|사용자관리 중복아이디 검색 팝업 호출|/uss/umt/EgovIdDplctCnfirmView.do|checkIdDplct|N/A|
+
+{{:egovframework:bopr:가이드:관리자메뉴:egovuserinsert.png|}}
+  * 목록 화면 이동
+    - 목록버튼①을 클릭한다.
+
+  * 등록
+    - 사용자ID③를 입력하기 위해 중복아이디 검색④을 클릭하여 중복검사를 한다.
+    - 사용자명⑤을 입력한다.
+    - 비밀번호⑥를 입력한다.
+    - 비밀번호확인⑦을 입력한다.
+    - 소속부서⑧를 선택한다.
+    - 전화번호⑨를 입력한다.
+    - 주소⑩를 입력한다.
+    - E-Mail⑪을 입력한다.
+    - 이미지 첨부파일⑫을 첨부한다.
+    - '등록' 버튼②을 클릭한다
+
+===== 상세 화면 =====
+^Action^URL^Controller method^QueryID^
+|사용자관리 목록화면 호출|/bopr/uam/EgovUserList.do|selectUserList|"userManageDAO.selectUserAllList"|
+|사용자관리 수정화면 호출|/bopr/uam/EgovUserUpdateView.do|updateUserView|"userManageDAO.updateUser"|
+|사용자관리 비사용전환|/bopr/uam/EgovUserListDelete.do|deleteUserList|"userManageDAO.deleteUser"|
+
+{{:egovframework:bopr:가이드:관리자메뉴:egovuserdetail.png|}}
+  * 목록 화면 이동
+    - 목록버튼①을 클릭한다.
+  
+  * 수정 화면 이동
+    - 수정버튼②을 클릭한다
+
+  * 사용불가로 전환
+    - 사용불가로전환버튼③을 클릭하여 해당 사용자를 사용불가로 전환한다.
+
+===== 비밀번호변경 화면 =====
+^Action^URL^Controller method^QueryID^
+|사용자관리 목록화면 호출|/bopr/uam/EgovUserList.do|selectUserList|"userManageDAO.selectUserAllList"|
+|사용자관리 비밀번호 변경|/bopr/uam/EgovUserPasswordUpdate.do|updateUserPassword|"userManageDAO.updatePassword"|
+|사용자관리 수정화면 호출|/bopr/uam/EgovUserUpdateView.do|updateUserView|"userManageDAO.updateUser"|
+
+{{:egovframework:bopr:가이드:관리자메뉴:egovuserpasswordupdt.png|}}
+  * 목록 화면 이동
+    - 목록버튼①을 클릭한다.
+  
+  * 수정 화면 이동
+    - 일반수정으로 이동버튼③을 클릭한다
+
+  * 비밀번호 수정
+    - 기존비밀번호④를 입력한다.
+    - 새비밀번호⑤를 입력한다.
+    - 비밀번호확인⑥을 입력한다.
+    - 비밀번호수정버튼②을 클릭하여 해당 사용자의 비밀번호를 수정한다.
+
+===== 수정 화면 =====
+^Action^URL^Controller method^QueryID^
+|사용자관리 목록화면 호출|/bopr/uam/EgovUserList.do|selectUserList|"userManageDAO.selectUserAllList"|
+|사용자관리 상세화면 호출|/bopr/uam/EgovUser.do|selectUser|"userManageDAO.selectUser"|
+|사용자관리 사용불가로 전환|/bopr/uam/EgovUserListDelete.do|deleteUserList|"userManageDAO.deleteUser"|
+|사용자관리 비밀번호변경으로 이동|/bopr/uam/EgovUserPasswordUpdateView.do|updateUserPasswordView|"userManageDAO.selectUser"|
+
+{{:egovframework:bopr:가이드:관리자메뉴:egovuserupdt.png|}}
+  * 목록 화면 이동
+    - 목록버튼①을 클릭한다.
+
+  * 사용불가로 전환
+    - 사용불가로전환버튼③을 클릭하여 해당 사용자를 사용불가로 전환한다.
+
+  * 비밀번호 수정
+    - 비밀번호변경으로 이동버튼⑤을 클릭하여 비밀번호변경 화면으로 이동한다.
+
+  * 수정
+    - 사용자명④을 입력한다.
+    - 사용여부⑥를 선택한다.
+    - 소속부서⑦를 선택한다.
+    - 전화번호⑧를 입력한다.
+    - 주소⑨를 입력한다.
+    - E-Mail⑩을 입력한다.
+    - 첨부파일⑪을 삭제 또는 입력한다.

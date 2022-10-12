@@ -1,0 +1,61 @@
+====== 개요 ======
+실행중 Job 관리를 통해 관리자가 현재 실행되고 있는 배치(Job)를 조회하거나 중지 시킬수 있도록 한다.
+
+====== 기능 설명 ======
+  - 실행중 Job을 조회할 수 있다.
+  - 실행중 Job를 중지시킬 수 있다.
+
+===== 관련소스 =====
+
+^유형^대상소스명^비고^
+|Controller|egovframework.bopr.mom.web.EgovExecutJobController.java|실행중Job 관리 Controller Class|
+|Service|egovframework.bopr.mom.service.EgovExecutJobService.java|실행중Job 관리 Service Class|
+|ServiceImpl|egovframework.bopr.mom.service.impl.EgovExecutJobServiceImpl.java|실행중Job 관리 ServiceImpl Class|
+|VO|egovframework.bopr.mom.service.ExecutJobVO.java|실행중Job 관리  VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|DAO|egovframework.bopr.mom.service.impl.ExecutJobDAO.java|실행중Job 관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/bopr/mom/EgovExecutJobList.jsp|실행중Job 관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/mom/EgovExecutJobDetail.jsp|실행중Job 관리 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/bopr/mom/executjob/ExecutJob_SQL_Mysql.xml|실행중Job 관리 MySQL용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/mom/executjob/ExecutJob_SQL_Oracle.xml|실행중Job 관리 Oracle용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/mom/executjob/ExecutJob_SQL_Tibero.xml|실행중Job 관리 Tibero용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/mom/executjob/ExecutJob_SQL_Altibase.xml|실행중Job 관리 Altibase용 QUERY XML| 
+|Message properties|resources/egovframework/message/com/message-common_ko_KR.properties|실행중Job 관리 Message properties|
+
+===== 관련테이블 =====
+
+^테이블명^테이블명(영문)^비고^
+|배치인스턴스 관리 정보|BATCH_JOB_INSTANCE|배치인스턴스 관리 정보를 관리한다.|
+|배치실행 관리 정보|BATCH_JOB_EXECUTION|배치실행 관리 정보를 관리한다.|
+
+\\
+====== 화면 설명 ======
+===== 목록 화면 =====
+^Action^URL^Controller method^QueryID^
+|실행중Job 관리 목록조회|/bopr/mom/EgovExecutJobList.do|selectExecutJobList|"executJobDAO.selectExecutJobList"|
+|실행중Job 관리 목록조회 카운트|N/A|N/A|"executJobDAO.selectExecutJobListTotCnt"|
+|실행중Job 관리 목록중지|/bopr/mom/EgovExecutJobListDelete.do|deleteExecutJob|N/A|
+
+{{:egovframework:bopr:가이드:배치운영:EgovExecutJobList-1.png|}}
+  * 현재 실행중인 Job이 페이징처리되어 목록으로 조회할 수 있다.
+  * 검색조건선택(①)으로 검색조건으로 Job 인스턴스ID, Job이름을 설정할 수 있으며, 검색어입력란(②)에 원하는 검색어를 입력(검색조건선택에서 아무것도 선택하지 않는 경우에는 활성화되지 않는다.)한 뒤 검색버튼(③)을 클릭하여 조건조회를 할 수 있다.
+  * ⑤의 부분에 체크박스가 존재하며, 가장 위의 제목단의 체크박스를 클릭하면 전체선택, 하단의 수행번호 앞의 체크박스를 클릭하면 해당 건 별로 선택이 가능하다.
+  * Job 이름(⑥)을 클릭하면 상세조회로 이동한다.
+  * 중지 : 중지버튼(④)을 클릭하여 체크되어있는 한개 또는 복수의 실행중인 Job을 중지시킬 수 있다.
+  * 페이지 이동 (⑦)
+    - 숫자 클릭 : 해당 숫자의 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prev.png|}} : 이전 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_next.png|}} : 다음 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prevend.png|}} : 맨 처음 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_nextend.png|}} : 마지막 페이지로 이동한다.
+    - 조회 건수가 100개 이하여서 페이지가 열개 이하인 경우 경우 화살표는 표시되지 않는다.
+
+===== 상세 화면 =====
+^Action^URL^Controller method^QueryID^
+|실행중Job 관리 상세조회|/bopr/mom/EgovExecutJob.do|selectExecutJob|"executJobDAO.selectExecutJob"|
+|실행중Job 관리 중지|/bopr/mom/EgovExecutJobDelete.do|deleteExecutJob|N/A|
+
+{{:egovframework:bopr:가이드:배치운영:EgovExecutJobDetail-1.png|}}
+  * 해당 실행중인 Job의 내용이 상세조회된다.
+  * 목록 : 목록버튼(①)을 클릭하여 목록화면으로 이동한다.
+  * 중지 : 중지버튼(②)을 클릭하여 해당 실행중인 Job을 중지시킨다.

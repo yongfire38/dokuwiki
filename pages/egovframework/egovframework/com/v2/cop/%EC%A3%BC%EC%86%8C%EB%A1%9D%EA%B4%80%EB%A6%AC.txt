@@ -1,0 +1,212 @@
+====== 주소록관리 ======
+
+===== 개요 =====
+시스템에 속한 다른 사용자의 정보나, 명함의 정보를 조회하여 사용자의 주소록에 등록하거나 자신의 주소록을 개인별, 부서별, 회사별로 공개하여 다른 사용자가 활용할 수 있도록 하는 기능을 제공한다. \\
+주소록을 등록하여 활용하는 방법은 직접 등록하는 방법과 다른 사람이 부서 및 회사로 공개 지정하여 등록한 주소록들을 조회한 후 사용을 할 수가 있다. 본인이 직접 등록하면서 공개여부를 부서 혹은 회사로 한 주소록은 같은 부서원들, 회사구성원들에게 공개되어 활용이 될 수 있다.
+
+  * 기능흐름
+
+{{:egovframework:com:cop:adressBook.png?700|기능흐름표}}
+
+
+
+
+===== 설명 =====
+주소록관리는 주소록을 생성하는 **주소록등록** 기능, 등록한 주소록 및, 사용자가 열람할수 있는 주소록을 조회할수 있는**주소록 목록조회** 기능, 내가 등록한 주소록을 조회하고 수정할수 있는 **주소록 조회수정** 기능의 3가지 기능을 제공한다.
+
+==== 패키지 참조 관계 ====
+
+주소록관리 패키지는 요소기술의 공통(cmm) 패키지에 대해서만 직접적인 함수적 참조 관계를 가진다. 하지만, 컴포넌트 배포 시 오류 없이 실행되기 위하여 패키지 간의 참조관계에 따라 포맷/날짜/계산 패키지와 함께 배포 파일을 구성한다. 
+
+
+  * 패키지 간 참조 관계 : [[egovframework:com:v2:init_pkg_dependency#일정관리, 문자메시지, 주소록 외|협업-일정관리, 문자메시지, 주소록 외 Package Dependency]]
+
+
+==== 관련소스 ====
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.adb.web.EgovAdressBookController.java|주소록 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.adb.service.EgovAdressBookService.java|주소록 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.adb.service.impl.EgovAdressBookServiceImpl.java|주소록 관리를 위한 서비스 구현 클래스|
+|Model|egovframework.com.cop.adb.service.AdressBook.java|주소록 관리를 위한 모델 클래스|
+|Model|egovframework.com.cop.adb.service.AdressBookUser.java|주소록구성원 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.adb.service.AdressBookVO.java|주소록 관리를 위한 VO 클래스|
+|VO|egovframework.com.cop.adb.service.AdressBookUserVO.java|주소록구성원 관리를 위한 VO 클래스|
+|DAO|egovframework.com.cop.adb.service.impl.AdressBookDAO.java|주소록 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovAdressBookRegist.jsp.jsp|명함 등록을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovAdressBookUpdt.jsp.jsp|생성된 주소록 수정을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovAdressBookList.jsp.jsp|조회가능한 주소록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovMyAdressBookPopup.jsp|주소록구성원을 조회 등록시키기 위한 팝업 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovAdressBookMainList.jsp|마이페이지 구성을 위한 목록 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/adb/EgovNcrd_SQL_Mysql.xml|주소록 관리를 MySQL용 Query 파일|
+|Query XML|resources/egovframework/sqlmap/com/cop/adb/EgovNcrd_SQL_Oracle.xml|주소록 관리를 Oracle용 Query 파일|
+|Query XML|resources/egovframework/sqlmap/com/cop/adb/EgovNcrd_SQL_Tibero.xml|주소록 관리를 Tibero용 Query 파일|
+|Query XML|resources/egovframework/sqlmap/com/cop/adb/EgovNcrd_SQL_Altibase.xml|주소록 관리를 Altibase용 Query 파일|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/cop/adb/EgovNcrdRegist.xml|주소록 관리를위한 Validator XML|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|주소록 관리를위한 Id생성 Idgen XML|
+
+==== 클래스 다이어그램 ====
+
+{{:egovframework:com:v2:cop:주소록관리_클래스다이어그램.jpg?740|}}
+
+ 
+
+==== ID Generation ====
+=== ID Generation 관련 DDL 및 DML ===
+   *   ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **ADBK_ID** , **ADBKUSER_ID** 항목을 추가해야 한다. 
+
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+ 
+ INSERT INTO COMTECOPSEQ VALUES('ADBK_ID','0');
+  INSERT INTO COMTECOPSEQ VALUES('ADBKUSER_ID','0');
+ </code>
+
+=== ID Generation 환경설정(context-idgen.xml) ===
+<code xml>
+	<bean name="egovAdbkIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy"   ref="adbkIdStrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="ADBK_ID"/>
+	</bean>
+	<bean name="adbkIdStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="ADBK_" />
+		<property name="cipers" value="15" />
+		<property name="fillChar" value="0" />
+	</bean>	
+
+	<bean name="egovAdbkUserIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy"   ref="adbkUserIdStrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="ADBKUSER_ID"/>
+	</bean>
+	<bean name="adbkUserIdStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="ADBKUSER_" />
+		<property name="cipers" value="11" />
+		<property name="fillChar" value="0" />
+	</bean>	
+</code>
+
+
+==== 관련테이블 ====
+
+^테이블명^테이블명(영문)^비고^
+|주소록정보속성|COMTNADBK|주소록의 속성정보를 관리한다.|
+|주소록구성원속성|COMTNADBKUSER|주소록의 사용정보를 관리한다.|
+
+
+
+
+
+===== 관련기능 =====
+
+주소록관리는 **주소록 목록조회**, **주소록 등록**, **주소록 조회수정**, **주소록구성원 조회팝업** 기능으로 분류되어 있다.
+
+
+==== 주소록 목록조회 ====
+=== 비즈니스 규칙 ===
+주소록을 삭제하기 위해서는 목록에 생성되어 있는 삭제 버튼을 클릭하면 된다. 단 주소록을 작성한 등록자와 현 사용자가 일치될때에 삭제버튼이 생성이 된다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록조회|/cop/adb/selectAdbkList.do|selectAdressBookList|"AdressBookDAO.selectAdressBookList"|
+
+
+주소록 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 주소록 명, 공개범위, 등록자 명에 대해서 수행된다. 페이지당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:cop:adressBookList.jpg?740|주소록 목록조회화면}}
+
+조회: 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색문자를 입력 후 조회 버튼을 클릭한다.\\
+등록: 등록하기 위해서는 상단의 등록 버튼을 통해서 **주소록 등록** 화면으로 이동한다.\\ 
+
+
+==== 주소록등록 ====
+
+=== 비즈니스 규칙 ===
+주소록에 대한 주소록명과 공개범위, 구성원 등을 선택하여 주소록을 등록한다. 등록이 성공되면 **주소록 목록조회** 화면으로 이동한다.\\
+공개범위가 부서인 경우는 같은 부서원들에게, 공개범위가 회사인 경우에는 같은 회사원들에게 주소록의 내용이 공개되어 볼수 있게 된다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|등록화면|/cop/adb/addAdbkInf.do|addAdressBook| |
+|등록|/cop/adb/RegistAdbkInf.do|registadbk|"AdressBookDAO.insertAdressBook"|
+
+
+{{:egovframework:com:cop:adressBookRegist.jpg?740|주소록등록화면}}
+
+목록: **주소록 목록** 화면으로 이동한다.\\ 
+등록: 입력한 주소록 정보들이 저장 처리된다. 
+
+
+
+==== 주소록 조회수정 ====
+
+=== 비즈니스 규칙 ===
+주소록에 대한 상세내용을 변경한 뒤 수정 버튼을 누르면 주소록 정보가 수정되고 **주소록 목록조회** 화면으로 이동한다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/cop/adb/UpdateAdressBook.do|updateAdressBook|"AdressBookDAO.updateAdressBook"|
+
+{{:egovframework:com:cop:adressBookUpdt.jpg?740|주소록 조회수정화면}}
+
+수정: 수정된 정보들이 저장 처리된다.\\ 
+목록: **주소록 목록** 화면으로 이동한다. 
+
+
+
+==== 주소록구성원 조회팝업 ====
+
+=== 비즈니스 규칙 ===
+**주소록등록** 이나 **주소록 조회수정** 에서 기등록된 사용자나 명함을 조회하여 주소록 구성원으로 선택하여 등록시킬수 있는 화면을 제공한다.\\
+콤보박스의 사용자 명을 명함 명 으로 선택한 뒤 조회를 실시하면, 등록할 수 있는 명함에 대한 목록을 조회할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회팝업 사용자목록|/cop/adb/selectManList.do|selectUserList|"AdressBookDAO.selectManList"|
+|조회팝업 명함목록|/cop/adb/selectManList.do|selectUserList|"AdressBookDAO.selectCardList"|
+
+
+{{:egovframework:com:cop:adressBookPopup.jpg?740|주소록 구성원조회 팝업}}
+
+
+

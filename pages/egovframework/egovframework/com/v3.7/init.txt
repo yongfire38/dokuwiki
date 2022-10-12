@@ -1,0 +1,13 @@
+====== 표준프레임워크 공통컴포넌트 v3.7 가이드 ======
+공통컴포넌트 v3.7 가이드는 공통컴포넌트 v3.7에 대하여 실행환경 3.7 기반으로 변경된 사항을 적용한 버전으로 기능적인 차이보다는 내부 코드 품질 향상을 목적으로 작성되었으며 개요 부분과 컴포넌트별 상세 설명 부분으로 구성되었다.
+
+===== 표준프레임워크 공통컴포넌트 v3.7 개요 =====
+  * [[egovframework:dev3.7:imp:editor:common_component|공통컴포넌트 시작하기(Getting Started)]]
+  * [[egovframework:com:v3.7:init_configration|공통컴포넌트 환경설정(globals.properties)]]
+  * [[egovframework:com:v3.7:init_deploy_file|공통컴포넌트 배포 파일의 구성]]
+  * [[egovframework:com:v3.7:init_table|공통컴포넌트 테이블 구성 정보]]
+  * [[egovframework:com:v3.6:init_pkg_dependency|패키지 간 참조 관계]]
+  * [[egovframework:com:v2:init_complement|웹 접근성 보완사항(공통컴포넌트 2.0 매뉴얼 참조)]]
+
+===== 표준프레임워크 공통컴포넌트 v3.7 상세 가이드 =====
+  * [[egovframework:com:v3.7:init_guide|공통컴포넌트별 가이드(Index)]]

@@ -1,0 +1,15 @@
+====== 표준프레임워크 공통컴포넌트 v2 가이드 ======
+공통컴포넌트 v2 가이드는 공통컴포넌트 경량화 작업을 통하여 변경된 사항에 대한 정보를 제공하여 현업에서 원활할게 사용할 수 있도록 돕는 것을 목적으로 작성되었으며 개요 부분과 컴포넌트별 상세 설명 부분으로 구성되었다. 
+
+===== 표준프레임워크 공통컴포넌트 v2 개요 =====
+  * [[egovframework:com:v2:init_intro|공통컴포넌트 경량화란?]]
+  * [[egovframework:com:v2:init_getstarted|공통컴포넌트 시작하기(Getting Started)]]
+  * [[egovframework:com:v2:init_configration|공통컴포넌트 환경설정(web.xml, context-egovuserdetailshelper.xml, datasource)]]
+  * [[egovframework:com:v2:init_deploy_file|공통컴포넌트 배포 파일의 구성]]
+  * [[egovframework:com:v2:init_table|공통컴포넌트 테이블 구성 정보]]
+  * [[egovframework:com:v2:init_pkg_dependency|패키지 간 참조 관계]]
+  * [[egovframework:com:v2:init_complement|웹 접근성 보완사항]]
+  * [[egovframework:com:v2:init_customizing|공통컴포넌트 커스터마이징]]
+
+===== 표준프레임워크 공통컴포넌트 v2 상세 가이드 =====
+  * [[egovframework:com:v2:init_guide|공통컴포넌트별 가이드(Index)]]

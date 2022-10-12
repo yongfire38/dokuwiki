@@ -1,0 +1,165 @@
+====== 공통컴포넌트 2.0.0 변경사항 ======
+
+===== 배경 =====
+
+전자정부 표준프레임워크가 2.0으로 업그레이드되면서 기존의 공통컴포넌트(1.0)에 비해 변경된 사항에 대해서 기술하고자 한다.
+
+
+
+===== 주요변경 사항(What's New) =====
+
+경량화 작업을 통해 새로워진 사항은 다음과 같다.
+
+  * **설정파일** : 각종 설정파일들을 개발자가 배포파일 설치시 수정사항을 최소화하였다.
+  * **배포파일** : 각 배포파일은 패키지간의 종속성 및 업무적 연관성을 포함하여 개별 배포파일이 하나의 독립적인 업무단위로 실행되도록 하였다.
+  * **보완사항** : 패키지 경량화, 웹표준 순수(웹접근성, 웹표준), 보안취약점 개선을 하였다.
+
+===== 2.0.0 변경사항 =====
+==== 설정파일 ====
+
+**1) global.properites**\\
+
+^변경사항^변경 전(1.0.0)^변경 후(2.0.0)^
+|local에 별도 복사 불필요|egovProps 디렉토리를 local로 복사한 후 설정변경|별도 복사없이 배포파일에 포함된 egovProps 디렉토리 파일을 변경함으로써 설정이 가능|
+|DB관련 설정|**context-datasource.xml**에서 DB관련된 설정|**global.properies** 파일에서 DB관련된 설정|
+
+**2) 디렉토리 경로변경**\\
+
+모바일 공통컴포넌트와 충돌을 방지하기위해 디렉토리를 변경하였다.
+
+^공통컴포넌트^모바일 공통컴포넌트^
+|egovframework.**com**|egovframework.**mbl.com**|
+|egovframework.spring.**com**|egovframework.spring.**mbl**|
+|egovframework.sqlmap.**com**|egovframework.sqlmap.**mbl**|
+|egovframework.validator.**com**|egovframework.validator.**mbl**|
+|css.egovframework.**com**|css.egovframework.**mbl**|
+|images.egovframework.**com**|images.egovframework.**mbl**|
+|js.egovframework.**com**|js.egovframework.**mbl**|
+|jsp.egovframework.**com**|jsp.egovframework.**mbl**|
+
+**3) context-scheduling 분리**\\
+
+기존의 context-scheduling 파일을 여러 파일로 분리하여 각 배포파일별로 필요한 scheduling만을 사용하도록 하였다.
+^파일명^관련 패키지^
+|context-scheduling-cop-sms.xml|SMS(문자메시지)|
+|context-scheduling-sts-bst.xml|게시판 통계|
+|context-scheduling-sts-ust.xml|사용자 통계|
+|context-scheduling-sym-bat.xml|배치관리|
+|context-scheduling-sym-ccm-acr.xml|법정동/행정동 수신처리|
+|context-scheduling-sym-ccm-icr.xml|기관코드 수신|
+|context-scheduling-sym-log-lgm.xml|시스템 로그|
+|context-scheduling-sym-log-tlg.xml|송수신 로그|
+|context-scheduling-sym-log-ulg.xml|사용자 로그|
+|context-scheduling-sym-log-wlg.xml|웹로그|
+|context-scheduling-sym-sym-bak.xml|백업관리|
+|context-scheduling-utl-sys-dbm.xml|DB서비스 모니터링|
+|context-scheduling-utl-sys-fsm.xml|파일시스템 모니터링|
+|context-scheduling-utl-sys-htm.xml|HTTP서비스 모니터링|
+|context-scheduling-utl-sys-nsm.xml|네트워크서비스 모니터링|
+|context-scheduling-utl-sys-prm.xml|프로세스 모니터링|
+|context-scheduling-utl-sys-srm.xml|서버자원 모니터링|
+|context-scheduling-utl-sys-trm.xml|송수신 모니터링|
+
+**4) validator 분리**\\
+기존 validator-rules.xml파일에 포함되어있는 rule을
+공통컴포넌트용 validator 파일(**com-rules.xml**)로 분리하여 공통컴포넌트용 rule을 추가하였다.
+
+^파일명^rule^비고^
+|validator-rules.xml|required, requiredif, validwhen, minlength, maxlength, mask\\ byte, short, integer, long, float, double\\ date, range, intRange, floatRange, creditCard, email\\ **ihidnum, korean**|Apache Commons validator\\ + **실행환경에서 포함한 rules**|
+|com-rules.xml|password1, password2, password3, password4, minInteger, english|공통컴포넌트 rules|
+
+**4) web.xml 추가**\\
+로그인 정책 컴포넌트용 필터는 1.0.0에서는 @RequestMapping 형태로 제공되었던 것을 **2.0.0에서는 필터**형태로 제공한다.\\
+EgovSSO 필터는 SSO를 연동하여서 사용시에 필터로 제어할 수 있도록 interface형태로 패키지를 제공한다.
+
+^filter name^내용^비고^
+|LoginPolicyFilter|로그인 정책 컴포넌트용 필터|**2.0.0 신규추가**|
+|springSecurityFilterChain|Spring Security 필터|Spring Security 사용시 주석해제|
+|EgovSpringSecurityLogoutFilter\\ EgovSpringSecurityLoginFilter|Spring Security 로그아웃\\ Spring Security 로그인 필터|Spring Security 사용시 주석해제|
+|EgovSSOLogoutFilter\\ EgovSSOLoginFilter|EgovSSO 로그아웃\\ EgovSSO 로그인 필터|**2.0.0 신규추가**\\ SSO 사용시 주석해제|
+
+**5) conetxt-egovuserdetailshelper.xml 신규추가**\\
+사용자에 대한 접근제한을 3가지 형태로 분리하여서 제공한다.
+<code xml>
+    <!--인증된 유저의 LoginVO, 권한, 인증 여부를 확인 할 수있는 서비스 클래스-->
+    <bean id="egovUserDetailsHelper" class="egovframework.com.cmm.util.EgovUserDetailsHelper">
+        <property name="egovUserDetailsService">
+        	<!-- 원하는 bean id를 아래에 ref 태그에 적용한다 -->
+            <ref bean="egovTestUserDetailsService" />
+        </property>
+    </bean>
+
+    <!-- 0. 세션/시큐리티를 제외한 테스트위한 인증(더미)을 사용하는 빈 -->
+    <bean id="egovTestUserDetailsService" class="egovframework.com.cmm.service.impl.EgovTestUserDetailsServiceImpl"/>
+
+    <!-- 1. 세션을 이용한 인증을 사용하는 빈 -->
+    <!--
+    <bean id="egovUserDetailsSessionService" class="egovframework.com.cmm.service.impl.EgovUserDetailsSessionServiceImpl"/>
+	-->
+
+    <!-- 2. 스프링 시큐리티를 이용한 인증을 사용할 빈 -->
+    <!--
+    <bean id="egovUserDetailsSecurityService" class="egovframework.com.sec.ram.service.impl.EgovUserDetailsSecurityServiceImpl"/>
+	-->
+</code>
+^bean id^내용^비고^
+|egovTestUserDetailsService|세션/시큐리티를 제외한 테스트위한 인증(더미)|자동로그인\\ 사용자명 : 더미사용자|
+|egovUserDetailsSessionService|세션을 이용한 인증|세션을 이용한 접근 제어를 위해서는\\ controller에서 로그인 확인유무 로직추가 필요|
+|egovUserDetailsSecurityService|스프링 시큐리티를 이용한 인증|권한관리 패키지 설치필요\\ web.xml에 스프링 시큐리티 관련 설정을 해야함|
+
+**6) bean id 변경**\\
+기존 1.0.0 배포파일을 설치하여서 사용하고 있고, 2.0.0 배포파일을 추가로 설치하는 경우에 bean id 충돌을 사전에 예방한다.
+<code xml>
+ex) context-common.xml
+<bean id="egov.antPathMater" class="org.springframework.util.AntPathMatcher" />
+</code>
+
+^1.0.0 bean id^2.0.0 bean id^
+|bean id="antPathMater"|bean id="**egov**.antPathMater"|
+
+==== 배포파일 ====
+
+**1) 경량화(배포파일 용량 감소)**
+^구분^1.0.0^2.0.0^
+|전체 용량|30.76Mb|114.5Mb|
+|개별용량평균|  3.48Mb|  1.03Mb|
+| | |-2.45Mb|
+**2) 각 패키지별 생성스크립트 탑재**\\ 
+ 기존 패키지는 DB 생성스크립트가 한개로 되어 있어서 사용하지 않는 테이블도 일괄 설치해야하는 불편함이 있었다.\\ 
+ 2.0.0에서는 각 패키지별 생성스크립트를 탑재하여서 불필요한 테이블을 생성하지 않도록 하였다.\\ 
+ 다만, 여러 개의 패키지를 설치할 때에 스크립트가 중복되어서 설치시에 오류가 발생하나, 설치하는 데에는 이상이 없다.
+
+**3) common 패키지의 최소화 및 통합화(각 개별 패키지에 포함됨)**\\ 
+ 기존 1.0.0에서의 common 패키지는 17개의 패키지를 포함하고 있어서, 사용자가 원하지 않는 패키지도 무조건 설치하여서 사용해야하는 불편함이 있었다.\\ 
+ 2.0.0에서는 17개의 패키지를 2개의 필수 패키지로 줄임으로써 경량화 및 코드이 가독성을 향상시켰다.
+
+**4) 패키지별 종속관계 및 업무적 연관성을 포함하여 한 개의 독립적 패키지로써 설치가 가능함**(별도의 피키지 설치없이 각 개 패키지로 실행이 가능함)\\ 
+ 기존 패키지 설치시에는 common패키지를 설치하고, 원하는 패키지를 설치하였으나,\\ 
+ 2.0.0에서는 한 개의 패키지만으로 독립적으로 설치가 가능하다.
+
+**5) 모든 컴포넌트를 테스트 할 수 있는 통합 배포본 제공**\\ 
+ 219종에 대한 모든 컴포넌트가 포함되어 있는 all-in-one 파일을 제공함으로써 사용자가 한 눈에 모든 컴포넌트를 테스트 할 수 있는 통합 배포본을 제공한다.
+
+**6) 공통적으로 사용되는 css, img 파일에 대한 중복을 최소화함**\\ 
+ 기본에 동일한 css, image 파일들이 다수 존재하여, 유지보수에 어려움이 있어 중복을 최소화하여 유지보수성을 향상시켰다.
+
+==== 보완사항 ====
+
+**1) 보안점검을 통한 취약점 최소화**
+  * KISA에 의한 보안점검 및 각종 취약점 수정
+ 
+**2) 웹표준 순수**
+  * 웹접근성 준수(K-WAH 3.0)
+  * 웹표준 준수(W3C-Validator)
+
+**3) 기존 컴포넌트 완성도 제고**
+  * 각 개의 배포파일만으로 실행이 가능하도록 DB 생성 스크립트 및 패키지에 대한 종속성을 고려하여 제작함
+
+**4) refactoring을 통한 패키지 경량화**
+  * 게시판, 통계, 로그 컴포넌트
+
+**5) DB컬럼명 변경**
+  * 자료사전과 데이터모델 정합성 일치화(데이터 표준화 정제)
+
+**6) 테스트 페이지**
+  * 요소기술 테스트 페이지만을 배포

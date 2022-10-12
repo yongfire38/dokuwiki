@@ -1,0 +1,79 @@
+====== 권한관리======
+===== 개요 =====
+
+시스템 구축시 스프링의 보안 메카니즘을 적용하기 위해 Spring Security 에서 관리하는 **권한(Authority)**을 정의하는 컴포넌트이다. 당 컴포넌트를 이용하여 담당자는 시스템 사용자에게 부여하는 권한을 정의하여 관리할 수 있다. 
+표준프레임워크 3.9부터는 **Session 방식 권한처리** 기능을 추가하여 Spring Security 를 사용하지 않고도 당 컴포넌트를 이용하여 접근제어가 가능하도록 하였다.
+===== 설명 =====
+**권한관리**는 사용자별 권한을 관리하기 위한 목적으로 **등록**, **수정**, **삭제**, **조회**, **목록조회**의 기능을 수반한다.
+
+    ① 권한등록 : 시스템 담당자는 시스템 사용자에게 권한을 부여하기 위한 정의한 권한정보를 등록한다.
+    ② 권한수정 : 시스템 담당자는 시스템 사용자에게 권한을 부여하기 위한 정의한 권한정보를 수정한다.
+    ③ 권한삭제 : 시스템 담당자는 시스템 사용자에게 권한을 부여하기 위한 정의한 권한정보를 삭제한다.
+    ④ 권한조회 : 시스템 담당자는 시스템 사용자에게 권한을 부여하기 위한 정의한 권한정보를 조회한다.
+    ⑤ 권한목록 : 시스템 담당자는 시스템 사용자에게 권한을 부여하기 위한 정의한 권한정보 목록을 조회한다.
+
+==== 환경설정 ====
+
+=== 권한 기본 설정 === 
+
+== * 스프링에서 제공하는 기본 권한(Authority) ==
+
+^AUTHORITI^DESCRIPTION^
+|ROLE_ANONYMOUS|모든 사용자|
+|IS_AUTHENTICATED_ANONYMOUSLY|익명 사용자|
+|IS_AUTHENTICATED_FULLY|인증된 사용자|
+|IS_AUTHENTICATED_REMEMBERED|REMEMBERED 사용자|
+|ROLE_RESTRICTED|제한된 사용자|
+|ROLE_USER|일반 사용자|
+|ROLE_ADMIN|관리자|
+
+=== 권한 추가 설정 ===
+== * 업무적으로 필요에 의해 추가한 권한(Authority) ==
+
+^AUTHORITI^DESCRIPTION^
+|ROLE_SYM|시스템 업무 담당자|
+|ROLE_COP|협업 담당자|
+|ROLE_USS|사용자지원 담당자|
+|ROLE_USER_MANAGER|업무사용자 관리자|
+|ROLE_SEC|보안 업무 담당자|
+|ROLE_ENTRPRSMBER_MANAGER|기업회원 관리자|
+|ROLE_MBER_MANAGER|일반회원 관리자|
+
+=== 권한(롤) 상속구조 정의(ROLES_HIERARCHY) ===
+== * 정의된 하위 권한의 롤을 상속하기 위해 COMTNROLES_HIERARCHY Table에 상속구조를 정의한다.  ==
+ROLE_ANONYMOUS -> IS_AUTHENTICATED_ANONYMOUSLY -> IS_AUTHENTICATED_FULLY -> IS_AUTHENTICATED_REMEMBERED -> ROLE_USER -> ROLE_ADMIN
+
+
+== * 기초 데이터 생성 ==
+권한관련 기초데이터를 먼저 생성한다.
+
+  * {{:egovframework:com:v3.6:sec:basic_data.zip|기초데이터 생성}}
+
+== * 추가적으로 설정하는 권한은 기존에 정의된 권한 사이에 삽입한다.  ==
+  * 상위 권한 정의
+  <code sql>INSERT INTO COMTNROLES_HIERARCHY (PARENT_ROLE, CHILD_ROLE) VALUES('ROLE_COP','ROLE_ADMIN');</code>
+
+  * 하위 권한 정의
+  <code sql>INSERT INTO COMTNROLES_HIERARCHY (PARENT_ROLE, CHILD_ROLE) VALUES('ROLE_RESTRICTED','ROLE_COP');</code>
+
+  * 권한의 HIERARCHY 구조 
+  <code sql>SELECT A.CHILD_ROLE CHILD, 
+       A.PARENT_ROLE PARENT
+  FROM COMTNROLES_HIERARCHY A LEFT JOIN COMTNROLES_HIERARCHY B ON (A.CHILD_ROLE = B.PARENT_ROLE);</code>
+
+==== Spring Security Configuration ====
+
+  * [[eGovframework:RTE:FDL:server_security:Architecture|Spring Security]]
+
+==== Session 방식 접근제어 Configuration ====
+
+  * [[eGovframework:RTE3.9:FDL:access_v3_9|Session 방식 접근제어 권한설정]]
+
+===== 관련기능 =====
+
+  * [[egovframework:com:v3.6:sec:권한관리_기능]] 
+  * [[egovframework:com:v3.6:sec:권한별 롤관리]]
+
+===== 참고자료 =====
+
+  * [[eGovframework:RTE:FDL:Server Security]]

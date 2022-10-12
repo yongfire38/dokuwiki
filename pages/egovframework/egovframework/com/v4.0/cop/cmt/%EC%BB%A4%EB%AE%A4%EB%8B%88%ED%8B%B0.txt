@@ -1,0 +1,218 @@
+====== 커뮤니티 ======
+
+===== 개요 =====
+커뮤니티 사용기능을 통해 기본적인 커뮤니티 기능을 제공한다.
+
+===== 설명 =====
+커뮤니티 컴포넌트는 커뮤니티 서비스를 제공한다.
+
+==== 패키지 참조 관계 ====
+
+커뮤니티 패키지는 요소기술의 공통 패키지(cmm), 협업의 공통기능(com) 패키지, 게시판 패키지, 동호회 패키지에 대해서 직접적인 함수적 참조 관계를 가진다. 하지만, 컴포넌트 배포 시 오류 없이 실행되기 위하여 패키지 간의 참조관계에 따라 배포 파일을 구성한다. 
+
+  * 패키지 간 참조 관계 : [[egovframework:com:v2:init_pkg_dependency#게시판, 커뮤니티, 동호회|게시판, 커뮤니티, 동호회 Package Dependency]]
+
+
+==== 관련소스 ====
+
+=== 커뮤니티 홈 사용 ===
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.cmy.web.EgovCommuManageController.java|게시판의 이용정보를 관리하기 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.cmy.service.EgovCommuManageService.java|커뮤니티 메인페이지를 조회하기 위한 서비스 인터페이스 클래스|
+|Service|egovframework.com.cop.cmy.service.EgovCommuBBSMasterService.java|게시판 목록 정보 처리하기 위한 서비스 인터페이스 클래스|
+|Service|egovframework.com.cop.bbs.service.EgovArticleService.java|게시판 게시글을 관리하기 위한 서비스 인터페이스 클래스|
+|ServiceImpl|egovframework.com.cop.cmy.service.impl.EgovCommuManageServiceImpl.java|커뮤니티 메인페이지를 조회하기 위한 서비스 구현 클래스|
+|ServiceImpl|egovframework.com.cop.cmy.service.impl.EgovCommuBBSMasterServiceImpl.java|게시판 목록 정보 처리하기 위한 서비스 구현 클래스|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovArticleServiceImpl.java|게시판 게시글을 관리하기 위한 서비스 구현 클래스|
+|Model|egovframework.com.cop.bbs.service.Board.java|게시물 관리를 위한 모델 클래스|
+|Model|egovframework.com.cop.bbs.service.BoardMaster.java|게시판 속성 정보를 관리하기 위한 모델 클래스|
+|Model|egovframework.com.cop.cmy.service.Community.java|커뮤니티 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.bbs.service.BoardVO.java|게시물 관리를 위한 VO 클래스|
+|VO|egovframework.com.cop.bbs.service.BoardMasterVO.java|게시판 속성 정보를 관리하기 위한 VO  클래스|
+|VO|egovframework.com.cop.cmy.service.CommunityVO.java|커뮤니티 관리를 위한 VO 클래스|
+|DAO|egovframework.com.cop.cmy.service.impl.EgovCommuManageDAO.java|게시판 이용정보를 관리하기 위한 데이터 접근 클래스|
+|DAO|egovframework.com.cop.cmy.service.impl.EgovCommuBBSMasterDAO.java|게시판 목록 정보 처리하기 위한 데이터 접근 클래스|
+|DAO|egovframework.com.cop.bbs.service.impl.EgovArticleDAO.java|게시판 게시글을 관리하기 위한 데이터 접근 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/cmy/EgovCommuMain.jsp|커뮤니티 기본 템플릿 jsp 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/cmy/EgovCmmntyBaseTmplContents.jsp|커뮤니티 기본 템플릿 기본 컨텐츠 jsp 페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovCommuManage_SQL_mysql.xml|커뮤니티 메인페이지를 조회하기 위한 MySQL용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovCommuManage_SQL_oracle.xml|커뮤니티 메인페이지를 조회하기 위한 Oracle용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovCommuManage_SQL_tibero.xml|커뮤니티 메인페이지를 조회하기 위한 Tibero용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovCommuManage_SQL_altibase.xml|커뮤니티 메인페이지를 조회하기 위한 Altibase용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovCommuManage_SQL_cubrid.xml|커뮤니티 메인페이지를 조회하기 위한 Cubrid용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovBBSMaster_SQL_mysql.xml|게시판 목록 정보 처리하기 위한 MySQL용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovBBSMaster_SQL_oracle.xml|게시판 목록 정보 처리하기 위한 Oracle용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovBBSMaster_SQL_tibero.xml|게시판 목록 정보 처리하기 위한 Tibero용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovBBSMaster_SQL_altibase.xml|게시판 목록 정보 처리하기 위한 Altibase용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovBBSMaster_SQL_cubrid.xml|게시판 목록 정보 처리하기 위한 Cubrid용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovArticle_SQL_mysql.xml|게시판 게시글을 관리하기 위한 MySQL용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovArticle_SQL_oracle.xml|게시판 게시글을 관리하기 위한 Oracle용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovArticle_SQL_tibero.xml|게시판 게시글을 관리하기 위한 Tibero용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovArticle_SQL_altibase.xml|게시판 게시글을 관리하기 위한 Altibase용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/cmy/EgovArticle_SQL_cubrid.xml|게시판 게시글을 관리하기 위한 Cubrid용 Query XML|
+
+
+=== 커뮤니티 게시판 사용 ===
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.bbs.web.EgovBBSMasterController.java|게시판 속성관리를 위한 컨트롤러  클래스|
+|Service|egovframework.com.cop.bbs.service.EgovBBSMasterService.java|게시판 마스터 목록을 조회하기 위한 서비스 인터페이스 클래스|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovBBSMasterServiceImpl.java|게시판 마스터 목록을 조회하기 위한 서비스 구현 클래스|
+|Model|egovframework.com.cop.bbs.service.BoardMaster.java|게시판 마스터 목록을 조회하기 위한 모델 클래스|
+|VO|egovframework.com.cop.bbs.service.BoardMasterVO.java|게시판 마스터 목록을 조회하기 위한 VO 클래스|
+|DAO|egovframework.com.cop.bbs.service.impl.EgovBBSMasterDAO.java|게시판 마스터 목록을 조회하기 위한 데이터 접근 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBBSMasterList.jsp|게시판 마스터 목록을 jsp 페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL_mysql.xml|게시판 속성관리를 위한 MySQL용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL_oracle.xml|게시판 속성관리를 위한 Oracle용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL_tibero.xml|게시판 속성관리를 위한 Tibero용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL_altibase.xml|게시판 속성관리를 위한 Altibase용 Query XML|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL_cubrid.xml|게시판 속성관리를 위한 Cubrid용 Query XML|
+
+
+==== 클래스 다이어그램  ====
+
+=== 커뮤니티 게시판 사용 ===
+
+{{:egovframework:com:v3.6:cop:egovcommumanage_homeclassdiagram.cld.jpg|}}
+
+=== 커뮤니티 게시판 속성관리 ===
+
+{{:egovframework:com:v3.6:cop:egovbbsmasterclassdiagram.cld.jpg|}}
+
+
+==== ID Generation ====
+
+  * **[[게시판생성관리#ID Generation|게시판 생성관리]]** 기능과 동일하게 ID Generation 을 설정한다.
+
+==== 관련테이블 ====
+
+^테이블명^테이블명(영문)^비고^
+|커뮤니티속성|COMTNCMMNTY|커뮤니티의 속성정보를 관리한다.|
+|커뮤니티사용자|COMTNCMMNTYUSER|커뮤니티 사용자 관리한다.|
+
+==== 게시판유형 ====
+
+커뮤니티가 새롭게 생성이 될 때에 다음과 같은 기본적인 게시판을 생성된다.
+
+^게시판 이름^게시판 유형^게시판 속성^비고^
+|통합게시판|일반게시판|일반게시판| |
+|방명록|방명록|일반게시판| |
+
+게시판 유형 및 속성에 대한 내용은 **[[게시판생성관리#게시판 속성|게시판 생성관리]]**를 참조한다.
+
+==== 커뮤니티 메인화면 ====
+커뮤니티에 대한 접근은 별도의 URL 링크를 통해 제공된다. 첫 메인 화면은 템플릿으로 지정된 화면이 나타나며 관리자인 경우 별도의 관리자 메뉴가 나타난다.
+왼쪽에는 커뮤니티에 사용되는 게시판 목록과 동호회 목록이 나타나며 템플릿을 통해 수정이 가능하다.\\
+
+<code>
+/cop/cmy/CmmntyMainPage.do?cmmntyId=커뮤니티ID
+</code>
+
+{{:egovframework:com:v3.6:cop:커뮤니티메인화면.jpg|}}
+
+===== 관련기능 =====
+
+커뮤니티사용관리는 **커뮤니티 게시판관리 목록조회**, **커뮤니티 게시판관리 등록**, **커뮤니티 게시판관리 수정**, **커뮤니티 사용자관리 목록조회**, **커뮤니티 동호회관리 목록조회**, **커뮤니티 동호회관리 등록**, **커뮤니티 동호회관리 상세조회**, **커뮤니티 동호회관리 수정** 기능으로 구분되어 있다.
+
+
+
+==== 커뮤니티 게시판 목록조회 ====
+
+=== 비즈니스 규칙 ===
+
+커뮤니티 관리자 메뉴에 해당되는 게시판관리는 해당 커뮤니티에 생성된 게시판을 관리할 수 있다.
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^SQL Namespace^SQL QueryID^
+|목록조회|/cop/bbs/selectBBSMasterInfs.do|selectBBSMasterInfs|"BBSMaster"|"selectBBSMasterList"|
+| |/cop/bbs/selectBBSMasterInfs.do|selectBBSMasterInfs|"BBSMaster"|"selectBBSMasterListTotCnt"|
+
+
+게시판관리 목록은 기본적인 페이징 처리가 되며 다음과 같은 정보를 제공한다.
+
+{{:egovframework:com:v3.6:cop:커뮤니티목록조회게시판.jpg|}}
+
+게시판을 새롭게 생성하기 위해서는 상단의 등록 버튼을 통해서 **커뮤니티 게시판관리 등록** 화면으로 이동한다.\\ 
+기존 게시판 속성정보를 수정하고자 하는 경우 해당 게시판 명을 클릭하여 상세 조회 및 수정기능을 제공하는 **커뮤니티 게시판관리 수정** 화면으로 이동한다.
+
+
+
+==== 커뮤니티 게시판 등록 ====
+
+=== 비즈니스 규칙 ===
+
+커뮤니티, 동호회에서 사용을 위한 게시판 마스터 등록 화면으로 이동한다.
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^SQL Namespace^SQL QueryID^
+|등록|/cop/bbs/insertBBSMasterView.do|insertBBSMasterView|"CmmUseDAO"|"selectCmmCodeDetail"|
+
+  * 게시판 생성에 대한 내용은 **[[게시판생성관리]]** 기능을 참조한다.\\ \\
+
+게시판관리 목록조회 화면에서 상단의 등록 버튼을 선택하면 다음과 같은 등록화면으로 이동한다.
+
+{{:egovframework:com:v3.6:cop:커뮤니티등록게시판.jpg|}}
+
+
+등록: 입력한 커뮤니티 게시판관리 정보를 저장 처리한다.\\
+목록: **커뮤니티 게시판관리 목록** 화면으로 이동한다.
+
+==== 커뮤니티 게시판 수정 ====
+
+=== 비즈니스 규칙 ===
+
+새롭게 선택사항을 지정한 INSERT에 대한 게시판 속성정보만을 수정한다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^SQL Namespace^SQL QueryID^
+|수정화면|/cop/bbs/updateBBSMasterView.do|updateBBSMasterView|"CmmUseDAO"|"selectCmmCodeDetail"|
+|수정|/cop/bbs/updateBBSMaster.do|updateBBSMasterInfByTrget|"BBSMaster"|"updateBBSMaster"|
+
+
+게시판관리 목록에서 게시판명을 선택하면 게시판에 대한 속성정보를 수정할 수 있는 수정화면으로 이동한다.
+
+{{:egovframework:com:v3.6:cop:커뮤니티수정게시판.jpg|}}
+
+
+==== 커뮤니티 사용자 관리 ====
+
+
+=== 비즈니스 규칙 ===
+
+커뮤니티 생성 시 또는 정보 수정 시 관리자 지정을 위한 사용자 목록조회 팝업 화면을 제공한다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^SQL Namespace^SQL QueryID^
+|사용자 목록조회|/cop/cmy/selectCommuUserList.do|selectCommuUserList|"CommuManage"|"selectCommuUserList"|
+| |/cop/cmy/selectCommuUserList.do|selectCommuUserList|"CommuManage"|"selectCommuUserListCnt"|
+
+{{:egovframework:com:v3.6:cop:커뮤니티사용자관리.jpg|}}
+
+
+===== 참고자료 =====
+
+  * 게시판 생성관리 참조 : [[게시판생성관리|게시판생성관리]]
+  * 커뮤니티 생성관리 참조 : [[커뮤니티생성관리|커뮤니티생성관리]]

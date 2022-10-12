@@ -1,0 +1,154 @@
+====== RSS태그관리 ======
+
+===== 개요 =====
+
+**RSS태그관리**는 번번히 게시물이 자주 생겨나거나 업데이트가 자주 일어나는 웹사이트에서, 필요한 정보를 쉽게 사용자들에게 제공하기 위한 서비스로 RSS태그관리 정보를 관리하는 기능을 제공하디.
+
+===== 설명 =====
+
+  * **RSS태그관리**는 RSS를 등록하기 위한 목적으로 RSS태그 정보를 등록, 수정, 삭제, 조회, 목록조회의 기능을 수반한다. \\
+  * **RSS태그관리** 등록/수정시 테이블 컬럼정보는 #테이블컬럼명# 형태로 입력되는 RSS본문정보(본문TITLE,본문LINK, 본문DESCRIPTION)와 RSS서비스를 매핑하기 위한 정보이다.
+
+    ① RSS태그관리 목록 : RSS태그관리 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② RSS태그관리 등록 : RSS태그관리 정보를 등록하고, 등록 결과를 조회한다.
+    ③ RSS태그관리 수정 : 기 등록된 RSS태그관리 정보의 항목들을 수정한다.
+    ④ RSS태그관리 삭제 : 기 등록된 RSS태그관리 정보를 삭제한다.
+    ⑤ RSS태그관리 상세조회 : 등록된 RSS태그관리 정보를 상세정보를 조회한다.
+
+==== 관련소스 ====
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.rss.web.EgovRssTagManageController.java|RSS태그관리 정보 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.uss.ion.rss.service.EgovRssTagManageService.java|RSS태그관리 정보 관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.ion.rss.service.impl.EgovRssTagManageServiceImpl.java|RSS태그관리 정보 관리를 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.uss.ion.rss.service.impl.RssTagManageDao.java|RSS태그관리 정보 관리를 위한 데이터처리 클래스|
+|Model|egovframework.com.uss.ion.rss.service.RssManage.java|RSS태그 정보 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/rss/EgovRssTagManageList.jsp|RSS태그관리 정보를 목록조회 하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/rss/EgovRssTagManageDetail.jsp|RSS태그관리 정보를 성세조회 하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/rss/EgovRssTagManageRegist.jsp|RSS태그관리 정보를 등록 하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/rss/EgovRssTagManageUpdt.jsp|RSS태그관리 수정을  위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/rss/EgovRssTagManageTableColumnList.jsp|RSS태그관리 정보를 등록/수정 할때 컬럼목록을 조회 하기 위한 jsp페이지|
+|QUERY XML|resources/egovframework/mapper/com/uss/ion/rss/EgovRssTagManage_SQL_altibase.xml|RSS태그관리 Altibase용 QUERY XML| 
+|QUERY XML|resources/egovframework/mapper/com/uss/ion/rss/EgovRssTagManage_SQL_cubrid.xml|RSS태그관리 Cubrid용 QUERY XML|
+|QUERY XML|resources/egovframework/mapper/com/uss/ion/rss/EgovRssTagManage_SQL_maria.xml|RSS태그관리 Maria용 QUERY XML| 
+|QUERY XML|resources/egovframework/mapper/com/uss/ion/rss/EgovRssTagManage_SQL_mysql.xml|RSS태그관리 MySQL용 QUERY XML| 
+|QUERY XML|resources/egovframework/mapper/com/uss/ion/rss/EgovRssTagManage_SQL_oracle.xml|RSS태그관리 Oracle용 QUERY XML|
+|QUERY XML|resources/egovframework/mapper/com/uss/ion/rss/EgovRssTagManage_SQL_postgres.xml|RSS태그관리 Postgres용 QUERY XML|
+|QUERY XML|resources/egovframework/mapper/com/uss/ion/rss/EgovRssTagManage_SQL_tibero.xml|RSS태그관리 Tibero용 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/ion/rss/RssManage.xml|RSS태그관리 Validator XML|
+|Message properties|resources/egovframework/message/com/uss/ion/rss/message_ko.properties|RSS태그관리 Message properties(한글)|
+|Message properties|resources/egovframework/message/com/uss/ion/rss/message_en.properties|RSS태그관리 Message properties(영문)|
+|Idgen XML|resources/egovframework/spring/com/idgn/context-idgn-RssTagManage.xml|RSS태그관리 Id생성 Idgen XML|
+
+
+==== 클래스 다이어그램 ====
+
+{{:egovframework:com:uss:ion:rss:rss태그관리.jpg?740|}}
+
+==== ID Generation ====
+=== ID Generation 관련 DDL 및 DML ===
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **RSS_ID** 항목을 추가한다. 
+
+<code sql>
+
+  CREATE TABLE COMTECOPSEQ( TABLE_NAME VARCHAR(20) NOT NULL,
+	                  NEXT_ID    NUMERIC(30) NULL,
+	                  PRIMARY KEY (TABLE_NAME));
+
+  INSERT INTO COMTECOPSEQ ( TABLE_NAME, NEXT_ID ) VALUES ('RSS_ID', 1);
+</code>
+
+=== ID Generation 환경설정(context-idgn-RssTagManage.xml) ===
+<code xml>
+<bean name="egovRssTagManageIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="egovRssTagManageIdMsgtrategy" />
+        <property name="blockSize"  value="10"/>
+        <property name="table"      value="COMTECOPSEQ"/>
+        <property name="tableName"  value="RSS_ID"/>
+    </bean>
+    <bean name="egovRssTagManageIdMsgtrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"   value="RSS_" />
+        <property name="cipers"   value="14" />
+        <property name="fillChar" value="0" />
+    </bean>
+  
+</code>
+
+
+==== 관련테이블 ====
+
+^테이블명^테이블명(영문)^비고^
+|RSS관리|COMTNRSS|RSS관리정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+===== 관련기능 =====
+RSS태그관리기능은 크게 **RSS태그관리 목록조회**, **RSS태그관리 상세조회**, **RSS태그관리 등록**, **RSS태그관리 수정** 기능으로 구성되어 있다.
+
+==== RSS태그관리 목록조회 ====
+
+^Action^URL^Controller method^SQL Namespace^SQL QueryID^
+|목록조회|/uss/ion/rss/listRssTagManage.do|EgovRssTagManageList|"RssTagManage"|"selectRssTagManage"|
+| | | |"RssTagManage"|"selectRssTagManageCnt"|
+|삭제|/uss/ion/rss/listRssTagManage.do|EgovRssTagManageList|"RssTagManage"|"deleteRssTagManage"|
+
+RSS태그관리 목록조회는 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+
+{{:egovframework:com:v3.9:uss:ion:rss:rss태그_목록.jpg|}}
+
+조회 : 기 등록된 RSS태그의 목록을 조회한다.\\
+삭제 : 목록에 선택된 RSS태그정보를 삭제한다.\\
+등록 : 신규 RSS태그를 등록하기 위해서는 상단의 등록 버튼을 통해서 **RSS태그관리 등록** 화면으로 이동한다.\\
+목록 대상서비스명/대상테이블명 클릭 :  **RSS태그관리 상세조회** 화면으로 이동한다.\\
+
+----
+
+==== RSS태그관리 상세조회 ====
+
+^Action^URL^Controller method^SQL Namespace^SQL QueryID^
+|상세조회|/uss/ion/rss/detailRssTagManage.do|EgovRssTagManageDetail|"RssTagManage"|"selectRssTagManageDetail"|
+|삭제|/uss/ion/rss/detailRssTagManage.do|EgovRssTagManageDetail|"RssTagManage"|"deleteRssTagManage"|
+
+[RSS태그관리 목록조회]에서 선택한 RSS태그관리 정보의 상세조회를 제공합니다.
+
+{{:egovframework:com:v3.9:uss:ion:rss:rss태그_상세.jpg|}}
+
+수정 : **RSS태그관리 수정 화면**으로 이동한다.\\
+삭제 : 기 등록된  RSS태그 정보를 삭제한다.\\
+목록 : **RSS태그관리 목록조회 화면**으로 이동한다.\\
+
+----
+
+==== RSS태그관리 등록 ====
+
+^Action^URL^Controller method^SQL Namespace^SQL QueryID^
+|등록|/uss/ion/rss/registRssTagManage.do|EgovRssTagManageRegist|"RssTagManage"|"insertRssTagManage"|
+
+RSS태그관리 등록 화면을 제공합니다.\\
+**대상테이블명**은 등록된 테이블 목록이 출력되어 사용자가 직접 선택할 수 있습니다. \\
+**대상테이블명** 클릭시 해당 태이블 컬럼정보가 **컬럼**에 자동 출력 된다. \\
+**본문**정보(본문TITLE,본문LINK, 본문DESCRIPTION) 입력시 컬럼추가 버튼을 이용하여 추가하거나 #컬럼명# 형태로 입력한다.\\
+
+{{:egovframework:com:v3.9:uss:ion:rss:rss태그_등록.jpg|}}
+
+저장 : 신규로 작성된 RSS태그 정보를 저장한다.\\
+목록 : **RSS태그관리 목록조회 화면**으로 이동한다.\\
+
+----
+
+==== RSS태그관리수정 ====
+
+^Action^URL^Controller method^SQL Namespace^SQL QueryID^
+|수정|/uss/ion/rss/updtRssTagManage.do|EgovRssTagManageModify|"RssTagManage"|"updateRssTagManage|
+
+RSS태그관리 수정 화면을 제공합니다.\\
+**대상테이블명**은 등록된 테이블 목록이 출력되어 사용자가 직접 선택할 수 있습니다. \\
+**대상테이블명** 클릭시 해당 태이블 컬럼정보가 **컬럼**에 자동 출력 된다. \\
+**본문**정보(본문TITLE,본문LINK, 본문DESCRIPTION) 입력시 컬럼추가 버튼을 이용하여 추가하거나 #컬럼명# 형태로 입력한다.\\
+
+{{:egovframework:com:v3.9:uss:ion:rss:rss태그_수정.jpg|}}
+
+저장 : 수정된 RSS태그 정보를 저장한다.\\
+목록 : **RSS태그관리 목록조회 화면**으로 이동한다.\\
+
+----

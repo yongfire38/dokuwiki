@@ -1,0 +1,59 @@
+====== 개요 ======
+온라인 실행 가능한 배치의 온라인실행을 관리한다.
+
+====== 기능 설명 ======
+  - 온라인 실행 가능한 배치 목록을 조회할 수 있다.
+  - 온라인 실행 가능한 배치를 온라인 실핼할 수 있다.
+
+\\
+
+====== 화면 설명 ======
+
+===== 목록 화면 =====
+{{:egovframework:bopr:가이드:배치운영:EgovBatchExecutList.png|}}
+
+  * 목록 검색
+    - 업무구분(코드ID:BO001)①을 선택한다.
+    - 배치ID, Job이름(배치명) 검색조건②을 선택한다.
+    - 검색 조건에 대해 검색할 검색어를 입력③한다. (검색조건②을 선택하면 입력창이 활성화 된다.)
+    - 검색 버튼④을 클릭하거나 검색어 입력란③에서 키보드의 'Enter' 버튼을 클릭하여 검색 기능을 실행한다.
+
+  * 실행(등록) 화면 호출
+    - '실행' 버튼⑤을 클릭한다.
+
+  * 페이지 이동 ⑥
+    - 숫자 클릭 : 해당 숫자의 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prev.png|}} : 이전 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_next.png|}} : 다음 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prevend.png|}} : 맨 처음 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_nextend.png|}} : 마지막 페이지로 이동한다.
+    - 조회 건수가 100개 이하여서 페이지가 열개 이하인 경우 경우 화살표는 표시되지 않는다.
+
+===== 실행 화면 =====
+{{:egovframework:bopr:가이드:배치운영:EgovBatchExecutRegist.png|}}
+
+  * 목록 이동
+    - '목록' 버튼①을 클릭한다.
+
+  * 배치 실행 등록
+    - 파라미터③를 입력한다. (ex)<property name="resource" value="#{jobParameters[input.file.path]}" /> 위 설정을 배치설정파일에 등록했다면 배치 등록시 jobParameters의 변수가 "input.file.path"에 해당되는 값을 읽어 배치를 실행함
+
+    - '실행' 버튼②을 클릭한다.
+
+  사용하는 데이터 베이스가 ALTIBASE 혹은 TIBERO 일 경우에는
+  context-batch-job-launcher.xml 파일의 "jobRepository" Bean 설정 시 반드시
+  
+  <bean id="jobRepository"
+    class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean" p:dataSource-ref="egov.dataSource"
+    p:databaseType="oracle" p:transactionManager-ref="transactionManager" p:lobHandler-ref="lobHandler"/>
+  
+  와 같이 databaseType을 "oracle"로 명시해줘야 합니다.
+  
+  
+  하지만 그 외의 데이터 베이스 (MYSQL, ORACLE 등)을 사용할 경우에는
+  
+  <bean id="jobRepository"
+    class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean" p:dataSource-ref="egov.dataSource"
+    p:transactionManager-ref="transactionManager" p:lobHandler-ref="lobHandler"/>
+  
+  와 같이 databaseType 명시 부분을 삭제하여야 합니다.
