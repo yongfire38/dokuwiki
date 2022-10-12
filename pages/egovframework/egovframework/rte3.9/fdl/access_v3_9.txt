@@ -1,0 +1,98 @@
+====== Session 방식 접근제어 권한설정 ======
+
+===== 개요 =====
+표준프레임워크 3.9부터 Session 방식으로 접근제어 권한관리를 설정 할 수 있는 방법을 제공한다.\\
+
+내부적으로 필요한 설정을 가지고 있고, XML Schema를 통해 필요한 설정만을 추가할 수 있도록 제공한다. \\
+
+이 기능을 사용하기 위해서는 globals.properties 파일에서 Globals.Auth = session 로 설정되어야 한다.
+
+
+===== 환경설정 =====
+
+==== pom.xml (dependency추가) ====
+Session 방식의 접근제어 권한관리를 사용하기 위해서는 표준프레임워크 실행환경 구성요소중 egovframework.rte.fdl.access 라이브러리가 설치되어야 한다.
+
+<code>
+<dependency>
+	<groupId>egovframework.rte</groupId>
+	<artifactId>egovframework.rte.fdl.access</artifactId>
+	<version>${egovframework.rte.version}</version>
+</dependency>
+</code>
+
+==== XML namespace 및 schema 설정 ====
+
+접근제어를 설정하기 위해서는 다음과 같은 xml 선언이 필요하며, src/main/webapp/WEB-INF/config/egovframework/springmvc/egov-com-access.xml 에 위치한다.
+<code xml>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:egov-access="http://www.egovframe.go.kr/schema/egov-access"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.egovframe.go.kr/schema/egov-access
+		http://www.egovframe.go.kr/schema/egov-access/egov-access-3.9.xsd">
+
+</code>
+
+
+===== Session 접근제어 설정 =====
+Session 방식 접근제어 권한관리에 대한 기본 설정 정보를 제공한다.
+
+예:
+<code xml>
+	<egov-access:config id="egovAccessConfig"
+	    globalAuthen="session"
+	    mappingPath="/**/*.do"
+	    dataSource="egov.dataSource"
+	    loginUrl="/uat/uia/egovLoginUsr.do"
+	    accessDeniedUrl="/uat/uia/egovLoginUsr.do?auth_error=1"
+	    sqlAuthorityUser="select concat(b.user_se, b.user_id) userid, a.author_code authority
+			from comtnemplyrscrtyestbs a, comvnusermaster b
+			where a.scrty_dtrmn_trget_id = b.esntl_id"
+	    sqlRoleAndUrl="select a.role_pttrn url, b.author_code authority
+			from comtnroleinfo a, comtnauthorrolerelate b
+			where a.role_code = b.role_code
+			and a.role_ty = 'url'
+			order by a.role_sort"
+	    requestMatcherType="regex"
+	    excludeList="/uat/uia/**, /uss/umt/**, /sec/rnc/**, /sym/ccm/zip/**, /uss/ion/lsi/**, 
+	    	/cmm/fms/getImage.do, /uss/ion/bnr/getBannerImage.do, /index.do, /EgovLeft.do, /EgovContent.do, 
+	    	/EgovTop.do, /EgovBottom.do, /EgovModal.do, /cop/cmt/selectArticleCommentList.do, /cop/stf/selectSatisfactionList.do, 
+	    	/cop/stf/selectSingleSatisfaction.do, /cop/cmt/updateArticleCommentView.do"
+	/>
+</code>
+
+==== 속성 설명 ====
+^   속성    ^    설명     ^    필수여부     ^    비고  ^   
+|   globalAuthen   | globals.properties 설정(전자정부 프레임워크 기본 설정 중 dummy, security 사용 시 session 으로 재설정됨) |  필수  |  |  
+|   dataSource  | DBMS 설정 dataSource |  필수  |  |  
+|   loginUrl   | 로그인 페이지 URL |  필수  |  |  
+|   accessDeniedUrl   | 권한이 없는 경우 호출되는 페이지 URL |  필수  |  |  
+|   sqlAuthorityUser   | 인증된 사용자의 권한(authority) 조회 query |  필수  |  |  
+|   sqlRoleAndUrl   | Role 및 URL 패턴 |  필수  |  |
+|   requestMatcherType   | 패턴 매칭 방식(regex, ant, ciRegex: case-insensitive regex) |  선택  | default : regex |
+|   excludeList   | 접근제한 예외처리 URL(구분자: ,) |  필수  |  |
+
+  * excludeList(접근제한 예외 목록 URL) 예시 값
+회원관리 : /uat/uia/%%*%%* \\
+실명확인 : /sec/rnc/%%*%%* \\
+우편번호 : /sym/ccm/zip/%%*%%* \\
+로그인이미지관리 : /uss/ion/lsi/%%*%%* \\
+약관확인 : /uss/umt/%%*%%* \\
+포털예제배너 : /uss/ion/bnr/getBannerImage.do \\
+처음화면 : /index.do \\
+로그인화면이미지 : /cmm/fms/getImage.do \\
+좌측메뉴 : /EgovLeft.do \\
+초기화면 : /EgovContent.do \\
+상단메뉴 : /EgovTop.do \\
+하단메뉴 : /EgovBottom.do \\
+모달팝업 : /EgovModal.do \\
+만족도조사      : /cop/stf/selectSatisfactionList.do \\
+만족도조사 선택 : /cop/stf/selectSingleSatisfaction.do \\
+댓글            : /cop/cmt/selectArticleCommentList.do \\
+댓글 선택       : /cop/cmt/updateArticleCommentView.do \\
+

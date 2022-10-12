@@ -1,0 +1,18 @@
+====== Manual ======
+
+
+===== 배치 실행환경  =====
+  * [[eGovframework:RTE2:BRTE|배치 실행환경 소개]]
+
+==== 공통기반 핵심 ====
+  * [[eGovframework:RTE2:FDL:IoC Container]]
+    * [[eGovframework:RTE2:FDL:IoC Container:Basics]]\\ IoC Container를 설명하기 위해 필요한 기본적인 개념 및 사용 방법을 설명한다.
+ 
+
+==== 배치 예제 ====
+  * [[eGovframework:RTE2:PTL:MVC|MVC]]
+    * [[eGovframework:RTE2:PTL:Spring MVC Architecture|Spring MVC Architecture]]\\ 스프링 MVC의 기본 구조 및 핵심 컴포넌트에 대해 설명한다.
+   
+
+
+

@@ -1,0 +1,261 @@
+======실행환경 eGovFrame Lite 4.0 가이드======
+
+===== 실행환경 eGovFrame Lite 소개 =====
+표준프레임워크의 문제점 중 하나인 불필요한 의존성 해소 및 대용량에 따른 속도 저하를 개선하기 위해 실행환경 라이브러리를 경량화하여 표준프레임워크의 성능을 개선하도록 한다.
+
+표준프레임워크의 모든 프로젝트는 Maven을 기반으로 제공되고 있다. \\
+그러나, 인터넷이 단절된 내부망(폐쇄망), 해외의 느린 인터넷 속도, 불필요한 의존성 발생으로 인한 최적화 소요 발생, 그로 인한 개발 속도 저하 등이 대두되었다. \\
+이에 따라, 소규모 홈페이지 등 규모가 작은 사업에도 바로 적용 가능하도록 필수 기능 위주로 경량화를 진행하여 관련 자료를 제공한다.
+
+제공되는 경량화 라이브러리는 폐쇄망 환경에서 Maven 종속성 없이 라이브러리 사용이 가능하며, 프로젝트 규모에 따라서 경량화 버전을 선택 가능하도록 제공한다.
+
+현재 제공하는 경량화 라이브러리는 표준프레임워크 구동을 위해 최소한으로 필요한 컴포넌트를 묶어서 제공하는 것을 원칙으로 하며, 가능한 용량을 최소로 줄여 제공하여 인터넷 여건이 좋지 않은 환경에서도 개발이 용이하도록 한다.
+
+===== 실행환경 eGovFrame Lite 라이브러리 목록=====
+
+경량화 라이브러리는 **소규모, 대규모 2가지로 구성**되어 있다. \\
+소규모 라이브러리는 개발환경의 Simple Homepage Template 기준으로 구성하였으며, 대규모 라이브러리는 공통컴포넌트 All-in-One 을 기준으로 구성하였다. \\
+경량화 대상 실행환경의 버전은 4.0 이다.
+
+**소규모 경량화 라이브러리 목록** (Simple Homepage Template 기준)
+^    라이브러리명     ^    라이브러리 버전   ^  비고  ^
+|activation|1.1| |
+|antlr|2.7.7| |
+|antlr|3.5| |
+|asm|7.1| |
+|aspectjrt|1.9.5| |
+|aspectjweaver|1.9.5| |
+|cglib|3.3.0| |
+|commons-beanutils|1.9.4| |
+|commons-codec|1.14| |
+|commons-collections|3.2.2| |
+|commons-dbcp2|2.4.0| |
+|commons-digester|2.1| |
+|commons-fileupload|1.3.1| |
+|commons-io|2.2| |
+|commons-lang3|3.10| |
+|commons-pool2|2.5.0| |
+|commons-validator|1.7| |
+|hsqldb|2.5.0| |
+|ibatis-sqlmap|2.3.4.726| |
+|icu4j|53.1| |
+|javaee-api|7.0| |
+|javax.mail|1.5.0| |
+|jcl-over-slf4j|1.7.30| |
+|jstl|1.2| |
+|log4j-api|2.17.1| |
+|log4j-core|2.17.1| |
+|log4j-over-slf4j|1.7.30| |
+|log4j-slf4j-impl|2.17.1| |
+|mybatis|3.5.3| |
+|mybatis-spring|2.0.3| |
+|org.egovframe.rte.fdl.cmmn|4.0.0| |
+|org.egovframe.rte.fdl.idgnr|4.0.0| |
+|org.egovframe.rte.fdl.logging|4.0.0| |
+|org.egovframe.rte.fdl.property|4.0.0| |
+|org.egovframe.rte.fdl.string|4.0.0| |
+|org.egovframe.rte.psl.dataaccess|4.0.0| |
+|org.egovframe.rte.ptl.mvc|4.0.0| |
+|slf4j-api|1.7.25| |
+|spring-aop|5.3.6| |
+|spring-beans|5.3.6| |
+|spring-context|5.3.6| |
+|spring-context-support|5.3.6| |
+|spring-core|5.3.6| |
+|spring-expression|5.3.6| |
+|spring-jdbc|5.3.6| |
+|spring-modules-validation|0.9| |
+|spring-orm|5.3.6| |
+|spring-tx|5.3.6| |
+|spring-web|4.3.25| |
+|spring-webmvc|5.3.6| |
+|ST4|4.0.7| |
+|standard|1.1.2| jsp내 taglib 관련|
+|stringtemplate|3.2.1| |
+
+총 53개 34.7MB
+\\
+\\
+\\
+**대규모 경량화 라이브러리 목록** (공통컴포넌트 All-in-One 기준)
+
+^    라이브러리명     ^    라이브러리 버전   ^  비고  ^
+|activation|1.1| |
+|ajaxtags|1.5.7| |
+|ajaxtags-resources|1.5.7| |
+|antlr|2.7.7| |
+|antlr-runtime|3.5| |
+|asm|7.1| |
+|aspectjrt|1.9.5| |
+|aspectjweaver|1.9.5| |
+|c3p0|0.9.5.4| |
+|cglib|3.3.0| |
+|ckeditor-java-core|3.5.3| |
+|commons-beanutils|1.9.4| |
+|commons-codec|1.15| |
+|commons-collections|3.2.2| |
+|commons-collections4|4.1| |
+|commons-compress|1.19| |
+|commons-dbcp2|2.4.0| |
+|commons-digester|2.1| |
+|commons-email|1.5| |
+|commons-fileupload|1.3.3| |
+|commons-io|2.7| |
+|commons-jexl|2.0.1| |
+|commons-lang|2.4| |
+|commons-lang3|3.10| |
+|commons-net|3.6| |
+|commons-pool2|2.5.0| |
+|commons-validator|1.7| |
+|commons-vfs2|2.5.0| |
+|curvesapi|1.04| |
+|gpkisecureweb|1.0.4.9| |
+|h2|1.4.180| |
+|hadoop-hdfs-client|3.2.1| |
+|HdrHistogram|2.1.12| |
+|HikariCP-java7|2.4.13| |
+|httpclient|4.3.6| |
+|httpcore|4.3.3| |
+|ibatis-sqlmap|2.3.4.726| |
+|icu4j|53.1| |
+|jackson-annotations|2.11.4| |
+|jackson-core|2.11.4| |
+|jackson-core-asl|1.9.13| |
+|jackson-databind|2.11.4| |
+|jackson-mapper-asl|1.9.13| |
+|jasypt|1.9.3| |
+|javaee-api|7.0| |
+|javax.batch-api|1.0| |
+|javax.json|1.0.4| |
+|javax.mail|1.5.6| |
+|jcl-over-slf4j|1.7.30| |
+|jettison|1.2| |
+|jodconverter|2.2.1| |
+|jstl|1.2| |
+|juh|2.3.0| |
+|jurt|2.3.0| |
+|jxls-core|1.0.6| |
+|jxls-reader|1.0.6| |
+|LatencyUtils|2.0.3| |
+|ldapsdk|4.1| |
+|libgpkiapi_jni|1.4.0.0| |
+|log4j-api|2.17.1| |
+|log4j-core|2.17.1| |
+|log4j-over-slf4j|1.7.30| |
+|log4j-slf4j-impl|2.17.1| |
+|log4jdbc|1.2| |
+|micrometer-core|1.5.12| |
+|mybatis|3.5.3| |
+|mybatis-spring|2.0.3| |
+|mysql-connector-java|5.1.31| |
+|okhttp|2.7.5| |
+|okio|1.6.0| |
+|org.egovframe.rte.bat.core|4.0.0| |
+|org.egovframe.rte.fdl.access|4.0.0| |
+|org.egovframe.rte.fdl.cmmn|4.0.0| |
+|org.egovframe.rte.fdl.crypto|4.0.0| |
+|org.egovframe.rte.fdl.excel|4.0.0| |
+|org.egovframe.rte.fdl.filehandling|4.0.0| |
+|org.egovframe.rte.fdl.idgnr|4.0.0| |
+|org.egovframe.rte.fdl.logging|4.0.0| |
+|org.egovframe.rte.fdl.property|4.0.0| |
+|org.egovframe.rte.fdl.security|4.0.0| |
+|org.egovframe.rte.fdl.string|4.0.0| |
+|org.egovframe.rte.psl.dataaccess|4.0.0| |
+|org.egovframe.rte.ptl.mvc|4.0.0| |
+|oro|2.0.8| |
+|poi|3.16| |
+|poi-ooxml|3.16| |
+|poi-ooxml-schemas|3.16| |
+|quartz|2.3.2| |
+|quartz-jobs|2.3.2| |
+|reactive-streams|1.0.3| |
+|reactor-core|3.4.4| |
+|ridl|2.3.0| |
+|scribejava-apis|5.6.0| |
+|scribejava-core|5.6.0| |
+|slf4j-api|1.7.25| |
+|smeapi_2_7|2_7| |
+|sndng-mail|1.0| |
+|spring-aop|5.3.6| |
+|spring-batch-core|4.3.2| |
+|spring-batch-infrastructure|4.3.2| |
+|spring-batch-integration|4.3.2| |
+|spring-batch-test|4.3.2| |
+|spring-beans|5.3.6| |
+|spring-context|5.3.6| |
+|spring-context-support|5.3.6| |
+|spring-core|5.3.6| |
+|spring-expression|5.3.6| |
+|spring-integration-core|5.4.5| |
+|spring-jcl|5.3.6| |
+|spring-jdbc|5.3.6| |
+|spring-ldap-core|2.3.3| |
+|spring-messaging|5.3.6| |
+|spring-modules-validation|0.9| |
+|spring-orm|5.3.6| |
+|spring-retry|1.3.1| |
+|spring-security-acl|5.4.6| |
+|spring-security-config|5.4.6| |
+|spring-security-core|5.4.6| |
+|spring-security-taglibs|5.4.6| |
+|spring-security-web|5.4.6| |
+|spring-social-config|1.1.4| |
+|spring-social-core|1.1.4| |
+|spring-social-facebook|2.0.3| |
+|spring-social-web|1.1.4| |
+|spring-tx|5.3.6| |
+|spring-web|5.3.6| |
+|spring-webmvc|5.3.6| |
+|ST4|4.0.7| |
+|standard|1.1.2|jsp내 taglib 관련|
+|stax-api|1.0.1| |
+|stringtemplate|3.2.1| |
+|twitter4j-core|4.0.7| |
+|unoil|2.3.0| |
+|xml-apis|1.4.01| |
+|xmlbeans|2.6.0| |
+
+
+총 135개 74.9MB
+
+===== 실행환경 eGovFrame Lite 설치가이드 =====
+
+  * 표준프레임워크 포탈 홈페이지에서 다운로드 - 실행환경을 클릭한다.
+{{:egovframework:rte3.7:rte_lite_3.7_1.png|}}
+
+  * 좌측의 3.x 다운로드를 클릭한 뒤, 실행환경 eGovFrame Lite 다운로드를 클릭하여 실행환경 eGovFrame Lite 라이브러리를 다운로드 받는다.
+{{:egovframework:rte3.10:lite:rtelite3100.png|}}
+
+  * 개발환경을 실행하여 열고, eGovFrame - Start - New Web Project를 선택한다.
+{{:egovframework:rtea3.5:rtelight2.png|}}
+
+  * 프로젝트명 등 필요한 정보를 입력한 후 Finish 버튼을 클릭하여 프로젝트를 생성한다.
+{{:egovframework:rtea3.5:rtelight3.png|}}
+
+  * 생성된 프로젝트의 마우스 오른쪽을 클릭한 뒤, Import를 선택한다.
+{{:egovframework:rtea3.5:rtelight4.png|}}
+
+  * Archive File을 선택한다.
+{{:egovframework:rtea3.5:rtelight5.png|}}
+
+  * Browse 버튼을 클릭하고, 다운받은 eGovFrame Lite 라이브러리 파일을 선택한다.
+{{:egovframework:rtea3.5:rtelight6.png|}}
+
+  * 하단의 Browse 버튼을 클릭하고, Import될 경로를 WEB-INF/lib 디렉토리로 선택한다.
+{{:egovframework:rtea3.5:rtelight7.png|}}
+
+  * Finish 버튼을 클릭한 후, 프로젝트의 WEB-INF/lib 디렉토리에 라이브러리들이 있는지 확인한다.
+{{:egovframework:rtea3.5:rtelight8.png|}}
+
+  * 프로젝트의 마우스 오른쪽을 클릭한 뒤 Maven - Disable Maven Nature를 선택하여 Maven 설정을 해제한다.
+{{:egovframework:rtea3.5:rtelight9.png|}}
+
+  * 프로젝트의 마우스 오른쪽을 클릭한 뒤, Properties를 클릭하여 설정을 들어간다. Java Build Path를 클릭한다.
+{{:egovframework:rtea3.5:rtelight10.png|}}
+
+  * Add Library를 선택한 뒤, Web App Libraries를 선택하고, 생성한 프로젝트를 선택한 후 Finish를 클릭한다. Web App Library가 추가된 것을 확인한다.
+{{:egovframework:rtea3.5:rtelight11.png|}}
+
+  * 개발 요건에 맞춰서 개발을 진행한다. 필요에 따라 Deployment Assembly에 내용을 추가한다.
+{{:egovframework:rtea3.5:rtelight12.png|}}

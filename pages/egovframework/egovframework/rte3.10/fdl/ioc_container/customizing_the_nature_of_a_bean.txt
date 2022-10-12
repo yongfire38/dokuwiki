@@ -1,0 +1,214 @@
+====== Customizing the nature of a bean ======
+
+===== 개요 =====
+
+===== 설명 =====
+
+==== Lifecycle callbacks ====
+Spring Framework는 container 내부의 bean의 행동을 변화시길 수 있는 다양한 callback interface를 제공한다. 
+
+=== 객체화 callbacks(Initialization callbacks) ===
+''org.springframework.beans.factory.InitializingBean'' interface를 구현하면 bean에 필요한 모든 property를 설정한 후, 초기화 작업을 수행한다. ''InitializingBean'' interface는 다음 메소드를 명시하고 있다.
+
+<code java>
+void afterPropertiesSet() throws Exception;
+</code>
+
+일반적으로, ''InitializingBean'' interface의 사용을 권장하지 않는다. 왜냐하면 code가 불필요하게 Spring과 결합되기(couple) 때문이다. 대안으로, bean 정의는 초기화 메소드를
+지정할 수 있다. XML 기반 설정의 경우, '''init-method''' attribute를 사용한다.
+
+<code xml>
+<bean id="exampleInitBean" class="examples.ExampleBean" init-method="init"/>
+</code>
+
+<code java>
+public class ExampleBean {
+    
+    public void init() {
+        // do some initialization work
+    }
+}
+</code>
+
+위 예제는 아래 예제와 같다.
+
+<code xml>
+<bean id="exampleInitBean" class="examples.AnotherExampleBean"/>
+</code>
+
+<code java>
+public class AnotherExampleBean implements InitializingBean {
+    
+    public void afterPropertiesSet() {
+        // do some initialization work
+    }
+}
+</code>
+
+=== 파괴 callbacks(Destruction callbacks) ===
+''org.springframework.beans.factory.DisposableBean'' interface를 구현하면, container가 파괴될 때 bean이 callback를 받을 수 있다. ''DisposableBean'' interface는 다음 메소드를 명시하고 있다.
+
+<code java>
+void destroy() throws Exception;
+</code>
+
+일반적으로, ''DisposableBean'' interface의 사용을 권장하지 않는다. 왜냐하면 code가 불필요하게 Spring과 결합되기(couple) 때문이다. 대안으로, bean 정의는 초기화 메소드를
+지정할 수 있다. XML 기반 설정의 경우, '''destroy-method''' attribute를 사용한다.
+
+<code xml>
+<bean id="exampleInitBean" class="examples.ExampleBean" destroy-method="cleanup"/>
+</code>
+
+<code java>
+public class ExampleBean {
+
+    public void cleanup() {
+        // do some destruction work (like releasing pooled connections)
+    }
+}
+</code>
+
+위 예제는 아래 예제와 같다.
+
+<code xml>
+<bean id="exampleInitBean" class="examples.AnotherExampleBean"/>
+</code>
+
+<code java>
+public class AnotherExampleBean implements DisposableBean {
+
+    public void destroy() {
+        // do some destruction work (like releasing pooled connections)
+    }
+}
+</code>
+
+=== 기본 객체화 및 파괴 메소드(Default initialization & destroy methods) ===
+Spring container는 모든 bean에 대해서 같은 이름의 초기화 및 파괴 메소드를 지정할 수 있다.
+
+<code java>
+public class DefaultBlogService implements BlogService {
+
+    private BlogDao blogDao;
+
+    public void setBlogDao(BlogDao blogDao) {
+        this.blogDao = blogDao;
+    }
+
+    // this is (unsurprisingly) the initialization callback method
+    public void init() {
+        if (this.blogDao == null) {
+            throw new IllegalStateException("The [blogDao] property must be set.");
+        }
+    }
+}
+</code>
+
+<code xml>
+<beans default-init-method="init">
+
+    <bean id="blogService" class="com.foo.DefaultBlogService">
+        <property name="blogDao" ref="blogDao" />
+    </bean>
+
+</beans>
+</code>
+
+''%%<beans/>%%'' element의 '''default-init-method''' attribute를 이용하여 기본 객체화 callback 메소드를 지정할 수 있다. 파괴 callback 메소드의 경우 '''default-destroy-method''' attribute를 이용하여 지정할 수 있다.
+
+''%%<bean/>%%'' element에 '''init-method''', '''destroy-method''' attribute가 정의되어 있는 경우, 기본값은 무시된다.
+
+=== 생명주기 메커니즘 병합 ===
+Spring Framework에서는 3가지 방식의 생명주기 메커니즘이 존재한다: ''InitialzingBean''과 ''DisposableBean'' interface; 맞춤 ''init()''과 ''destroy()'' 메소드; 그리고 [[eGovframework:RTE:FDL:IoC Container:Annotation-based configuration:#@PostConstruct and @PreDestroy annotations]]
+
+만약 서로 다른 생명주기 메커니즘을 같이 사용할 경우, 개발자는 적용되는 순서를 알고 있어야 한다. 객체화 메소드의 순서는 다음과 같다.
+  - @PostConstruct annotation이 있는 메소드
+  - ''InitializingBean'' callback interface에 정의된 ''afterPropertiesSet()''
+  - 맞춤 ''init()'' 메소드
+파괴 메소드의 호출 순서는 다음과 같다.
+  - @PreDestroy annotation이 있는 메소드
+  - ''DisposableBean'' callback interface에 정의된 ''destroy()''
+  - 맞춤 ''destroy()'' 메소드
+
+==== Knowing who you are ====
+
+=== BeanFactoryAware ===
+''org.springframework.beans.factory.BeanFactoryAware'' interface를 구현한 class는 자신을 생성한 ''BeanFactory''를 참조할 수 있다.
+
+<code java>
+public interface BeanFactoryAware {
+
+    void setBeanFactory(BeanFactory beanFactory) throws BeansException;
+}
+</code>
+
+''BeanFactoryWare'' interface를 사용하면, 자신을 생성한 ''BeanFactory''를 알 수 있고, 프로그램적으로 다른 bean을 검색할 수 있다. 하지만 이 방법은 Spring과의 결합을 발생시키고, Inversion of Control 스타일에도 맞지 않으므로 피하는 것이 좋다.
+
+대안으로는 ''org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean''을 사용할 수 있다.
+
+''ObjectFactoryCreatingFactoryBean''은 ''FactoryBean''을 구현한 것으로 bean을 찾아주는 객체를 참조할 수 있다. ''ObjectFactoryCreatingFactoryBean''은 스스로 ''BeanFactoryAware'' interface를 구현하고 있다.
+
+<code java>
+package x.y;
+
+public class NewsFeed {
+    
+    private String news;
+
+    public void setNews(String news) {
+        this.news = news;
+    }
+
+    public String getNews() {
+        return this.toString() + ": '" + news + "'";
+    }
+}
+</code>
+
+<code java>
+package x.y;
+
+import org.springframework.beans.factory.ObjectFactory;
+
+public class NewsFeedManager {
+
+    private ObjectFactory factory;
+
+    public void setFactory(ObjectFactory factory) {
+        this.factory = factory;
+    }
+
+    public void printNews() {
+        // here is where the lookup is performed; note that there is no
+        // need to hard code the name of the bean that is being looked up...
+        NewsFeed news = (NewsFeed) factory.getObject();
+        System.out.println(news.getNews());
+    }
+}
+</code>
+
+아래 설정은 ''ObjectFactoryCreatingFactoryBean'' 방식을 사용하여 위 두 class를 엮어주는 예제이다.
+
+<code xml>
+<beans>
+    <bean id="newsFeedManager" class="x.y.NewsFeedManager">
+        <property name="factory">
+            <bean
+class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+                <property name="targetBeanName">
+                    <idref local="newsFeed" />
+                </property>
+            </bean>
+        </property>
+    </bean>
+    <bean id="newsFeed" class="x.y.NewsFeed" scope="prototype">
+        <property name="news" value="... that's fit to print!" />
+    </bean>
+</beans>
+</code>
+
+=== BeanNameAware ===
+''org.springframework.beans.factory.BeanNameAware'' interface를 구현한 bean은 container내에서의 //name//을 알 수 있다.
+
+===== 참고자료 =====
+  * [[https://docs.spring.io/spring-framework/docs/4.3.25.RELEASE/spring-framework-reference/html/beans.html#beans-factory-nature|Spring Framework - Reference Document / 7.6 Customizing the nature of a bean]]
