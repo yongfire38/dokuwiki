@@ -1,0 +1,154 @@
+
+====== IDE for the e-government standard framework ======
+
+
+===== Summary =====
+
+This document describes a summary of the IDE for the e-government standard framework. 
+
+===== Description =====
+
+==== IDE Goal ====
+
+The IDE provides following tools that support the life-cycle of the development process, including business program development, version control, build, and so forth. 
+
+  * Implementation Tool
+  * Test Tool
+  * Configuration & Change Management Tool
+  * Deployment Tool
+
+||^Architecture and components||
+||  {{:egovframework:dev2:개발환경구성도.jpg|}}  ||
+|Implementation Tool|Provides a developer IDE for program development, test, and debugging|
+|Test Tool|Supports unit-test for developed program|
+|Conf. Change Mgt. Tool|Provides SCM, Issue Tracking and Monitoring tools|
+|Deployment Tool|Provides the Continuous Integration (CI) and server migration tools|
+
+==== IDE and Server IDE ====
+
+
+**IDE**
+
+IDE consists of Implementation Tool(Editor, Debug, IDE, Common Component, Mobile IDE) and Test Tool(Test Reporting, Unit Test.)\\ {{:egovframework:dev2:clntoverview.jpg|}} \\ 
+
+
+Detailed features of the Developer Development Environment are separated into two groups: core and optional components. Optional components are provided for convenience.
+eGov standard framework provides lightweight development environment that consists of core components only. It is simple and easy for the developers to install and use the lightweight development environment. It is appropriate for small projects.  
+The framework also provides the integrated development environment that contains core and optional components for developer’s convenience. Developers are advised to download and use the appropriate environment for the needs of their project. 
+
+Server IDE 
+
+Server IDE consists of Deployment Tool(Build, Deploy) and Conf. & Change Mgt. Tool(Configuration Management, Change Management.) \\ {{:egovframework:dev2:svroverview.jpg|}} \\
+
+ 
+
+
+
+Server IDE of the Standard framework also provides both essential and optional features.
+According to the project, features in the Deployment Tool and the Conf. & Change Mgt. Tool are optionally selectable. (Server IDE) 
+
+==== Development Process ====
+
+The following diagram describes the possible development process using given IDE. \\
+The development process is separated into four areas, and detailed process for each area is shown below. 
+  * Developer’s Personal Computer
+  * Configuration Management Server
+  * CI Server
+  * Application Server
+
+
+
+{{:egovframework_eng:dev2:development_process.jpg|}}
+
+===== Environmental settings =====
+
+
+==== Basic Environment =====
+
+^Components^Recommended Version^Notes^
+|Java Development Kit|5.0| |
+|Servlet|2.4| |
+|Eclipse IDE for Java EE Developers|3.6|http://www.eclipse.org/downloads|
+
+==== WAS ====
+^Components^Recommended Version^Java Compatibility^Notes^
+|Jboss application platform|5.1.30|JDK 5.0| |
+|Tmax JEUS|6.0.0.5|JDK 5.0 or higher| |
+|Oracle WebLogic ServerDBMS Server|9.2|JDK 5.0 or higher| |
+
+==== DBMS ====
+^Components^Recommended Version^Notes^
+|Mysql|5.1.30| |
+|Tibero|3.0(sp2)| |
+|Altibase DBMS Server|5.1.3.18| |
+|Oracle|9.2(mp3)| |
+
+
+
+
+==== Open Source Software Usage Status ====
+
+^Service Group^Service^^Open Source Software^Version^License^Expansion & Development^
+|Implemtation Tool|Editor|Source Editor|Eclipse|3.6.2|EPL & EDL|**Indigo (3.7) version, please contact the maintenance team.**|
+| | |IDE| N/A ||| Developed |
+| | |Common Component| N/A ||| Developed |
+| | |Customize Development Tool| N/A ||| Developed |
+| | |Mobile IDE| N/A ||| Developed |
+| | |Mobile Common Component| N/A ||| Developed |
+| | |Mobile Code Verification| N/A ||| Developed |
+| | |Add Plug-In| N/A ||| Developed |
+| | |UML Editor|AmaterasUML| 1.3.2 |EPL 1.0| |
+| | |ERD Editor|AmaterasERD| 1.0.8 |EPL 1.0| |
+| | |DBIO Editor| N/A |||Developed |
+| | |Web Flow| Spring Web Flow | 2.0.7 | | |
+| | |Code Generation| N/A |||Developed |
+| | |Code Inspection| PMD, FindBugs | 3.2.6, 1.3.9 | BSD, LGPL | |
+| | |Server Connection Management| N/A |||Developed |
+| |Debug|Local Debug|Eclipse| 3.6.2 |EPL & EDL| |
+| | |Remote Debug|Eclipse| 3.6.2 |EPL & EDL| |
+|TestTool|Unit Test|Test Case|JUnit| 4.8.1, 3.8.2 |CPL| |
+| | |Mock Support|EasyMock| 3.0 |MIT| |
+| | |DB Support|DbUnit| 2.4.8 |LGPL 2.1| |
+| |Test Automation||Ant, Maven| 1.8.2, 3.0.3 |Apache License 2.0| |
+| |Test Reporting||Ant, Maven| 1.8.2, 3.0.3 |Apache License 2.0|Feature added|
+| |Test Coverage||EMMA| 2.1 |CPL| |
+| |TestCase Generator|| N/A |||Developed |
+|Deployment Tool|Build|Build Tool|Maven| 3.0.3 |Apache License 2.0| |
+| | |CI Server|Hudson| 1.398 |Creative Commons Attribution \\ Share-Alike License,MIT| |
+| | |Nexus| Nexus | 1.8.0.1 |GPL| |
+| |Deploy||N/A|||Developed|
+|Conf.& Change Mgt.Tool|Configuration Management||Subversion| |Subversion License| |
+| |Change Management||jTrac| |Apache License 2.0|RE-DEVELOPED UI|
+
+✔ DBUnit, EasyMock, Emma, ​​Ant, if required, the use of tin in the pom.xml file to run Maven Install to unpack.
+
+==== Manual ====
+
+
+IDE main screen introduces the development framework and environment. Users can manage the link URL information. 
+A standard user should change link URL according to each project settings to use the development tool. The following process describes how to change the information.
+  - **Admin Login**\\ Use the default Initial ID and password to login. Once successfully logged in, user should set a new password. 
+  - **Management of Menus**\\ Update the link URL information and enablement of each tool on the specified project.
+
+==== Environmental settings ====
+
+  - Install IDE main tool\\ Download the main tool from the eGov standard framework portal (http://www.egovframe.go.kr [http://www.egovframe.go.kr]), and deploy to the WAS server. 
+  - Create DB Scheme\\ Download the DB Scheme creation sql for the main tool, connect to the DB and run the downloaded sql. 
+  - Change the DB connection information\\ After deploying the main tool, modify a WEB-INF/config/context-datasource.xml file under the deployed location of the WAS. Set it accordingly to the current project.\\ On deployment, a ‘dev’ user is registered on MySQL database as default. 
+
+==== Intro screen ====
+  - User can get to the main pages of each development tool.
+  - In order to standard users use the tool, the admin should modify link URL to configure IDE settings suitable to the project.
+{{:egovframework_eng:dev2:intro_screen.jpg|}}
+
+==== Admin Login ====
+{{:egovframework_eng:dev2:admin_login.jpg|}}
+  - Enter an ID and password.
+  - Press the ‘Login’ button.
+
+==== Management of Menus ====
+{{:egovframework_eng:dev2:management_of_menus.jpg|}}
+  - Enter URLs and choose the active status for each tool.
+  - Press the ‘Save’ button.
+
+
