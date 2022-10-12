@@ -1,0 +1,26 @@
+====== 카테고리 관리 ======
+
+===== 설명 =====
+
+카테고리를 등록, 수정, 삭제할 수 있는 기능으로 관리자만 접근 가능하다. Restful을 사용하였으며, xml, json으로 화면 출력이 가능하다.
+
+  1. 관리자로 로그인 하고, 메뉴에서 [카테고리 조회]를 선택한다. 현재 목록을 json으로 출력 가능하다.
+{{:egovframework:rte2:tex:사용법:1._리스트.jpg|}}
+  2. 목록페이지에서 [등록]버튼을 클릭한 후, 카테고리명과 비고을 입력하고 [등록] 버튼을 클릭한다.
+{{:egovframework:rte2:tex:사용법:2._등록.jpg|}}
+  3. 등록한 카테고리 중 수정할 카테고리를 선택하면, 다음과 같이 수정, 삭제가 가능하다.
+{{:egovframework:rte2:tex:사용법:3.수정.jpg|}}
+  4. 카테고리 정보를 xml과 json으로 출력가능하며, 다음은 xml 화면이다.
+{{:egovframework:rte2:tex:사용법:4._xml.jpg|}}
+  5. 카테고리에 포함된 품목이 존재 할 경우, 다음과 같은 에러 메세지를 출력한다.
+{{:egovframework:rte2:tex:사용법:5._삭제에러.jpg|}}
+===== 참고자료 =====
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:itl:restful|RESTful]]
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:psl:orm|ORM]]
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:psl:transaction|Transaction]]
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:fdl:server_security|Server Security]]
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:ptl:spel|SpEL]]
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:ptl:internationalization|Internationalization(국제화)]]
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:psl:data_access|Data Access]]
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:fdl:id_generation|ID Generation]]
+  * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte2:fdl:property|Property]]

@@ -1,0 +1,5 @@
+====== Spring Cloud 기반 마이크로서비스 이해 ======
+
+===== Spring Boot =====
+
+Spring Boot는 표준프레임워크가 제공하는 기본적인 공통기반 영역(Foundation Layer ; Spring Core, Batch Spring Web 등)을 기반 위에 모듈 단위의 배포 및 설정 최소화를 지원하는 실행(execution) 환경의 기반을 제공한다.

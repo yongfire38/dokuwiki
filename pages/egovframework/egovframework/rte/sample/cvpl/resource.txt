@@ -1,0 +1,34 @@
+====== [적용 예] Resource ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:resource|Resource]] Service 를 적용해서 오류 발생시 또는 안내 메시지를 제공하기 위해 키값에 해당하는 메세지를 가져온다. 
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-common.xml ===
+<code xml>   
+<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	<property name="basenames">
+		<list>
+			<value>classpath:/message/message-common</value>
+			<value>classpath:/message/egov-message-cvpl</value>
+			<value>classpath:/egovframework/rte/fdl/idgnr/messages/idgnr</value>
+			<value>classpath:/egovframework/rte/fdl/property/messages/properties</value>
+		</list>
+	</property>
+	<property name="cacheSeconds">
+		<value>60</value>
+	</property>
+</bean>
+</code>
+위의 설정에서 ”classpath:/message/egov-message-cvpl” 로 지정한 파일은 실제로는 resources\message\ 폴더안에 egov-message-cvpl으로 시작하는 .properties 로 정의되어 있다. 
+==== Source ====
+=== resources\message\egov-message-cvpl_ko_KR.properties ===
+<code java>
+topmenu.title=e-온라인 민원상담
+</code>
+
+=== WEB-INF\jsp\EgovCvplTop.jsp ===
+<code java>
+<spring:message code="topmenu.title"/>
+</code>

@@ -1,0 +1,79 @@
+====== 설정관리 도구 설치 ======
+===== 1. 개요 ======
+설정관리 도구는 설정관리 도구를 실행하기 위한 Jetty 설치와 Jetty 위에 설정관리 도구 WAR 파일을 배포 하는 과정으로 이루어 지며, 설정관리 대상 정보를 외부 설정파일에 저장하여 관리한다.
+===== 2. 설치 ======
+
+==== Jetty 설치 ==== 
+Jetty는 서블릿과 JSP를 지원하는 자바 기반의 WAS 서버이다. 
+Netcraft Web Server 조사에서 따르면 Jetty는 현재 톰캣의 점유율에 대비해서 80% 정도의 점유율을 차지하고 있다고 한다. 
+실제로 Jetty는 다른 WAS에 비해 가볍고 빠르며, 설정도 더 쉽다. 설정관리 도구의 실행에 Jetty를 사용하는 이유는 경량 WAS 를 통해 큰 작업 없이도 설정관리 도구를 배포 사용할 수 있기 때문이다.
+
+    * Jetty 다운로드 URL http://dist.codehaus.org/jetty/jetty-6.1.25/
+    * 설정관리도구 WAR 다운로드 URL 
+
+==== 설치 순서 ==== 
+  - http://www.egovframe.go.kr 에서 설정관리 도구를 다운로드 받는다. (Jetty 와 설정관리 도구 셋팅)
+  - 해당 Zip 파일을 C 드라이브에 압축을 해제한다.
+  - 설정관리 대상 XML 파일의 위치를 정의한 egovsms.properties 파일을 C 드라이브에 복사 한다.
+  - egovsms.properties 파일을 로컬 환경에 맞게 수정한다.
+  - Jetty의 압축 해제 디렉토리에서 start.bat 파일을 실행하여, WAS 를 기동한다.
+  - http://localhost:9090/egovoe1_sms 에서 확인한다.
+
+==== 설치 예 ==== 
+아래와 같이 배포된 Zip 파일을 아래와 같이 설치한다.
+
+{{:egovframework:oe1:설정관리:jetty_설치1.jpg|}}
+
+    * 설정관리 도구 어플리케이션 배포 확인 : C:\jetty-6.1.25\webapps\egovsms\root.war (docBase 를 Root로 주기위하여 War 명이  root.war 로 배포됨) 
+
+    * 설정관리 대상 설정 XML 파일 프로퍼티 설치 : C:\egovsms.properties
+      아래 설정을 로컬 개발 환경에 맞게 수정한다.
+<code properties>
+sms.xmlfileReadPath=C:/00.egovpotalsite/workspace/egovoe1/src/main/resources/egovframework/test/
+sms.xmlFileBackupStorePath=C:/00.egovpotalsite/workspace/egovoe1/src/main/resources/egovframework/test/backup/
+sms.xmlfileStorePath=C:/00.egovpotalsite/workspace/egovoe1/src/main/resources/egovframework/test/
+sms.idGenXmlfileNm=context-idgen.xml
+sms.cacheXmlfileNm=context-cache.xml
+sms.scheduleXmlfileNm=context-scheduler.xml
+sms.propertiesXmlfileNm=context-properties.xml
+sms.datasourceXmlfileNm=context-datasource.xml
+sms.ehCacheXmlfileNm=ehcache-default.xml
+</code>
+
+
+각 프로퍼티에 대한 설명은 다음과 같다.
+^ PARAMETER ^ 설 명 ^
+|sms.xmlfileReadPath  | 설정관리 대상 설정파일의 위치|
+|sms.xmlFileBackupStorePath  | 설정관리 도구에서 설정파일 수정 시 기존 설정파일의 백업 위치|
+|sms.xmlfileStorePath  | 설정관리 도구에서 설정파일 수정한 파일의 저장위치 (sms.xmlfileReadPath과 동일하게 설정)|
+|sms.idGenXmlfileNm  | Id Gen 서비스 설정파일명|
+|sms.cacheXmlfileNm  | 캐시 서비스 설정파일명|
+|sms.scheduleXmlfileNm  | 스케줄 서비스 설정파일명|
+|sms.propertiesXmlfileNm  | 프로퍼티 서비스 설정파일명|
+|sms.datasourceXmlfileNm  | 데이터소스 서비스 설정파일명|
+|sms.ehCacheXmlfileNm  | EhCache 설정파일명|
+
+==== 실행 예 ==== 
+    * 설정관리 도구 실행 : C:\jetty-6.1.25\start.bat
+      {{:egovframework:oe1:설정관리:jetty실행.jpg|}}
+{{:egovframework:oe1:설정관리:jetty서버기동.jpg|}}
+
+정상적으로 서버가 기동되면 설정관리 도구 메인화면이 아래와 같이 나온다.
+
+{{:egovframework:oe1:설정관리:jetty메인화면.jpg|}}
+
+===== 3. 설정관리 실행환경 ======
+==== 실행가능 브라우저 ==== 
+
+설정관리 도구는 웹접근성 및 표준을 준수하여 아래 브라우저에서 실행 될 수 있다
+
+브라우저의 보안 정책에 따라 XML 파일을 브라우저상에 표현 할 수 없는 브라우저의 경우 Plugin(Extension)을 설치를 통해
+미리보기 기능을 사용이 가능하나 특정 브라우저의 경우 Plugin 조차 제공되지 않는다.
+
+* Internet Explorer 6+, FireFox 2+, Safari 3, Opera 9, Chrome 지원
+
+* 미리보기가 불가능한 브라우저
+   - Safari
+   - Chrome  
+Safari 3의 경우 XML을 브라우저 상에 표현할 수 있는 추가적인 Plugin(Extension)이 존재하지 않아 미리보기 기능은 사용할 수 없다.
+Chrome의 경우 여러가지 XML 표현 Plugin(Extension)- XML Viewer(https://chrome.google.com/extensions/detail/cfphnlpadcinhoebfooghjoknlifphjb)를 설치하여 미리보기 기능을 사용할 수 있다.

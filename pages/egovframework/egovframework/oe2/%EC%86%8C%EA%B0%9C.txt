@@ -1,0 +1,71 @@
+====== 모니터링 도구 소개 ======
+
+===== 개요 ======
+모니터링 도구는 전자정부 표준프레임워크 기반 어플리케이션 구현 또는 운영시 시스템의 상태와 전자정부 프레임워크 적용 및 현황에 대한 모니터링 환경을 제공하고, 통계정보를 지원하는 도구이다. 
+
+  * Monitoring Management
+    * 표준프레임워크 적용 시스템에 대한 개발,운영이벤트 및 수치지표 수집기능
+    * 기본적인 성능 모니터링 기능
+    * 사용자 환경정보 수집기능
+
+  * Status Management
+    * 모니터링 상태 Reporting 
+    * 모니터링 결과에 대한 통계 정보 제공
+
+===== 기능 ======
+  - 어플리케이션 모니터링 : 표준프레임워크 적용 어플리케이션에 대한 모니터링 기능으로, 사용자 request에 대한 HTTP, Application Service, JDBC, SQL 에 대한 시간 및 횟수 성능정보 수집  
+  - 프레임워크 모니터링 : Management Bean(MBean)을 통한 프레임워크가 적용된 WAS(Java VM)의 성능정보를 모니터링 하는 기능과 프레임워크 기반 스케줄, 캐쉬, 클래스 정보를 모니터링하는 기능 제공
+  - 시스템 모니터링 : 공통컴포넌트 요소기술을 사용하여, 관리화면을 통해 등록한 시스템의 정상 서비스 여부를 확인하는 기능을 제공
+
+===== 아키텍처 ======
+모니터링 도구는 모니터링 대상서버의 어플리케이션 실행 데이터와 프레임워크 성능정보를 수집하는 역할을 수행하는 에이전트, 에이전트에서 수집한 데이터를 저장하고 수집된 데이타를 관리자(모니터링 관리자)가 쉽게 조회할 수 있는 GUI 환경을 제공하는 모니터링 관리서버로 구성된다. 모니터링 도구의 아키텍처 구성요소는 다음과 같다. 
+
+  * 모니터링 (관리)서버 : 모니터링 수집서버 및 웹 GUI가 설치되며, 에이전트, 수집서버에 대한 환경 설정 및 모니터링 데이타에 대한 성능,통계 정보 제공 
+  * 모니터링 대상서버 : 모니터링 대상 시스템으로 에이전트가 설치되는 환경
+  * 에이전트 : 모니터링 대상 어플리케이션에 설치가 되면, 모니터링 정보를 수집하여 수집서버로 전송하는 기능 수행
+  * 모니터링 서버(수집서버): 에이전트에서 전송받은 수집데이타를 데이타베이스에 저장하는 기능 수행
+  * 모니터링 관리자 : 모니터링 도구 사용자로, 프레임워크가 적용된 시스템을 모니터링하는 역할을 담당 
+
+{{:egovframework:oe2:가이드:monitoringtool.gif|}}
+
+===== 모니터링 개념도 ======
+모니터링 도구는 MBean을 이용하여 WAS의 자원을 측정하는 MBean모니터링과, Infrared를 기반으로 대상 Aplication의 성능을 모니터링하는 어플리케이션 모니터링으로 구분된다. (참고로, 시스템 모니터링은 공통컴포넌트의 요소기술을 사용하였다.)
+
+==== MBean을 통한 모니터링 개념도 ==== 
+
+**Layer별 모니터링 MBean **\\
+{{:egovframework:oe2:가이드:mbean-architecture.jpg|}}\\
+모니터링 서버는 모니터링 대상 서버의 JVM과 WAS(Web Application Server), Framework에 RMI, JNDI Protocol로 접속하여 \\
+JVM Layer에서는 OS, CPU, Memory&GC, Loaded Classes 정보 \\
+WAS Layer 에서는 Session, Thread, JDBC 정보 \\
+전자정부 표준 Framework Layer에서는 Model, Schedule, Cache 정보를 조회한다.
+
+**WAS별 MBean 모니터링 접속 Protocol ** \\
+^MBean 종류^ JEUS ^ JBoss ^ WebLogic ^ Tomcat ^
+|Operating System & RunTime| RMI(8992) |||| 
+| Memory | RMI(8992) |||| 
+| Load Class | RMI(8992)  |||| 
+| Garbage Collection| RMI(8992)  |||| 
+| JDBC  | JNDI(9736) | JNDI(8992) |JNDI(1099) |RMI(8992) | 
+| Session | JNDI(9736) | JNDI(8992) |JNDI(1099) |RMI(8992) | 
+| Thread | JNDI(9736) | JNDI(8992) |JNDI(1099) |RMI(8992) | 
+| egovModelExtractMBean | RMI(8992)  |||| 
+| egovScheduleExtractMBean | RMI(8992)  |||| 
+| egovEhCacheExtractMBean| RMI(8992) |||| 
+
+
+? RMI Port는 WAS의 rmi 설정시 8992를 권장하며 JNDI Port는 WAS 설치시 부여되는 Default값으로 지정하였다.
+
+==== Infrared를 통한 모니터링 개념도 ====
+어플리케이션 모니터링은 오픈소스 성능 모니터링툴인 InfraRED를 기반으로 기능을 확장하였다.\\ 
+InfraRED( http://infrared.sourceforge.net )는 Servlet filter 및 Aspect를 이용하여 성능 측정을 위한 데이터를 수집하고, 데이터 분석 결과를 보여주는 역할을 수행한다.  
+
+{{:egovframework:oe2:가이드:infrared-architecture.png|}}
+
+InfraRED는 기본적으로 Agent, Collector, GUI로 구성되어 있다.
+
+  * Agent : 모니터링 대상서버에 설치된 어플리케이션 실행시 수행되는 이벤트에 대한 데이터를 수집하고 통합한 후, Collector에게 전송하는 역할을 수행 
+  * Collector : 모니터링 관리서버에서 모니터링 대상서버의 Agent로부터 데이터를 전송받아 DB에 저장하는 기능 수행 
+  * GUI : 모니터링 관리서버에서 수집된 데이터를 관리자에게 다양한 형태로 보여주는 역할을 수행
+
+

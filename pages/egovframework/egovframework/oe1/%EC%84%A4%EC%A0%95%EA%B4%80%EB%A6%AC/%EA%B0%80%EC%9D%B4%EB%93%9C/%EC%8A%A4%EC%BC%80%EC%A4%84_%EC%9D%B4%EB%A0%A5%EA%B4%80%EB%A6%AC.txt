@@ -1,0 +1,96 @@
+====== 스케줄 이력관리 ======
+
+===== 1. 개요 ======
+스케줄 이력관리는 개발 프로젝트에서 스케줄링 서비스를 사용하고 있을 때, 현재 스케줄링 되고 있는 대상 클래스들의 목록을 조회 하고,
+실제 스케줄링 대상 클래스들의 실행이 제대로 이루어 졌는지에 대한 이력을 관리하기 위한 기능이다.
+
+스케줄 이력관리 기능을 사용하려면 실제 개발 프로젝트의 개발 환경 혹은 운영환경의 WAS 에서 스케줄 이력 기능이 설치되어야 하기 때문에
+Jetty 로 다른 WAS 에서 실행시킬 수 있는  WAR 파일로 직접 배포되는 설정관리 도구에는 기능이 제외 되어 있다.
+
+
+===== 2. 동작 방식 ======
+스케줄 이력관리는 아래 그림과 같이 기존 스케줄링이 등록되어 있느 설정파일에 설정관리 도구에서 제공하는 Job, Trigger 리스너를 추가하여
+실제  Job 실행 시에 리스너가 감지하여 Logger 를 이용해 DB 에 이력을 관리하는 방식으로 동작한다.
+
+
+{{:egovframework:oe1:설정관리:가이드:스케줄이력관리설명1.jpg|}}
+
+===== 3. 설치 ======
+스케줄 이력 기능에 대한 설치는 공통 컴포넌트의 기능 처럼 해당 기능을 수행하는 클래스들을 커스터마이징 하여 프로젝트에 맞게 패키지 등을 수정할 수도 있고
+설정관리 도구에 포함되어 있는 대로 패키지 및 파일을 추가 하여 사용할 수도 있다.
+    * 설치 순서
+=== 설정파일에 리스너 추가 ===
+
+<code xml>
+
+<bean id="SchedulerFactory"
+	class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<property name="quartzProperties">
+		<props>
+			<prop key="org.quartz.threadPool.threadCount">3</prop>
+		</props>
+	</property>
+
+	<property name="triggers">
+		<list>
+			<ref bean="schedulerSampleService1Trigger" />
+			<ref bean="shceduleSampleService3Trigger" />
+			<ref bean="jobDetailBeanTrigger" />
+		</list>
+	</property>
+		
+    	<property name="globalTriggerListeners" ref="globalTriggerListener"/>
+    	<property name="globalJobListeners" ref="globalJobListeners"/>
+</bean>
+
+<bean id="globalTriggerListener"
+	class="egovframework.oe1.sms.schedule.service.EgovOe1SmsGlobalTriggerListener">
+	<property name="listenerType" value="Global" />
+</bean>
+
+<bean id="globalJobListeners"
+	class="egovframework.oe1.sms.schedule.service.EgovOe1SmsGlobalJobListener">
+	<property name="listenerType" value="Global" />
+</bean>
+</code>
+
+=== 리스너 클래스 추가 ===  
+
+^ Class ^ 패키지 ^ 설 명 ^
+|EgovOe1SmsGlobalJobListener | egovframework.oe1.sms.schedule.service | 스케줄링 Job 실행을 관장하는 Listener 클래스|
+|EgovOe1SmsGlobalTriggerListener | egovframework.oe1.sms.schedule.service | 스케줄링 Job Trigger Listener 클래스|
+
+=== 스케줄링 관련 클래스 추가 ===  
+
+^ Class ^ 패키지 ^ 설 명 ^
+|EgovOe1SmsScheduleController |egovframework.oe1.sms.schedule.web | 스케줄링 이력관리를 위한 컨트롤러 클래스|
+|EgovOe1SmsSchedulingService |egovframework.oe1.sms.schedule.service | 스케줄링 이력 관리를 위한 서비스 Interface|
+|EgovOe1SmsSchedulingServiceImpl |egovframework.oe1.sms.schedule.service.impl | 스케줄링 Job 이력 관리를 위한 Service Impl 클래스|
+|EgovOe1SmsScheduleLogUtil |egovframework.oe1.sms.schedule.service.impl | 스케줄링 Job 이력을 DB 에 저장하기 위한 로그 Util 클래스|
+|EgovOe1SmsScheduleDAO |egovframework.oe1.sms.schedule.service.impl | 스케줄링 Job 이력 관리를 위한 DAO 클래스|
+
+
+=== 화면 구성 === 
+화면 구성은 아래 페이지를 참고하여 프로젝트의 표준에 맞추어 사용하기를 권고한다.
+
+^ 화면ID ^ 패키지 ^ 설 명 ^
+|EgovSmsSchedulingList.jsp |/jsp/egovframework/oe1/sms/schedule/ | 스케줄링 현황 목록|
+|EgovSmsSchedulingDetail.jsp |/jsp/egovframework/oe1/sms/schedule/ | 스케줄링 현황 상세조회|
+|EgovOe1SmsScheduleHistList.jsp |/jsp/egovframework/oe1/sms/schedule/ | 스케줄 이력 현황 목록|
+
+    * 스케줄링 현황 목록
+
+{{:egovframework:oe1:설정관리:가이드:스케줄링_목록.jpg|}}
+
+    * 스케줄링 현황 상세조회
+{{:egovframework:oe1:설정관리:가이드:스케줄링_상세_정보.jpg|}}
+
+    * 스케줄 이력 현황 목록
+{{:egovframework:oe1:설정관리:가이드:스케줄링_이력조회.jpg|}}
+
+=== DB 생성 및 쿼리 추가 ===
+설정관리 도구에서 DB가 사용되는 부분은, 스케줄 이력관리 부분이다. 테이블은 2개로 구성되며, DDL 및 적용 쿼리를 4개 DB 밴더(Mysql, Oracle, Altibase, Tibero)에 맞추어 제공한다.
+
+^ Table ^ 설명 ^
+|EGOVOE1SMSTIDS |ID generation 을 위한 테이블 |
+|EGOVOE1SMSTNSCHELOG |스케줄링 대상 클래스의 이력정보를 위한 테이블 |

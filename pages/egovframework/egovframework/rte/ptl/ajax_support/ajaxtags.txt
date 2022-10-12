@@ -1,0 +1,45 @@
+====== AjaxTags ======
+===== 개요 =====
+일반적으로 Ajax 기능은 javascript 언어로 개발하나, server-side 구현에 익숙한 J2EE 개발자들에게는 쉽지 않은 작업일 수 있다.\\
+AjaxTags도 javascript로 Ajax 기능을 실행하지만, 이용하는 개발자에게 JSP Tag Library 형태의 API만을 노출시키고 필요값만을 입력받음으로써 쉽게 Ajax기능을 구현할 수 있도록 하고 있다. \\
+===== 설명 =====
+==== 설치 ====
+=== 시스템 환경 및 필요 라이브러리 ===
+  * JDK 1.5
+  * Servlet container running Servlets 2.4+ and JSP 2.0+ (jsp-api 2.0,servlet-api 2.4)
+  * [[http://ajaxtags.sourceforge.net|AjaxTags 라이브러리]]
+=== 설치 순서 ===
+  - [[http://sourceforge.net/project/showfiles.php?group_id=140499|AjaxTags Download 사이트]]에 가서 해당 라이브러리를 download한 후 WEB-INF/lib에 위치시킨다.
+  - web.xml 설정.  <code>
+        <servlet>
+		<servlet-name>sourceloader</servlet-name>
+		<servlet-class>net.sourceforge.ajaxtags.servlets.SourceLoader</servlet-class>
+
+		<init-param>
+			<param-name>prefix</param-name>
+			<param-value>/ajaxtags</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>sourceloader</servlet-name>
+		<url-pattern>/ajaxtags/js/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>sourceloader</servlet-name>
+		<url-pattern>/ajaxtags/img/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>sourceloader</servlet-name>
+		<url-pattern>/ajaxtags/css/*</url-pattern>
+	</servlet-mapping>
+</code>  해당 tld 파일은 jar안에 포함되어 있으므로 web.xml에 별도로 <taglib> 지정을 해 줄 필요가 없다.
+
+==== Tag Reference ====
+AjaxTags가 지원하는 reference는 이곳(http://ajaxtags.sourceforge.net/usage.html)을 참조하라.
+
+=== ajax:autocomplete ===
+
+===== 참고자료 =====

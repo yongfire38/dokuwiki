@@ -1,0 +1,75 @@
+====== [적용 예] Validation ======
+
+===== 개요 =====
+[[egovframework:rte:ptl:security:jakarta_commons_validator|Validation]] Service 를 적용해서 필수값 및 주민등록번호를 체크한다.
+
+===== 설명 =====
+==== Configuration ====
+=== WEB_INF\config\egovframework\validator\validator.xml ===
+<code xml>
+<form-validation>
+    <formset>
+        <form name="cvplUserVO">
+            <field property="userId" depends="required">
+                <arg0 key="cvplUserVO.userId" />
+            </field>
+            <field property="password" depends="required">
+                <arg0 key="cvplUserVO.password" />
+            </field>
+            <field property="passwordCnfirm" depends="required">
+                <arg0 key="cvplUserVO.passwordCnfirm" />
+            </field>
+            <field property="userName" depends="required">
+                <arg0 key="cvplUserVO.userName" />
+            </field>            
+            <field property="ihidnum" depends="ihidnum">
+                <arg0 key="cvplUserVO.ihidnum" />
+            </field>            
+            <field property="email" depends="email">
+                <arg0 key="cvplUserVO.email" />
+            </field>
+        </form>
+        .
+        .
+        .
+    </formset>
+</form-validation>
+</code>
+==== Source ====
+=== WEB_INF\jsp\egovframework\rte\cvpl\EgovCvplUserRegister.jsp ===
+<code java>
+<!--For Commons Validator Client Side-->
+<script type="text/javascript" src="<c:url value="/cmmn/validator.js"/>"></script>
+<validator:javascript formName="cvplUserVO" staticJavascript="false" xhtml="true" cdata="false"/>
+
+<script type="text/javaScript" language="javascript" defer="defer">
+<!--
+function fn_egov_save_cvpluser(frm) {
+	
+	if(!validateCvplUserVO(frm)){
+        return;
+    }else{
+    	.
+    	.
+    	.
+    }
+}
+-->
+</script>
+.
+.
+.
+<tr>
+    <th><spring:message code="cvplUserVO.userId"/></th>
+    <td><form:input path="userId" cssClass="essentiality" maxlength="10" readonly="true" />
+    &nbsp;<form:errors path="userId" /></td>
+</tr>
+<tr>
+    <th><spring:message code="cvplUserVO.password"/></th>
+    <td><form:password path="password" cssClass="txt" maxlength="50" showPassword="true"/>
+    &nbsp;<form:errors path="password" /></td>
+</tr>
+.
+.
+.
+</code>

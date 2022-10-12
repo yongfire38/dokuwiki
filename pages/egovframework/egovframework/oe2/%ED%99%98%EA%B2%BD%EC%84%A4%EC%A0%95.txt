@@ -1,0 +1,71 @@
+===== 개요 =====
+ 어플리케이션 모니터링 Agent는 다음과 같은 환경 설정을 갖고 있다. 
+
+===== 어플리케이션 모니터링 Agent 환경 설정파일 구성 =====
+
+==== 1. 모니터링 에이전트 속성 ====
+   
+<표 1.1.1 모니터링 속성>
+^Property^Description^Default Value^
+|enable-monitoring|해당 어플리케이션에 대한 모니터링 여부를 정의한다. false일 경우, 어플리케이션 성능 모니터링이 수행되지 않는다.| true|
+|jdbc-monitoring-enable|해당 어플리케이션의 JDBC 실행에 대한 모니터링 여부를 정의한다.|true|
+|enable-call-tracing|전자정부표준프레임워크 Monitoring Tool을 통해 실행 순서대로 기록될 것인지 정의한다. 어플리케이션 API 실행 순서를 트리 구조로써 보여준다. |true|
+|prune-threshold|전자정부표준프레임워크 Monitoring Tool이 표현할 수 있는 한계 시간(milliseconds)을 정의한다. 실행 시간이 지정된 milliseconds보다 적을 경우 표현되지 않는다. |-1|
+|last-invocations-to-trace|전자정부표준프레임워크 Monitoring Tool의 Last Invocations 페이지에 표현할 Invocation 개수를 정의한다. |5|
+|prepared-statement-monitoring-enable|PreparedStatement 표현시 해당 쿼리문의 인자값을 함께 표현할 것인지를 정의한다.|true|
+|enable-user-monitoring|해당 어플리케이션의 사용자 정보 (로그인id, os, browser, 업무시스템) 모니터링 여부를 정의한다.|true|
+|contextFlushSize|사용자 정보 모니터링 Flush size |500|
+|enable-exception-monitoring|해당 어플리케이션의 오류 정보 (Exception) 모니터링 여부를 정의한다.|true|
+|collection-strategy|수집된 데이터를 표현하기 위한 strategy가 정의된 class명을 정의한다. 전자정부표준프레임워크 Monitoring Tool은 현재 net.sf.infrared.agent.transport.impl. CentralizedCollectionStrategy만을 추가 지원한다. default로 적용되는 DoNothingCollectionStrategy는, 이름에서 알 수 있듯이 아무것도 수행하지 않는다. |egovframework.oe2.agt.aggregator.transport.impl.CentralizedCollectionStrategy|
+|collection-strategy.ccs.remotehost|전자정부표준프레임워크 모니터링서버의 ip를 정의한다. 모니터링 대상 어플리케이션으로부터 수집된 데이터는 Socket을 통해 Collertor에게 flush된다. |localhost|
+|collection-strategy.ccs.port|전자정부표준프레임워크 Monitoring Tool의 Collector가 listening할 대상 port를 정의한다. |7777|
+|collection-strategy.ccs.flush-frequency|Remotehost에서 모니터링 대상 어플리케이션의 데이터가 Collector에 flush되는 주기를 정의한다. flush되는 주기값은 양호한 성능을 위해서 최적화될 필요가 있다. 그 값이 클수록 저장할 통계값이 커지고, 이에 따라 더 많은 메모리가 필요할 것이다. 반면에 주기값이 낮으면, 빈번한 network traffic을 유발할 수 있게 된다. |30000|
+|collection-strategy.ccs.pool|Collector가 flush되기 전에 Thread Pool이 수집된 데이터를 유지할 것인지를 정의한다. |false|
+|collection-strategy.ccs.pool. maxThreads|Thread pool에서 허용 가능한 thread의 최대 개수를 정의한다. collection-strategy.ccs.pool 속성이 true일 경우에만 적용할 수 있다. |1|
+|collection-strategy.ccs.pool.buffer-length|유지가능한 element의 수를 알려주는 pool buffer의 용량을 정의한다. collection-strategy.ccs.pool 속성이 true일 경우에만 적용할 수 있다. |100|
+
+다음은 위에서 언급한 속성을 포함하고 있는 infrared-agent.properties 파일의 내용이다.
+
+<code:xml>
+#  The sample infrared-agent.properties
+
+enable-monitoring = true
+enable-call-tracing = true
+jdbc-monitoring-enable = true
+prune-threshold = -1
+last-invocations-to-trace = 5
+prepared-statement-monitoring-enable = true
+jdbc-fetch-statistics = true
+enable-exception-monitoring = true
+enable-user-monitoring = true
+only-user-monitoring = true
+
+collection-strategy = egovframework.oe2.agt.aggregator.transport.impl.CentralizedCollectionStrategy
+collection-strategy.ccs.remotehost = localhost
+collection-strategy.ccs.port = 7777  
+collection-strategy.ccs.pool = false
+collection-strategy.ccs.flush-frequency = 30000
+#collection-strategy.ccs.pool.maxThreads = 1
+#collection-strategy.ccs.pool.buffer-length = 100	 
+
+</code>
+
+==== 2. 모니터링 도구 속성  ====
+
+
+ 모니터링 서버에서 어플리케이션 모니터링이 정상적으로 작동하는 지 확인할 수 있으며 주요 확인 항목은 다음과 같다. 
+
+<표 2.1 어플리케이션 주요 모니터링 항목>
+
+^항목^설명^
+|총 실행 시간|한 번의 호출에 대한 총 경과 시간|
+|호출 횟수|총 실행 횟수|
+|평균 시간|호출을 처리하기 위해 소요된 평균 실행 시간|
+|최소, 최대 실행 시간|실행 시간중 가장 적게 걸린 시간과 가장 오래 걸린 시간|
+|최초, 최후 실행 시간|여러번의 호출들 중에서 최초 혹은 최후의 실행에 대한 실행 시간|
+
+===== 참조 URL =====
+
+  * http://infrared.sourceforge.net/versions/latest/
+  * http://dev.anyframejava.org/docs/monitoring/1.0.0/reference/htmlsingle/monitoring.html
+

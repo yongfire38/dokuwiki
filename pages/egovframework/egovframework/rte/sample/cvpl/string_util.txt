@@ -1,0 +1,19 @@
+====== [적용 예] String Util ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:string_util|String Util]] Service 중 문자열을 다루는 EgovStringUtil Service 적용한다.
+
+Substring을 적용 전체 String 중 일부를 가져온다. 
+
+===== 설명 =====
+=== egovframework\rte\cvpl\service\impl\EgovCvplUserServiceImpl.java ===
+<code java>
+.
+.
+.
+strIhidnum1 = EgovStringUtil.toSubString(strDecrypt, 0, 6);
+strIhidnum2 = EgovStringUtil.toSubString(strDecrypt, 6);
+.
+.
+.
+</code>

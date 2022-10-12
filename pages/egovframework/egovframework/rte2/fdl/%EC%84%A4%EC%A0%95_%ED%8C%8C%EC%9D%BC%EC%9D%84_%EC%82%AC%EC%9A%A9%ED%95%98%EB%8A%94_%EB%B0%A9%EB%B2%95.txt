@@ -1,0 +1,135 @@
+====== Log4j 환경 설정[설정 파일을 사용하는 방법] ======
+
+===== 개요 =====
+
+Log4j 환경 설정을 위하여 설정 파일을 사용하는 방법이다. 자바의 프로퍼티 형식, XML 형식 두가지로 나누어서 기술한다.
+
+
+===== 설명 =====
+=== 설정 파일을 사용하는 방법[자바 프로퍼티 형식] ===
+
+<code>
+# properties 파일 사용하는 법
+</code>
+
+애플리케이션에서 각 클래스는 각각의 로거를 가지거나 공통의 로거를 가질 수 있다.
+
+Log4j는 모든 로거가 상속할 수 있는 루트 로거를 제공한다.
+
+log4j.properties를 만들때도 맨 위에 필요한 것이 루트로거에 대한 내용이다.
+
+== 사용 예시 ==
+
+<code xml>
+#log4j.rootLogger=DEBUG, A1
+log4j.rootLogger=OFF, A1
+log4j.appender.A1=org.apache.log4j.ConsoleAppender
+log4j.appender.A1.layout=org.apache.log4j.PatternLayout
+log4j.appender.A1.layout.ConversionPattern=[%d{yyyy-MM-dd HH:mm:ss}] - %m%n
+</code>
+
+
+=== 설정 파일을 사용하는 방법[log4j.properties 파일을 이용한 초기화] ===
+
+필요한 로깅 요소를 포함하는 log4j.properties 파일을 만들어 이를 통해 초기화 하는 것이다.
+아래 예는 INFO 레벨로 oef.apache.log4j.ConsoleAppender를 사용하여 콘솔에 메시지를 출력하는 설정 파일이다.
+
+== 사용 예시 ==
+<code xml>
+[Log4j.properties]
+# A basic log4j configuration file that creates a single
+console appender
+# Create a single console appender that logs INFO and higher
+log4j.rootLogger=INFO, stdout
+# Configure the stdout appender to go to the console
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+# Configure the stdout appender to use the PatternLayout
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+# Pattern to output the caller's filename and line number.
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] (%F:%L) - %m%n
+</code>
+
+
+이 설정은 하나의 Appender 즉 System.out으로만 메시지를 출력하는 ConsoleAppender를 사용한다.
+
+log4j.properties 파일은 WEB-INF/classes 폴더에 설치해야 하며 다중 애플리케이션 환경일 경우 각 애플리케이션 별로 log4j.properties를 설치 할 수 있다.
+
+아래의 log4j.properties 파일은 메시지의 레벨과 다른 파라미터들을 기반으로 하여 여러 Appender에 로그 메시지를 기록하도록 설정 하는 예이다.
+콘솔에도 출력하고 out.log 파일에도 메시지를 출력한다.
+
+== 사용 예시 ==
+
+<code xml>
+[Log4j.properties]
+# A sample log4j configuration file
+# Create two appenders, one called stdout and the other called rolling
+log4j.rootLogger=DEBUG, stdout, rolling
+
+# Configure the stdout appender to go to the console
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+
+# Configure the stdout appender to use the PatternLayout
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+
+# Pattern to output the caller's filename and line number
+log4j.appender.stdout.layout.ConversionPattern=%5p [%t] (%F:%L)- %m%n
+
+# Configure the rolling appender to be a RollingFileAppender
+log4j.appender.rolling=org.apache.log4j.RollingFileAppender
+
+# Configure the name of the logout for the rolling appender
+log4j.appender.rolling.File=output.log
+
+# Set up the maximum size of the rolling log file
+log4j.appender.rolling.MaxFileSize=100KB
+
+# Keep one backup file of the rolling appender
+log4j.appender.rolling.MaxBackupIndex=1
+
+# Configure the layout pattern and conversion pattern for the rolling appender
+log4j.appender.rolling.layout=org.apache.log4j.PatternLayout
+log4j.appender.rolling.layout.ConversionPattern=%d{ABSOLUTE} - %p %c - %m%n
+</code>
+
+=== 설정 파일을 사용하는 방법[Log4j의 초기화] ===
+Log4j.properties 처럼 XML 파일 역시 WEB-INF/classes 폴더에 위치한다.
+그리고 파일이름은 반드시 log4j.configuration 시스템 프로퍼티에 지정하여 어떤 파일을 로딩 할것인지를 알게 해야한다.
+
+Log4j.configuration 파일에서 프로퍼티를 설정 하는 방법은 다음과 같다.
+
+<code>
+set CATALINA_OPTS=-Dlog4j.configuration=log4j.xml
+</code>
+또는 자바 명령행에서 지정하는 것도 가능 합니다.
+<code>
+java -Dlog4j.configuration=log4j.xml
+</code>
+
+== 사용 예시 ==
+
+<code xml>
+[log4j.xml]
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration
+xmlns:log4j='http://jakarta.apache.org/log4j/'>
+<appender name="stdout"
+class="org.apache.log4j.ConsoleAppender">
+<layout class="org.apache.log4j.PatternLayout">
+<param name="ConversionPattern" value="%5p [%t] (%F:%L)- %m%n"/>
+</layout>
+</appender>
+<root>
+<priority value ="INFO" />
+<appender-ref ref="stdout" />
+</root>
+</log4j:configuration>
+</code>
+
+참고로 log4j.xml 파일의 위치를 /WEB-INF/class 에서 상대적으로 지정하지 않고 파일 시스템의 절대 경로를 사용 하기 위해서는 다음과 같이 합니다.
+<code>
+java -Dlog4j.configuration=file:/c:/dev/env/log4j.xml
+</code>
+
+===== 참고자료 =====
+[[http://logging.apache.org/index.html|Apache Logging Services Project]]

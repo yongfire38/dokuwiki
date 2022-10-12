@@ -1,0 +1,64 @@
+====== Server Security ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:server_security|Server Security]] Service 를 적용해서 로그인을한다.
+
+===== 설명 =====
+==== Configuration ====
+=== web.xml ===
+<code xml>
+<filter>
+	<filter-name>springSecurityFilterChain</filter-name>
+	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+
+<filter-mapping>
+	<filter-name>springSecurityFilterChain</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+</code>
+=== resources\spring\context-security.xml ===
+<code xml>
+<http access-denied-page="/system/accessDenied.do" path-type="regex" lowercase-comparisons="false">
+    <form-login login-processing-url="/j_spring_security_check"
+                authentication-failure-url="/cvpl/egovCvplLogin.do?login_error=1"
+                default-target-url="/index.jsp"
+                login-page="/cvpl/egovCvplLogin.do" />
+    <anonymous/>
+    <logout logout-success-url="/index.jsp"/>
+    <concurrent-session-control max-sessions="1" exception-if-maximum-exceeded="false" expired-url="/EgovCvplLogout.jsp" />
+</http>
+</code>
+==== Source ====
+=== WEB_INF\jsp\egovframework\rte\cvpl\EgovCvplLogin.jsp ===
+<code java>
+<script type="text/javaScript" language="javascript" defer="defer">
+<!--
+function fn_egov_login() {
+	if(FormValidation(document.loginForm) != false) {
+	    document.loginForm.action="<c:url value='/j_spring_security_check'/>";
+	    document.loginForm.flag.value = "L";
+	    document.loginForm.submit();
+	}
+}
+-->
+</script>
+.
+.
+.
+<input type='text' name='j_username' 
+    <c:if test="${not empty param.login_error}">
+        value='<c:out value="${SPRING_SECURITY_LAST_USERNAME}"/>'
+    </c:if>
+        class='ct_input_g' style='width:180px; height:19px' required fieldTitle='ID' maxLength='50'>          
+</input>
+.
+.
+.
+<input type="password" name="j_password" class="ct_input_g" style="width:180px; height:19px" 
+    required fieldTitle="Password" maxLength="50" 
+    onKeyPress="if(event.keyCode==13) fn_egov_login();">
+.
+.
+.
+</code>

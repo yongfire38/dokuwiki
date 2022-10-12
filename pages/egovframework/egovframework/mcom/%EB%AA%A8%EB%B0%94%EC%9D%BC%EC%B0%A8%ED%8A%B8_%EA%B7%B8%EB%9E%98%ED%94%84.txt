@@ -1,0 +1,372 @@
+====== 디지털 자산관리 - 모바일차트/그래프 ======
+
+===== 개요 =====
+모바일 차트/그래프는 차트/그래프 데이터를 모바일 화면을 통해 Line, Column, Pie, Scatter, Bar 차트/그래프 형태로 출력할 수 있는 기능을 제공한다. \\
+
+모바일 차트/그래프는 HTML5에서 제공하는 CANVAS 요소를 사용하여 자바스크립트를 통해 벡터 그래픽을 화면을 그릴 수 있다. 이를 통해 서버측 기술이나 \\
+플래시, 기타 플러그인이 어려운 모바일 환경에서 차트/그래프를 표현할 수 있다.
+
+ * 기능흐름
+
+{{:egovframework:mcom:mcg_flow.jpg?800}}
+
+본 컴포넌트의 모바일 화면은 모바일 디바이스에 탑재된 브라우저를 대상으로 개발 및 테스트 검증이 완료되었다. \\
+또한 동일 제조사의 동일한 브랜드라도 PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 \\
+개발시 유의가 필요함을 밝혀둔다.
+
+검증 대상 디바이스와 브라우저로는 각각 갤럭시S2, 갤럭시S, iPad2, iPhone4, 갤럭시탭1 등의 디바이스와 \\
+android용 웹 브라우저, Firefox, Safari, opera mobile 등의 모바일 브라우저를 사용하였다.
+
+검증결과는 아래와 같다.
+
+Android \\
+android용 웹 브라우저, Firefox(6.xx), opera mobile은  android OS 2.3(gingerbread) 에서 HTML5, CSS3 및 컴포넌트의 \\
+실행이 안정적으로 실행되는 것을 확인 하였다. \\
+반면 android OS 2.3(gingerbread) 하위 브라우저인 android 2.1, 2.2에서는 컴포넌트 실행에 있어 매끄럽지 못한 HTML5, CSS3 지원으로 인하여 \\
+컴포넌트의 UI 구현이 원할하지 못한 모습을 보였다. 
+
+opera mobile의 경우 UI처리시 색상 및 이벤트 처리에 문제를 야기하였으며 \\
+그로인해 opera mobile은 3종 지원브라우저 대상에서 제외 되었다. \\
+테스트 모바일 디바이스로는 갤럭시, 갤럭시S2, 갤럭시탭1을 채택하였다.
+
+iOS \\
+iOS는 3종 지원브라우저 대상중 하나로 Safari 4.2, 4.3 버전에서 검증을 하였으며 비교적 원활한 HTML5, CSS3를 지원을 하였다.\\
+테스트 모바일 디바이스로는 iPhone4, iPad2를 채택하였다.
+
+===== 설명 =====
+모바일차트/그래프는 크게 차트/그래프의 데이터 관리기능인 **차트/그래프 데이터 목록조회, 상세조회, 등록, 수정, 삭제**로 구성되어 있으며,\\
+서버에 저장된 데이터를 기반으로 5가지의 차트/그래프를 출력하는 **차트/그래프 조회** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:mcom:mcg_class.jpg?800}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.mbl.com.mcg.web.EgovChartGraphController.java|모바일차트/그래프 Controller Class|
+|Service|egovframework.mbl.com.mcg.service.EgovChartGraphService.java|모바일차트/그래프 Service Class|
+|ServiceImpl|egovframework.mbl.com.mcg.service.impl.EgovChartGraphServiceImpl.java|모바일차트/그래프 ServiceImpl Class|
+|Model|egovframework.mbl.com.mcg.service.ChartGraph.java|모바일차트/그래프 Model Class|
+|VO|egovframework.mbl.com.mcg.service.ChartGraphVO.java|모바일차트/그래프 컨텐츠 VO Class|
+|DAO|egovframework.mbl.com.mcg.service.impl.ChartGraphDAO.java|모바일차트/그래프 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mcg/EgovChartGraphList.jsp|차트/그래프 데이터 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mcg/EgovChartGraphRegist.jsp|차트/그래프 데이터 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mcg/EgovChartGraphUpdt.jsp|차트/그래프 데이터 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mcg/EgovChartGraphDetail.jsp|차트/그래프 데이터 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mcg/EgovMobileChartGraph.jsp|모바일차트/그래프 조회 페이지|
+|QUERY XML|resources/egovframework/sqlmap/mbl/com/mcg/EgovChartGraph_SQL_XXX.xml|모바일차트/그래프 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/mbl/com/mcg/EgovChartGraph.xml|모바일차트/그래프 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|모바일차트/그래프 Message properties|
+|Idgen XML|resources/egovframework/spring/com/context-idgen.xml|모바일차트/그래프 Id생성 Idgen XML|
+
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 MCG_ID (차트/그래프 데이터 아이디) 항목을 추가해야 한다. 
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|차트/그래프 데이터|COMTNCHARTGRAPH|차트/그래프 데이터를 관리|
+
+== 로그인/회원관리/권한관리 ==
+
+모바일 차트/그래프는 **모바일 차트/그래프 데이터 목록조회, 상세조회, 등록, 수정, 삭제**에서 관리자 인증이 필요하다.\\
+인증을 위해 로그인/회원관리/권한관리 컴포넌트와 연계하여 사용할 수 있다.
+Spring Security를 통해 인증을 할 경우 다음과 같이 변경하면 된다.
+
+== src/main/java/resources/egovframework/spring/com/context-egovuserdetailshelper.xml ==
+
+<code xml>
+    <!--인증된 유저의 LoginVO, 권한, 인증 여부를 확인 할 수있는 서비스 클래스-->
+    <bean id="egovUserDetailsHelper" class="egovframework.com.cmm.util.EgovUserDetailsHelper">
+        <property name="egovUserDetailsService">
+            <ref bean="egovUserDetailsSecurityService" />
+        </property> 
+    </bean>
+
+    <!-- 시큐리티를 이용한 인증을 사용할 빈 -->
+    <bean id="egovUserDetailsSecurityService" class="egovframework.com.sec.ram.service.impl.EgovUserDetailsSecurityServiceImpl"/>
+</code>
+
+== web.xml ==
+
+<code xml>
+    <!-- 2. 스프링 시큐리티 설정-->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.security.ui.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    <!-- security 끝 -->
+
+    <!-- 4. Spring Security 로그아웃 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLogoutFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<url-pattern>/uat/uia/actionLogout.do</url-pattern>
+    </filter-mapping>
+
+    <!-- 4. Spring Security 로그인 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<url-pattern>*.do</url-pattern>
+    </filter-mapping>
+</code>
+web.xml에 위 내용과 같은 Spring Security 관련 필터를 추가 하여야 한다.
+
+로그인/회원관리/권한관리에 대한 자세한 내용은 다음을 참조한다.
+
+  * 로그인 : [[egovframework:일반_로그인#일반로그인]]
+  * 회원관리 : [[egovframework:사용자_관리|사용자관리]]
+  * 권한관리 : [[egovframework:권한관리|권한관리]]
+
+사용자/관리자 권한이 필요한 페이지는 다음과 같다.
+^권한 종류^페이지 경로^설명^
+|관리자|/mbl/com/mpa/selectChartGraphList.mdo|모바일 차트/그래프 데이터 목록조회 화면|
+|관리자|/mbl/com/mpa/selectChartGraph.mdo|모바일 차트/그래프 데이터 상세조회 화면|
+|관리자|/mbl/com/mpa/goChartGraphRegist.mdo|모바일 차트/그래프 데이터 등록 화면|
+|관리자|/mbl/com/mpa/insertChartGraph.mdo|모바일 차트/그래프 데이터 등록|
+|관리자|/mbl/com/mpa/goChartGraphUpdt.mdo|모바일 차트/그래프 데이터 수정 화면|
+|관리자|/mbl/com/mpa/updateChartGraph.mdo|모바일 차트/그래프 데이터 수정|
+|관리자|/mbl/com/mpa/deleteChartGraph.mdo|모바일 차트/그래프 데이터 삭제|
+
+==== 설정 및 주의사항 ====
+* 현재 배포된 모바일 공통컴포넌트는 HTML5, CSS3를 적용하고 있다.\\
+* 그에 따라, 현재 모바일OK, W3C의 모바일 웹 사이트 유효성 검사의 표준에 맞지 않으며, 정확한 유효성 검사에 대한 문의는 해당 전문기관에 문의가 필요하다.\\
+* 현재 배포된 모바일 공통컴포넌트 V 2.0은 소스코드에 대한  보안성 검증이 완료 되었다.\\
+
+===== 관련기능 =====
+모바일 차트/그래프는 크게 일반사용자가 사용하는 **모바일차트/그래프 조회** 기능 및 관리자가 사용하는 **차트/그래프 데이터 목록조회**,\\ 
+**차트/그래프 데이터 상세조회**, **차트/그래프 데이터 등록**, **차트/그래프 데이터 수정**, **차트/그래프 데이터 삭제** 기능으로 구성되어있다.
+
+==== 모바일차트/그래프 조회 ====
+
+=== 비즈니스 규칙 ===
+서버에 저장된 차트/그래프 데이터를 기준으로 사용자의 선택에 따라 5가지의 차트/그래프를 조회할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|차트/그래프 조회|/mbl/com/mcg/selectMobileChartGraphList.mdo|selectMobileChartGraphList|"ChartGraphDAO.selectChartGraphList"|
+
+^모바일차트/그래프 조회 메인화면^모바일차트/그래프 조회 선택화면^
+|{{:egovframework:mcom:egovmobilechartmain.jpg|메인화면}}|{{:egovframework:mcom:egovmobilechartcheck.jpg|선택화면}}|
+
+^Line 차트/그래프 조회화면^Column 차트/그래프 조회화면^
+|{{:egovframework:mcom:egovmobilechart_line.jpg|Line 차트/그래프}}|{{:egovframework:mcom:egovmobilechart_column.jpg|Column 차트/그래프}}|
+
+^Pie 차트/그래프 조회화면^Scatter 차트/그래프 조회화면^
+|{{:egovframework:mcom:egovmobilechart_pie.jpg|Pie 차트/그래프}}|{{:egovframework:mcom:egovmobilechart_scatter.jpg|Pie 차트/그래프}}|
+
+^Bar 차트/그래프 조회화면^
+|{{:egovframework:mcom:egovmobilechart_bar.jpg|Bar 차트/그래프}}|
+
+=== 차트/그래프 설정 ===
+
+== src/main/webapp/js/egovframework/mbl/mcg/mcg.js ==
+<code>
+	// 기본 설정
+	var maxChartGraph = 5;						// 최대 표현 차트 색
+	var chartGraphColor = [	"#ECD078",				// 차트색 (총 5종)
+        	       		"#D95B43",
+               			"#C02942",
+               			"#542437",
+               			"#53777A" ];
+	var defaultWidth = 500;						// 기본 사이즈(넓이)
+
+	// Line 차트/그래프
+	var scale_rect = [50*ratio, 50*ratio, 300*ratio, 300*ratio];	// 위치(X, Y좌표) 및 사이즈(Width, Height)
+	var y_value_interval = 200;					// Y축 눈금 값의 간격
+	var line_width = 5*ratio;					// 선 굵기
+	var radius = 5*ratio;						// 점의 반지름
+
+	// Column 차트/그래프
+	var scale_rect = [50*ratio, 50*ratio, 300*ratio, 300*ratio];	// 위치(X, Y좌표) 및 사이즈(Width, Height)
+	var y_value_interval = 200;					// Y축 눈금 값의 간격
+	var x_margin = 5*ratio;						// X축 눈금 간 여백
+	var x_bar_interval = 2*ratio;					// X축 막대 간 간격
+
+	// Pie 차트/그래프
+	var center_x = 200*ratio;					// 중점의 X좌표
+	var center_y = 200*ratio;					// 중점의 Y좌표
+	var radius = 150*ratio;						// 반지름
+	var lastend = Math.PI*(3.0/2.0);				// Pie 시작 위치 지정
+	var line_color = "#FFF";					// 구분선 색
+	var line_width = 2*ratio;					// 구분선 굵기
+
+	// Scatter 차트/그래프
+	var scale_rect = [50*ratio, 50*ratio, 300*ratio, 300*ratio];	// 위치(X, Y좌표) 및 사이즈(Width, Height)
+	var x_value_interval = 1;					// X축 눈금 값의 간격
+	var y_value_interval = 200;					// Y축 눈금 값의 간격
+	var radius = 5*ratio;						// 점의 반지름
+
+	// Bar 차트/그래프
+	var scale_rect = [50*ratio, 50*ratio, 300*ratio, 300*ratio];	// 위치(X, Y좌표) 및 사이즈(Width, Height)
+	var x_value_interval = 200;					// X축 눈금 값의 간격
+	var y_margin = 5*ratio;						// Y축 눈금 간 여백
+	var y_bar_interval = 2*ratio;					// Y축 막대 간 간격
+
+	// 눈금선
+	var main_line_color = "#000";					// 메인 눈금선 색
+	var assist_line_color = "#CCC";					// 보조 눈금선 색
+	var main_line_width = 2*ratio;					// 메인 눈금선 굵기
+	var assist_line_width = 1*ratio;				// 보조 눈금선 굵기
+	var font_size = 15*ratio + "px";				// 폰트 크기
+	var font_name = "sans-serif";					// 폰트명
+	var font_style = "bold";					// 폰트 스타일
+	var x_line_margin = 10;						// X축 눈금값 여백
+	var y_line_margin = 40*ratio;					// y축 눈금값 여백
+	var x_label_position = 0.2;					// x축 눈금값 위치 조정 (0~1 : 값에 따라 눈금값 이동)
+
+	// 범례
+	var start_x = 400*ratio;					// 시작 위치의 X좌표
+	var start_y = 50;						// 시작 위치의 Y좌표
+	var interval = 20;						// 범례 간격
+	var mark_size = 15*ratio;					// 마크 크기
+	var mark_interval = 5*ratio;					// 마크와 범례명 간격
+	var font_size = 15*ratio + "px";				// 폰트 크기
+	var font_name = "sans-serif";					// 폰트명
+	var font_style = "bold";					// 폰트 스타일
+
+	* ratio 변수는 실제 단말기 화면 사이즈에 따른 차트/그래프 사이즈 변화를 위한 변수이다.
+</code>
+
+각 차트/그래프의 설정은 위 자바스크립트 파일 내 설정 변수들을 수정하여 변경할 수 있다.
+
+==== 차트/그래프 데이터 목록조회 ====
+
+=== 비즈니스 규칙 ===
+조회조건으로 목록조회를 할 수 있고, 등록버튼을 클릭하면 차트/그래프 등록 화면으로 이동하여 새로운 데이터를 등록할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/mbl/com/mcg/selectChartGraphList.mdo|selectChartGraphList|"ChartGraphDAO.selectChartGraphList"|
+| |/mbl/com/mcg/selectChartGraphList.mdo|selectChartGraphListTotCnt|"ChartGraphDAO.selectChartGraphListTotCnt"|
+|등록|/mbl/com/mcg/goChartGraphRegist.mdo|goChartGraphRegist| |
+|목록클릭|/mbl/com/mcg/selectChartGraph.mdo|selectChartGraph|"ChartGraphDAO.selectChartGraph"|
+
+차트/그래프 데이터 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 범례명, X축값, Y축값에 대해서 수행된다.\\ 
+페이지 당 검색 범위를 변경하고자 하는 경우 context-properties.xml 파일의 pageUnit, pageSize를 변경한다.\\
+(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:mcom:egovchartlist.jpg|데이터 목록조회}}
+
+조회: 차트/그래프 데이터를 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색어를 입력 후 조회 버튼을 클릭한다. \\
+등록: 차트/그래프 데이터를 등록하기 위해서는 상단의 등록 버튼을 통해서 **차트/그래프 데이터 등록** 화면으로 이동한다. \\
+목록클릭: **차트/그래프 데이터 상세조회** 화면으로 이동한다.
+
+==== 차트/그래프 데이터 상세조회 ====
+
+=== 비즈니스 규칙 ===
+차트/그래프 데이터 목록조회에서 목록 클릭 시 이동되는 화면으로 차트/그래프 데이터에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^Action^URL^Controller method^QueryID^
+|수정|/mbl/com/mcg/goChartGraphUpdt.mdo|goChartGraphUpdt| |
+|삭제|/mbl/com/mcg/deleteChartGraph.mdo|deleteChartGraph|"ChartGraphDAO.deleteChartGraph"|
+|목록|/mbl/com/mcg/selectChartGraphList.mdo|selectChartGraphList|"ChartGraphDAO.selectChartGraphList"|
+
+차트/그래프 데이터 상세조회화면을 통해 차트/그래프 데이터 수정, 차트/그래프 데이터 삭제, 차트/그래프 데이터 목록조회를 할 수 있다.
+
+{{:egovframework:mcom:egovchartdetail.jpg|데이터 상세조회}}
+
+수정: 수정버튼 클릭 시 차트/그래프 데이터를 수정할 수 있는 ** 차트/그래프 데이터 수정 **화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **차트/그래프 데이터 목록조회** 화면으로 이동한다.
+
+==== 차트/그래프 데이터 등록 ====
+
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 반드시 입력해야할 항목을 표시한다. \\
+
+- 저장처리 시 MCG_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 자동으로 부여된다.\\
+  Primary Key => MCG_ID : 일련번호로 자동생성 부여된다.
+
+	<bean name="egovChartGraphIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="MCG_ID"/>
+	</bean>		
+
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/mbl/com/mcg/insertChartGraph.mdo|insertChartGraph|"ChartGraphDAO.insertChartGraph"|
+|목록|/mbl/com/mcg/selectMobileChartGraphList.mdo|selectMobileChartGraphList|"ChartGraphDAO.selectChartGraphList"|
+
+차트/그래프 데이터에 관한 기본정보를 입력 저장처리한다.
+
+{{:egovframework:mcom:egovchartregist.jpg|데이터 등록}}
+
+등록: 입력한 차트/그래프 데이터가 저장 처리된다. \\
+목록: **차트/그래프 데이터 목록조회** 화면으로 이동한다.
+
+==== 차트/그래프 데이터 수정 ====
+
+=== 비즈니스 규칙 ===
+입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/mbl/com/mcg/updateChartGraph.mdo|updateChartGraph|"ChartGraphDAO.updateChartGraph"|
+|목록|/mbl/com/mcg/selectChartGraphList.mdo|selectChartGraphList|"ChartGraphDAO.selectChartGraphList"|
+
+입력한 차트/그래프 데이터를 저장 처리한다.
+
+{{:egovframework:mcom:egovchartupdt.jpg}}
+
+수정: 수정 입력한 차트/그래프 데이터가 저장 처리된다. \\
+목록: **차트/그래프 데이터 목록조회** 화면으로 이동한다.
+
+===== 참고자료 =====
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]
+  * 관련 데이터베이스 구조 및 스키마 : [[모바일_관련_데이터베이스_구조_및_스키마|관련 데이터베이스 구조 및 스키마]]

@@ -1,0 +1,454 @@
+===== 개요 =====
+에이전트는 WAS의 CPU 현황, 메모리 현황, Thread 현황 및 프레임워크에 기반한 스케쥴 정보와 프레임워크 모델정보를 모니터링하는 MBean 에이전트와 어플리케이션의 각 Layer 별 성능 및 오류를 모니터링하는 어플리케이션 에이전트로 구성된다.\\
+MBean 에이전트와 어플리케이션 에이전트는 모니터링 대상 서버에 설치되며, 각 에이전트별 설치절차를 따라 진행한다. 
+
+===== MBean 모니터링 Agent 설치 절차 =====
+
+
+^NO^단계^확인사항^
+|1| 모니터링 대상 WAS RMI Port 설정| 정의된 Port 통신 확인 |
+|2| monitoring-mbean.jar 설치 | context-monitoring-mbean.xml 정의 |
+|3| 설치확인 | JAVA SDK에 내장된 jconsole 실행 | 
+
+==== 1. 모니터링 대상 WAS RMI Port 설정 ==== 
+
+모니터링 대상 서버의 IP를 192.168.100.87이고 RMI Port는 8992라고 임의로 정의하였다. (모니터링 대상 서버의 IP를 localhost나 127.0.0.1로 지정할 경우 외부에서 접속이 불가함.)
+
+=== 1. JEUS 설정 ===
+JEUSMain.xml
+<code:XML>
+<engine-container>
+…
+<command-option> 
+-Djava.rmi.server.hostname=192.168.100.87
+-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.port=8992 
+-Dcom.sun.management.jmxremote.authenticate=false 
+-Dcom.sun.management.jmxremote.ssl=false
+</command-option>
+</code>
+
+=== 2. WebLogic 설정 ===
+startWeblogic.sh
+<code>
+JAVA_OPTIONS="
+-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.port=8992 
+-Dcom.sun.management.jmxremote.ssl=false 
+-Dcom.sun.management.jmxremote.authenticate=false 
+-Djava.rmi.server.hostname=192.168.100.87" 
+</code>
+
+=== 3. JBoss 설정 ===
+startJboss.sh
+<code>
+JAVA_OPTS="
+-Dcom.sun.management.jmxremote
+-Dcom.sun.management.jmxremote.port=8992
+-Dcom.sun.management.jmxremote.authenticate=false
+-Dcom.sun.management.jmxremote.ssl=false
+-Djava.rmi.server.hostname=192.168.100.87"
+</code>
+
+=== 4. Tomcat 설정 ===
+<del>
+.profile
+
+CATALINA_OPTS="
+-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.port=8992  
+-Dcom.sun.management.jmxremote.authenticate=false  
+-Dcom.sun.management.jmxremote.ssl=false
+-Djava.rmi.server.hostname=192.168.100.87"</del>
+
+
+모니터링 대상 WAS RMI Port 설정하고 정의된 Port WAS 부팅후 netstat -na | grep [rmi port]로 rmi port 떠 있는지 확인
+
+
+==== 2. monitoring-mbean.jar 설치 ==== 
+모티터링 대상 서버의 WEB-INF에 jar를 설치하고 환경 설정 xml파일을(context-monitoring-mbean.xml) 정의한다.
+모니터링 대상 서버에 여러개의 Application 이 등록 된 경우 Application 별로 ScheduleExtractMBean과 CacheInfoMBean을 다른 export 명으로 등록하여야 하며 ModelExtractMBean 은 한개의 Application 에만 등록하여야 한다.
+<code:XML>
+ <!-- MBean Server 등록 -->
+  <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean"/>
+  <!-- MBean Export 에서 등록한 beans 에 export 명 지정 -->
+  <bean id="namingStrategy" class="org.springframework.jmx.export.naming.KeyNamingStrategy">
+    <property name="mappings">
+      <props>       
+        <!--  ModelExtractMBean은 하나의 Container 에 하나만 등록-->
+        <prop key="ModelExtractMBean">bean:name=EgovModelExtractMBean</prop>  
+        <!--  ScheduleExtractMBean, CacheInfoMBean 은 Application별 다른 이름으로 등록-->
+        <prop key="ScheduleExtractMBean">bean:name=EgovScheduleExtractMBean</prop>         
+        <prop key="CacheInfoMBean">bean:name=EgovCacheExtractMbean</prop>         
+        <prop key="InfraredProperties">bean:name=InfraredProperties.egovframework-portal(renew)</prop>    
+      </props>   
+    </property>
+  </bean>
+  <!-- spring bean 을 JMX Mbean Server 에 등록  -->
+   <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
+    <property name="beans">
+      <map>
+        <entry key="ModelExtractMBean" value-ref="ModelExtractMBean"/>
+        <entry key="ScheduleExtractMBean" value-ref="ScheduleExtractMBean"/>        
+        <entry key="CacheInfoMBean" value-ref="CacheInfoMBean" />
+        <entry key="InfraredProperties" value-ref="InfraredProperties" />
+      </map>
+    </property>
+    <property name="namingStrategy" ref="namingStrategy"/>      
+  </bean>
+
+  <!-- 운영서버에서 호출할 대상 MBean 클래스 등록 -->
+  <bean id="ModelExtractMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovModelExtractMBeanImpl"></bean>
+  <bean id="ScheduleExtractMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovScheduledExtractMBeanImpl"></bean>
+  <bean id="CacheInfoMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovCacheInfoMBeanImpl"></bean>   
+  <bean id="InfraredProperties" class="egovframework.oe2.agt.aggregator.setup.InfraredProperties">  	 
+	<constructor-arg ref="monitorConfig" />
+  </bean>
+</code>
+
+==== 3. 설치확인 (jconsole 실행 테스트 수행) ==== 
+
+실행 테스트 순서는 RMI Port 접속 확인과 기본 MBean 노출 확인, 설치한 monitoring-mbean.jar의 순서로 수행하여 각 단계별 문제를 발견 및 해결 할 수 있다.
+
+=== RMI Port 접속 확인 ===
+{{:egovframework:oe2:설치:rmi.png|}}\\
+JAVA SDK에 내장된 jconsole.exe를 실행하고 "Advanced" 탭 JMX URL란에 <nowiki>"service:jmx:rmi:///jndi/rmi://서버IP:RMI포트/jmxrmi"</nowiki> 입력하여 접속(서버 IP : RMI Port,기본 8992) 테스트 수행하여 RMI Port에 정상적으로 떠있을 경우 확인할 수 있다.
+
+=== MBean Export 확인 ===
+{{:egovframework:oe2:설치:jconsole_rmi.png|}}\\
+정상적일 경우 기본 내장된 MBean이 노출됨을 확인할 수 있다.
+
+=== monitoring-mbean.jar 설치 확인 ===
+{{:egovframework:oe2:설치:jconsole_wasagent.png|}} \\
+정상적으로 설치된 경우 EgovCacheExtractMbean, EgovModelExtractMbean, EgovScheduleExtractMbean MBean이 노출됨을 확인할 수 있다.
+
+
+===== MBean 종류 별 RMI/ Default JNDI PORT  =====
+
+^MBean 종류^ JEUS ^ JBoss ^ WebLogic ^ Tomcat ^
+|Operating System & RunTime| RMI(8992) |||| 
+| Memory | RMI(8992) |||| 
+| Load Class | RMI(8992)  |||| 
+| Garbage Collection| RMI(8992)  |||| 
+| JDBC  | JNDI(9736) | JNDI(1099) |JNDI(7001) |RMI(8992) | 
+| Session | JNDI(9736) | JNDI(1099) |JNDI(7001) |RMI(8992) | 
+| Thread | JNDI(9736) | JNDI(1099) |JNDI(7001) |RMI(8992) | 
+| egovModelExtractMBean | RMI(8992)  |||| 
+| egovScheduleExtractMBean | RMI(8992)  |||| 
+| egovEhCacheExtractMBean| RMI(8992) |||| 
+** RMI Port는 8992를 권장하며 JNDI Port는 WAS에 위와 같이 Default값으로 저장되어 있다. 
+
+===== 참고자료 =====
+
+[[http://java.sun.com/j2se/1.5/pdf/rmi-spec-1.5.0.pdf|Java Remote Method Invocation 1.5.0 Specification ]] \\
+[[http://jcp.org/aboutJava/communityprocess/final/jsr154/index.html|JSR-000154 JavaTM Servlet 2.4 Specification ]]
+
+
+===== 어플리케이션 모니터링 Agent 설치 절차 =====
+
+ 전자정부표준프레임워크 모니터링 도구를 사용하여 특정 어플리케이션에 대한 모니터링을 수행하기 위해서는 다음과 같은 절차를 거쳐야 한다. 
+
+^NO^단계^확인사항^
+|1| monitoring-agent.jar 설치 | Maven Repository 또는 참조 library 추가 확인 |
+|2| 설정파일 구성 | 설정 파일 경로 확인 |
+|3| 설치확인 | 어플리케이션 동기화 또는 모니터링 정보 수신 확인 | 
+
+==== 1. monitoring-agent.jar 설치 ====
+
+  * 대상 어플리케이션에 Maven 을 사용할 경우 
+ Maven 설정 파일인 pom.xml 을 수정하여 간단히 설정할 수 있다. monitoring-agent.jar 가 참조하는 library 파일은 jar 파일 내부의 pom.xml 에 정의되어 있으므로 아래의 내용과 같이 수정하면 maven install, build 작업이 정상적으로 이루어진다. 
+
+<code:XML>
+  <dependencies> 
+  ...
+  <!-- Application Monitoring Agent -->
+   <dependency>
+      <groupId>egovframework.oe2</groupId>
+      <artifactId>monitoring-agent</artifactId>
+      <version>0.9</version>
+    </dependency>
+  ...
+    </dependencies>
+</code>
+
+  * 단, Maven 을 사용하지 않는 경우 
+ 현재 WAR 가 Deploy된 상태에서 직접 monitoring-agent.jar 파일을 설치할 경우, 전자정부 표준프레임워크 포탈 게시판으로부터 직접 다운받아 WEB-INF/lib 하위에 업로드시킨다. 이때, monitoring-agent.jar 가 기본적으로 참조하는 jar 파일도 함께 업로드해야 함을 유의한다. 
+
+^참조 라이브러리 파일^설명^필수 여부^
+|monitoring-agent.jar|어플리케이션 모니터링 엔진, AOP Aspect, 필터, 통신 등을 위해 필요|필수|
+|p6spy-1.3.jar|JDBC 모니터링을 위한 JDBC Connection 및 객체에 대한 Proxy 를 생성하기 위해 필요|필수|
+|concurrent-1.3.4.jar|POOL 설정시 참조하기 위한 라이브러리|선택|
+|standard-1.1.2.jar|사용자 모니터링을 위한 태그 적용시 참조하기 위한 라이브러리|선택|
+
+  * aspectjrt-1.6.2.jar, aspectjweaver-1.6.2.jar 등은 전자정부 프레임워크 프로젝트에 기본적으로 포함하고 있다. 
+
+==== 2. 설정파일 구성 ====
+
+=== 2.1. 모니터링 에이전트 속성 파일 : infrared-agent.properties ===
+   
+infrared-agent.properties 는 모니터링 여부를 정의하는 에이전트 설정 파일이다. 속성에 대해서는 [[egovframework:oe2:환경설정|환경설정 도움말]] 의 <표 2.1.1 모니터링 속성>을 참고한다.
+
+WEB-INF/classes 하위에 infrared-agent.properties 파일을 작성하며, 작성예시는 다음과 같다. 
+
+<code:xml>
+#  The sample infrared-agent.properties
+
+enable-monitoring = true
+enable-call-tracing = true
+jdbc-monitoring-enable = true
+prune-threshold = -1
+last-invocations-to-trace = 5
+prepared-statement-monitoring-enable = true
+jdbc-fetch-statistics = true
+enable-exception-monitoring = true
+enable-user-monitoring = true
+only-user-monitoring = true
+
+collection-strategy = egovframework.oe2.agt.aggregator.transport.impl.CentralizedCollectionStrategy
+collection-strategy.ccs.remotehost = localhost
+collection-strategy.ccs.port = 7777  
+collection-strategy.ccs.pool = false
+collection-strategy.ccs.flush-frequency = 30000
+#collection-strategy.ccs.pool.maxThreads = 1
+#collection-strategy.ccs.pool.buffer-length = 100	 
+
+</code>
+
+=== 2.2. 어플리케이션 API 모니터링 설정 파일 : context-monitoring-api.xml ====
+
+ 전자정부표준프레임워크에서는 비즈니스 레이어를 구성하는 서비스에 대한 호출 정보를 모니터링하기 위해 ApiAspect 클래스를 제공한다. 다음과 같이 설정하면 비즈니스 서비스 호출 정보를 모니터링할 수 있게 된다. 다음은 ApiAspect에 대한 속성 정보를 포함하고 있는 context-monitoring-api.xml 파일의 내용이다. 
+<code:xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+	
+	<bean id="egovframe_api_profiler" class="egovframework.oe2.agt.aggregator.aspects.ApiAspect">
+		<property name="layerName" value="APPLICATION_SERVICE"></property>
+	</bean>
+	<bean id="egovframe_api_profiler_aop_autowire" class="egovframework.oe2.agt.aggregator.aspects.ExclusiveBeanNameAutoProxyCreator">
+		<property name="beanNames" value="*Service" />
+		<property name="exclusiveBeanNames" value="egovframe_api_profiler" />
+		<property name="interceptorNames">
+			<list>
+				<value>egovframe_api_profiler</value>
+			</list>
+		</property>
+	</bean>
+</beans>
+</code>
+
+ 위의 설정에 따르면 *Service 로 정의된 비즈니스 API 에 대한 AOP Aspect 를 실행하도록 정의되어 있다. 
+
+=== 2.3. 어플리케이션 JDBC 모니터링 설정 파일 : context-monitoring-jdbc.xml ====
+
+
+전자정부표준프레임워크에서는 특정 쿼리문에 대한 실행 정보를 모니터링하기 위해 JdbcAspect 클래스를 제공한다. JdbcAspect는 수행되는 쿼리문이나 쿼리문 실행 시간을 체크하기 위한 Aspect이다. 따라서 모니터링 대상 어플리케이션 실행 시 JdbcAspect을 적용시키면 쿼리문 실행 영역을 모니터링할 수 있게 된다. 다음은 JdbcAspect에 대한 속성 정보를 포함하고 있는 context-monitoring-jdbc.xml 파일의 내용이다. 
+<code:xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-2.0.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+	
+	<bean id="egovframe_jdbc_profiler" class="egovframework.oe2.agt.aggregator.aspects.JdbcAspect">
+	</bean>
+	<bean id="egovframe_jdbc_profiler_aop_autowire" class="egovframework.oe2.agt.aggregator.aspects.ExclusiveBeanNameAutoProxyCreator">
+		<property name="beanNames" value="dataSource" />
+		<property name="exclusiveBeanNames" value="egovframe_jdbc_profiler" />
+		<property name="interceptorNames">
+			<list>
+				<value>egovframe_jdbc_profiler</value>
+			</list>
+		</property>
+	</bean>
+</beans>
+</code>
+
+위 속성 정의에 의하면, JdbcAspect은 egovframe_jdbc_profiler라는 이름의 Bean으로 정의되어 있다. 그리고 egovframe_jdbc_profiler_aop_autowire라는 Bean에 의 Bean 이름이 dataSource인 Bean 실행시마다 egovframe_jdbc_profiler라는 이름의 Bean을 interceptor로 작동하게 된다. 
+예외적으로 어떤 프로젝트에서는 dataSource 라는 이름을 사용하지 않는 경우도 있다. 이런 경우 다음과 같이 설정을 조정할 수 있다. 
+
+<code:xml>
+...
+	<property name="beanNames" value="[데이타소스 Bean 이름]" />
+...
+</code>
+
+
+=== 2.4. 어플리케이션 오류 모니터링 설정 : context-monitoring-aspect.xml ====
+
+전자정부표준프레임워크에서는 어플리케이션 오류 정보를 모니터링하기 위해 ExceptionAspect 클래스를 제공한다. 
+ExceptionAspect 는 Exception 발생시에 Exception 내용, Exception 발생 시간 등을 체크하기 위한 Aspect이다. 
+따라서 모니터링 대상 어플리케이션 실행 시 ExceptionAspect을 적용시키면 오류정보를 모니터링할 수 있게 된다. 
+ExceptionAspect 에 대한 설정은 전자정부 표준프레임워크에서 제공하는 context-monitoring-aspect.xml 을 사용한다. 
+context-monitoring-aspect.xml 에서 ExceptionHandler 설정을 다음과 같이 ExceptionAspect 로 연결되도록 변경한다. 
+
+<code:xml>
+...
+	<bean id="exceptionTransfer" class="egovframework.oe2.agt.aggregator.aspects.ExceptionAspect">
+	<!-- bean id="exceptionTransfer" class="egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer"-->
+		<property name="exceptionHandlerService">
+			<list>
+				<ref bean="defaultExceptionHandleManager" />
+				<ref bean="otherExceptionHandleManager" />
+			</list>
+		</property>
+	</bean>
+...
+</code>
+
+ExceptionAspect 는 기존에 제공하는 ExceptionTransfer 를 확장한 클래스이므로, 기존 Exception 처리에는 영향을 주지 않는다.
+
+=== 2.5. HTTP 모니터링 필터 설정 ====
+ 어플리케이션 HTTP 모니터링을 위해서는 WEB-INF/web.xml 에 다음과 같이 필터를 추가해 주어야 한다. 
+<code:xml>
+중략...
+<filter>
+        <filter-name>infrared</filter-name>
+        <filter-class>egovframework.oe2.agt.aggregator.aspects.EgovMonitoringServletFilter</filter-class>
+    </filter>
+<filter-mapping>
+        <filter-name>infrared</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+중략...
+</code>
+
+위 설정에 의하면 모든 .do로 끝나는 요청은 infrared라는 이름의 Filter를 통해 필터링됨으로써, 전자정부표준프레임워크 Monitoring Tool을 통해 모든 HTTP Request를 모니터링 할 수 있게 될 것이다. 
+
+=== 2.6. 어플리케이션 모니터링 에이전트 리스너 설정 ====
+
+어플리케이션 모니터링을 위해서는 WEB-INF/web.xml 에 다음과 같이 리스너를 등록시켜 주어야 한다. 
+
+<code:xml>
+중략...
+    <!-- Application Monitoring Listener Start -->
+    <listener>
+        <listener-class>egovframework.oe2.agt.aggregator.base.EgovMonitoringServletContextListener</listener-class>
+    </listener>
+    <!-- Application Monitoring Listener End -->
+중략...
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+...  
+</code>
+
+ * 위의 XML 코드를 추가할 때 ContextLoaderListener 설정 상단에 추가하는 것을 권장한다. ContextLoaderListener에 대한 선언 이후에 EgovMonitoringServletContextListener를 선언하는 경우 
+ 프로젝트에서 Spring Security 를 사용할 때 설정 오류가 발생하는 현상이 발견된다. 이것은 모니터링 엔진이 가동되지 않은 상태에서 Spring Security 설정에 의해 일부 어플리케이션 서비스가 
+ 호출되기 때문이다. 위의 예시처럼 설정하면 문제가 없다. 
+
+=== 2.7. 모니터링 속성 Bean 등록 : context-monitoring-mbean.xml ====
+ 어플리케이션 모니터링 에이전트 속성은 기본적으로 MBean 을 사용하여 원격에서 제어가능할 수 있도록 되어 있다. 설정파일에는 프레임워크 모니터링 항목 중 프레임워크 클래스, 스케쥴러, 캐쉬 모니터링의 MBean 설정이 되어 있다. 이는 MBean 모니터링 에이전트와 동일한 내용을 사용하고있으며, 다음과 같다. 
+
+<code:xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd">
+		
+	<bean id="monitorConfig"
+	class="egovframework.oe2.agt.aggregator.setup.impl.MonitorConfigImpl">
+		<constructor-arg value="infrared-agent.properties" />
+	</bean>
+  <!?만약 MBean 사용을 원하지 않을 경우의 주석처리 범위 시작 -->           
+  <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean"/>
+  <bean id="namingStrategy" class="org.springframework.jmx.export.naming.KeyNamingStrategy">
+    <property name="mappings">
+      <props>       
+        <prop key="ModelExtractMBean">bean:name=EgovModelExtractMBean</prop>  
+        <prop key="ScheduleExtractMBean">bean:name=EgovScheduleExtractMBean</prop>
+        <prop key="CacheInfoMBean">bean:name=EgovCacheExtractMbean</prop>
+        <prop key="InfraredProperties">bean:name=InfraredProperties</prop>    
+        
+      </props>   
+    </property>
+    <!--property name="mappingLocations">
+      <value>names1.properties,names2.properties</value>
+    </property-->
+  </bean>
+   <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
+    <property name="beans">
+      <map>
+        <entry key="ModelExtractMBean" value-ref="ModelExtractMBean"/>
+        <entry key="ScheduleExtractMBean" value-ref="ScheduleExtractMBean"/>        
+        <entry key="InfraredProperties" value-ref="InfraredProperties" />
+        <entry key="CacheInfoMBean" value-ref="CacheInfoMBean" />
+      </map>
+    </property>
+    <property name="namingStrategy" ref="namingStrategy"/>      
+  </bean>
+
+  <bean id="ModelExtractMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovModelExtractMBeanImpl"></bean>
+  <bean id="ScheduleExtractMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovScheduledExtractMBeanImpl"></bean>
+  <bean id="CacheInfoMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovCacheInfoMBeanImpl"></bean>	 
+  <!?--만약 MBean 사용을 원하지 않을 경우의 주석처리 범위 종료 ---->  
+  	<bean id="InfraredProperties" class="egovframework.oe2.agt.aggregator.setup.InfraredProperties">  	 
+		<constructor-arg ref="monitorConfig" />
+	</bean>
+</beans>
+</code>
+
+ 프로젝트 환경 특성으로 RMI를 이용한 MBean 모니터링 및 에이전트 속성 원격 관리를 원하지 않을 경우 위의 주석을 참고하여 Mbean 설정 부분을 주석처리한다. 
+ 단, MBean 설정을 주석처리할 경우 모니터링 서버에서 모니터링 에이전트 설정관리 기능이 불가능하다. MBean 사용을 원하지만, 일부 설정에 문제가 있는 경우 
+ MBean 모니터링 에이전트 도움말을 참조한다. 모니터링 서버의 모니터링 에이전트 설정관리 기능은 RMI 통신을 사용하는 데, RMI 연결 포트 설정에 관해서는 역시
+ MBean 모니터링 도움말을 참조한다. 
+
+ ==== 3. 설치확인 =====
+
+ 모니터링 에이전트를 설치한 이후에 모니터링 대상 어플리케이션을 실행하여 모니터링 정보를 정상적으로 송수신하는 지 확인하는 과정은 다음과 같다. 
+
+^NO^단계^확인사항^
+|1| 모니터링 대상 어플리케이션 실행 | 모니터링 설정에 따라 모니터링 항목별 정보 전송 |
+|2| 모니터링 서버 접속 | ID, PASSWORD 입력 후 로그인  | 
+|3| 어플리케이션 선택 후 모니터링 대상 선택 | 해당어플리케이션 선택  | 
+|4| 모니터링 항목별 확인 | 모니터링 설정에 따라 모니터링 항목별 화면 데이타 확인 | 
+
+ 아직 모니터링 서버에 모니터링 대상 어플리케이션 정보를 등록하지 않았으므로, 대상 어플리케이션 선택시에 '어플리케이션명(unknown)' 으로 조회된다. 
+ 어플리케이션 에이전트 원격 설정 관리, 데이타베이스 기반 조회, 기본 메인 화면에서의 관리, WAS 모니터링 등의 서비스를 정상적으로 이용하기 위해서는 
+ 어플리케이션 에이전트 정보를 다음과 같은 순서로 등록해 주어야 한다. 각각의 링크된 상세 페이지를 활용하여 정보를 등록하도록 한다.
+
+  - [[eGovframework:oe2:가이드:어드민:WAS관리:서버|서버 등록]] : 서버 정보를 입력한다.
+  - [[eGovframework:oe2:가이드:어드민:WAS관리:컨테이너|컨테이너 등록]] :컨테이너 정보를 입력한다.
+  - [[eGovframework:oe2:가이드:어드민:어플리케이션관리|어플리케이션 등록]] : 어플리케이션 정보를 입력한다.
+  - [[eGovframework:oe2:가이드:어드민:설정관리:어플리케이션 에이전트|어플리케이션 동기화]] : 어플리케이션 에이전트 설정을 동기화하고 조정한다.
+
+모니터링 대상 어플리케이션을 실행한 이후 모니터링 서버에서 다음 화면을 통해 어플리케이션 모니터링이 정상적으로 이루어지는 지 세부적으로 확인한다.
+
+    * [[eGovframework:oe2:가이드:어플리케이션:종합]]
+    * [[eGovframework:oe2:가이드:어플리케이션:HTTP 서비스]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:어플리케이션 서비스]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:JDBC 서비스]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:SQL 서비스]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:Exception]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:Sequence 현황]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:OS 사용현황]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:브라우저 사용현황]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:어플리케이션 선택]] 
+
+==== 4. 에이전트 부가 기능 ====
+
+ 어플리케이션 모니터링 에이전트는 다음과 같은 부가 기능을 추가로 지원한다. 
+ 다음 부가기능에 대한 추가 작업에 대해서는 해당 도움말을 활용한다.
+
+  * [[eGovframework:oe2:설치:에이전트 설치:에이전트 부가기능|서브시스템/업무 모니터링 기능]]
+  * [[eGovframework:oe2:설치:에이전트 설치:에이전트 부가기능|로그인 ID 모니터링 기능]]
+
+==== 5. 에이전트 설치 문제 해결 가이드 ====
+
+ SW프로젝트 특성상 설치환경의 변화로 인해서 모니터링 에이전트 설치시에 예외사항이 발생할 수 있다. 
+ 모니터링 에이전트 설치시에 발생한 문제 해결에 대해서는 다음 문제해결 가이드 도움말을 참고한다.
+
+  * [[eGovframework:oe2:설치:에이전트 설치:에이전트 문제해결가이드|어플리케이션 모니터링 에이전트 설치 문제 해결 가이드]]  
+
+===== 참조 URL =====
+
+  * http://infrared.sourceforge.net/versions/latest/
+  * http://dev.anyframejava.org/docs/monitoring/1.0.0/reference/htmlsingle/monitoring.html
+

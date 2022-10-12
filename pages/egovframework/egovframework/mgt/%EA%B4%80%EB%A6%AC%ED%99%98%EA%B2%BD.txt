@@ -1,0 +1,6 @@
+===== 관리환경 사용자 메뉴얼 =====
+
+  * [[eGovframework:mgt:SR 목록]]
+  * [[eGovframework:mgt:SR 요청]]
+  * [[eGovframework:mgt:공지사항 조회]]
+  * [[eGovframework:mgt:KDB 검색]]

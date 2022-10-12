@@ -1,0 +1,83 @@
+====== 모니터링 도구 Quick Start ======
+모니터링 도구는 전자정부 표준프레임워크 기반의 응용SW 구현 및 운영시 WAS성능 모니터링과 어플리케이션 성능 모니터링을 하기 위한 도구이다.\\ 
+구현시나 운영시 상용APM Tool과 같이 보완적으로 사용되거나, 독자적으로 간단한 WAS나 어플리케이션의 성능을 모니터링하는 용도로 설치가 되며, 제공하는 서비스로는 WAS의 CPU 현황, 메모리 현황, 쓰레드 현황 및 세션 현황과 어플리케이션의 각 Layer 별로 호출되는 시간 측정 및 횟수 정보를 모니터링함으로써 개발 및 운영 WAS의 성능을 최적화하거나 구현된 어플케이션의 성능을 최적하는데 지표로서 사용할 정보를 모니터링하는 도구이다. 
+
+본 Quick Start 가이드는 모니터링 도구를 간편하고 쉽게 설치를 할 수 있도록 중요한 내용만을 기반으로 작성되었으며 간편한 설치를 위하여 Tomcat(톰켓) + Hsql 환경을 기반으로 작성하였다.\\
+모니터링 도구의 상세설치 방법은 [[egovframework:oe2:설치:모니터링_도구_설치|모니터링 운영관리 도구설치]]페이지를 참조한다. 
+
+===== 설치환경 =====
+모니터링 도구는 아래와 같은 환경을 지원한다.
+
+* Web Container
+^WAS종류^ 버전^
+|TOMCAT| 6.x, 7.x|
+|JEUS | 6.0 fix5, 6.0 fix6|
+|WebLogic|9.2, 9.3, 10.2, 11G(10.3)|
+|JBoss|4.2.3, 5.1.0, 6.0.0 M5|
+
+* DBMS
+^DBMS종류 ^버전^
+|Oracle | 10G |
+|MySql | 5.0 |
+|Altibase| 5.1|
+|Tibero| 3.0(sp2)|
+|Hsql | 1.8.0|
+
+* JVM
+^JVM종류^ 버전^
+|Sun JDK| HotSpot(TM) 1.5, 1.6|
+|IBM JDK| IBM J2RE 1.5.0, 1.6|
+|HP JDK| HP JDK 1.5.0, 1.6|
+|BEA JDK | BEA JDK 1.5.0, 1.6|
+
+===== 모니터링 도구 설치=====
+모니터링 도구 설치절차는 다음과 같이 나누어진다.
+
+
+^NO^단계^설치대상^확인사항^
+|1| 모니터링 운영관리도구(monitoring-web.war) 배포 |모니터링관리서버| jarfile is not loaded library 확인 |
+|2| 에이전트 설치 | 모니터링대상서버|Mbean 에이전트 설정, 어플리케이션 에이전트 설정|
+
+==== 1.monitoring-web.war 배포 ====
+   * 다운로드한 monitoring-web.war 파일을 [CATALINA_HOME]/webapps 폴더에 복사한다.
+   * 톰캣을 시작하면 자동으로 [CATALINA_HOME]/webapps/monitoring-web/ 폴더가 생성된다.
+   * 톰캣을 시작하고 콘솔창에서 정상적으로 시작되었는지 확인한다. 정삭적으로 시작되었으면 http://localhost:8080/monitoring-web으로 접속하여 모니터링 로그인 화면이 나타나는지 확인한다.
+=== ===   
+{{:egovframework:oe2:설치:login.jpg}}
+
+==== ====   
+   * 처음 설치하면 기본적으로 admin/admin으로 접속이 가능하다.접속을 하면 다음과 같은 메인화면이 나타난다. 현재 에이전트가 설치 되지 않았으므로, 표시되는 데이터가 없다.
+=== ===   
+{{:egovframework:oe2:설치:main.jpg}}
+
+==== 2.에이전트 설치 ====
+   에이전트는 monitoring-web.war를 설치한 서버가 아닌 모니터링할 대상 서버에 설치를 한다.
+   quick start guide 에서는 대상서버가 tomcat 일 경우를 가정해서 기술하였으며 기타 다른 서버의 경우는 에이전트 설정 을 참조하도록 한다. 
+
+   * [CATALINA_HOME]/bin/catalina.bat 파일에 CATALINA_OPTS를 설정한다.
+=== ===
+== ==
+<code>
+
+set CATALINA_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8992 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1
+
+</code>
+
+
+==== ====
+   * Mbean 에이전트를 설치하기 전에 모니터링 할 프로젝트를 WAR로 패킹하여 [CATALINA_HOME]/webapps 폴더에 복사한다.
+   * 톰캣을 시작하면 자동으로 [CATALINA_HOME]/webapps/프로젝트/ 폴더가 생성된다.
+   * 에이전트의 상세한 설치방법은 [[egovframework:oe2:설치:에이전트_설치|에이전트 설치]]를 참고한다.
+
+
+===== 실행확인 =====
+모니터링 도구의 실행을 확인하기 위해서는 모니터링 운영관리 도구에 모니터링 대상 서버와 어플리케이션 정보를 등록한다.\\
+등록하는 절차와 상세한 내용은 다음과 같다.
+
+   * 모니터링 대상 서버의 정보를 등록한다.           [[egovframework:oe2:가이드:어드민:was관리:서버|서버 등록]]참조
+   * 모니터링 대상 컨테이너 정보를 등록한다.          [[egovframework:oe2:가이드:어드민:was관리:컨테이너|컨테이너 등록]]참조
+   * 모니터링 대상 어플리케이션 정보를 등록한다.      [[egovframework:oe2:가이드:어드민:어플리케이션관리|어플리케이션 등록]]참조
+   * 모니터링 대상 Mbean 에이전트를 설정한다.        [[egovframework:oe2:가이드:어드민:설정관리:mbean_에이전트|Mbean 에이전트 설정]]참조
+   * 모니터링 대상 어플리케이션 에이전트를 설정한다.   [[egovframework:oe2:가이드:어드민:설정관리:어플리케이션_에이전트|어플리케이션 에이전트 설정]]참조
+   * 모니터링 대상 어플리케이션을 선택한다.           [[egovframework:oe2:가이드:어플리케이션:어플리케이션_선택|어플리케이션 선택]]참조
+

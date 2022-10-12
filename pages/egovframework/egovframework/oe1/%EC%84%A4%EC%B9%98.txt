@@ -1,0 +1,127 @@
+====== 커뮤니케이션 도구 설치 ======
+===== 1. 개요 ======
+커뮤니케이션 도구는 의사소통관련 데이터를 관리하기 위해 필요한 테이블생성을 위한 DDL 실행 및 시스템 운영을 위한 기초데이터 생성, 시스템을 실행하기 위한 WAR 파일 배포 등으로 이루어진다.
+
+===== 2. 설치 ======
+
+==== 설치 순서 ==== 
+  - 데이터를 관리하기 위해 필요한 테이블생성을 위한 DDL을 실행한다.
+  - 시스템운영을 위해 필요한 기초데이터 생성 쿼리를 실행한다.
+  - WAR 파일을 WAS의 해당위치로 디플로이 한다.
+  - WAR 파일이 풀린 위치에서 설정파일의 설정 값을 환경에 맞게 수정한다.
+  - WAS를 기동시킨 후 커뮤니케이션시스템에 접속하여 사용자계정으로 로그인 한다.
+  - 운영정보관리의 행정용어사전목록화면에서 행정용어엑셀데이터를 업로드하여 일괄등록한다.
+
+
+==== 설치 예 ==== 
+
+
+**[ DDL 실행 ]**
+    * 57개의 테이블이 생성된다.
+   
+    
+
+**[ 기초데이터 입력 ]**
+    * 14개의 테이블에 기초데이터를 생성한다.
+    
+
+
+WAR 소스를 WAS에 디플로이 한 후 WAR 파일이 풀린 위치에서 아래와 같이 설정값을 수정한다.
+
+**[ DB 프로퍼티 수정 ]**
+    * [소스경로]\WEB-INF\classes\egovframework\property\globals.properties 파일에서 아래와 같이 사용할 DB를 설정한다. (예시: ORACLE DB 사용)
+<code properties>  
+# DB서버 타입(ORACLE, MYSQL) - datasource 및 sqlMap 파일 지정에 사용됨
+#Globals.DbType = mysql
+Globals.DbType = oracle
+#Globals.DbType = altibase
+#Globals.DbType = tibero
+</code>  
+
+
+
+**[ DATASOURCE 수정 ]**
+    * [소스경로]\WEB-INF\classes\egovframework\spring\context-datasource.xml 파일에서 아래와 같이 사용할 DATASOURCE의 url, username, password를 설정한다.
+
+<code properties> 
+<!-- mysql -->
+  <bean id="dataSource-mysql" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+      <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+      <property name="url" value="jdbc:mysql://192.168.200.24:1621/oe1"/>
+      <property name="username" value="oe1"/>
+      <property name="password" value="oe1dev"/>
+  </bean>
+  
+<!-- Oracle -->
+  <bean id="dataSource-oracle" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+      <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+      <property name="url" value="jdbc:oracle:thin:@192.168.200.22:1521:egovfrm"/>
+      <property name="username" value="rte"/>
+      <property name="password" value="rte01"/>
+  </bean>
+
+<!-- Altibase -->
+<bean id="dataSource-altibase" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<property name="driverClassName" value="Altibase.jdbc.driver.AltibaseDriver"/>
+	<property name="url" value="jdbc:Altibase://192.168.200.22:1721/egovfrm?encoding=UTF-8" />
+	<property name="username" value="rte"/>
+	<property name="password" value="rte01"/>
+	<property name="maxActive" value="10"/>
+</bean>
+
+<!-- Tibero -->
+<bean id="dataSource-tibero" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<property name="driverClassName" value="com.tmax.tibero.jdbc.TbDriver"/>
+	<property name="url" value="jdbc:tibero:thin:@192.168.200.22:1821:egovfrm" />
+	<property name="username" value="rte"/>
+	<property name="password" value="rte"/>
+</bean>
+</code> 
+
+
+
+**[ FILE UPLOAD 및 Excel 템플릿 경로 수정 ]**
+    * [소스경로]\WEB-INF\classes\egovframework\spring\context-properties.xml 파일에서 아래와 같이 FILE UPLOAD 경로를 설정한다.  
+<code properties> 
+<property name="properties">
+    <map>
+    	<entry key="pageUnit" value="10"/>
+    	<entry key="pageSize" value="10"/>
+    	<entry key="Globals.fileStorePath" 
+    	       value="/user/oe/files/cms/"/>
+    	<entry key="Globals.excleStorePath" 
+    	       value="/product/jeus3/webhome/was3_oe1/cms_web/egovoe1_egovoe1-webapp_war___/files/excelTemplet/"/>
+    </map>
+</property>
+</code>   
+
+
+    * 설정해야 할 entry에 대한 설명은 다음과 같다.
+    
+^ entry key ^ 설 명 ^
+|Globals.fileStorePath  | 커뮤니케이션 도구에서 첨부파일을 업로드 할 서버의 물리적 위치|
+|Globals.excleStorePath  | 커뮤니케이션 도구에서 사용하는 엑셀템플릿 위치로 위의 예시에서 \\ **"/product/jeus3/webhome/was3_oe1/cms_web/egovoe1_egovoe1-webapp_war___"** 는 \\ WAR가 풀린 소스 경로이며 **"/files/excelTemplet/"** 부분은 수정없이 사용|  
+
+    * 위에서 설정한 엑셀템플릿 위치에서 아래의 파일이 존재하는 것을 확인한다.    
+    
+^ 파일명 ^ 설 명 ^
+|StandardTermStatus.xls  | 용어사전 엑셀 업로드 다운로드 템플릿|
+|StandardWordStatus.xls  | 단어사전 엑셀 업로드 다운로드 템플릿| 
+|EgovStandardTermStatus.xls  | 행정용어사전 엑셀 업로드 다운로드 템플릿| 
+
+
+
+**[ 커뮤니케이션 도구에 접속하여 테스트 계정으로 로그인 ]**
+    * 정상적으로 서버가 기동되어 로그인 하면 커뮤니케이션 도구 메인화면이 아래와 같이 나온다.(default id : test, password : 1)
+
+{{:egovframework:oe1:cms_setting_01.jpg|}}
+
+
+
+**[ 행정용어사전 엑셀 데이터를 IMPORT ]**
+    * 운영정보관리>행정용어사전 메뉴에서 제공된 행정용어사전 엑셀 데이터를 일괄등록 한다.
+
+{{:egovframework:oe1:cms_setting_02.jpg|}}
+
+{{:egovframework:oe1:cms_setting_03.jpg|}}
+    

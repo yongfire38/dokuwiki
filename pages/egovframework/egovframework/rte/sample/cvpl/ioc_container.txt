@@ -1,0 +1,40 @@
+====== Ioc Container ======
+
+===== 개요 =====
+클래스에서 의존관계에 놓인 다른 컴포넌트를 사용할 때 
+[[egovframework:rte:fdl:ioc_container|Ioc Container]] Service 를 이용한다.
+
+기존 XML로 표현하던 클래스간의 의존관계는 Annotation을 적용하여 설정하는 방법을 사용한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-common.xml ===
+<context:component-scan> 등록에 포함하거나 제외할 클래스를 정의하기 위해서 filter 설정을 추가한다.
+
+<code xml>
+...
+<context:component-scan base-package="egovframework">
+   <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+</context:component-scan>
+...
+</code>
+
+
+의존관계에 있는 컴포넌트를 Annotation으로 정의한다. XML의 경우와 달리 Setter method 가 없어도 된다.
+=== egovframework\rte\cvpl\service\impl\EgovCvplUserServiceImpl.java ===
+<code java>
+@Service("cvplUserService")
+public class EgovCvplUserServiceImpl extends AbstractServiceImpl implements EgovCvplUserService {
+    ...
+    @Resource(name="cvplUserDAO")
+        private CvplUserDAO cvplUserDAO;
+    ...
+}
+</code>
+=== egovframework\rte\cvpl\service\impl\cvplUserDAO.java ===
+<code java>
+@Repository("cvplUserDAO")
+public class CvplUserDAO extends EgovAbstractDAO {
+    ...
+}
+</code>

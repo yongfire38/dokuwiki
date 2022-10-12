@@ -1,0 +1,40 @@
+====== Spring Web Flow  ======
+
+===== 개요 =====
+Spring Web Flow는 Spring MVC를 기반으로\\
+ 웹 어플리케이션에서 Flow의 정의에 집중하여 구현할 수 있는 Spring 기반의 Web  Application의 모듈이다.\\
+
+Flow란 대부분의 웹 어플리케이션에서 사용자들은 필요한 업무를 수행하면서 여러 페이지들를 동일한 순서대로 사용하는 경우가 있는데,\\ 
+ 이러한 업무순서에 따른 화면의 흐름을 Flow라고 한다.
+
+Spring Web Flow는 Flow Definition Language를 제공하여\\
+ 화면의 흐름을 정의하여 화면의 흐름을 쉽게 파악하고 제어하는데 용이하다.\\
+ 또 정의된 Flow를 재사용할 수 있다.
+
+===== 설명 =====
+
+== 시작하기 ==
+
+    * [[eGovframework:RTE3:BSL:Getting Started|Hello World]] 
+
+== Spring Web Flow==
+
+    * [[eGovframework:RTE3:BSL:Flow Definition]] 
+    * [[eGovframework:RTE3:BSL:Expression Language]] 
+    * [[eGovframework:RTE3:BSL:Rendering Views]] 
+    * [[eGovframework:RTE3:BSL:Executing actions]]
+    * [[eGovframework:RTE3:BSL:Flow Inheritance]]
+
+== Configuration ==
+
+    * [[eGovframework:RTE3:BSL:Setting System|SWF 시스템 설정]] 
+    * [[eGovframework:RTE3:BSL:With Spring MVC|Spring Web Flow 와 MVC 연동]] 
+    * [[eGovframework:RTE3:BSL:Securing Flows]] 
+    * [[eGovframework:RTE3:BSL:Flow Managed Persistence]]
+
+===== N. 참고자료 =====
+  * [[http://projects.spring.io/spring-webflow/|Spring Web Flow Project]]
+  * [[http://docs.spring.io/spring-webflow/docs/2.3.3.RELEASE/reference/html/|Spring Web Flow 2.3.3 Reference ]]
+  * [[http://richweb.springframework.org/swf-booking-faces/spring/intro|Spring Web Flow Demo]]
+  * [[http://whiteship.me/?cat=2340|Whiteship's Note]]
+  * Spring Web-Flow Framework Reference beta with Korean (by 박찬욱)

@@ -1,0 +1,34 @@
+====== [적용 예] Marshalling/Unmarshalling ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:marshalling_unmarshalling|Marshalling/Unmarshalling]] Service 를 적용해서 사용자 등록 할 경우 사용자 정보를  XML Mashalling 한다.
+
+XML Mashalling 한 사용자 등록 정보를 Unmarshalling 한 후에 DB에 저장 한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-common.xml ===
+<code xml> 
+<bean id="castorMarshaller" class="org.springframework.oxm.castor.CastorMarshaller"/>
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\web\EgovCvplUserController.java ===
+<code java>
+/** Marshaller */
+@Resource(name = "castorMarshaller")
+private Marshaller marshaller;
+
+FileOutputStream os = null;
+os = new FileOutputStream(propertiesService.getString("marshallingDir") + "cvplUserMarshalling.xml");			
+StreamResult sr = new StreamResult(os);
+this.marshaller.marshal(cvplUserVO, sr);
+
+/** UnMarshaller */
+@Resource(name = "castorMarshaller")
+private Unmarshaller unmarshaller;
+
+FileInputStream is = null;
+CvplUserVO cvplUserVO = null;			
+is = new FileInputStream(propertiesService.getString("marshallingDir") + "cvplUserMarshalling.xml");			
+cvplUserVO = (CvplUserVO) this.unmarshaller.unmarshal(new StreamSource(is));
+</code>

@@ -1,0 +1,23 @@
+====== 개별예제 설치법 ======
+
+===== 설치 순서 =====
+==== 기본순서====
+전자정부 표준프레임워크 홈페이지에서 다운받은 개별예제 소스파일(zip파일)과 개발환경2.7을 이용하여 설치한다. 일반적인 이클립스를 사용 할 경우 m2eclipse가 설치되어 있다는 가정하에 설명한다.
+
+  1. Package Explorer에서 오른쪽 마우스를 클릭하여 소스를 임포트한다.
+{{:egovframework:rte2:tex:개요:사용자_지정_3.jpg|}}
+  2. General > Existing Project into Workspace를 선택하여 Select archive file을 선택하고 다운받은 zip파일을 선택한다.
+{{:egovframework:rte2:tex:개요:사용자_지정_4.jpg|}}
+  3. DB를 사용하는 예제일 경우 globals.properties와 datasource를 편집해 DB정보를 알맞게 바꿔준다.
+     위치:src/main/resources/egovframework/property/globals.properties
+          src/main/resources/egovframework/spring/context-datasource.xml    
+{{:egovframework:rte2:rex:개별1.png|}}
+  4. script 폴더의 script, data 파일을 참고하여 테이블을 생성한다.
+{{:egovframework:rte2:rex:개별2.png|}}
+  5. 프로젝트를 실행시킨다. (오른쪽마우스 클릭 > Run As > Run On Server)
+{{:egovframework:rte2:tex:개요:사용자_지정_15.jpg|}}
+  6. 설치된 톰캣 버전을 선택하고 next 또는 finish를 클릭하여 프로젝트를 실행한다.
+{{:egovframework:rte2:tex:개요:사용자_지정_16.jpg|}}
+
+==== 오류 발생 시 수정 방법  ==== 
+[[egovframework:rte2:tex:개요:설치법#오류_발생_시_대처_순서]]

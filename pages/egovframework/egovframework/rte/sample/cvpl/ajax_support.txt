@@ -1,0 +1,148 @@
+====== [적용 예] Ajax Support ======
+
+===== 개요 =====
+Ajax Support Service 를 적용해서 민원목록 검색시, 검색어 자동완성기능을 제공한다.
+
+==== Configuration ====
+=== WEB_INF\web.xml ===
+<code xml>
+    <servlet>
+		<servlet-name>sourceloader</servlet-name>
+		<servlet-class>net.sourceforge.ajaxtags.servlets.SourceLoader</servlet-class>
+
+		<init-param>
+			<param-name>prefix</param-name>
+			<param-value>/ajaxtags</param-value>
+		</init-param>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>sourceloader</servlet-name>
+		<url-pattern>/ajaxtags/js/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>sourceloader</servlet-name>
+		<url-pattern>/ajaxtags/img/*</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>sourceloader</servlet-name>
+		<url-pattern>/ajaxtags/css/*</url-pattern>
+	</servlet-mapping>
+
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\web\view\CvplAjaxXmlView.java ===
+<code java>
+package egovframework.rte.cvpl.web.view;
+
+import java.util.Map;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.view.AbstractView;
+
+public class CvplAjaxXmlView extends AbstractView {
+
+	@Override
+	protected void renderMergedOutputModel(Map model,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		response.setContentType("text/xml;");
+		response.setHeader("Cache-Control", "no-cache");
+		response.setCharacterEncoding("UTF-8");
+			
+		PrintWriter writer = response.getWriter();
+		writer.write((String) model.get("ajaxXml"));
+	}
+}
+
+</code>
+=== egovframework\rte\cvpl\web\view\CvplXmlView.java ===
+<code java>
+package egovframework.rte.cvpl.web.view;
+
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.web.servlet.view.AbstractView;
+
+import sun.text.CompactShortArray.Iterator;
+
+public class CvplXmlView extends AbstractView {
+
+	@Override
+	protected void renderMergedOutputModel(Map model,
+			HttpServletRequest request, HttpServletResponse response)
+			throws Exception {
+		
+		for(Iterator it = (Iterator) model.keySet().iterator(); it.hasNext();){
+			
+		}
+	}
+
+}
+
+</code>
+=== egovframework\rte\cvpl\web\EgovCvplCnsltController.java ===
+<code java>
+...
+        /** 공백이 아닌 경우, 검색어의 중복을 체크한다. */
+        String searchKeyword = searchVO.getSearchKeyword();
+        if (!searchKeyword.equals("")) {
+	        String dupSrchKeyword = cvplCnsltService.checkDupSearchKeywordList(searchKeyword);
+	        
+	        if (!searchKeyword.equals(dupSrchKeyword)) {
+	            /** 검색어를 등록한다. */
+	        	cvplCnsltService.insertSearchKeywordList(searchKeyword);
+	        }
+        }
+...
+    @RequestMapping("/cvpl/egovCvplCnsltSearchAjax.do")
+	protected ModelAndView handle(@RequestParam("searchKeyword") String searchKeyword) 
+    			throws Exception {
+				
+		ModelAndView model = new ModelAndView(new CvplAjaxXmlView());
+		List<String> searchKeywordList = cvplCnsltService.selectSearchKeywordList(searchKeyword);
+		
+		AjaxXmlBuilder ajaxXmlBuilder = new AjaxXmlBuilder();
+		 
+		for(String srchkeyword:searchKeywordList){
+			ajaxXmlBuilder.addItem(srchkeyword, srchkeyword, false);			
+		}
+
+		model.addObject("ajaxXml",ajaxXmlBuilder.toString());
+		return model;
+	}
+
+</code>
+=== WEB-INF\jsp\egovframework\rte\cvpl\EgovCvplCnsltList.jsp ===
+<code java>
+<%@ taglib prefix="ajax" uri="http://ajaxtags.sourceforge.net/tags/ajaxtags" %>
+...
+<script type="text/javascript" src="<c:url value='/ajaxtags/js/prototype.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/ajaxtags/js/scriptaculous/scriptaculous.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/ajaxtags/js/overlibmws/overlibmws.js'/>"></script>
+<script type="text/javascript" src="<c:url value='/ajaxtags/js/ajaxtags.js'/>"></script>
+<link type="text/css" rel="stylesheet" href="<c:url value='/ajaxtags/css/ajaxtags.css'/>"/>
+<link type="text/css" rel="stylesheet" href="<c:url value='/ajaxtags/css/displaytag.css'/>"/>
+...
+                            <form:input path="searchKeyword" cssClass="txt" />
+...
+</form:form>
+<ajax:autocomplete 
+  baseUrl="${pageContext.request.contextPath}/cvpl/egovCvplCnsltSearchAjax.do" 
+  source="searchKeyword" 
+  target="searchKeyword" 
+  className="autocomplete" 
+  minimumCharacters="1" />
+</body>
+</html>
+
+</code>

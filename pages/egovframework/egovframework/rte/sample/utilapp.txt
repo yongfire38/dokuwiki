@@ -1,0 +1,24 @@
+====== UtilApp(FileUpload/download, mail) ======
+
+===== 개요 =====
+유틸가이드 시스템은 개발프레임워크 실행환경에 공통기반의 File Upload/Download와 Mail부분의 가이드프로그램을 구성했다.
+
+가이드 프로그램의 각 메뉴는 기본적으로 FileUpload / Mail로 구성되어 있다.
+
+==== [구성 메뉴] ====
+=== FileUpload ===
+  * **Multipart resolution Enabled** : Multipart resolver disabling aspect Test 할 수 있다.
+  * **Generic file upload** : Generic file upload using files array Test 할 수 있다.
+  * **Sequential generic file** : Sequential generic file upload using unique parameter names test 할 수 있다.
+  * **Parallel generic file** : Parallel generic file upload using unique parameter names test 할 수 있다.
+  * **multiple files** : multiple files with a single file element test 할 수 있다.
+  * **Single file** : single file upload를 개발시 실폐 CASE를 볼 수 있다. (잘못된 CASE)를 보여준다.
+
+=== Mail ===
+  * **간단히 텍스트만 보내기** : 간단히 텍스트만 보내기 예제를 볼 수 있다.
+  * **파일첨부하기** : 이 메일에 파일첨부하여 보내는 예제를 볼 수 있다.
+
+
+===== 설치 가이드 =====
+  * [[egovframework:rte:sample:Source:binary|Binary 설치]]
+  * [[egovframework:rte:sample:Source|Source 설치]]

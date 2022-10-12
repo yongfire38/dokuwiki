@@ -1,0 +1,139 @@
+====== [적용 예] Integration Service ======
+
+===== 개요 =====
+[[egovframework:rte:itl:integration_service|Integration Service]] Service 를 적용해서 Best민원 설정시 웹서비스를 통해 해당 시스템과 송수신한다.
+
+===== 설명 =====
+==== 연계서비스 제공모듈 ====
+===  egovframework\rte\cvpl\util\ServiceProviderRegisterCvpl.java ===
+<code java>
+package egovframework.rte.cvpl.util;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Repository;
+
+import egovframework.rte.cvpl.service.CvplCnsltVO;
+import egovframework.rte.cvpl.service.EgovCvplCnsltService;
+import egovframework.rte.itl.integration.EgovIntegrationMessage;
+import egovframework.rte.itl.integration.EgovIntegrationServiceProvider;
+
+@Repository("serviceProviderRegisterCvpl")
+public class ServiceProviderRegisterCvpl
+        implements EgovIntegrationServiceProvider
+{
+
+	/** EgovCvplCnsltService */
+    @Resource(name = "cvplCnsltService")
+    private EgovCvplCnsltService cvplCnsltService;
+    
+    public void service(EgovIntegrationMessage requestMessage,
+            EgovIntegrationMessage responseMessage)
+    {
+        Map<String, Object> requestBody = requestMessage.getBody();
+        
+        CvplCnsltVO vo = new CvplCnsltVO();
+        vo.setCvplNo((String)requestBody.get("cvplNo"));
+        vo.setCvplSj((String)requestBody.get("cvplSj"));
+        vo.setCvplContents((String)requestBody.get("cvplContents"));
+        vo.setCvplAtch1((String)requestBody.get("cvplAtch1"));
+        vo.setCvplAtch2((String)requestBody.get("cvplAtch2"));
+        vo.setCvplOthbcCode((String)requestBody.get("cvplOthbcCode"));
+        vo.setOrgReceiptTime((String)requestBody.get("receiptTime"));
+        vo.setUserId((String)requestBody.get("userId"));
+        vo.setAnswerContents((String)requestBody.get("answerContents"));
+        vo.setAnswerAtch1((String)requestBody.get("answerAtch1"));
+        vo.setAnswerAtch2((String)requestBody.get("answerAtch2"));
+        vo.setOrgAnswerTime((String)requestBody.get("answerTime"));
+        vo.setAnswerUserId((String)requestBody.get("answerUserId"));
+        vo.setEmailYn((String)requestBody.get("emailYn"));
+        vo.setAdmnstmachCode((String)requestBody.get("admnstmachCode"));
+        vo.setBestYn((String)requestBody.get("bestYn"));
+        
+        Map<String, Object> responseBody = new HashMap<String, Object>();
+        try {
+        	cvplCnsltService.insertBestCvplCnslt(vo);
+            responseBody.put("result", true);
+        } catch (Exception e) {
+            responseBody.put("result", false);
+        }
+        
+        responseMessage.setBody(responseBody);
+    }
+}
+
+</code>
+==== 연계서비스 호출모듈 ====
+===  egovframework\rte\cvpl\util\EgovWebServiceClientRegisterCvpl.java ===
+<code java>
+package egovframework.rte.cvpl.util;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import egovframework.rte.cvpl.service.CvplCnsltVO;
+import egovframework.rte.itl.integration.EgovIntegrationMessage;
+import egovframework.rte.itl.integration.EgovIntegrationService;
+import egovframework.rte.itl.webservice.EgovWebServiceContext;
+
+public class EgovWebServiceClientRegisterCvpl
+{
+
+    @Resource(name = "egovWebServiceContext")
+    private EgovWebServiceContext context;
+    
+    private String integrationId;
+    
+    /**
+     * @param context the context to set
+     */
+    public void setContext(EgovWebServiceContext context)
+    {
+        this.context = context;
+    }
+
+    /**
+     * @param integrationId the integrationId to set
+     */
+    public void setIntegrationId(String integrationId)
+    {
+        this.integrationId = integrationId;
+    }
+
+    public boolean registerCvpl(final CvplCnsltVO vo)
+    {
+        EgovIntegrationService service = context.getService(integrationId);
+        
+        EgovIntegrationMessage requestMessage = service.createRequestMessage();
+        Map<String, Object> requestBody = new HashMap<String, Object>();
+        requestBody.put("cvplNo", vo.getCvplNo());
+        requestBody.put("cvplSj", vo.getCvplSj());
+        requestBody.put("cvplContents", vo.getCvplContents());
+        requestBody.put("cvplAtch1", vo.getCvplAtch1());
+        requestBody.put("cvplAtch2", vo.getCvplAtch2());
+        requestBody.put("cvplOthbcCode", vo.getCvplOthbcCode());
+        requestBody.put("receiptTime", vo.getOrgReceiptTime());
+        requestBody.put("userId", vo.getUserId());
+        requestBody.put("answerContents", vo.getAnswerContents());
+        requestBody.put("answerAtch1", vo.getAnswerAtch1());
+        requestBody.put("answerAtch2", vo.getAnswerAtch2());
+        requestBody.put("answerTime", vo.getOrgAnswerTime());
+        requestBody.put("answerUserId", vo.getAnswerUserId());
+        requestBody.put("emailYn", vo.getEmailYn());
+        requestBody.put("admnstmachCode", vo.getAdmnstmachCode());
+        requestBody.put("bestYn", vo.getBestYn());
+        requestMessage.setBody(requestBody);
+        
+        EgovIntegrationMessage responseMessage =
+            service.sendSync(requestMessage);
+        
+        return (Boolean)responseMessage.getBody().get("result");
+    }
+}
+
+</code>

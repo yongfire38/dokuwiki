@@ -1,0 +1,55 @@
+====== 개발환경 ======
+개발 환경은 보다 정확하고 효율적인 어플리케이션의 개발을 위해 전자정부 개발 프레임워크의 실행환경에서 제공하는 다양한 기능들을 효과적으로 사용하기 위한 개발 툴을 의미합니다
+
+===== 개발환경의 구성 =====
+  * 구현도구 : 개발자의 코드 작성을 지원하는 도구로 Editor, Debug, Methodology& Template로 구성되어 있습니다.
+  * 테스트 도구 : 개발자가 작성된 코드를 테스트 하기 위한 도구로 Unit Test, Test Automation, Test Coverage, Test Reporting이 있습니다.
+  * 빌드 도구: 개발자가 작성된 코드를 컴파일, 빌드, 배포하기 위한 도구로 Build와 Deploy가 있습니다.
+  * 형상관리: 형상요소에 대한 식별 및 등록, 이력관리를 지원하는 Configuration Management와 이슈를 등록하고 검색할 수 있는 ChangeManagement로 구성되어 있습니다.
+
+===== 구현도구 =====
+  * Java Editor : 이클립스를 기반으로 개발되어 이클립스가 제공하는 기본 기능인 Code Assist, Quick Fix, 코드 스타일 적용, 코드 템플릿 처리, 문자열 검색, Quick Type Hierarchy, Quick Outline, 소스 코드 네비게이션, Mark Occurrences, 로컬 히스토리 등과 추가 기능인 eGovFramework을 위한 Perspective, Menu, New Project Wizard 기능을 제공합니다.
+  * DBIO Editor : iBatis를 기반한 프로젝트에 적합하도록 만들어진 Editor로써 SqlMapConfig 파일과 SqlMap 파일 작성을 위한 GUI와 Query sentence 작성시 발생할 수 있는 오류를 최소화 하기 위한 테스트기능, Query ID 중복체크기능, Query ID 조회기능 등의 편리한 기능이 제공됩니다.
+  * UML Editor : 객체를 모델링 하는 도구로 Class Diagram, Use Case Diagram, Sequence Diagram 등을 작성할 수 있는 기능을 제공합니다. 추가적인 기능으로 작성된 Class Diagram 으로 Java Source 생성이 가능합니다.
+  * ERD Editor : 데이타 모델링을 위한 도구로 논리모델과 물리모델의 표현이 가능하고 잘 알려진 DB Vendor 에 맞게 스키마 생성 스키립트를 만들 수 있는 기능을 제공합니다.
+
+===== 테스트 도구 =====
+  * Unit Test : JUnit 기반으로 TestCase 작성을 지원합니다. TestCase Generator를 통하여 유형에 따라 TestCase를 화면기반으로 작성할 수 있습니다. 또한, 가상의 객체인 Mock과 DB 단위 테스트케이스를 작성할 수 있도록 지원합니다.
+  * Test Automation : 작성된 Test를 자동으로 수행하게 합니다. Test Suite으로 그룹핑하거나 TestCase로 작성된 다수의 테스트케이스 클래스들을 Build 도구(Maven)를 통해 자동으로 테스트가 수행되도록 합니다.
+  * Test Coverage : 오픈소스인 EMMA를 사용하여, 개발자가 작성한 TestCase가 대상 소스코드에 대해 어느 정도 Test Coverage를 갖는지 분석합니다.
+  * Test Reporting : Build 도구(Maven)를 통해 JUnit으로 작성된 TestCase의 테스트 결과를 XML, HTML, Excel 형태로 리포팅합니다. 또한, Coverage 분석 결과도 XML, HTML 형태로 리포팅하며, 배포도구의 CI 서버는 XML 리포트 파일을 이용하여 대시보드에서 테스트 결과와 Test Coverage 분석 결과를 보여주게 됩니다.
+{{:egovframework:portal:introduction:테스트_도구.png|}}
+
+===== 빌드 도구 =====
+  * Build : Maven을 표준 프로젝트 빌드 관리 도구로 활용하여 빌드 프로세스를 수행하며 Maven의 강력한 특징인 의존성 설정과 라이브러리 관리 기능을 통해 개발자가 라이브러리를 직접관리하지 않고  라이브러리 Repository 시스템을 활용하여 관리합니다. 또한 Maven Plugin을 탑재하여 Eclipse에서 Build 수행을 지원합니다.
+  * CI : 지속적인 통합 및 빌드를 위해 오픈소스인 Hudson을 사용하며 소스 저장소와의 연동을 통해 개발자가 올린 코드를 저장소 내 소스에 반영하여 빌드를 수행합니다. 만약 빌드가 실패할 경우, 실패 원인을 해당 개발자에게 통보하여 실패 원인을 분석하고 문제를 해결하여 빌드가 성공될 수 있도록 합니다 . 또한 주기 설정을 통하여 자동 빌드 기능을 수행합니다.
+  * Deploy : 빌드 후 패키징 된 모듈을 Target 서버에 이관 및 WAS 기동/중지 기능을 지원합니다.
+
+===== 형상관리 도구 =====
+  * Configuration Management : Subversion기반으로 소스 및 산출물을 Chcek In, Check Out, History 내역을 확인할 수 있습니다. 
+  * Change Management : 개발시 발생하는 이슈를 등록, 처리, 검색할 수 있으며 Notification기능을 통해 담당자에게 통보할 수 있습니다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+   
+
+
+
+
+
+
+

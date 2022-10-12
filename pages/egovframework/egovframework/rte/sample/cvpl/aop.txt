@@ -1,0 +1,31 @@
+====== AOP ======
+
+===== 개요 =====
+[[egovframework:rte:sample:cvpl:ioc_container|AOP]] Service 를 적용해서 exception의 설정정보를 구현한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-aspect.xml ===
+<code xml>
+<aop:config>
+	<aop:pointcut id="serviceMethod"
+		expression="execution(* egovframework.rte.cvpl..impl.*Impl.*(..))" />
+
+	<aop:aspect ref="exceptionTransfer">
+		<aop:after-throwing throwing="exception"
+			pointcut-ref="serviceMethod" method="transfer" />
+	</aop:aspect>
+</aop:config>
+	
+<bean id="exceptionTransfer" class="egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer">
+	<property name="exceptionHandlerService">
+		<list>
+			<ref bean="defaultExceptionHandleManager" />
+			<ref bean="otherExceptionHandleManager" />
+		</list>
+	</property>
+</bean>
+.
+.
+.
+</code>

@@ -1,0 +1,21 @@
+====== 개요 ======
+프레임워크는 Mbean 으로부터 받은 데이타를 수신하여 모니터링 정보를 제공한다.
+
+CPU, OS Runtime, 메모리, GC정보, 세션, 쓰레드, JDBC Pool 정보, 로딩 클래스 및 프레이웜크 적용 클래스, 스케줄 정보, 캐쉬 정보 및 통계정보를 제공한다.
+
+WAS와 모니터링 대상 시스템의 성능 및 자원 사용량을 확인할 수 있다.
+
+\\
+\\
+====== 기능설명 ======
+      * [[eGovframework:oe2:가이드:프레임워크:종합]]
+      * [[eGovframework:oe2:가이드:프레임워크:CPU(VM)]]
+      * [[eGovframework:oe2:가이드:프레임워크:OS Runtime]]
+      * [[eGovframework:oe2:가이드:프레임워크:메모리 및 GC]]
+      * [[eGovframework:oe2:가이드:프레임워크:세션]]
+      * [[eGovframework:oe2:가이드:프레임워크:쓰레드]]
+      * [[eGovframework:oe2:가이드:프레임워크:JDBC Pool]]
+      * [[eGovframework:oe2:가이드:프레임워크:로딩 클래스]]
+      * [[eGovframework:oe2:가이드:프레임워크:프레임워크 적용 클래스]]
+      * [[eGovframework:oe2:가이드:프레임워크:스케줄]]
+      * [[eGovframework:oe2:가이드:프레임워크:캐쉬]]

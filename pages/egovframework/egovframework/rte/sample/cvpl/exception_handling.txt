@@ -1,0 +1,89 @@
+====== Exception Handling ======
+
+===== 개요 =====
+[[egovframework:rte:bsl:exception_handling|Exception Handling]] Service 를 적용해서 Exception을 처리한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-aspect.xml ===
+<code xml>
+<aop:config>
+	<aop:pointcut id="serviceMethod"
+		expression="execution(* egovframework.rte.cvpl..impl.*Impl.*(..))" />
+
+	<aop:aspect ref="exceptionTransfer">
+		<aop:after-throwing throwing="exception"
+			pointcut-ref="serviceMethod" method="transfer" />
+	</aop:aspect>
+</aop:config>
+
+<bean id="exceptionTransfer" class="egovframework.rte.fdl.cmmn.aspect.ExceptionTransfer">
+	<property name="exceptionHandlerService">
+		<list>
+			<ref bean="defaultExceptionHandleManager" />
+			<ref bean="otherExceptionHandleManager" />
+		</list>
+	</property>
+</bean>
+
+<bean id="defaultExceptionHandleManager"
+	class="egovframework.rte.fdl.cmmn.exception.manager.DefaultExceptionHandleManager">
+	<property name="reqExpMatcher">
+		<ref bean="antPathMater"/>
+	</property>
+	<property name="patterns">
+		<list>
+			<value>**service.impl.*</value>
+		</list>
+	</property>
+	<property name="handlers">
+		<list>
+			<ref bean="egovHandler" />
+		</list>
+	</property>
+</bean>
+
+<bean id="otherExceptionHandleManager"
+	class="egovframework.rte.fdl.cmmn.exception.manager.DefaultExceptionHandleManager">
+	<property name="reqExpMatcher">
+		<ref bean="antPathMater"/>
+	</property>
+	<property name="patterns">
+		<list>
+			<value>**service.impl.*</value>
+		</list>
+	</property>
+	<property name="handlers">
+		<list>
+			<ref bean="otherHandler" />
+		</list>
+	</property>
+</bean>
+
+
+<bean id="egovHandler"
+	class="egovframework.rte.cvpl.exception.EgovCvplExcepHndlr" />
+<bean id="otherHandler"
+	class="egovframework.rte.cvpl.exception.EgovCvplOthersExcepHndlr" />
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\exception\EgovCvplExcepHndlr.java ===
+<code java>
+public void occur(Exception ex, String packageName) {
+
+    log.debug(" EgovCvplExcepHndlr run...............");
+    try {
+        log.debug(" sending a alert mail  is completed ");
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</code>
+=== egovframework\rte\cvpl\exception\EgovCvplOthersExcepHndlr.java ===
+<code java>
+protected Log log = LogFactory.getLog(this.getClass());
+    
+public void occur(Exception exception, String packageName) {
+    log.debug(" EgovCvplOthersExcepHndlr run...............");
+}
+</code>

@@ -1,0 +1,49 @@
+====== Logging ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:logging|Logging]] Service 를 적용해서 로그를 남긴다.
+
+===== 설명 =====
+==== Configuration ====
+=== main\resources\log4j.xml ===
+<code xml>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration 
+    xmlns:log4j="http://jakarta.apache.org/log4j/" 
+    debug="false">
+    
+    <appender name="console" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+        </layout>   
+    </appender>
+    
+    <logger name="egovframework" additivity="false">
+        <level value="DEBUG"/>
+        <appender-ref ref="console"/>
+    </logger>
+
+	<!-- log SQL with timing information, post execution -->
+	<logger name="jdbc.sqltiming" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="console" />
+	</logger>
+ 
+	
+	<logger name="org.springframework" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="console" />
+	</logger>
+	
+	<root>
+		<level value="OFF" />
+		<appender-ref ref="console" />
+	</root>        
+</log4j:configuration>
+</code>
+==== Source ====
+<code java>
+protected Log log = LogFactory.getLog(this.getClass());
+log.debug("checkCvplUserIdDplc");
+</code>

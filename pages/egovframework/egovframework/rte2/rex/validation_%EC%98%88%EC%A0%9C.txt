@@ -1,0 +1,14 @@
+====== 입력값 검증 예제(Validation Example) ======
+
+===== 개요 =====
+Spring 3.0에서 새롭게 추가된 선언적 Validation 기능에 대한 예제로, 검증을 원하는 bean을 JSR-303 규격에 맞게 annoation으로 제약사항을 정의해두면, 이를 서버측에서 입력값의 검증을 수행하여 적합 또는 부적합 여부를 판단하여 주는 기능의 예제이다.
+
+===== 설명 =====
+  1. 예제를 실행한 모습. 간단한 회원등록페이지다.
+{{:egovframework:rte2:rex:validation-1.png|}}
+  2. 필수입력값을 제외하고 [등록] 버튼을 누르면 입력값 검증을 통해 부적합으로 판단, 경고메세지를 출력한다.
+{{:egovframework:rte2:rex:validation-2.png|}}
+  3. 필수값 검증뿐만 아니라 영문, 한글, 이메일 등을 Annotation기반으로 입력값 검증을 수행한다.
+{{:egovframework:rte2:rex:validation-3.png|}}
+===== 참고자료 =====
+  * [[eGovframework:RTE2:PTL:JSR303|Declarative Validation 가이드]]

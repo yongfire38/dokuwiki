@@ -1,0 +1,57 @@
+====== [적용 예] Encryption/Decryption ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:encryption_decryption|Encryption/Decryption]] Service 를 적용해서 사용자 등록 중 주민등록번호, 비밀번호를 암호화 한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-crypto.xml ===
+<code xml>
+<bean id="cryptotool" class="egovframework.rte.fdl.crypto.EgovCryptoset">
+    <property name="cryptoTxt" ref="cryptolerTxt" />
+    <property name="cryptoPwd" ref="cryptolerPwd" />
+</bean> 
+<bean id="cryptolerTxt" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionTxtServiceImpl" />
+<bean id="cryptolerPwd" class="egovframework.rte.fdl.crypto.impl.EgovEDcryptionPasswdServlceImpl" />
+</code>
+=== resources\spring\crypto_config.properties ===
+<code xml>
+crypto.password=N5h+Lz1rd/24YvL1KhV1pO0OSIc=
+cyrpto.algorithm=PBEWithSHA1AndDESede  
+crypto_password.algorithm=
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\service\impl\EgovCvplUserServiceImpl.java ===
+<code java>
+
+/** Encryption, Decryption */
+@Resource(name = "cryptolerTxt")
+private EgovEDcryptionService cryptoTxt;
+
+/** Encryption */
+cryptoTxt.setComformStr("Egov");
+cryptoTxt.setConfig(-1, strIhidnum);		
+byte ret_encryt[] = cryptoTxt.encrypt();
+String strEncryt = new String(ret_encryt);		
+strIhidnum = strEncryt;
+ 
+/** Decryption  */
+cryptoTxt.getComformStr("Egov");
+cryptoTxt.setConfig(-1, resultVO.getIhidnum());
+byte ret_decrypt[] = cryptoTxt.decrypt();
+String strDecrypt = new String(ret_decrypt);
+
+/** Encryption, Decryption */
+@Resource(name = "cryptolerPwd")
+private EgovEDcryptionService cryptoPwd;
+
+/** Encryption */
+cryptoPwd.setPlainDigest(true);
+cryptoPwd.setConfig(-1, strPwd);
+cryptoPwd.setAlgorithm("MD5");
+
+byte ret_Pwdencryt[] = cryptoPwd.encrypt();
+String strPwdEncryt = new String(ret_Pwdencryt);
+strPwd = strPwdEncryt;
+
+</code>

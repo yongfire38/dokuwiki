@@ -1,0 +1,30 @@
+====== [적용 예] Transaction ======
+
+===== 개요 =====
+[[egovframework:rte:psl:transaction|Transaction]] Service 중 DataSource Transaction Service 적용한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-transaction.xml ===
+<code xml>
+<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  <property name="dataSource" ref="dataSource"/>
+</bean>
+
+<tx:advice id="txAdvice" transaction-manager="txManager">
+	<tx:attributes>
+		<tx:method name="*" rollback-for="Exception"/>
+	</tx:attributes>
+</tx:advice>
+</code>
+=== resources\spring\context-datasource.xml ===
+<code java>
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+    <property name="url" value="jdbc:log4jdbc:hsqldb:hsql://localhost/cvpldb"/>
+    <property name="username" value="sa"/>
+    <property name="password" value=""/>
+    <property name="defaultAutoCommit" value="false"/>
+    <property name="poolPreparedStatements" value="true"/>
+</bean>
+</code>

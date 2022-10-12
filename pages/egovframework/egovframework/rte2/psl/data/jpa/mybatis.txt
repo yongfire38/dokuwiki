@@ -1,0 +1,8 @@
+MyBatis
+
+    * [[eGovframework:RTE2:PSL:dataaccess:IBatis Vs MyBatis|주요 변경 사항]]
+    * [[eGovframework:RTE2:PSL:dataaccess:Getting Started]]
+    * [[eGovframework:RTE2:PSL:dataaccess:Configuration XML]]
+    * [[eGovframework:RTE2:PSL:dataaccess:Mapper XML Files]]
+    * [[eGovframework:RTE2:PSL:dataaccess:MyBatis Dynamic SQL|Dynamic SQL]]
+    * [[eGovframework:RTE2:PSL:dataaccess:MyBatisGuide|표준프레임워크 기반 적용 가이드]]

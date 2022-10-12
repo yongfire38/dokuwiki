@@ -1,0 +1,124 @@
+====== ORM ======
+
+===== 개요 =====
+[[egovframework:rte:psl:orm|ORM]] Service 를 적용해서 (egovframework-ormcivilappealsample)으로 별도 구현되어 있다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\META-INF\persistence.xml ===
+<code xml>
+<persistence-unit name="HSQLMUnit" transaction-type="RESOURCE_LOCAL">
+    
+    <provider>org.hibernate.ejb.HibernatePersistence</provider>
+
+    <class>egovframework.rte.cvpl.service.CvplUser</class>
+    <exclude-unlisted-classes/>
+            
+    <properties>
+        <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
+        <property name="hibernate.show_sql" value="true"/>
+        <property name="hibernate.format_sql" value="true"/>
+    </properties>
+</persistence-unit>
+</code>
+=== resources\spring\context-jpa.xml ===
+<code xml>
+<tx:annotation-driven />
+<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor"/>  
+
+<bean id="emf" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+    <property name="persistenceUnitName" value="HSQLMUnit"/>
+    <property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"/>
+    <property name="dataSource" ref="dataSource"/>
+</bean> 
+
+<context:component-scan base-package="egovframework"/>
+</code>
+=== resources\spring\context-datasource.xml ===
+<code xml>
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	<property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+	<property name="url" value="jdbc:log4jdbc:hsqldb:hsql://localhost/cvpldb"/>
+	<property name="username" value="sa"/>
+</bean>
+</code>
+=== resources\spring\context-transaction.xml ===
+<code xml>
+<tx:advice id="txAdvice" transaction-manager="transactionManager">
+    <tx:attributes>
+        <tx:method name="*" propagation="REQUIRES_NEW"
+            rollback-for="Exception" />
+    </tx:attributes>
+</tx:advice>
+
+<aop:config>
+	<aop:pointcut id="requiredTx"
+		expression="execution(* egovframework.rte.cvpl..impl.*Impl.*(..))"/>
+	<aop:advisor advice-ref="txAdvice"
+		pointcut-ref="requiredTx" />
+</aop:config>
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\service\CvplUser.java ===
+<code java>
+@Entity
+@SqlResultSetMapping(name="setMap",
+		 columns = { @ColumnResult(name = "totCnt") })
+@Table(name="RTETNORMUSER")
+@NamedQueries({
+	@NamedQuery(name = "selectCvplUserList", 
+	    query = "FROM CvplUser cvplUser"),
+	@NamedQuery(name = "selectCvplUserId", 
+	    query = "FROM CvplUser cvplUser 
+	                WHERE cvplUser.userId = :searchKeyword ORDER BY cvplUser.userId"),
+	@NamedQuery(name = "selectCvplUserName", 
+	    query = "FROM CvplUser cvplUser 
+	                WHERE cvplUser.userName like :searchKeyword ORDER BY cvplUser.userName")
+})
+public class CvplUser implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
+	
+	@Id
+	@Column(name = "USER_ID", length=20)
+	private String userId;
+	
+	@Column(name = "USER_NAME", length=20)
+	private String userName;
+	.
+	.
+	.
+</code>
+=== egovframework\rte\cvpl\service\impl\CvplUserDAO.java ===
+<code java>
+@Repository("cvplUserDAO")
+public class CvplUserDAO {
+
+	@PersistenceContext
+	private EntityManager em;
+        .
+        .
+        .
+
+    	String strQl = "selectCvplUserList";
+    	String searchCondition = searchVO.getSearchCondition();
+    	String searchKeyword = searchVO.getSearchKeyword();
+
+    	if( "0".equals(searchCondition) ) {
+    		strQl = "selectCvplUserId";
+    	} else {
+    		strQl = "selectCvplUserName";
+    		searchKeyword = "%" + searchKeyword + "%";
+    	}
+    	
+    	Query qlQuery = em.createNamedQuery(strQl);
+    	qlQuery.setParameter("searchKeyword", searchKeyword);
+    	qlQuery.setFirstResult(searchVO.getFirstIndex());
+    	qlQuery.setMaxResults(searchVO.getRecordCountPerPage());
+    	
+    	return qlQuery.getResultList();
+        
+        .
+        .
+        .
+</code>

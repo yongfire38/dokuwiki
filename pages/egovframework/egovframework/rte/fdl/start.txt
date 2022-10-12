@@ -1,0 +1,38 @@
+====== 프로그래밍내에서 직접 설정 ======
+
+===== 개요 =====
+Log4j 환경 설정을 위하여 프로그래밍내에서 직접 설정하는 방법이다.
+===== 설명 =====
+=== 프로그래밍내에서 직접 설정 ===
+== 사용 예시 ==
+
+<code java>
+
+public class EgovLogTest {
+ 
+ // Logger 클래스의 인스턴스를 받아온다.
+   static Logger logger = Logger.getLogger(EgovLogTest.class);
+
+   public EgovLog() {}
+
+   public static void main(String[] args) {
+
+   /*
+     콘솔로 로그 출력 위한 간단한 설정,
+     이 설정이 없다면 경고 메세지가 출력되면서 실행이 중단된다.
+      */
+    BasicConfigurator.configure();
+
+       logger.info ("[INFO]  Test log4j.");
+       logger.warn ("[WARN]  Test log4j.");
+       logger.debug("[DEBUG] Test log4j.");
+       logger.error("[ERROR] Test log4j.");
+       logger.fatal("[FATAL] Test log4j.");
+       //loger.log( Level.DEBUG , "debug") 와 동일하다.
+       
+   }
+}
+
+</code> 
+
+===== 참고자료 =====

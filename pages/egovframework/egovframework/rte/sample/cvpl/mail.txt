@@ -1,0 +1,71 @@
+====== [적용 예] Mail ======
+
+===== 개요 =====
+[[egovframework:rte:sample:cvpl:mail|Mail]] Service 를 적용해서 답변 메일을 보낸다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-properties.xml ===
+<code xml>
+<entry key="emailServer" value="메일호스트"/>
+<entry key="emailAuthId" value="인증아이디"/>
+<entry key="emailAuthPwd" value="인증패스워드"/>
+<entry key="emailFromAddr" value="보내는사람메일주소"/>
+<entry key="emailFromName" value="보내는사람이름"/>
+</code>
+==== Source ====
+===  egovframework\rte\cvpl\util\EgovCvplCnsltMailService.java ===
+<code java>
+@Resource (name = "leaveaTrace")
+private LeaveaTrace traceObj;
+
+/** 메일 받는사람 이름 */
+private String emailName = "";
+
+/** 메일 주소 */
+private String emailAddr = "";
+
+/** 메일 제목 */
+private String emailSj = "";
+
+/** 메일 내용 */
+private String emailContents = "";
+
+/** EgovPropertyService */
+@Resource(name = "propertiesService")
+protected EgovPropertyService propertiesService;
+
+/**
+ * email을 보낸다.
+ * @param 
+ * @return 성공여부
+ * @exception Exception
+ */                 
+public String sendEmail() {   
+	MultiPartEmail email = new MultiPartEmail();
+	String sResult = "";
+	
+	try {
+		email.setHostName(propertiesService.getString("emailServer"));
+		email.setSSL(true);
+		email.setSmtpPort(465);
+		email.setAuthentication(propertiesService.getString("emailAuthId"), propertiesService.getString("emailAuthPwd"));
+		
+		email.addTo(emailAddr, emailName);
+		email.setFrom(propertiesService.getString("emailFromAddr"), propertiesService.getString("emailFromName"));
+		email.setSubject(emailSj);
+		email.setMsg(emailContents);
+		
+		email.send();
+		
+		sResult = "SUCCESS";
+		return sResult;
+	} catch (Exception e) {
+		traceObj.trace("trace.mail.fail", this.getClass());
+		sResult = "FAIL";
+		return sResult;
+	} finally {
+		email = null;
+	}
+}
+</code>

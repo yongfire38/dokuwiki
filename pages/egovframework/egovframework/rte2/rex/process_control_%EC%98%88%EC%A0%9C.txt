@@ -1,0 +1,14 @@
+====== 흐름제어 예제(Process Control Example) ======
+
+===== 개요 =====
+Spring Web Flow를 이용하여 웹 어플리케이션의 흐름을 제어하는 기능에 대한 예제를 제공한다. 웹 어플리케이션의 로직에 대한 흐름을 정의하고 어플리케이션이 정의된 흐름에 따라 사용자의 요청 및 응답을 처리하는 기능을 제공하게 된다. 이 예제는 Spring Web Flow를 사용하여 화면에 메세지를 출력하거나 기초적인 입출력 작업을 수행하는 기능의 예제를 제공하게 된다.
+
+
+===== 설명 =====
+{{:egovframework:rte2:rex:processcontrol-1.jpg|}}\\
+{{:egovframework:rte2:rex:processcontrol-2.jpg|}}\\
+{{:egovframework:rte2:rex:processcontrol-3.jpg|}}\\
+{{:egovframework:rte2:rex:processcontrol-4.jpg|}}\\
+{{:egovframework:rte2:rex:processcontrol-5.jpg|}}\\
+{{:egovframework:rte2:rex:processcontrol-6.jpg|}}\\
+===== 참고자료 =====

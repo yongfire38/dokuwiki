@@ -1,0 +1,247 @@
+====== [적용 예] File Upload/Download ======
+
+===== 개요 =====
+[[egovframework:rte:sample:cvpl:file_upload_download|File Upload/Download]] Service 를 적용해서 FAQ 파일첨부에 사용한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-properties.xml ===
+<code xml>
+<entry key="fileDir" value="C:\\Temp\\"/>
+<entry key="filePath" value="C:\\Temp\\"/>
+</code>
+=== WEB_INF\config\egovframework\springmvc\dispatcher-servlet.xml ===
+<code xml>
+<!-- MULTIPART RESOLVERS -->
+<!-- regular spring resolver -->
+<bean id="spring.RegularCommonsMultipartResolver"
+ class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <property name="maxUploadSize" value="100000000" />
+    <property name="maxInMemorySize" value="100000000" />
+</bean>
+
+<!-- custom multi file resolver -->
+<bean id="local.MultiCommonsMultipartResolver"
+  class="egovframework.rte.cvpl.web.resolver.MultiCommonsMultipartResolver">
+    <property name="maxUploadSize" value="100000000" />
+    <property name="maxInMemorySize" value="100000000" />
+</bean>
+
+<!-- choose one from above and alias it to the name Spring expects -->
+<alias name="local.MultiCommonsMultipartResolver" alias="multipartResolver" />
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\web\resolver\MultiCommonsMultipartResolver.java ===
+<code java>
+public class MultiCommonsMultipartResolver extends CommonsMultipartResolver {
+    
+    public MultiCommonsMultipartResolver() {}
+    
+    public MultiCommonsMultipartResolver(ServletContext servletContext) {
+        super(servletContext);
+    }
+    
+    /**
+     * Only one line changed which is indicated below.
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    protected MultipartParsingResult parseFileItems(List fileItems, String encoding) {
+        Map multipartFiles = new HashMap();
+        Map multipartParameters = new HashMap();
+        
+        // Extract multipart files and multipart parameters.
+        for (Iterator it = fileItems.iterator(); it.hasNext();) {
+            FileItem fileItem = (FileItem) it.next();
+            if (fileItem.isFormField()) {
+                String value = null;
+                if (encoding != null) {
+                    try {
+                        value = fileItem.getString(encoding);
+                    } catch (UnsupportedEncodingException ex) {
+                        if (logger.isWarnEnabled()) {
+                            logger.warn("Could not decode multipart item '" + fileItem.getFieldName()
+                                    + "' with encoding '" + encoding + "': using platform default");
+                        }
+                        value = fileItem.getString();
+                    }
+                } else {
+                    value = fileItem.getString();
+                }
+                String[] curParam = (String[]) multipartParameters.get(fileItem.getFieldName());
+                if (curParam == null) {
+                    // simple form field
+                    multipartParameters.put(fileItem.getFieldName(), new String[] { value });
+                } else {
+                    // array of simple form fields
+                    String[] newParam = StringUtils.addStringToArray(curParam, value);
+                    multipartParameters.put(fileItem.getFieldName(), newParam);
+                }
+            } else {
+                // multipart file field
+                CommonsMultipartFile file = new CommonsMultipartFile(fileItem);
+                if (multipartFiles.put(fileItem.getName(), file) != null) { // CHANGED!!
+                    throw new MultipartException("Multiple files for field name [" + file.getName()
+                            + "] found - not supported by MultipartResolver");
+                }
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Found multipart file [" + file.getName() + "] of size " + file.getSize()
+                            + " bytes with original filename [" + file.getOriginalFilename() + "], stored "
+                            + file.getStorageDescription());
+                }
+            }
+        }
+        return new MultipartParsingResult(multipartFiles, multipartParameters);
+    }
+    
+}
+</code>
+=== egovframework\rte\cvpl\web\EgovCvplFaqController.java ===
+<code java>
+/** 파일 처리 */
+final Map<String, MultipartFile> files = multiRequest.getFileMap();
+
+/** 디렉토리 생성 */
+File saveFolder = new File(propertiesService.getString("fileDir"));
+boolean isDir = false;
+if (!saveFolder.exists() || saveFolder.isFile()) {
+	isDir = saveFolder.mkdirs();
+} else {
+	isDir = true;
+}
+
+if (!isDir) {
+	log.debug("Fail Create folder!!");
+	model.addAttribute("cvplFaqVO", cvplFaqVO);
+	/* Session */
+	EgovCvplSessionAuth egovCvplSessionAuth = (EgovCvplSessionAuth)EgovUserDetailsHelper.getAuthenticatedUser();    	
+    model.addAttribute("egovCvplSessionAuth", egovCvplSessionAuth);
+
+	return "/cvpl/EgovCvplFaqUpdate";
+}
+
+Iterator<Entry<String, MultipartFile>> itr = files.entrySet().iterator();
+MultipartFile file;
+String filePath = "";
+int fileKey = 0;
+
+while (itr.hasNext()) {
+	Entry<String, MultipartFile> entry = itr.next();
+	
+	file = entry.getValue();
+	if (!"".equals(file.getOriginalFilename())) {
+		filePath = propertiesService.getString("filePath") + file.getOriginalFilename();
+		file.transferTo(new File(filePath));
+	}
+
+	if(fileKey == 0 && !"".equals(file.getOriginalFilename())) {
+		cvplFaqVO.setFaqAtch1(file.getOriginalFilename());
+	}
+	if(fileKey == 1 && !"".equals(file.getOriginalFilename())) {
+		cvplFaqVO.setFaqAtch2(file.getOriginalFilename());
+	}
+	fileKey++;
+}
+</code>
+=== WEB-INF\jsp\egovframework\rte\cvpl\EgovCvplFaqUpdate.jsp ===
+<code java>
+<script type="text/javascript" src="<c:url value='/js/egovframework/rte/cvpl/multifile.js'/>"></script>
+<script type="text/javaScript" language="javascript" defer="defer">
+<!--
+var multi_selector = new MultiSelector( document.getElementById( 'cvplFileList' ), 2 );
+multi_selector.addElement( document.getElementById( 'cvplFileUploader' ) );
+.
+.
+.
+<form:form commandName="cvplFaqVO" name="updateForm" enctype="multipart/form-data" method="post">
+.
+.
+.
+<tr>
+    <th><spring:message code='title.faq.faqAtch1' /></th>
+    <td><input name="file_1" id="cvplFileUploader" type="file" /></td>
+</tr>
+<tr>
+    <th><spring:message code='title.faq.faqAtch2' /></th>
+    <td>
+    	<div id="cvplFileList"></div>
+    </td>
+</tr>
+.
+.
+.
+</form:form>
+</code>
+=== egovframework\rte\cvpl\web\EgovDownloadController.java ===
+<code java>
+/**
+ * 첨부파일을 다운로드한다.
+ * @param 다운로드할 파일명
+ * @return 첨부파일
+ * @exception Exception
+ */
+@RequestMapping(value = "/cvpl/egovDownloadFile.do")
+public void cvplFileDownload (
+		@RequestParam(value = "requestedFile") String requestedFile,
+		HttpServletResponse response) throws Exception {
+
+	String uploadPath = propertiesService.getString("fileDir");
+
+	File uFile = new File(uploadPath, requestedFile);
+	int fSize = (int) uFile.length();
+
+	if (fSize > 0) {
+		BufferedInputStream in = new BufferedInputStream(new FileInputStream(uFile));
+
+		response.setBufferSize(fSize);
+		response.setContentType("application/x-msdownload;charset=euc-kr");
+		response.setHeader("Content-Disposition", "attachment; filename=\""
+				+ requestedFile + "\"");
+		response.setContentLength(fSize);
+
+		FileCopyUtils.copy(in, response.getOutputStream());
+		in.close();
+		response.getOutputStream().flush();
+		response.getOutputStream().close();
+	} else {
+		response.setContentType("application/x-msdownload");
+		PrintWriter printwriter = response.getWriter();
+		printwriter.println("<html>");
+		printwriter.println("<br><br><br><h2>Could not get file name:<br>"
+				+ requestedFile + "</h2>");
+		printwriter
+				.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
+		printwriter.println("<br><br><br>&copy; webAccess");
+		printwriter.println("</html>");
+		printwriter.flush();
+		printwriter.close();
+	}
+}
+</code>
+=== WEB-INF\jsp\egovframework\rte\cvpl\EgovCvplFaqUpdate.jsp ===
+<code java>
+function fn_egov_download_file(reqfile) {
+	window.open(encodeURI("<c:url value='/cvpl/egovDownloadFile.do?'/>requestedFile=") + reqfile);
+}
+.
+.
+.
+<tr>
+    <th><spring:message code='title.faq.faqAtch1' /></th>
+	<td>
+	<c:if test="${cvplFaqVO.faqAtch1 != ''}">
+	<c:out value='${cvplFaqVO.faqAtch1}'/>
+	<span><input type="button" onclick="javascript:fn_egov_download_file('<c:out value="${cvplFaqVO.faqAtch1}"/>')"
+				 value="<spring:message code='button.download' />" /></span>
+       </c:if>
+	<c:if test="${cvplFaqVO.faqAtch2 != ''}">
+    	<br/><c:out value='${cvplFaqVO.faqAtch2}'/>
+		<span><input type="button" onclick="javascript:fn_egov_download_file('<c:out value="${cvplFaqVO.faqAtch2}"/>')"
+    				 value="<spring:message code='button.download' />" /></span>
+       </c:if>
+	</td>
+</tr>
+.
+.
+.
+</code>

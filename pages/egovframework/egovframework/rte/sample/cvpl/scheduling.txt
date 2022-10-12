@@ -1,0 +1,68 @@
+====== [적용 예] Scheduling ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:scheduling|Scheduling]] Service 를 적용해서 메일을 보내지 않은 답변을 체크한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-scheduling.xml ===
+<code xml>
+<bean id="jobDetail"
+	class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+	<property name="targetObject" ref="egovCvplCnsltSchedulingService" />
+	<property name="targetMethod" value="sendAnswerEmail" />
+	<property name="concurrent" value="false" />
+</bean>
+
+<bean id="simpleTrigger"
+	class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+	<property name="jobDetail" ref="jobDetail" />
+	<property name="startDelay" value="100000" />
+	<property name="repeatInterval" value="100000" />
+</bean>
+
+<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+	<property name="triggers">
+		<list>
+			<ref bean="simpleTrigger" />
+		</list>
+	</property>
+</bean>
+</code>
+==== Source ====
+===  egovframework\rte\cvpl\util\EgovCvplCnsltSchedulingService.java ===
+<code java>
+/** EgovCvplCnsltMailService */
+@Resource(name = "egovCvplCnsltMailService")
+private EgovCvplCnsltMailService egovCvplCnsltMailService;
+
+/**
+ * email을 보낼 대상을 선정한다.
+ * @param 
+ * @return EgovCvplCnsltMailService
+ * @exception Exception
+ */                 
+public void sendAnswerEmail() throws Exception {
+	CvplEmailVO cvplEmailVO = new CvplEmailVO();
+	String sResult = "";
+	List<CvplEmailVO> cvplEmailVOList = cvplCnsltService.selectCvplEmail();
+	
+    for (int i = 0; i < cvplEmailVOList.size(); i++) {
+    	cvplEmailVO = (CvplEmailVO)cvplEmailVOList.get(i);
+    	
+    	egovCvplCnsltMailService.setEmailName(cvplEmailVO.getEmailName());
+    	egovCvplCnsltMailService.setEmailAddr(cvplEmailVO.getEmailAddr());
+    	egovCvplCnsltMailService.setEmailSj(cvplEmailVO.getEmailSj());
+    	egovCvplCnsltMailService.setEmailContents(cvplEmailVO.getEmailContents());
+    	
+    	sResult = egovCvplCnsltMailService.sendEmail();
+    	
+    	// 메일송신이 성공했을 경우에만 메일송신 완료 셋팅을 해준다.
+    	if(sResult.equals("SUCCESS")) {
+    		cvplCnsltService.updateCvplEmailSend(cvplEmailVO);
+    	}
+
+    }
+
+}
+</code>

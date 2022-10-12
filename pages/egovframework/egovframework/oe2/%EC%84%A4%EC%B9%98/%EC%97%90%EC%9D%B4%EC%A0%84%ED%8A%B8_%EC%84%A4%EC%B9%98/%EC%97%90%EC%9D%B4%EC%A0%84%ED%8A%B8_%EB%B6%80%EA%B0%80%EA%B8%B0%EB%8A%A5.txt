@@ -1,0 +1,71 @@
+===== 개요 =====
+ 어플리케이션 모니터링 에이전트는 사용자 정보 모니터링 기능을 통해 기본적으로 사용OS, BROWSER 정보를 모니터링하여 통계 정보를 제공한다. 그 외 부가적인 모니터링 기능은 다음을 참고하여 선택적으로 설정할 수 있으며, **필수 사항은 아니다.** 
+
+===== 어플리케이션 모니터링 부가 기능 설정 =====
+ 
+==== 1. 사용자 ID 모니터링 설정 ====
+로그인 ID 정보를 모니터링하기 위해서는 로그인 동작시 세션정보에 userId 라는 이름으로 로그인한 USER ID 값을 저장해 주어야 한다. 예제코드는 다음과 같다.
+<code>
+request.getSession().setAttribute("userId", "[로그인한 실제 USER ID 값]");
+</code>
+
+  USERID정보는 다른 HTTP 사용정보와 매핑되므로, 어떤 사용자가 어떤 OS, 브라우저로 어떤 서브시스템을 사용했는 지 또는, 어느 사용자가 사용시에 Exception이 발생했는 지 여부를 모니터링할 수 있다. 
+
+==== 2. 서브시스템 모니터링 설정 ====
+ 서브시스템별 사용 통계 정보를 얻기 위해서는 egov-monitoring-system.properties 파일에 서브 시스템 정보를 입력시켜 주어야 한다. 파일 작성 예시는 다음과 같다.
+
+
+		##############################################
+		#                  시스템                                          #
+		##############################################
+		/svr/reporting = 리포팅 시스템
+		/svr/configuration = 설정 시스템
+		/cmmn = 시스템 공통
+		/sample = 카테고리 관리 시스템
+
+
+==== 3. 업무 모니터링 설정 ===
+ 업무별 사용 통계 정보를 얻기 위해서는 egov-monitoring-job.properties 파일에 서브 시스템 정보를 입력시켜 주어야 한다. 파일 작성 예시는 다음과 같다.
+
+
+		##############################################
+		#                  업무정보                                       #
+		##############################################
+		/sample/egovSampleList.do = 카테고리 관리 목록
+		/sample/updateSampleView.do = 카테고리 수정
+		/sample/addSampleView.do = 카테고리등록
+		* egov-monitoring-etc.properties : 업무시스템 기타 하위 속성을 관리하는 파일
+
+==== 4. 태그라이브러리를 활용한 시스템, 업무 모니터링 설정 ===
+
+ 먼저, egov.tld 태그 라이브러리 파일을 다운로드받은 후, WEB-INF/web.xml 을 다음과 같이 설정한다. 
+
+<code:xml>
+...
+<taglib>
+  <taglib-uri>
+   https://www.egovframe.go.kr/tags
+  </taglib-uri>
+  <taglib-location>
+   /WEB-INF/egov.tld
+  </taglib-location>
+ </taglib>
+...
+</code>
+
+위와 같이 태그 라이브러리를 등록하면 페이지에서는 다음과 같은 코드를 작성하여 업무시스템 사용 정보를 모니터링할 수 있다.
+
+<code>
+중략...
+<%@ taglib prefix="egov" uri="https://www.egovframe.go.kr/tags" %>
+중략…
+<egov:url value='/sample/updateSampleView.do' system='카테고리관리' job='글 수정' />
+중략 … 
+</code>
+
+단, 태그 라이브러리를 사용하는 경우 한글 깨짐 현상이 발생할 수 있는 데, 해당 WAS에 맞게 UTF-8 설정을 해주어야 한다. 다음은 Tomcat 에서 server.xml 을 변경하여 UTF-8을 설정하는 예시이다.
+<code:xml>
+중략
+<Connector URIEncoding="UTF-8"
+중략 … 
+</code>

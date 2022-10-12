@@ -1,0 +1,132 @@
+====== 시스템/서비스 연계 - MMS 서비스연계 v2.0 ======
+
+===== 개요 =====
+MMS 서비스연계는 행정기관이 이동통신서비스를 이용하여 기관의 필요에 따라 각종 행정업무에 활용할 수 있도록 \\
+행정안전부 정부통합전산센터 M-Gov(http://www.mgov.go.kr)에서 구축/제공하는 이동통신 기반의 MMS 서비스를 인터페이싱한 컴포넌트이다.\\
+\\
+실제 메시지는 정부통합전산센터 M-Gov(http://www.mgov.go.kr)에서 제공하는 API가 전송 처리, 결과값 반환처리를 하고,\\
+본 컴포넌트는 사용자 입력값을 넘겨주고, 반환받은 결과값을 처리하는 역할을 한다.\\
+장문 메시지, 이미지, 동영상, 벨소리 등을 전송할 수 있도록 기반환경을 지원한다.\\
+\\
+본 컴포넌트는 사용자가 MMS를 전송하며, 관리자가 MMS 첨부파일 및 전송결과를 관리하는 기능을 제공한다.\\
+\\
+※ 본 컴포넌트는 v1.0에서 v2.0으로 버전업되면서 컴포넌트 사용 시 사전환경설정이 간소화 되었기에 v2.0 사용을 권장한다.\\
+※ 본 가이드에서는 v1.0에서 v2.0으로 버전업되면서 변경된 사항만을 가이드하오니 공통적인 부분은 [[egovframework:mcom:mms서비스연계v1.0|mms서비스연계 v1.0]] 가이드를 참조한다.\\
+
+===== 전제조건 =====
+[[egovframework:mcom:mms서비스연계v1.0|mms서비스연계 v1.0]] 가이드를 참조한다.
+
+===== 설명 =====
+모바일MMS서비스는 크게 MMS 첨부파일의 관리기능인 **MMS첨부파일 목록조회, 상세조회, 등록, 수정, 삭제**와 MMS 전송결과 관리기능인 **MMS전송결과 목록조회**로 구성되어 있으며, \\
+**MMS 전송** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:mcom:mms_class1.jpg?1000|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.mbl.com.mms.web.EgovMmsController.java|MMS Controller Class|
+|Service|egovframework.mbl.com.mms.service.EgovMmsService.java|MMS Service Class|
+|ServiceImpl|egovframework.mbl.com.mms.service.impl.EgovMmsServiceImpl.java|MMS ServiceImpl Class|
+|Model|egovframework.mbl.com.mms.service.MmsTransInfo.java|MMS 전송정보 Model Class|
+|Model|egovframework.mbl.com.mms.service.AttachFile.java|첨부파일 Model Class|
+|VO|egovframework.mbl.com.mms.service.MmsTransInfoVO.java|MMS 전송정보 VO Class|
+|VO|egovframework.mbl.com.mms.service.AttachFileVO.java|첨부파일 VO Class|
+|DAO|egovframework.mbl.com.mms.service.impl.MmsDAO.java|MMS Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsAttachFileList.jsp|첨부파일 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsAttachFileRegist.jsp|첨부파일 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsAttachFileUpdt.jsp|첨부파일 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsAttachFileDetail.jsp|첨부파일 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsTransResultList.jsp|MMS전송결과 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMobileMmsRegist.jsp|모바일 MMS 전송 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMobileAttachFileList.jsp|모바일 첨부파일 조회 페이지|
+|QUERY XML|resources/egovframework/sqlmap/mbl/com/mms/EgovMms_SQL_XXX.xml|MMS QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/mbl/com/mms/EgovMms.xml|MMS Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|MMS Message properties|
+|Idgen XML|resources/egovframework/spring/com/context-idgen.xml|MMS 전송결과 Id, 첨부파일 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+[[egovframework:mcom:mms서비스연계v1.0|mms서비스연계 v1.0]] 가이드를 참조한다.
+
+
+== 관련테이블 ==
+
+[[egovframework:mcom:mms서비스연계v1.0|mms서비스연계 v1.0]] 가이드를 참조한다.
+
+== 로그인/회원관리/권한관리 ==
+
+[[egovframework:mcom:mms서비스연계v1.0|mms서비스연계 v1.0]] 가이드를 참조한다.
+
+
+==== 설정 및 주의사항 ====
+* 현재 배포된 모바일 공통컴포넌트는 HTML5, CSS3를 적용하고 있다.\\
+* 그에 따라, 현재 모바일OK, W3C의 모바일 웹 사이트 유효성 검사의 표준에 맞지 않으며, 정확한 유효성 검사에 대한 문의는 해당 전문기관에 문의가 필요하다.\\
+* 현재 배포된 모바일 공통컴포넌트 V 2.0은 소스코드에 대한  보안성 검증이 완료 되었다.\\
+
+===== 환경설정 =====
+
+MMS 서비스연계 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+  * 프로퍼티 파일 설정(egovframework/egovProps/conf/mms.properties)
+
+<code xml>
+#-----------------------------------------------------------------------
+#
+#   mms.properties : MMS 연계 관련 정보를 나타내는 Config 파일
+#   
+#-----------------------------------------------------------------------
+#   1.  key = value 구조
+#   2.  key값은 공백문자를 포함불가, value값은 공백문자를 가능
+#   3.  key값으로 한글을 사용불가,   value값은 한글사용이 가능
+#   4.  줄을 바꿀 필요가 있으면 '\'를 라인의 끝에 추가(만약  '\'문자를 사용해야 하는 경우는 '\\'를 사용)
+#   5.  Windows에서의 디렉토리 표시 : '\\' or '/'  ('\' 사용하면 안됨)
+#   6.  Unix에서의 디렉토리 표시 : '/'
+#   7.  주석문 처리는  #사용
+#   8.  value값 뒤에 스페이스가 존재하는 경우 서블릿에서 참조할때는 에러발생할 수 있으므로 trim()하거나 마지막 공백없이 properties 값을 설정할것
+#-----------------------------------------------------------------------
+
+# MMS 연계 정보
+mmsPort = 13000(또는 14000)
+mmsHost = M-Gov G/W IP
+mmsId = 인증 ID
+mmsPassword = 인증 패스워드
+</code>
+
+위의 정보에서 **mmsHost**는 정부통합전산센터 M-Gov에서 제공하는 가이드를 참조해서 입력하고, **mmsId**, **mmsPassword** 항목에는 각각 발급받은 인증정보를 입력한다.\\
+**mmsPort**의 경우 개발테스트 시에는 14000번 포트를 이용하고, 실제 서비스시 13000번 포트를 이용한다.\\
+(14000번 포트 사용시 사용자에게 실제로 메시지가 전송되는 것이 아니라 M-Gov Gateway Server에서 임의 결과값을 전송 요청자에게 되돌려 준다는 사실을 참고한다.)\\
+
+본 컴포넌트를 이용하기 위해서는 다음의 라이브러리들이 필요하며 이 라이브러리를 classpath로 추가한다.\\
+<code>
+activation.jar
+commons-codec-1.3.jar
+commons-httpclient-3.1-alpha1.jar
+commons-logging-1.0.4.jar
+dom.jar
+log4j-1.2.9.jar
+mail.jar
+mose-api-1.5.1.jar
+saaj-api.jar
+saaj-impl.jar
+soap.jar
+xalan.jar
+xercesImpl.jar
+</code>
+
+위의 라이브러리는 정부통합전산센터(http://www.mgov.go.kr)에서 다운로드 받을 수 있다.\\
+(정부통합전산센터홈 > 서비스 소개 > FAQ > QUESTION 6번에서 다운로드)
+
+===== 관련기능 =====
+[[egovframework:mcom:mms서비스연계v1.0|mms서비스연계 v1.0]] 가이드를 참조한다.
+
+===== 참고자료 =====
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 공통컴포넌트 참조 : [[egovframework:파일관리|File Manage 서비스]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]
+  * 관련 데이터베이스 구조 및 스키마 : [[모바일_관련_데이터베이스_구조_및_스키마|관련 데이터베이스 구조 및 스키마]]

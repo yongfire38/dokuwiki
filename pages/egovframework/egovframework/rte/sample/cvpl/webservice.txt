@@ -1,0 +1,113 @@
+====== [적용 예] WebService ======
+
+===== 개요 =====
+[[egovframework:rte:itl:webservice|WebService]] Service 를 적용해서 Best민원 설정시 해당 시스템과 송수신한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-webservice.xml ===
+<code xml>
+    <bean id="integrationDefinitionDao"
+          class="egovframework.rte.itl.integration.metadata.dao.hibernate.HibernateIntegrationDefinitionDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="recordTypeDefinitionDao"
+          class="egovframework.rte.itl.integration.metadata.dao.hibernate.HibernateRecordTypeDefinitionDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="webServiceClientDefinitionDao"
+          class="egovframework.rte.itl.webservice.data.dao.hibernate.HibernateWebServiceClientDefinitionDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>          
+    
+    <bean id="webServiceServerDefinitionDao"
+          class="egovframework.rte.itl.webservice.data.dao.hibernate.HibernateWebServiceServerDefinitionDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mappingResources">
+            <list>
+                <value>/egovframework/rte/itl/integration/metadata/dao/hibernate/OrganizationDefinition.hbm.xml</value>
+                <value>/egovframework/rte/itl/integration/metadata/dao/hibernate/SystemDefinition.hbm.xml</value>
+                <value>/egovframework/rte/itl/integration/metadata/dao/hibernate/ServiceDefinition.hbm.xml</value>
+                <value>/egovframework/rte/itl/integration/metadata/dao/hibernate/RecordTypeDefinition.hbm.xml</value>
+                <value>/egovframework/rte/itl/integration/metadata/dao/hibernate/IntegrationDefinition.hbm.xml</value>
+                <value>/egovframework/rte/itl/webservice/data/dao/hibernate/WebServiceClientDefinition.hbm.xml</value>
+                <value>/egovframework/rte/itl/webservice/data/dao/hibernate/WebServiceServerDefinition.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <value>
+                hibernate.dialect=org.hibernate.dialect.HSQLDialect
+                hibernate.show_sql=false
+                hibernate.hbm2ddl.auto=validate
+            </value>
+        </property>
+    </bean>
+
+    <bean id="typeLoader" class="egovframework.rte.itl.integration.type.support.TypeLoaderUsingMetadata">
+        <property name="recordTypeDefinitionDao" ref="recordTypeDefinitionDao"/>
+    </bean>
+    
+    <bean id="classLoader" class="egovframework.rte.itl.webservice.service.impl.EgovWebServiceClassLoaderFactoryBean"/>
+    
+    <bean id="egovWebServiceContext"
+          class="egovframework.rte.itl.webservice.EgovWebServiceContext"
+          init-method="init">
+        <property name="organizationId" value="ORG_EGOV"/>
+        <property name="systemId" value="SYS00002"/>
+        <property name="defaultTimeout" value="5000"/>
+        <property name="integrationDefinitionDao" ref="integrationDefinitionDao"/>
+        <property name="webServiceServerDefinitionDao" ref="webServiceServerDefinitionDao"/>
+        <property name="webServiceClientDefinitionDao" ref="webServiceClientDefinitionDao"/>
+        <property name="typeLoader" ref="typeLoader"/>
+        <property name="classLoader" ref="classLoader"/>
+    </bean>
+    
+    <bean id="egovWebServiceClientRegisterCvpl"
+          class="egovframework.rte.cvpl.util.EgovWebServiceClientRegisterCvpl">
+        <property name="context" ref="egovWebServiceContext"/>
+        <property name="integrationId" value="INT01"/>
+    </bean>
+    
+    <bean id="egovWebServiceClientRegisterFaq"
+          class="egovframework.rte.cvpl.util.EgovWebServiceClientRegisterFaq">
+        <property name="context" ref="egovWebServiceContext"/>
+        <property name="integrationId" value="INT02"/>
+    </bean>
+
+</code>
+=== WEB_INF\web.xml ===
+<code xml>
+    <servlet>
+    	<servlet-name>EgovWebServiceServlet</servlet-name>
+    	<servlet-class>egovframework.rte.itl.webservice.EgovWebServiceServlet</servlet-class>
+    	<load-on-startup>1</load-on-startup>
+    </servlet>
+
+	<servlet-mapping>
+		<servlet-name>EgovWebServiceServlet</servlet-name>
+		<url-pattern>/services/*</url-pattern>
+	</servlet-mapping>
+
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\web\EgovCvplCnsltController.java ===
+<code java>
+    @RequestMapping("/cvpl/updateCvplCnsltBest.do")
+    public String updateCvplCnsltBest(
+            CvplCnsltVO cvplCnsltVO,
+            @ModelAttribute("searchVO") CvplSearchVO searchVO, SessionStatus status)
+            throws Exception {
+    	if(egovWebServiceClientRegisterCvpl.registerCvpl(cvplCnsltVO)) {
+            cvplCnsltService.updateCvplCnsltBest(cvplCnsltVO);
+            status.setComplete();
+    	}
+        return "forward:/cvpl/egovCvplCnsltList.do";
+    }
+
+</code>

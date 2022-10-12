@@ -1,0 +1,63 @@
+====== 배포 패키지 구성 ======
+
+===== 구현 패키지별 배포 패키지 매핑 =====
+
+**공통컴포넌트전환**
+^구현패키지명^설명^배포패키지명^공용여부^
+|egovframework.mbl.com.uat.uia|공통컴포넌트_로그인|egovframework-mbl-certlogin-2.0.0.zip| |
+|egovframework.mbl.com.cop.bbs|공통컴포넌트_게시판|egovframework-mbl-bbsmanagement-2.0.0.zip| |
+|egovframework.mbl.com.cop.scp|공통컴포넌트_스크랩|egovframework.mbl-mbl-scrapmanagement-2.0.0.zip| |
+|egovframework.mbl.com.cop.cmt|공통컴포넌트_댓글관리|egovframework-mbl-replymanagement-2.0.0.zip| |
+|egovframework.mbl.com.cop.cmy|공통컴포넌트_커뮤니티|egovframework-mbl-communityclub-2.0.0.zip| |
+|egovframework.mbl.com.cop.smt.dsm|공통컴포넌트_일정관리_일지관리|egovframework-mbl-schedulemanagement-2.0.0.zip| |
+|egovframework.mbl.com.cop.smt.sam|공통컴포넌트_일정관리_전체일정|egovframework-mbl-schedulemanagement-2.0.0.zip| |
+|egovframework.mbl.com.cop.smt.sdm|공통컴포넌트_일정관리_부서일정관리|egovframework-mbl-schedulemanagement-2.0.0.zip| |
+|egovframework.mbl.com.cop.smt.sim|공통컴포넌트_일정관리_개인일정관리|egovframework-mbl-schedulemanagement-2.0.0.zip| |
+|egovframework.mbl.com.cop.adb|공통컴포넌트_주소록관리|egovframework-mbl-addressbook-2.0.0.zip| |
+|egovframework.mbl.com.uss.mpe|공통컴포넌트_마이페이지|egovframework-mbl-mypage-2.0.0.zip| |
+|egovframework.mbl.com.uss.sam.stp|공통컴포넌트_약관 및 정책관리_약관관리|egovframework-mbl-stipulationmanagement-2.0.0.zip| |
+|egovframework.mbl.com.uss.olh.hpc|공통컴포넌트_온라인 핼프_도움말|egovframework-mbl-onlinehelp-2.0.0.zip| |
+|egovframework.mbl.com.uss.olh.wor|공통컴포넌트_온라인 핼프_용어사전|egovframework-mbl-wordbook-2.0.0.zip| |
+|egovframework.mbl.com.uss.olh.faq|공통컴포넌트_온라인 핼프_FAQ관리|egovframework-mbl-faq-2.0.0.zip| |
+|egovframework.mbl.com.uss.olh.qna|공통컴포넌트_온라인 핼프_Q&A관리|egovframework-mbl-qna-2.0.0.zip| |
+|egovframework.mbl.com.uss.olh.awm|공통컴포넌트_온라인 핼프_행정전문용어사전관리|egovframework-mbl-administrationdic-2.0.0.zip| |
+|egovframework.mbl.com.uss.olh.omm|공통컴포넌트_온라인 핼프_온라인매뉴얼|egovframework-mbl-onlinemanual-2.0.0.zip| |
+|egovframework.mbl.com.uss.olp.cns|공통컴포넌트_온라인 참여_상담관리|egovframework-mbl-onlineconsultation-2.0.0.zip| |
+|egovframework.mbl.com.uss.olp.qri|공통컴포넌트_온라인 참여_설문조사|egovframework-mbl-onlineparticipation-2.0.0.zip| |
+|egovframework.mbl.com.uss.olp.opp|공통컴포넌트_온라인참여_온라인POLL참여|egovframework-mbl-onlinepoll-2.0.0.zip| |
+|egovframework.mbl.com.uss.ion.nws|공통컴포넌트_정보제공/알림_뉴스관리|egovframework-mbl-news-2.0.0.zip| |
+|egovframework.mbl.com.uss.ion.rec|공통컴포넌트_정보제공/알림_추천사이트관리|egovframework-mbl-recommendedsitemanagement-2.0.0.zip| |
+|egovframework.mbl.com.uss.ion.ecc|공통컴포넌트_정보제공/알림_행사/이벤트/캠페인|egovframework-mbl-informationoffer-2.0.0.zip| |
+|egovframework.mbl.com.sym.mnu.mcm|공통컴포넌트_사이트맵|egovframework-mbl-sitemap-2.0.0.zip| |
+
+**신규공통컴포넌트**
+^구현패키지명^설명^배포패키지명^공용여부^
+|egovframework.mbl.com.rns|신규공통컴포넌트_실시간공지서비스|egovframework-realtimenoticeservice-1.0.0.zip| |
+|egovframework.mbl.com.mpa|신규공통컴포넌트_모바일사진앨범|egovframework-mobilephotoalbum-1.0.0.zip| |
+|egovframework.mbl.com.oas|신규공통컴포넌트_OPEN-API연계서비스|egovframework-openapiservice-1.0.0.zip| |
+|egovframework.mbl.com.mcg|신규공통컴포넌트_모바일차트/그래프|egovframework-mobilechartgraph-1.0.0.zip| |
+|egovframework.mbl.com.mdi|신규공통컴포넌트_모바일기기식별|egovframework-mobiledeviceidentification-1.0.0.zip| |
+|egovframework.mbl.com.syn|신규공통컴포넌트_동기화서비스|egovframework-synchronizationservice-1.0.0.zip| |
+|egovframework.mbl.com.mlt|신규공통컴포넌트_멀티미디어제어|egovframework-multimediacontroller-1.0.0.zip| |
+|egovframework.mbl.com.ows|신규공통컴포넌트_오프라인웹서비스|egovframework-offlinewebservice-1.0.0.zip| |
+|egovframework.mbl.com.geo|신규공통컴포넌트_위치정보연계|egovframework-geographicallocationinformation-1.0.0.zip| |
+|egovframework.mbl.com.mms|신규공통컴포넌트_MMS서비스연계|egovframework-mmsservice-1.0.0.zip| |
+
+
+
+
+===== 공통환경 설정파일 =====
+
+^구분^경로 및 파일명^설명^
+|maven config|/pom.xml|maven project config|
+|Web Application config|/WEB-INF/web.xml|Web Application 단위 config 설정|
+|servlet context config|/WEB-INF/config/egovframework/springmvc/egov-mcom-servlet.xml|DispatcherServlet application context 설정|
+|context bean 정의|/resources/egovframework/spring/context-*.xml|bean 정의|
+|범용 properties 정의|/resources/egovframework/egovProp/globals.properties|global 상수 정의|
+|message properties 정의|/resources/egovframework/message/*.properties|message 정의|
+|gpki 인증에 필요한 요소|/WEB-INF/conf/*.properties|GPKI 인증서 로그인에 필요한 설정|
+|요소기술 환경설정|/resources/egovframework/egovProp/conf/*.properties|요소기술에 필요한 환경설정|
+|요소기술 프로그램 설정|/resources/egovframework/egovProp/prg/*.sh(*.bat)|요소기술에 필요한 실행 스크립트|
+|sql config 파일|/resources/egovframework/sqlmap/mbl/com/*.xml|sql map config 정의|
+|validator rule 파일|/resources/egovframework/validator/validator-rules.xml|validator를 이용할 시 rule을 정의|
+|log 설정|/resources/log4j.xml|log 관련 설정|

@@ -1,0 +1,82 @@
+
+
+====== 개요 ====== 
+어플리케이션 정보를 관리하기 위하여 모니터링관리자가 어플리케이션 정보를 등록/수정/상세조회/목록검색 할 수 있는 기능을 제공한다.
+
+====== 기능 설명 ======
+
+  - 어플리케이션 정보 목록 : 어플리케이션 정보 목록을 검색 조회한다.
+  - 어플리케이션 정보 상세 : 등록된 어플리케이션 정보를 상세 조회한다.
+  - 어플리케이션 정보 등록 : 식별된 어플리케이션 정보를 등록한다.
+  - 어플리케이션 정보 수정 : 등록한 어플리케이션 정보를 수정한다.
+
+====== 화면 설명 ======
+
+===== 어플리케이션 정보 목록 =====
+어플리케이션 정보목록은 페이지당 10건씩 조회되며 검색조건은 **어플리케이션명**, **서버명**, **컨테이너명**이다. 
+
+{{:egovframework:oe2:가이드:어드민:applicatonlist.gif|}}
+
+  * 검색 : 선택 또는 입력한 검색조건을 기반으로 등록한 어플리케이션 정보를 목록으로 조회한다.
+  * 등록 : 신규 어플리케이션 정보를 등록하기 위한 화면으로 이동한다.
+
+
+===== 어플리케이션 정보 상세  =====
+어플리케이션 정보 목록에서 어플리케이션명을 클릭하면 해당 어플리케이션에 대한 정보를 상세 조회한다.
+
+{{:egovframework:oe2:가이드:어드민:applicationdetail.gif|}}
+
+  * 목록 : 어플리케이션 정보 목록 조회 화면으로 이동한다. 
+  * 삭제 : 해당 어플리케이션 정보를 삭제한다. 
+  * 수정 : 어플리케이션 정보를 수정할 수 있는 편집 가능한 화면으로 이동한다.
+
+
+===== 어플리케이션 정보 등록 =====
+어플리케이션 정보를 등록할 수 있는 기능을 제공한다.
+
+{{:egovframework:oe2:가이드:어드민:applicationregist.gif|}}
+
+  * 저장 : 어플리케이션 정보를 등록한다.
+  * 목록 : 어플리케이션 정보 목록 조회 화면으로 이동한다.
+  * 초기화 : 입력한 어플리케이션 정보를 초기화한다.
+
+
+==== 어플리케이션 에이전트 등록시 주의사항 ====
+
+
+=== 컨텍스트명 ===
+컨텍스트명은 web.xml에서 작성한 <display>명을 등록한다.
+
+
+
+Ex) web.xml의 <display-name>이 **egovframework-potal**일 경우 컨텍스트명에 **egovframework-potal**을 등록한다. 
+<code:XML>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>egovframework-potal</display-name>
+         ...
+</web-app>
+</code>  
+
+
+context-monitoring-mbean.xml의 bean:name과도 컨텍스트명을 맞추도록 한다.
+<code:XML>
+<prop key="InfraredProperties">bean:name=InfraredProperties.egovframework-potal</prop>    
+</code>
+위 예시에서는 <del>InfraredProperties.</del>**egovframework-potal**이 컨텍스트 명이다.
+
+===== 어플리케이션 정보 수정 =====
+어플리케이션 상세조회 화면에서 수정 버튼을 클릭한 경우  해당 어플리케이션 정보를 수정할 수 있는 기능을 제공한다.
+
+{{:egovframework:oe2:가이드:어드민:applicationupdate.gif|}}
+
+  * 저장 : 수정한 어플리케이션 정보를 저장한다.
+  * 목록 : 어플리케이션 정보 목록 조회 화면으로 이동한다.
+  * 초기화 : 입력한 어플리케이션 정보를 초기화한다.
+
+
+
+====== 관련 기능 ======
+해당 내용 없음
+

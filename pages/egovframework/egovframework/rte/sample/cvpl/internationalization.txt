@@ -1,0 +1,55 @@
+====== [적용 예] Internationalization ======
+
+===== 개요 =====
+[[egovframework:rte:ptl:internationalization|Internationalization]] Service 중 AcceptHeaderLocaleResolver 적용해서 메세지를 다국어로 지원한다.
+
+===== 설명 =====  
+==== Configuration ====
+=== Bean 설정 파일에 정의하지 않을 경우 AcceptHeaderLocaleResolver 를 default 로 적용된다. ===
+  
+=== web.xml ===
+<code xml> 
+<filter>
+   <filter-name>encoding-filter</filter-name>
+   <filter-class>
+       org.springframework.web.filter.CharacterEncodingFilter
+   </filter-class>
+   <init-param>
+       <param-name>encoding</param-name>
+       <param-value>UTF-8</param-value>
+   </init-param>
+</filter>
+
+<filter-mapping>
+  <filter-name>encoding-filter</filter-name>
+  <url-pattern>/*</url-pattern>
+</filter-mapping>
+</code>
+
+=== resources\spring\context-common.xml ===
+<code xml>
+<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	<property name="basenames">
+		<list>
+			<value>classpath:/message/message-common</value>
+			<value>classpath:/message/egov-message-cvpl</value>
+		</list>
+	</property>
+	<property name="cacheSeconds">
+		<value>60</value>
+	</property>
+</bean>
+</code>
+==== Source ====
+=== resources\message\egov-message-cvpl_ko_KR.properties ===
+<code java>
+leftmenu.title.userMng=사용자관리
+</code>
+=== resources\message\egov-message-cvpl_en_US.properties ===
+<code java>
+leftmenu.title.userMng=User Management
+</code>
+=== WEB-INF\jsp\egovframework\rte\cvpl\EgovCvplTop.jsp ===
+<code java>
+<spring:message code="leftmenu.title.userMng"/>
+</code>

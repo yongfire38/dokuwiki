@@ -1,0 +1,276 @@
+====== Logging 서비스 ======
+
+===== 개요 =====
+
+**전자정부 프레임워크**에서는 Log4j 를 이용하여 로그를 남길 수 있는 Log4j를 오픈 소스로 채택하였다.
+
+Logging은 시스템의 개발이나 운용시 발생할 수 있는 사항에 대해서, 시스템의 외부 저장소에 기록하여, 시스템의 상황을 쉽게 파악할 수 있도록 도와준다. 
+많은 개발자가 Log을 출력하기 위해 일반적으로 사용하는 방식은 System.out.println()이다.
+하지만 이 방식은 간편한 반면에 다음과 같은 이유로 권장하지 않는다.
+
+   * 콘솔 로그를 출력 파일로 리다이렉트 할 지라도, 어플리케이션 서버가 재 시작할 때 파일이 overwrite될 수도 있음. 
+   * 개발/테스팅 시점에만 System.out.println()을 사용하고 운영으로 이관하기 전에 삭제하는 것은 좋은 방법이 아님. 
+   * System.out.println() 호출은 디스크 I/O동안 동기화(synchronized)처리가 되므로 시스템의 throughput을 떨어뜨림.
+   * 기본적으로 stack trace 결과는 콘솔에 남는다. 하지만 시스템 운영 중 콘솔을 통해 Exception을 추적하는 것은 바람직하지 못함.
+
+운영시의 코드가 테스트시의 코드와 다르게 동작할 수 있기 때문이다. 
+따라서, 테스팅 코드와 운영 코드를 동일하게 가져가면서 로깅을 선언적으로 관리할 수 있고, 운영시 성능 오버헤드를 최소화할 수 있는 메커니즘이 필요하다. 
+===== 설명 =====
+== Log4j 환경 설정하는 방법 ==
+
+Log4j 환경 설정하는 방법은 다음과 같이 두가지로 나누어 볼수 있다.
+   *  [[egovframework:rte2:fdl:프로그래밍내에서 직접 설정하는 방법]]
+   *  [[egovframework:rte2:fdl:설정 파일을 사용하는 방법]] 
+
+
+== 중요 컴포넌트 설명 ==
+
+1. **Logger** : 로그의 주체 (로그 파일을 작성하는 클래스)
+- 설정을 제외한 거의 모든 로깅 기능이 이를 통해 처리된다. 어플리케이션별로 사용할 로거(로거명 기반)를 정의하고 이에 대해 로그레벨과 Appender를 지정할 수 있다.
+
+  로거는 로그레벨을 가지고 있으며, 로그의 출력여부는 로그문의 레벨과 로거의 레벨을 가지고 결정된다.
+
+
+- 어플리케이션을 작성하기전 어떤 로거를 사용해야 할지 정해야 한다.
+<code java>
+   ex) static Logger logger = Logger.getLogger(SimpleLog.class);
+</code>
+ [참고] Commons-Logging 는 레퍼클래스도 존재함
+
+
+2. **Appender** : 로그를 출력하는 위치
+
+-  로그를 출력하는 위치를 의미하며, Log4J API문서의 XXXAppender로 끝나는 클래스들의 이름을 보면, 출력위치를 어느정도 짐작할 수 있다. 
+   http://logging.apache.org/log4j/docs/api/index.html
+
+3. **Layout** : Appender의 출력포맷
+-  일자, 시간, 클래스명등 여러가지 정보를 선택하여 로그정보내용으로 지정할 수 있다.
+   자세한 패턴은 아래의 클래스정보를 살펴보면 알수있다.
+   http://logging.apache.org/log4j/docs/api/org/apache/log4j/PatternLayout.html
+
+=== Layout의 종류 ===
+
+<code>
+  1) DateLayout,
+  2) HTMLLayout,
+  3) PatternLayout, ( 일반적으로 PatternLayout을 사용하는 것이 디버깅에 가장 적합함 )
+  4) SimpleLayout,
+  5) XMLLayout 
+</code>
+
+
+== 패턴 레이아웃 설명 ==
+
+ex) "[%d{yyyy-MM-dd HH:mm:ss}] %-5p [%l] - %m%n
+
+^ 패턴 레이아웃 ^ 설명 ^
+|C | 클래스명을 출력한다. DateLayout과 같은 설정을 추가하여 클래스 이름 또는 특정 패키지 이상만 출력하도록 설정할 수 있다.|
+|d | 로그 시간을 출력한다. java.text.SimpleDateFormat에서 적절한 출력 포맷을 지정할 수 있다.|
+|F | 파일 이름을 출력한다. 로그시 수행한 메소드, 라인번호가 함께 출력된다.|
+|L | 라인 번호만 출력한다.|
+|m | 로그로 전달된 메시지를 출력한다.|
+|M | 로그를 수행한 메소드명을 출력한다.|
+|n | 줄 바꿈|
+|p | 로그 이벤트명 (DEBUG등)|
+|r | 로그 처리시간 (milliseconds)|
+
+
+== 로그레벨 지정하기 ==
+
+log4j에서는 기본적으로 debug, info, warn, error, fatal의 다섯 가지 로그레벨이 있다. 
+
+각각은 메소드 debug(), info(), warn(), error(), fatal()라는 5가지 메소드를 이용해서 로그를 남길 수 있다.
+
+로그 레벨은 다음과 같다. (FATAL > ERROR > WARN > INFO > DEBUG > TRACE)
+
+^ 로그 레벨 ^ 설명 ^
+| fatal | 아주 심각한 에러가 발생한 상태를 나타냄. 시스템적으로 심각한 문제가 발생해서 어플리케이션 작동이 불가능할 경우가 해당하는데, 일반적으로는 어플리케이션에서는 사용할 일이 없음.|
+| error | 요청을 처리하는중 문제가 발생한 상태를 나타냄.|
+| warn  | 처리 가능한 문제이지만, 향후 시스템 에러의 원인이 될 수 있는 경고성 메시지를 나타냄.|
+| info  | 로그인, 상태변경과 같은 정보성 메시지를 나타냄.|
+| debug | 개발시 디버그 용도로 사용한 메시지를 나타냄.|
+| trace | log4j1.2.12에서 신규 추가된 레벨으로서. 디버그 레벨이 너무 광범위한것을 해결하기위해서 좀더 상세한 상태를 나타냄. |
+
+
+ 
+다만 이때 Logger의 setLevel에서 지정된 로그레벨이 있다면 지정된 로그레벨 이하의 로깅이벤트는 무시된다.
+
+따라서 로그도 남지 않는다. 즉, 아래와 같이
+<code>
+logger.setLevel(Level.INFO);
+</code>
+
+코드내에 지정되어 있다면, 다음의 세 코드 중
+<code>
+logger.debug("debug 로그");
+logger.info("info 로그");
+logger.warn("warning 로그");
+</code>
+debug 로그는 남지 않고 info 와 warn 로그만 남는다. 자바에서는 C와 같이 전처리기의 기능이 없기 때문에 #ifdef DEBUG와 같은 형태와 같이 디버깅 때와 릴리즈 때의 디버깅코드를 각각 별도로 생성할 수가 없다. 따라서 log4j의 이러한 기능은 로그관리에 있어서 상당히 편리하다.
+
+==Appender==
+
+log4j 는 콘솔, 파일, DB, socket, message, mail 등 다양한 로그 출력 대상과 방법을 지원하는데, 이에 대해 log4j 의 Appender로 다양하게 정의할 수 있다.
+
+ **ConsoleAppender** : 콘솔화면으로 출력하기 위한 appender이다.
+org.apache.log4j.ConsoleAppender : Console 화면으로 출력하기 위한 Appender. 다음은 log4j.xml  파일 내의 ConsoleAppender에 대한 속성 정의 내용이다.
+
+<code xml>
+<appender name="console" class="org.apache.log4j.ConsoleAppender">
+	<!-- ref.) attr : Encoding, ImmediateFlush, Target, Threshold -->
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+	</layout>
+</appender>
+</code>
+    
+ **FileAppender** : FileAppender는 로깅을 파일에 하고 싶을 때 사용한다.
+<code xml>
+<appender name="file" class="org.apache.log4j.FileAppender">
+	<!--
+		ref.) attr : Append, Encoding, BufferedIO, BufferSize, File,
+		ImmediateFlush, Threshold
+	-->
+	<param name="File" value="./logs/file/sample.log" />
+	<!-- test 편의를 위해 매번 새로 file 덮어쓰도록 Append false로 설정 -->
+	<param name="Append" value="false" />
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+	</layout>
+</appender> 
+
+<appender name="mdcFile" class="org.apache.log4j.FileAppender">
+	<param name="File" value="./logs/file/mdcSample.log" />
+	<param name="Append" value="false" />
+	<layout class="org.apache.log4j.PatternLayout">
+		<!-- MDC 관련 패턴 포함 -->
+		<param name="ConversionPattern"
+			value="%d %5p [%c] [%X{class} %X{method} %X{testKey}] %m%n" />
+	</layout>
+</appender>				    
+</code>
+    
+ **RollingFileAppender** : FileAppender는 지정한 파일에 로그가 계속 남으므로 한 파일의 크기가 지나치게 커질 수 있으며, 
+계획적인 로그관리가 불가능해진다. RollingFileAppender는 파일의 크기 또는 파일백업인덱스 등의 지정을 통해서 특정크기 이상 
+파일의 크기가 커지게 되면 기존파일을 백업파일로 바꾸고, 다시 처음부터 로깅을 시작한다.
+
+<code xml>
+<!-- log4j-1.3alpha-8 스타일 - 패키지 변경 및 policy 처리로 구조 변경 됨 -->
+<appender name="rollingFile" class="org.apache.log4j.rolling.RollingFileAppender">
+	<rollingPolicy class="org.apache.log4j.rolling.FixedWindowRollingPolicy">
+		<param name="FileNamePattern" value="./logs/rolling/rollingSample.%i.log" />
+		<param name="MaxIndex" value="3" />
+	</rollingPolicy>
+	<triggeringPolicy class="org.apache.log4j.rolling.SizeBasedTriggeringPolicy">
+		<param name="MaxFileSize" value="1000" />
+	</triggeringPolicy>
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+	</layout>
+</appender>
+</code>			
+    
+**DailyRollingFileAppender** : 설정한 날짜 또는 조건에 맞춰 로깅을 수행한다. 
+생성자 DailyRollingFileAppender(Layout layout, String filename, String datePattern);를 이용해서 객체의 생성과 함께 log가 
+roll 되는 시간을 지정해줄 수도 있고 기본 생성자로 생성 후 setDatePattern()을 이용해서 지정해 줄 수도 있다. 
+보다 자세한 내용은 아파치 api 문서를 참고하기 바란다.
+<code xml>
+<appender name="dailyRollingFile" class="org.apache.log4j.DailyRollingFileAppender">
+	<!-- ref.) attr : FileAppender + DatePattern -->
+	<param name="File" value="./logs/daily/dailyRollingSample.log" />
+	<param name="Append" value="true" />
+	<!--
+		SimpleDateFormat 을 따름. ex.) .yyyy-ww : 첫날 기준 매주마다, .yyyy-MM-dd-HH-mm
+		: 매분마다
+	-->
+	<param name="DatePattern" value=".yyyy-MM-dd-HH-mm-ss" />
+	<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern" value="%d %5p [%c] %m%n" />
+	</layout>
+</appender>    
+</code>          
+
+**JDBCAppender** : DB에 로그를 출력하기 위한 Appender로 하위에 Driver, URL, User, Password, Sql과 같은 parameter를 정의할 수 있다. 다음은 log4j.xml  
+파일 내의 JDBCAppender에 대한 속성 정의 내용이다.
+<code xml>
+<appender name="db" class="org.apache.log4j.jdbc.JDBCAppender">
+	<!-- JDBC Driver를 정의하기 위한 parameter -->
+	<param name="Driver" value="oracle.jdbc.driver.OracleDriver"/>
+	<!-- DB URL을 정의하기 위한 parameter -->
+	<param name="URL" value="jdbc:oracle:thin:@107.108.150.108:1521:ora10"/>
+	<!-- DB User를 정의하기 위한 parameter -->
+	<param name="User" value="egovframe"/>
+	<!-- DB Password를 정의하기 위한 parameter -->
+	<param name="Password" value="egovframe"/>
+	<!-- 로그를 남길때 수행할 쿼리를 정의하기 위한 parameter -->
+	<param name="Sql" value="insert into STMR_LOG (msg)
+	                        values('%d %p [%c] - &lt;%m&gt;%n')"/>
+</appender>      
+</code>
+      
+== 전자 정부 확장 Appender ==
+**EgovDBAppender** : 
+   * Oracle 인 경우 (ojdbc-14.jar jdbc type 4 thin) getGeneratedKeys 를 실행할 때 문제가 발생하므로 useSupportsGetGeneratedKeys flag 에 따라 JDBC3.0 의 getGeneratedKeys 를 사용하지 않는 옵션으로 처리 가능한 EgovDBAppender 로 처리함(TEST DB : 10g r2 버전)
+   * log4j-1.3alpha-8 의 DB Appender 를 extends 하고 있으며 useSupportsGetGeneratedKeys flag 에 따라 JDBC3.0 의 getGeneratedKeys 를 사용하지 않는 옵션 추가한 Appeder 이다. 
+Oracle 인 경우 (ojdbc-14.jar jdbc type 4 thin) getGeneratedKeys 를 실행할 때 java.sql.SQLException: 허용되지 않은 작업  (operation not allowed) 에러가 나는데 EgovDBAppender 를 통해                      useSupportsGetGeneratedKeys 를 사용하지 않도록 설정하여 Oracle 에 대한 DBAppender 의 처리에 문제가 없도록 지원한다.  
+
+<code xml>
+<appender name="egovDB" class="org.apache.log4j.db.EgovDBAppender">
+	<!-- caller_filename, caller_class, caller_method, caller_line -->
+	<param name="locationInfo" value="true" />
+	<!-- Oracle 인 경우 아래를 false 로 설정 또는 아래 옵션 라인 삭제(기본 false) -->
+	<param name="useSupportsGetGeneratedKeys" value="false" />
+	<connectionSource class="org.apache.log4j.db.DriverManagerConnectionSource">
+		<param name="driverClass" value="${driver}" />
+		<param name="url" value="${dburl}" />
+		<param name="user" value="${username}" />
+		<param name="password" value="${password}" />
+	</connectionSource>
+</appender>
+</code>
+      
+**EgovJDBCAppender** : Singleton을 구현하고 있으며, spring 의 dataSource bean 을 injection 할 수 있도록 Annotation Bean 으로도 설정되어 있어야 함.
+log4j 의 JDBCAppender 을 extends 하고 있으며 JDBCAppender 는 log4j 의 접속 설정을 따라 매번 Connection 을 직접 생성하게 되나,
+EgovJDBCAppender 는 Spring 의 dataSource 를 Annotation 형식으로 injection 하여 사용할 수 있게 확장한 Appender 이다.
+
+<code xml>
+<appender name="pooledDB"
+	class="egovframework.rte.fdl.logging.db.EgovJDBCAppender">
+	<!-- caller_filename, caller_class, caller_method, caller_line -->
+	<param name="locationInfo" value="true" />
+	<param name="sql"
+		value="INSERT INTO logging_event (
+								sequence_number, timestamp, rendered_message,
+								logger_name, level_string, ndc,
+								thread_name, reference_flag,
+								caller_filename, caller_class,
+								caller_method, caller_line) 
+							VALUES 
+								('%X{sequence_number}', '%X{timestamp}', '%X{rendered_message}', 
+								'%X{logger_name}', '%X{level_string}', '%X{ndc}', 
+								'%X{thread_name}', '%X{reference_flag}', 
+								'%X{caller_filename}', '%X{caller_class}', 
+								'%X{caller_method}', '%X{caller_line}')" />
+</appender>      
+</code>
+      
+      
+== Layout ==
+
+로그를 어떤 포맷의 형태로 남길 것인가? 
+단순히 메시지 외에도 현재 로그하는 대상의 스레드명, 로그시간 등등 많은 정보를 조합할 수 있다. 
+Layout에는 HTMLLayout, PatternLayout, SimpleLayout, XMLLayout 등이 있다. 
+SimpleLayout과 XMLLayout 등도 많이 사용할 수 있겠지만, 아무래도 자신이 원하는 스타일의 로그메세지를 남기기 불편한 면이 있다. 
+필자가 자주 사용하는 레이아웃은 PatternLayout으로서, c 함수의 printf처럼 다양한 로그 메시지 조합을 만들어 낼 수가 있다.
+<code>
+%p : debug, info, warn, error, fatal 등의 priority 가 출력된다.
+%m : debug(), info(), warn(), error(), fatal() 등의 함수로 지정한 로그내용이 출력된다.
+%d : 로깅 이벤트가 발생한 시간을 기록한다. 출력포멧은 %d후의 브레이스내에 지정된 형태를 따른다. %d{HH:mm:ss, SSS}라든가 
+     %d{yyyy MMM dd HH:mm:ss, SSS}와 같은 형태로 사용하면 된다. Java 의 SimpleDateFormat 의 형식대로 사용하면 된다.
+%t : 로그이벤트가 발생된 쓰레드의 이름이 출력된다.
+%% : % 표시를 출력하기 위해 사용한다.
+%n : 플랫폼 종속적인 개행문자가 출력된다.
+</code>
+
+===== 참고 자료 =====
+[[http://logging.apache.org/index.html|Apache Logging Services Project]] 

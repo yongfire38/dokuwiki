@@ -1,0 +1,57 @@
+====== Configuration ======
+
+===== 개요 =====
+
+===== 설명 =====
+=== 필수라이브러리 ===
+  * spring-security-core-2.0.0.jar
+  * spring-security-taglibs-2.0.0.jar
+=== web.xml 등록 ===
+Application Context에 Spring 빈으로 등록된 필터 구현체를 대표하는 Spring Framework 클래스이다.
+  * org.springframework.web.filter.DelegatingFilterProxy 등록
+== sample ==
+<code xml>
+<filter>
+	<filter-name>springSecurityFilterChain</filter-name>
+	<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+</filter>
+<filter-mapping>
+	<filter-name>springSecurityFilterChain</filter-name>
+	<url-pattern>/*</url-pattern>
+</filter-mapping>
+</code>
+=== 필수 테이블 ===
+== 사용자 테이블 ==
+<code>
+CREATE TABLE USERS (
+	USER_ID VARCHAR(20) NOT NULL,
+	USER_NAME VARCHAR(50) NOT NULL,
+	PASSWORD VARCHAR(10) NOT NULL,
+	ENABLED INTEGER,
+	SSN VARCHAR(13),
+	SL_YN CHAR(1),
+	BIRTH_DAY VARCHAR(8),
+	AGE NUMERIC(3),
+	CELL_PHONE VARCHAR(14),
+	ADDR VARCHAR(100),
+	EMAIL VARCHAR(50),
+	EMAIL_YN CHAR(1),
+	IMAGE_FILE VARCHAR(100),
+	REG_DATE DATE,
+	CONSTRAINT PK_USERS PRIMARY KEY(USER_ID)
+);
+</code>
+  * 필수 필드 : USER_ID(사용자 ID), PASSWORD(사용자 암호), ENABLED(계정 사용여부)
+  * 나머지 필드 : 세션처리를 위해 사용자 테이블의 나머지 정보를 사용한다.
+== 사용자 권한 테이블 ==
+<code>
+CREATE TABLE AUTHORITIES (
+	USER_ID VARCHAR(20) NOT NULL,
+	AUTHORITY VARCHAR(50) NOT NULL,
+	CONSTRAINT PK_AUTHORITIES PRIMARY KEY(USER_ID,AUTHORITY),
+	CONSTRAINT FK_USERS FOREIGN KEY(USER_ID) REFERENCES USERS(USER_ID),
+	CONSTRAINT FK_ROLES3 FOREIGN KEY(AUTHORITY) REFERENCES ROLES(AUTHORITY)
+);
+</code>
+  * 필수 필드 : USER_ID(사용자 ID), AUTHORITY(권한)
+

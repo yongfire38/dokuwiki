@@ -1,0 +1,51 @@
+====== [적용 예] Object Pooling ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:object_pooling|Object Pooling]] Service 를 적용해서 데이타베이스 접속정보를 얻어온다.
+
+[[egovframework:rte:psl:data_source|Data Source]] Service 내부에 적용되어 있다.
+
+===== 설명 =====
+==== Source ====
+<code java>
+GenericObjectPool connectionPool = new GenericObjectPool(null);
+connectionPool.setMaxActive(maxActive); 
+connectionPool.setMaxIdle(maxIdle); 
+connectionPool.setMaxWait(maxWait); 
+connectionPool.setWhenExhaustedAction(whenExhaustedAction);
+connectionPool.setMinIdle(minIdle);
+connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvctionRunsMillis);
+connectionPool.setTestOnBorrow(testOnBorrow);
+connectionPool.setTestOnReturn(testOnReturn);
+connectionPool.setTestWhileIdle(testWhileIdle);
+connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
+
+ConnectionFactory connectionFactory = 
+	 new DriverManagerConnectionFactory(url,user,password);
+
+PoolableConnectionFactory poolableConnectionFactory =
+   new PoolableConnectionFactory(connectionFactory,
+					connectionPool,
+					null,
+					null,
+					false,						
+                    true);
+
+PoolingDriver poolingDriver = new PoolingDriver();
+
+poolingDriver.registerPool("database", connectionPool);
+</code>
+  - setMaxWait : 최대 대기시간
+  - setWhenExhaustedAction : pool에서 할당할 객체가 없을 경우 어떻게 처리할지를 설정
+  - setMinIdle : pool에서 사용되지 않고 저장될 수 최소수
+  - setMinEvictableIdleTimeMillis : 사용되지 않는 커넥션을 추출할 때 이 속성에서 지정한 시간 이상 비활성화 상태인 객체만 추출
+  - setTimeBetweenEvictionRunsMillis : 사용되지 않은 커넥션을 추출하는 쓰레드의 실행 주기를 지정
+  - setTestOnBorrow : true일 경우 커넥션 풀에서 커넥션을 가져올 때 커넥션이 유효한지의 여부를 검사
+  - setTestOnReturn : true일 경우 커넥션 풀에 커넥션을 반환할 때 커넥션이 유효한지의 여부를 검사
+  - setTestWhileIdle : true일 경우 비활성화 커넥션을 추출할 때 커넥션이 유효한지의 여부를 검사해서 유효하지 않은 커넥션은 풀에서 제거
+  - setNumTestsPerEvictionRun : 사용되지 않는 커넥션을 몇 개 검사할지 지정
+  - 실제 DB와의 커넥션을 연결해주는 팩토리 생성 
+  - Connection Pool이 PoolableConnection 객체를 생성할 때 사용할  PoolableConnectionFactory 생성
+  - Pooling을 위한 PoolingDriver 생성
+  - PoolingDriver에 connection pool을 등록

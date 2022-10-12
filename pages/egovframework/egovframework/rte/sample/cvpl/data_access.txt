@@ -1,0 +1,38 @@
+====== Data Access ======
+
+===== 개요 =====
+[[egovframework:rte:psl:data_access|Data Access]] Service 를 적용해서 데이터를 입력,수정,삭제,조회 한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-datasource.xml ===
+<code xml>
+<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <property name="driverClassName" value="net.sf.log4jdbc.DriverSpy"/>
+    <property name="url" value="jdbc:log4jdbc:hsqldb:hsql://localhost/cvpldb"/>
+    <property name="username" value="sa"/>
+    <property name="password" value=""/>
+    <property name="defaultAutoCommit" value="false"/>
+    <property name="poolPreparedStatements" value="true"/>
+</bean>
+</code>
+=== resources\spring\context-salMap.xml ===
+<code xml>
+<!-- SqlMap setup for iBATIS Database Layer -->
+<bean id="sqlMapClient" class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+	<property name="configLocation" value="classpath:/sqlmap/egov-sql-map-config.xml"/>
+	<property name="dataSource" ref="dataSource"/>
+</bean>
+</code>
+=== resources\sqlmap\egov-sql-map-config.xml ===
+<code xml>
+<sqlMapConfig>
+    <!-- Hsql DB -->
+    <sqlMap resource="sqlmap/rte/egov-cvpl-cmmn.mapping_Hsql.xml"/>
+    <sqlMap resource="sqlmap/rte/egov-cvpl-cnslt.mapping_Hsql.xml"/>
+    <sqlMap resource="sqlmap/rte/egov-cvpl-user.mapping_Hsql.xml"/> 
+    <sqlMap resource="sqlmap/rte/egov-cvpl-faq.mapping_Hsql.xml"/>
+</sqlMapConfig>
+</code>
+
+  * iBATIS 의 mapped statement 형태로 처리될 수 있도록 SQL Map 문서 구조에 따라 다양한 옵션 설정 및 매핑 정의, sql 문을 외부화하여 저장한다.

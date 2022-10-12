@@ -1,0 +1,73 @@
+====== Cache ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:cache|Cache]] Service 를 적용해서 사용자목록, 민원상담목록, 나의민원상담목록, FAQ목록을 다운로드한다.
+
+===== 설명 =====
+==== Configuration ====
+=== WEB-INF\config\egovframework\excel\context-excel.xml ===
+<code xml>
+<bean id="cvplCnsltExcelView" class="egovframework.rte.cvpl.web.view.CvplCnsltExcelView" />
+<bean id="cvplCnsltMyExcelView" class="egovframework.rte.cvpl.web.view.CvplCnsltMyExcelView" />
+<bean id="cvplFaqExcelView" class="egovframework.rte.cvpl.web.view.CvplFaqExcelView" />
+<bean id="cvplUserExcelView" class="egovframework.rte.cvpl.web.view.CvplUserExcelView" />
+
+<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" >
+    <property name="order" value="0" />
+</bean>
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\web\EgovCvplCnsltController.java ===
+<code java>
+Map<String, Object> map = new HashMap<String, Object>();
+map.put("cvplCnslt", cvplCnsltList);
+
+return new ModelAndView("cvplCnsltExcelView", "cvplCnsltMap", map);
+</code>
+=== egovframework\rte\cvpl\web\EgovCvplFaqController.java ===
+<code java>
+Map<String, Object> map = new HashMap<String, Object>();
+map.put("cvplFaq", cvplFaqList);
+
+return new ModelAndView("cvplFaqExcelView", "cvplFaqMap", map);
+</code>
+=== egovframework\rte\cvpl\web\EgovCvplUserController.java ===
+<code java>
+Map<String, Object> map = new HashMap<String, Object>();
+map.put("cvplUser", cvplUserList);
+
+return new ModelAndView("cvplUserExcelView", "cvplUserMap", map);
+</code>
+=== egovframework\rte\cvpl\web\view\CvplCnsltExcelView.java ===
+<code java>
+public class CvplCnsltExcelView extends AbstractExcelView {
+...
+
+Map<String, Object> map= (Map<String, Object>) model.get("cvplCnsltMap");
+List<Object> cvplCnsltList = (List<Object>) map.get("cvplCnslt");
+
+...
+}
+</code>
+=== egovframework\rte\cvpl\web\view\CvplFaqExcelView.java ===
+<code java>
+public class CvplFaqExcelView extends AbstractExcelView {
+...
+
+Map<String, Object> map= (Map<String, Object>) model.get("cvplFaqMap");
+List<Object> cvplFaqList = (List<Object>) map.get("cvplFaq");
+
+...
+}
+</code>
+=== egovframework\rte\cvpl\web\view\CvplUserExcelView.java ===
+<code java>
+public class CvplUserExcelView extends AbstractExcelView {
+...
+
+Map<String, Object> map= (Map<String, Object>) model.get("cvplUserMap");
+List<Object> cvplUserList = (List<Object>) map.get("cvplUser");
+
+...
+}
+</code>

@@ -1,0 +1,68 @@
+====== Inversion of Control Containers and the Dependency Injection pattern ======
+
+===== 개요 =====
+본 문서는 Martin Fowler가 저술한 [[http://martinfowler.com/articles/injection.html|Inversion of Control Containers and the Dependency Injection pattern]] 문서를 번역 및 일부 의역한 것이다.
+
+Java 커뮤니티에서 서로 다른 프로젝트의 컴포넌트들을 응집력 있는 어플리케이션으로 조합할 수 있도록 도와주는 경량 컨테이너(lightweight container)들이 속속 등장하고 있다. 이들 컨테이너이 컴포넌트들을 조합하기 위해 사용하는 공통적인 패턴이 있는데, 일반적으로 "Inversion of Control"으로 불리우는 개념이다. 본 문서에서 난 이 패턴의 좀 더 특화된 이름인 "Dependency Injection"의 동작 방식을 파고들고, Service Locator라는 대안과 비교할 것이다. 둘 사이의 선택은 사용으로부터 설정을 분리한다는 원칙에 비하면 중요한 것은 아니다.
+
+**Contents**
+  * [[#컴포넌트와 서비스(Components and Services)]]
+  * [[#간단한 예제(A Naive Example)]]
+  * [[#Inversion of Control]]
+  * [[#Dependency Injection의 형태(Forms of Dependency Injection)]]
+    * [[#PicoContainer를 사용한 Contstructor Injection(Constructor Injection with PicoContainer)]]
+    * [[#Spring을 사용한 Setter Injection(Setter Injection with Spring)]]
+    * [[#인터페이스 삽입(Interface Injection)]]
+  * [[#Service Locator의 사용(Using a Service Locator)]]
+    * [[#Locator를 위한 Segregated 인터페이스의 사용(Using a Segregated Interface for the Locator)]]
+    * [[#동적 Service Locator(A Dynamic Service Locator)]]
+    * [[#Avalon을 통한 locator와 injection 사용(Using both a locator anc injection with Avalon)]]
+  * [[#선택사항에 대한 고려(Deciding with option to use)]]
+    * [[#Service Locator vs Dependency Injection]]
+    * [[#Constructor versus Setter Injection]]
+    * [[#Code or configuration files]]
+    * [[#Separating Configuration from Use]]
+  * [[#또 다른 이슈들(Some further issues)]]
+  * [[#결론(Concluding Thoughts)]]
+
+===== 설명 =====
+
+==== 컴포넌트와 서비스(Components and Services) ====
+
+==== 간단한 예제(A Naive Example) ====
+
+==== Inversion of Control ====
+
+==== Dependency Injection의 형태(Forms of Dependency Injection) ====
+
+=== PicoContainer를 사용한 Contstructor Injection(Constructor Injection with PicoContainer) ===
+
+=== Spring을 사용한 Setter Injection(Setter Injection with Spring) ===
+
+=== 인터페이스 삽입(Interface Injection) ===
+
+==== Service Locator의 사용(Using a Service Locator) ====
+
+=== Locator를 위한 Segregated 인터페이스의 사용(Using a Segregated Interface for the Locator) ===
+
+=== 동적 Service Locator(A Dynamic Service Locator) ===
+
+=== Avalon을 통한 locator와 injection 사용(Using both a locator anc injection with Avalon) ===
+
+==== 선택사항에 대한 고려(Deciding with option to use) ===
+
+=== Service Locator vs Dependency Injection ===
+
+=== Constructor versus Setter Injection ===
+
+=== Code or configuration files ===
+
+=== Separating Configuration from Use ===
+
+==== 또 다른 이슈들(Some further issues) ====
+
+==== 결론(Concluding Thoughts) ====
+
+===== 참고자료 =====
+  * [[http://martinfowler.com/articles/injection.html|Inversion of Control Containers and the Dependency Injection pattern]]
+  * [[http://javacan.tistory.com/entry/120|Inversion of Control Containers and the Dependency Injection pattern 한글 번역 문서]]

@@ -1,0 +1,484 @@
+====== Excel Service ======
+
+===== 1. 개요 =====
+Excel 파일 포맷을 다룰 수 있는 자바 라이브러리를 제공하여, 사용자들이 데이터를 Excel 파일 포맷으로 다운받거나, 대량의 Excel 데이터를 시스템에 올릴 수 있도록 지원하기 위한 서비스이다.\\
+Excel 서비스는 **Apache POI** 오픈소스를 사용하여 구현하였으며 **주요 Excel접근** 기능 외에 **Excel 다운로드**, **Excel 파일 업로드** 등의 기능이 있다.
+
+===== 2. 설명 =====
+==== 주요기능 ====
+=== Excel 파일 생성 ===
+엑셀 파일을 생성하여 지정된 위치에 저장하는 기능을 제공한다.\\
+HSSFWorkbook 인스턴스를 생성하여 Excel sheet를 추가 생성할 수 있다.
+
+엑셀 버전에 따라 엑셀 97~2003버전인 HSSFWorkbook, 엑셀 2007이상의 XSSFWorkbook, 가장 최근에 나온 성능개선버전의 SXSSFWorkbook 등의 클래스를 사용할 수 있으며, 각 클래스별 사용 법(method)는 동일하다.
+== Sample Source ==
+<code java>
+HSSFWorkbook wb = new HSSFWorkbook();
+
+HSSFSheet sheet1 = wb.createSheet(sheetName1);
+HSSFSheet sheet2 = wb.createSheet(sheetName2);
+HSSFSheet sheet = wb.createSheet();
+
+// 엑셀 파일 생성
+HSSFWorkbook tmp = excelService.createWorkbook(wb, filename);
+
+// 파일 존재 확인
+assertTrue(EgovFileUtil.isExistsFile(sb.toString()));
+
+// 저장된 Sheet명 일치 점검
+assertEquals(sheetName1, tmp.getSheetName(0));
+assertEquals(sheetName2, tmp.getSheetName(1));
+</code>
+
+=== Excel 파일 수정 ===
+엑셀 파일 내 셀의 내용을 변경하고 저장한다.\\
+저장된 엑셀파일을 로드할 수 있으며 지정한 sheet에 row와 cell 객체를 생성하여 텍스트를 저장하고 수정할 수 있다.
+== Sample Source ==
+<code java>
+// 엑셀 파일 로드
+HSSFWorkbook wb = excelService.loadWorkbook(filename);
+
+HSSFSheet sheet = wb.getSheetAt(0);
+HSSFRow row = sheet.createRow( rownum );
+row.setHeight( (short) 0x349 );
+HSSFCell cell = row.createCell( cellnum );
+cell.setCellType( HSSFCell.CELL_TYPE_STRING );
+cell.setCellValue( new HSSFRichTextString(content) );
+cell.setCellStyle( cs );
+
+sheet.setColumnWidth( (short) 20, (short) ( ( 50 * 8 ) / ( (double) 1 / 20 ) ) );
+
+FileOutputStream out = new FileOutputStream(filename);
+wb.write(out);
+out.close();
+</code>
+
+=== Excel 파일 속성 수정 ===
+엑셀 파일의 속성(셀의 크기, Border의 속성, 셀의 색상, 정렬 등)을 수정한다.\\
+HSSFFont, HSSFCellStyle 클래스를 이용하여 셀에 적용된 폰트, 색상 및 정렬 등을 설정할 수 있다.
+== Sample Source ==
+<code java>
+HSSFWorkbook wb = new HSSFWorkbook();
+
+HSSFSheet sheet1 = wb.createSheet("new sheet");
+HSSFSheet sheet2 = wb.createSheet("second sheet");
+
+// 셀의 크기
+sheet1.setDefaultRowHeight(rowheight);
+sheet1.setDefaultColumnWidth(columnwidth);
+
+HSSFFont f2 = wb.createFont();
+HSSFCellStyle cs = wb.createCellStyle();
+cs = wb.createCellStyle();
+
+cs.setFont( f2 );
+cs.setWrapText( true );
+
+// 정렬
+cs.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
+cs.setFillPattern(HSSFCellStyle.DIAMONDS); // 무늬 스타일
+
+// 셀의 색상
+cs.setFillForegroundColor(new HSSFColor.BLUE().getIndex()); // 무늬 색
+cs.setFillBackgroundColor(new HSSFColor.RED().getIndex());  // 배경색
+  
+sheet1.setDefaultColumnStyle((short) 0, cs);
+</code>
+
+=== Excel 문서 속성 수정 ===
+엑셀 파일 문서의 속성(Header, Footer)을 수정한다.\\
+HSSFHeader 및 HSSFFooter 클래스로 엑셀문서의 Header와 Footer의 값과 속성을 설정할 수 있다.
+== Sample Source ==
+<code java>
+// 엑셀 파일 로드
+HSSFWorkbook wb = excelService.loadWorkbook(filename);
+HSSFSheet sheet = wb.createSheet("doc test sheet");
+
+HSSFRow row = sheet.createRow(1);
+HSSFCell cell = row.createCell((short) 1);
+cell.setCellValue(new HSSFRichTextString("Header/Footer Test"));
+
+// Header
+HSSFHeader header = sheet.getHeader();
+header.setCenter("Center Header");
+header.setLeft("Left Header");
+header.setRight(HSSFHeader.font("Stencil-Normal", "Italic") + HSSFHeader.fontSize((short) 16) + "Right Stencil-Normal Italic font and size 16");
+
+// Footer
+HSSFFooter footer = sheet.getFooter();
+footer.setCenter(HSSFHeader.font("Fixedsys", "Normal") + HSSFHeader.fontSize((short) 12) + "- 1 -");
+footer.setLeft("Left Footer");
+footer.setRight("Right Footer");
+
+// 엑셀 파일 저장
+FileOutputStream out = new FileOutputStream(sb.toString());
+wb.write(out);
+out.close();
+</code>
+
+=== 셀 내용 추출 ===
+엑셀 파일을 읽어 특정 셀의 값을 얻어온다.\\
+HSSFCell 클래스의 getRichStringCellValue, getNumericCellValue, getStringCellValue 등 다양한 type의 Cell 내용을 추출할 수 있다.
+== Sample Source ==
+<code java>
+HSSFWorkbook wbT = excelService.loadWorkbook(filename);
+HSSFSheet sheetT = wbT.getSheet("cell test sheet");
+
+for (int i = 0; i < 100; i++) {
+	HSSFRow row1 = sheetT.getRow(i);
+
+	for (int j = 0; j < 5; j++) {
+		HSSFCell cell1 = row1.getCell((short) j);
+		assertEquals("row " + i + ", cell " + j, cell1.getRichStringCellValue().toString());
+	}
+}
+</code>
+
+=== 셀 속성 추출 ===
+특정 셀의 속성(폰트, 사이즈 등)을 수정한다.\\
+HSSFFont, HSSFCellStyle 등의 클래스를 이용하여 셀의 폰트, 사이즈 등의 셀 속성을 수정할 수 있다.
+== Sample Source ==
+<code java>
+// 엑셀 파일 로드
+HSSFWorkbook wb = excelService.loadWorkbook(sb.toString());
+
+HSSFSheet sheet = wb.createSheet("cell test sheet2");
+sheet.setColumnWidth((short) 3, (short) 200);	// column Width
+
+HSSFCellStyle cs = wb.createCellStyle();
+HSSFFont font = wb.createFont();
+font.setFontHeight((short) 16);
+font.setBoldweight((short) 3);
+font.setFontName("fixedsys");
+
+cs.setFont(font);
+cs.setAlignment(HSSFCellStyle.ALIGN_RIGHT);	// cell 정렬
+cs.setWrapText( true );
+
+for (int i = 0; i < 100; i++) {
+	HSSFRow row = sheet.createRow(i);
+	row.setHeight((short)300); // row의 height 설정
+  
+	for (int j = 0; j < 5; j++) {
+		HSSFCell cell = row.createCell((short) j);
+		cell.setCellValue(new HSSFRichTextString("row " + i + ", cell " + j));
+		cell.setCellStyle( cs );
+	}
+}
+
+// 엑셀 파일 저장
+FileOutputStream out = new FileOutputStream(sb.toString());
+wb.write(out);
+out.close();
+</code>
+
+=== 공통 템플릿 사용 ===
+공통 템플릿을 사용하여 일관성을 유지한다.
+jXLS 오픈소스를 사용하여 작성된 템플릿에 지정된 값을 저장한다.
+== Sample Source ==
+<code java>
+List<PersonHourVO> persons = new ArrayList<PersonHourVO>();
+PersonHourVO person = new PersonHourVO();
+person.setName("Yegor Kozlov");
+person.setId("YK");
+person.setMon(5.0);
+person.setTue(8.0);
+person.setWed(10.0);
+person.setThu(5.0);
+person.setFri(5.0);
+person.setSat(7.0);
+person.setSun(6.0);
+
+persons.add(person); 
+
+PersonHourVO person1 = new PersonHourVO();
+person1.setName("Gisella Bronzetti");
+person1.setId("GB");
+person1.setMon(4.0);
+person1.setTue(3.0);
+person1.setWed(1.0);
+person1.setThu(3.5);
+person1.setSun(4.0);
+
+persons.add(person1); 
+
+Map<String, Object> beans = new HashMap<String, Object>();
+beans.put("persons", persons);
+XLSTransformer transformer = new XLSTransformer();
+
+transformer.transformXLS(filename, beans, sbResult.toString());
+</code>
+
+== Excel Template ==
+<code xml>
+<jx:forEach var="persons" items="${persons}">
+${persons.name}	${persons.id}	${persons.mon}	${persons.tue}	${persons.wed}	${persons.thu}	${persons.fri}	${persons.sat}	${persons.sun}	$[C4+D4+E4+F4+G4+H4+I4]
+</jx:forEach>
+		Total Hrs:	$[SUM(C4)]	$[SUM(D4)]	$[SUM(E4)]	$[SUM(F4)]	$[SUM(G4)]	$[SUM(H4)]	$[SUM(I4)]	$[SUM(J4)]
+</code>
+{{:egovframework:rte:fdl:template.png|}}
+
+== Template 적용결과 ==
+{{:egovframework:rte:fdl:template_result.png|}}
+
+
+==== Excel 다운로드 ====
+
+== Configuration ==
+<code xml>
+<bean id="categoryExcelView" class="egovframework.rte.fdl.excel.download.CategoryExcelView" />
+
+<!--
+XSSF 형태의 다운로드의 경우 다음의 View를 등록하여 사용한다.
+<bean id="CategoryPOIExcelView" class="egovframework.rte.fdl.excel.download.CategoryPOIExcelView" />
+-->
+
+<bean class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	<property name="order" value="0" />
+</bean>
+</code>
+== Sample Source ==
+Controller 클래스 작성
+Map 사용
+<code java>
+@RequestMapping("/sale/listExcelCategory.do")
+public ModelAndView selectCategoryList() throws Exception {
+
+	List<Map> lists = new ArrayList<Map>();
+	
+	Map<String, String> mapCategory = new HashMap<String, String>();
+	mapCategory.put("id", "0000000001");
+	mapCategory.put("name", "Sample Test");
+	mapCategory.put("description", "This is initial test data.");
+	mapCategory.put("useyn", "Y");
+	mapCategory.put("reguser", "test");
+	
+	lists.add(mapCategory);
+
+	mapCategory.put("id", "0000000002");
+	mapCategory.put("name", "test Name");
+	mapCategory.put("description", "test Deso1111");
+	mapCategory.put("useyn", "Y");
+	mapCategory.put("reguser", "test");
+
+	lists.add(mapCategory);
+	
+	Map<String, Object> map = new HashMap<String, Object>();
+	map.put("category", lists);
+	
+	return new ModelAndView("categoryExcelView", "categoryMap", map);
+}
+</code>
+VO 사용
+<code java>
+@RequestMapping("/sale/listExcelVOCategory.do")
+public ModelAndView selectCategoryVOList() throws Exception {
+
+	List<UsersVO> lists = new ArrayList<UsersVO>();
+	
+	UsersVO users = new UsersVO();
+	
+	//Map<String, String> mapCategory = new HashMap<String, String>();
+	users.setId("0000000001");
+	users.setName("Sample Test");
+	users.setDescription("This is initial test data.");
+	users.setUseYn("Y");
+	users.setRegUser("test");
+	
+	lists.add(users);
+	
+	users.setId("0000000002");
+	users.setName("test Name");
+	users.setDescription("test Deso1111");
+	users.setUseYn("Y");
+	users.setRegUser("test");
+	
+	lists.add(users);
+	
+	Map<String, Object> map = new HashMap<String, Object>();
+	map.put("category", lists);
+	
+	return new ModelAndView("categoryExcelView", "categoryMap", map);
+}
+</code>
+View 클래스 작성
+<code java>
+public class CategoryExcelView extends AbstractExcelView {
+	@Override
+	protected void buildExcelDocument(Map model, HSSFWorkbook wb,
+			HttpServletRequest req, HttpServletResponse resp) throws Exception {
+		HSSFCell cell = null;
+
+		HSSFSheet sheet = wb.createSheet("User List");
+		sheet.setDefaultColumnWidth((short) 12);
+
+		// put text in first cell
+		cell = getCell(sheet, 0, 0);
+		setText(cell, "User List");
+
+		// set header information
+		setText(getCell(sheet, 2, 0), "id");
+		setText(getCell(sheet, 2, 1), "name");
+		setText(getCell(sheet, 2, 2), "description");
+		setText(getCell(sheet, 2, 3), "use_yn");
+		setText(getCell(sheet, 2, 4), "reg_user");
+
+		Map<String, Object> map= (Map<String, Object>) model.get("categoryMap");
+		List<Object> categories = (List<Object>) map.get("category");
+
+		boolean isVO = false;
+
+		if (categories.size() > 0) {
+			Object obj = categories.get(0);
+			isVO = obj instanceof UsersVO;
+		}
+
+		for (int i = 0; i < categories.size(); i++) {
+		
+			if (isVO) {	// VO
+
+				Map<String, String> category = (Map<String, String>) categories.get(i);
+					
+				cell = getCell(sheet, 3 + i, 0);
+				setText(cell, category.get("id"));
+				
+				cell = getCell(sheet, 3 + i, 1);
+				setText(cell, category.get("name"));
+				
+				cell = getCell(sheet, 3 + i, 2);
+				setText(cell, category.get("description"));
+				
+				cell = getCell(sheet, 3 + i, 3);
+				setText(cell, category.get("useyn"));
+				
+				cell = getCell(sheet, 3 + i, 4);
+				setText(cell, category.get("reguser"));
+			} else {	// Map
+        		 
+				Map<String, String> category = (Map<String, String>) categories.get(i);
+				
+				cell = getCell(sheet, 3 + i, 0);
+				setText(cell, category.get("id"));
+				
+				cell = getCell(sheet, 3 + i, 1);
+				setText(cell, category.get("name"));
+				
+				cell = getCell(sheet, 3 + i, 2);
+				setText(cell, category.get("description"));
+				
+				cell = getCell(sheet, 3 + i, 3);
+				setText(cell, category.get("useyn"));
+				
+				cell = getCell(sheet, 3 + i, 4);
+				setText(cell, category.get("reguser"));
+				
+			}
+		}
+	}
+}
+</code>
+==== Excel 업로드 ====
+
+== Configuration ==
+<code xml>
+<bean id="excelService“ class="egovframework.rte.fdl.excel.impl.EgovExcelServiceImpl">
+	<property name="propertyPath" value="excelInfo.xml" />
+	<property name="mapClass" value="egovframework.rte.cvpl.service.impl.EgovExcelTestMapping" />
+	<property name="sqlMapClient" ref="sqlMapClient" />
+</bean>
+
+<!--
+XSSF 형태의 다운로드의 경우 다음의 excelService를 등록하여 사용한다.
+<bean id="excelService“ class="egovframework.rte.fdl.excel.impl.EgovPOIExcelServiceImpl">
+	<property name="propertyPath" value="excelInfo.xml" />
+	<property name="mapClass" value="egovframework.rte.cvpl.service.impl.EgovExcelTestMapping" />
+	<property name="sqlMapClient" ref="sqlMapClient" />
+</bean>
+-->
+
+</code>
+  * class : egovframework.rte.fdl.excel.impl.EgovExcelServiceImpl
+  * propertyPath : xml형식의 엑셀 형식정보 위치
+  * mapClass : 개발자가 작성한 VO와 Query의 mapping을 위한 클래스
+  * sqlMapClient : ibatis의 sqlMapClient
+== Sample Source ==
+VO 클래스 작성
+<code java>
+public class EmpVO implements Serializable {
+  
+	private BigDecimal empNo;
+	private String empName;
+	private String job;
+  
+	public BigDecimal getEmpNo() {
+		return empNo;
+	}
+  
+  public void setEmpNo(BigDecimal empNo) {
+  	this.empNo = empNo;
+  }
+  
+	public String getEmpName() {
+		return empName;
+	}
+	
+	public void setEmpName(String empName) {
+		this.empName = empName;
+	}
+	
+	public String getJob() {
+		return job;
+	}
+	
+	public void setJob(String job) {
+		this.job = job;
+	}
+}
+</code>
+  * 엑셀과 Query의 mapping을 위한 VO클래스
+
+Mapping 클래스 작성
+<code java>
+public class EgovExcelTestMapping extends EgovExcelMapping {
+
+	@Override
+	public EmpVO mappingColumn(HSSFRow row) {
+		HSSFCell cell0 = row.getCell((short) 0);
+		HSSFCell cell1 = row.getCell((short) 1);
+		HSSFCell cell2 = row.getCell((short) 2);
+		
+		EmpVO vo = new EmpVO();
+		
+		vo.setEmpNo(new BigDecimal(cell0.getNumericCellValue()));
+		vo.setEmpName(cell1.getRichStringCellValue().toString());
+		vo.setJob(cell2.getRichStringCellValue().toString());
+		
+		return vo;
+	}
+}
+</code>
+  * 엑셀과 VO의 mapping을 위한 mapping클래스
+  * **EgovExcelMapping** 클래스를 상속받아서 **mappingColumn** 메소드를 오버라이드하여 구현
+  * **HSSFCell** 클래스에서 엑셀 값을 추출하여 Query를 실행시키기 위한 VO와 mapping
+
+== Query ==
+<code xml>
+<sqlMap namespace="EmpBatchInsert">
+	<typeAlias alias="empVO" type="egovframework.rte.fdl.excel.vo.EmpVO" />
+	<insert id="insertEmpUsingBatch" parameterClass="empVO">
+		<![CDATA[
+			insert into EMP (
+				EMP_NO,
+				EMP_NAME,
+				JOB
+			) values (
+				#empNo#,
+				#empName#,
+				#job#
+			)
+		]]>
+	</insert>
+</sqlMap>
+</code>
+
+===== N. 참고자료 =====

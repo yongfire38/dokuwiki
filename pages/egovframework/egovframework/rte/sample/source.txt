@@ -1,0 +1,52 @@
+====== Source 설치 ======
+
+===== 개요 =====
+ 파일을 다운로드한다. 
+
+  * 원하는 위치에 파일의 압축을 해제한다.
+
+  * 해제하면 다음과 같은 내용이 존재한다
+
+{{:egovframework:rte:sample:01_.jpg|}}
+
+
+===== 설치 =====
+=== Step1. workspace character encoding 설정 ===
+기본적인 workspace의 character encoding은 UTF-8로 한다.
+
+  - windows > preference를 선택한다.
+  - general 탭의 workspace 선택 후 Text file encoding 을 Other : UTF-8 로 설정한다.
+
+{{:egovframework:rte:sample:cvpl:eclipse_workspace.gif?600|}}
+
+=== Step2. Tomcat Server 설정 ===
+Sample Application 실행을 위해 Tomcat 서버를 설정한다.
+
+  - windows > preference 를 선택한다.
+  - server탭의 Runtime Environments 선택 후 Add버튼을 사용하여 Apache Tomcat의 각 버전(Tomcat 6.0이상)에 맞는 Tomcat 위치를 지정한다.
+( Tomcat은 사용자의 로컬에 설치되어 있어야 한다. )
+
+{{:egovframework:rte:sample:cvpl:eclipse_server.gif?600|}}
+
+=== Step3. egovframework.guideprogram.utilapp 프로젝트 import ===
+  - Eclipse 를 구동한다.
+  - File>Import... 메뉴를 선택한다.
+  - General>Maven Projects 를 선택한다.
+  
+{{:egovframework:rte:sample:02.jpg|}}  
+  
+  - [압축해제폴더]\egovframework.guideprogram.utilapp를 선택한다.
+  - Finish 버튼을 클릭한다.
+  
+  * Maven Dependencies 를 확인한다.
+  
+{{:egovframework:rte:sample:03.jpg|}}
+
+
+=== Step4. Sample Application 실행 ===
+Tomcat Server를 실행시킨 후, Sample Application이 제대로 실행되는지 확인한다.
+  - Server>context 메뉴>New>Server 메뉴를 선택하여 egovframework.guideprogram.utilapp.web 을 실행한다.
+  
+{{:egovframework:rte:fdl:index.jpg|}}
+
+

@@ -1,0 +1,46 @@
+===== 개요 =====
+모니터링 도구의 에이전트는 MBean(Managed beans)으로부터 WAS정보 수집과 어플리케이션 에이전트를 통해 어플리케이션 정보를 수집하는 기능으로 나누어진다.\\
+어플리케이션 에이전트는 infrared를 확장,사용하여 데이터 수집을 위해 servlet filter, Aspect를 이용하기 때문에 Servlet Spec을 준수하는 모든 WAS에 설치가 가능한데 비해, MBean을 통해 데이타를 수집하는 기능은 JVM과 WAS 종류에 따라 수집할 수 있는 데이타와 제공하는 MBean 서비스가 상이하며 이때문에 MBean 에이전트를 사용하여 데이터를 수집하는 기능은 JVM 종류 및 WAS 종류별로 테스트를 진행하여 MBean을 통해 제공받을 수 있는 서비스를 확인해야 한다. \\
+아래에 정의되어 있는 환경에서 테스트를 하였으며 정상적으로 서비스가 되는 것을 확인하였다. 
+목록에 추가되지 않은 환경은 추후 jdk 1.5 이상, 현재 기점으로 앞으로 업데이트되는 WAS를 대상으로 추가가 될 예정이다.
+
+===== 설치 환경 =====
+
+==== Java Development Kit ====
+
+^  항목  ^  권장버전  ^
+|Java Development Kit| SUN Java HotSpot(TM) 1.5, 1.6| 
+|Java Development Kit| IBM J2RE 1.5.0, 1.6 | 
+|Java Development Kit| HP JDK 1.5.0, 1.6 | 
+
+==== WAS ====
+아래의 WAS(Web Application Server) 환경에 대하여 테스트가 수행되었으며, 모니터링 도구 사용이 가능하다.
+
+^이름 ^권장버전 ^자바호환성 ^
+|Tmax JEUS |6.0.5 |JDK 5.0 | 
+|  |6.0.6 |JDK 5.0 | 
+|  |6.0.6 |JDK 6.0 | 
+|Oracle WebLogic Server |9.2 MP2 |JDK 5.0 | 
+|  |9.2 MP3 |JDK 5.0 | 
+|  |10G(10.2) |JDK 5.0 | 
+|  |11G(10.3) |JDK 6.0 | 
+|Jboss application platform |4.3.0 |JDK 5.0 | 
+|  |5.1.0 |JDK 5.0 | 
+|  |6.0.0M5 |JDK 6.0 | 
+|Apache Tomcat |6.0.29 |JDK 5.0 | 
+|  |7.0.2 |JDK 6.0 | 
+
+
+✔ 지원하는 4대 WAS의 지원 환경은 위와 같으며 기타 환경에 대한 테스트는 계속 진행될 예정이다.\\
+✔ 주의: 모니터링 관리 서버는 모니터링 대상서버가 같은 벤더의 상이한 버전의 WAS를 모니터링 하는 경우, 즉 예를 들면 JEUS 5.0, JEUS6.0 등이 혼재된 상황에서는 수행이 되지 않는다.(현재 확인된 바로 같은 버전이라도 fix patch가 많이 변경된 경우에도 수행이 되지 않음) JEUS 6.0.5, JEUS 6.0.6의 JAR Library 가 서로 달라 두 서버를 동시에 모니터링하는 것은 불가능하다.\\
+
+
+==== DBMS ====
+
+^이름 ^권장버전 ^
+|HSQLDB | 1.8.0 | 
+|Mysql |5.1.30 | 
+|Tmax Tibero |3.0(sp2) | 
+|Altibase DBMS Server |5.1.3.18 | 
+|Oracle | 10g | 
+✔ 지원하는 5대 Database 지원 환경은 위와 같으며 기타 환경에 대한 테스트는 계속 진행될 예정이다.

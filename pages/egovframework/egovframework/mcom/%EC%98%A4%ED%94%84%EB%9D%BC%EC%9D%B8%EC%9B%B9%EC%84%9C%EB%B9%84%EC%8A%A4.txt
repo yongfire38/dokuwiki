@@ -1,0 +1,357 @@
+
+====== 협업 - 모바일 오프라인웹 서비스 ======
+
+===== 개요 =====
+모바일 오프라인웹 서비스는 ON/OFFLINE에 관계없이 관리자에 의해 등록된 글의 목록 및 상세 내용을 조회 할 수 있으며,\\
+관리자는 글내용을 관리하는 기능을 제공한다.
+
+본 컴포넌트의 활용사례로는 온라인상의 ebook 서비스가 비교적 관련성이 높다.\\
+네트웍 단절 상황에서도 온라인 상황과 동일하게 ebook을 열람 할 수 있다.\\
+\\
+오프라인웹 서비스는 HTML5의 offlineweb 기술을 이용하여 구현을 하였다.\\
+구현 내용을 살펴보자면 offlineweb 을 이용하여 네트웍 단절시에도 활용 할 페이지를 offlineweb으로 지정하면된다.\\
+\\
+HTML5의 offlineweb 활용 측면에서 '모바일 동기화 서비스' 컴포넌트와 '모바일 오프라인웹 서비스'는 offlineweb 활용이라는 동일한 서비스를 \\
+기반으로 출발하고 있다. 단 '동기화 서비스'의 경우에는 HTML5의 offlineweb에 webstorage 를 추가하여 활용 측면을 확대한 것이고 \\
+오프라인웹 서비스는 HTML5 offlineweb 단일 기술로만 이루어져있다.
+
+ * 기능흐름
+
+{{:egovframework:mcom:offline_flow.jpg?800|}}
+
+본 컴포넌트의 모바일 화면은 모바일 디바이스에 탑재된 브라우저를 대상으로 개발 및 테스트 검증이 완료되었다. \\
+또한 동일 제조사의 동일한 브랜드라도 PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 \\
+개발시 유의가 필요함을 밝혀둔다.
+
+검증 대상 디바이스와 브라우저로는 각각 갤럭시S2, 갤럭시S, iPad2, iPhone4, 갤럭시탭1 등의 디바이스와 \\
+android용 웹 브라우저, Firefox, Safari, opera mobile 등의 모바일 브라우저를 사용하였다.
+
+검증결과는 아래와 같다.
+
+Android \\
+android용 웹 브라우저, Firefox(6.xx), opera mobile은  android OS 2.3(gingerbread) 에서 HTML5, CSS3 및 컴포넌트의 \\
+실행이 안정적으로 실행되는 것을 확인 하였다. \\
+반면 android OS 2.3(gingerbread) 하위 브라우저인 android 2.1, 2.2에서는 컴포넌트 실행에 있어 매끄럽지 못한 HTML5, CSS3 지원으로 인하여 \\
+컴포넌트의 UI 구현이 원할하지 못한 모습을 보였다. 
+
+opera mobile의 경우 UI처리시 색상 및 이벤트 처리에 문제를 야기하였으며 \\
+그로인해 opera mobile은 3종 지원브라우저 대상에서 제외 되었다. \\
+테스트 모바일 디바이스로는 갤럭시, 갤럭시S2, 갤럭시탭1을 채택하였다.
+
+iOS \\
+iOS는 3종 지원브라우저 대상중 하나로 Safari 4.2, 4.3 버전에서 검증을 하였으며 비교적 원활한 HTML5, CSS3를 지원을 하였다.\\
+테스트 모바일 디바이스로는 iPhone4, iPad2를 채택하였다.
+
+===== 설명 =====
+오프라인웹 서비스는 관리기능인 **오프라인웹 목록조회, 상세조회, 등록, 수정, 삭제**로 구성되어 있으며, 사용자기능에서는\\
+**오프라인웹 서비스 목록조회, 상세조회** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+== 클래스 다이어그램 ==
+{{:egovframework:mcom:offline_class.jpg?800|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.mbl.com.ows.web.EgovOfflineWebController.java|오프라인웹 Controller Class|
+|Service|egovframework.mbl.com.ows.service.EgovOfflineWebService.java|오프라인웹 Service Class|
+|ServiceImpl|egovframework.mbl.com.ows.service.impl.EgovOfflineWebServiceImpl.java|오프라인웹 ServiceImpl Class|
+|Model|egovframework.mbl.com.ows.service.OfflineWeb.java|오프라인웹 Model Class|
+|VO|egovframework.mbl.com.ows.service.OfflineWebVO.java|오프라인웹 VO Class|
+|DAO|egovframework.mbl.com.ows.service.impl.OfflineWebDAO.java|오프라인웹 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/ows/EgovMobileOfflineWebList.jsp|오프라인웹 모바일 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/ows/EgovMobileOfflineWeb.jsp|오프라인웹 모바일 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/ows/EgovOfflineWebList.jsp|오프라인웹 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/ows/EgovOfflineWebDetail.jsp|오프라인웹 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/ows/EgovOfflineWebInsert.jsp|오프라인웹 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/ows/EgovOfflineWebUpdate.jsp|오프라인웹 수정 페이지|
+|QUERY XML|resources/egovframework/sqlmap/mbl/com/ows/EgovOfflineWeb_SQL_XXX.xml|오프라인웹 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/mbl/com/ows/EgovOfflineWeb.xml|오프라인웹 Validator XML|
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|오프라인웹|COMTNOFFLINEWEB|오프라인웹를 관리|
+
+== 로그인/회원관리/권한관리 ==
+
+오프라인 웹 서비스는 **오프라인 글 목록조회, 상세조회, 등록, 수정, 삭제**에서 관리자 인증이 필요하다.\\
+인증을 위해 로그인/회원관리/권한관리 컴포넌트와 연계하여 사용할 수 있다.
+Spring Security를 통해 인증을 할 경우 다음과 같이 변경하면 된다.
+
+== src/main/java/resources/egovframework/spring/com/context-egovuserdetailshelper.xml ==
+
+<code xml>
+    <!--인증된 유저의 LoginVO, 권한, 인증 여부를 확인 할 수있는 서비스 클래스-->
+    <bean id="egovUserDetailsHelper" class="egovframework.com.cmm.util.EgovUserDetailsHelper">
+        <property name="egovUserDetailsService">
+            <ref bean="egovUserDetailsSecurityService" />
+        </property> 
+    </bean>
+
+    <!-- 시큐리티를 이용한 인증을 사용할 빈 -->
+    <bean id="egovUserDetailsSecurityService" class="egovframework.com.sec.ram.service.impl.EgovUserDetailsSecurityServiceImpl"/>
+</code>
+
+== web.xml ==
+
+<code xml>
+    <!-- 2. 스프링 시큐리티 설정-->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.security.ui.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    <!-- security 끝 -->
+
+    <!-- 4. Spring Security 로그아웃 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLogoutFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<url-pattern>/uat/uia/actionLogout.do</url-pattern>
+    </filter-mapping>
+
+    <!-- 4. Spring Security 로그인 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<url-pattern>*.do</url-pattern>
+    </filter-mapping>
+</code>
+web.xml에 위 내용과 같은 Spring Security 관련 필터를 추가 하여야 한다.
+
+로그인/회원관리/권한관리에 대한 자세한 내용은 다음을 참조한다.
+
+  * 로그인 : [[egovframework:일반_로그인#일반로그인]]
+  * 회원관리 : [[egovframework:사용자_관리|사용자관리]]
+  * 권한관리 : [[egovframework:권한관리|권한관리]]
+
+사용자/관리자 권한이 필요한 페이지는 다음과 같다.
+^권한 종류^페이지 경로^설명^
+|관리자|/mbl/com/syn/selectOfflineWebList.mdo|오프라인 글 목록조회 화면|
+|관리자|/mbl/com/syn/selectOfflineWeb.mdo|오프라인 글 상세조회 화면|
+|관리자|/mbl/com/syn/goOfflineWebRegist.mdo|오프라인 글 등록 화면|
+|관리자|/mbl/com/syn/insertOfflineWeb.mdo|오프라인 글 등록|
+|관리자|/mbl/com/syn/goOfflineWebUpdt.mdo|오프라인 글 수정 화면|
+|관리자|/mbl/com/syn/updateOfflineWeb.mdo|오프라인 글 수정|
+|관리자|/mbl/com/syn/deleteOfflineWeb.mdo|오프라인 글 삭제|
+
+
+
+==== 설정 및 주의사항 ====
+* 현재 배포된 모바일 공통컴포넌트는 HTML5, CSS3를 적용하고 있다.\\
+* 그에 따라, 현재 모바일OK, W3C의 모바일 웹 사이트 유효성 검사의 표준에 맞지 않으며, 정확한 유효성 검사에 대한 문의는 해당 전문기관에 문의가 필요하다.\\
+* 현재 배포된 모바일 공통컴포넌트 V 2.0은 소스코드에 대한  보안성 검증이 완료 되었다.\\
+
+html5의 오프라인 웹을 사용하기 위해서는 몇가지 설정 정보가 필요하다.\\
+- web.xml에 mime type을 설정한다.\\
+- root이하에 xxxx.manifest파일을 작성하고 오프라인으로 적용할 대상 페이지 상단에 <html manifest="/xxxx.manifest">를 기술하도록 한다.\\
+- /xxxx.manifest에 적용대상 페이지를 기술한다. \\
+\\
+단 표준프레임워크의 경우 jsp 파일이 WEB-INF폴더 이하에 기술되어 있음으로 /WEB-INF/xx/xx.jsp 형태로 기술하면 오프라인 작업 대상이 될 수 없다.\\
+또한 root 이하에서 사용된 jsp를 포함한 xx.css, xx.js, xx.jpg... etc를 xxxx.manifest은 오프라인 작업 대상이 될 수 있다.\\
+\\
+
+오프라인 적용대상 파일을 xxxx.manifest 파일 적용시 css, js 파일과 jsp 파일내에 import 되어있는 파일을 \\
+xxxx.manifest 파일에 별도 기술할 필요는 없다. \\
+단 import된 파일의 경로가 정확하지 못하다면 오프라인 적용 전체가 적용되지 않을 수 있으니 import되는 파일의 \\
+경로 확인은 반드시 주의를 요해야만 한다.\\
+\\
+또한 xxxx.manifest 파일에 설정된 파일을 수정한 후 테스트를 하고자 할때는 반드시 브라우저 Cache를 삭제 해야만한다.\\
+만일 에디터 상에서 코드 수정 후 브라우저만을 refresh 한다하여도 적용된 코드가 반영이 안되는 경우가 발생할 수 있다.
+
+=== web.xml 설정 ===
+	<mime-mapping>
+		<extension>manifest</extension>
+		<mime-type>text/cache-manifest</mime-type>
+	</mime-mapping>
+\\
+=== xxxx.manifest 설정 ===
+    CACHE MANIFEST
+    # version 1.0.01
+    # 2011.09.21
+
+    # Explicitly cached
+    CACHE:
+    ./css/egovframework/mbl/cmm/jquery.mobile-1.0b3.min.css
+    ./css/egovframework/mbl/cmm/EgovMobile.css
+    ./css/egovframework/mbl/mcomd/egovMcomd.css
+ 
+    ./js/egovframework/mbl/cmm/jquery-1.6.2.min.js
+    ./js/egovframework/mbl/cmm/jquery.mobile-1.0b3.min.js
+    ./js/egovframework/mbl/cmm/EgovMobile.js
+    ./js/egovframework/mbl/cmm/datepicker/jquery.mobile.datebox.js
+
+    ./mbl/com/ows/goMobileOfflineWebList.mdo
+    ./mbl/com/ows/goMobileOfflineWeb.mdo
+  
+    # Display fallback.html for all uncached pages
+    FALLBACK:
+  
+    # Following resources require network connection.
+    NETWORK:
+	*
+\\
+
+==== 오프라인웹 관련 코딩 Tip  ====
+HTML5의 오프라인웹서비스를 구현할때 데스크탑의 chrome 브라우저상에서 우클릭 후 요소검사 탭을 선택하여 개발자도구를 이용하면 \\
+브라우저 Cache내지는 xxxx.manifest 파일로 인한 문제를 감소 시킬 수 있다.\\
+\\
+실례로 chrome 브라우저의 개발자 도구의 Resource 탭을 선택하면 Local Storage, Application Cache를 확인 할 수 있다. \\
+Application Cache 를 클릭하여 펼치면 xxxx.manifest 상에 기술된 오프라인웹 대상 페이지를 확인 할 수 있다.\\
+\\
+만일 Application Cache에 xxxx.manifest에 기술된 내용이 없다면 오프라인웹이 적용이 안된 것이다. \\
+개발시 chrome 브라우저의 개발자도구를 이용한 디버깅을 병행한다면 보다 안정적인 오프라인웹 코딩이 이루어 질 수 있다.\\
+
+아래 그림은 각각 Local Stroage, Application Cache에 적용된 실례이다.\\
+
+{{:egovframework:mcom:egovmobileoffline_localstorage.jpg}}
+\\
+{{:egovframework:mcom:egovmobileoffline_applicationcache.jpg}}
+\\
+
+
+==== 오프라인웹 모바일 목록 조회 ====
+
+=== 비즈니스 규칙 ===
+오프라인웹 서비스의 기능 수행은 ajax통신을 통한 json 및 form 전송 방식으로 통해 데이터를 처리하며,\\
+페이지 이동은 전적으로 form 전송 방식으로 이루어지고 있다.\\
+\\
+오프라인웹 서비스 대상 메시지 목록을 조회 할 수 있다.\\
+\\
+단 더보기 버튼을 클릭하면 기존의 조회 목록에 신규로 메시지를 5건씩 추가하여 조회 할 수 있다.\\
+또한 오프라인웹 서비스 등록 화면으로 이동 할 수 있다.\\
+
+오프라인 전환시 온라인상에서의 목록조회, 상세조회가 동일하게 이루어지며\\
+단 온라인상에서 목록 조회를 반드시 1번 이상을 해야한다.\\
+\\
+온라인 상에서 목록조회를 하는 순간 목록에 담긴 정보를 webstorage에 저장하고 이를 오프라인 상에서\\
+사용을 하게 된다.
+
+=== 관련코드  ===
+    localStorage.setItem("localOfflineList", html);
+    $('div[id="list"] ul[data-role="listview"]').html(html).listview('refresh');
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회페이지로이동|/mbl/com/ows/goMobileOfflineWebList.mdo|goMobileOfflineWebList|  |
+|조회|/mbl/com/ows/selectMobileOfflineWebList.mdo|selectMobileOfflineWebList|"OfflineWebDAO.selectOfflineWebList"|
+|더보기|/mbl/com/ows/selectMobileOfflineWebList.mdo|selectMobileOfflineWebList|"OfflineWebDAO.selectOfflineWebList"|
+|상세페이지이동|/mbl/com/ows/goMobileOfflineWeb.mdo|goMobileOfflineWeb| |
+
+{{:egovframework:mcom:egovmobileofflinelist.jpg}}
+
+==== 오프라인웹 모바일 상세 조회 ====
+
+=== 비즈니스 규칙 ===
+오프라인웹 서비스의 기능 수행은 ajax통신을 통한 json 및 form 전송 방식으로 통해 데이터를 처리하며,\\
+페이지 이동은 전적으로 form 전송 방식으로 이루어지고 있다.\\
+\\
+
+오프라인웹 서비스 상세 조회 기능을 제공한다.\\
+오프라인 상에서의 상세 글은 온라인 상에서 목록 조회시 획득된 webstorage 정보를 이용하여 처리하고 있다.\\
+또한 삭제 기능을 제공하고 있다.\\
+\\
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/mbl/com/ows/goMobileOfflineWebList.mdo|goMobileOfflineWebList| |
+
+{{:egovframework:mcom:egovmobileOffline.jpg}}
+
+
+==== 오프라인웹 목록 조회 ====
+
+=== 비즈니스 규칙 ===
+오프라인웹서비스 글 목록을 검색조건 및 검색어를 이용하여 조회 할 수 있다.\\
+페이지에는 10개의 행을 노출하도록하며, 10개 이상이 되면 하단의 페이징을 통해 처리를 하고있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/mbl/com/ows/selectOfflineWebList.mdo|selectowsList|"OfflineWebDAO.selectOfflineWebList"|
+|  |  |"OfflineWebDAO.selectOfflineWebTotCnt"|  |
+|등록페이지이동|/mbl/com/ows/goOfflineWebRegist.mdo|goowsRegist|  |
+
+{{:egovframework:mcom:egovofflinelist.jpg}}
+
+
+==== 오프라인웹 상세 조회 ====
+
+=== 비즈니스 규칙 ===
+오프라인웹 서비스 상세 조회 기능을 제공한다.\\
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|삭제|/mbl/com/ows/deleteOfflineWeb.mdo|deleteOfflineWeb|"OfflineWebDAO.deleteOfflineWeb"|
+|수정페이지로이동|/mbl/com/ows/goOfflineWebUpdt.mdo|goowsUpdt| |
+|목록|/mbl/com/ows/selectOfflineWebList.mdo|selectowsList|"OfflineWebDAO.selectOfflineWebList"|
+
+{{:egovframework:mcom:egovoffline.jpg}}
+
+==== 오프라인웹 등록 ====
+
+=== 비즈니스 규칙 ===
+오프라인웹 서비스 글을 등록하며 입력시에는 제목, 내용을 입력 하도록 한다.\\
+제목, 글내용은 필수 입력 항목이다.
+
+=== 관련코드  ===
+N/A
+   
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/mbl/com/ows/insertOfflineWeb.mdo|insertOfflineWeb|"OfflineWebDAO.insertOfflineWeb"|
+|취소| | | |
+|목록|/mbl/com/ows/selectOfflineWebList.mdo|selectowsList|"OfflineWebDAO.selectOfflineWebList"|
+
+{{:egovframework:mcom:egovofflineinsert.jpg}}
+
+==== 오프라인웹 수정 ====
+
+=== 비즈니스 규칙 ===
+오프라인웹 서비스 글을 수정하며 수정시에는 제목, 내용을 입력 하도록 한다.\\
+제목, 글내용은 필수 입력 항목이다.
+
+=== 관련코드  ===
+N/A
+	
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|취소| | | |
+|저장|/mbl/com/ows/updateOfflineWeb.mdo|updateows|"OfflineWebDAO.updateOfflineWeb"|
+|목록|/mbl/com/ows/selectOfflineWebList.mdo|selectowsList|"OfflineWebDAO.selectOfflineWebList"|
+
+{{:egovframework:mcom:egovofflineupdt.jpg}}
+
+===== 참고자료 =====
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]
+  * 관련 데이터베이스 구조 및 스키마 : [[모바일_관련_데이터베이스_구조_및_스키마|관련 데이터베이스 구조 및 스키마]]

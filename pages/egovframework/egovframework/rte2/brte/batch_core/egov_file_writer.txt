@@ -1,0 +1,64 @@
+====== EgovFileWriter ======
+
+===== 개요 =====
+Spring 배치에서 제공하는 ItemWriter 중 File 기반 관련 설정을 사용할 경우, 대용량 데이터 처리 시간이 상용 배치프레임워크과 비교하여 큰 차이가 발생해 실무에 적용하기에는 부족한 점이 있었다. 이 문제를 해결하기 위해서 File 기반 Item Writer의 요소 중 성능저하 요인인 FieldExtractor, FormatterLineAggregator 부분을 개선하였다.
+
+===== 설명 =====
+==== FlatFileItemWriter와 EgovFlatFileItemWriter의 구조 ====
+
+=== FlatFileItemWriter와 EgovFlatFileItemWriter의 구조는 다음과 같다. ===
+
+{{:egovframework:rte2:brte:batch_core:egovfileitemwriter.png?1300|}} \\ \\
+
+===차이점 및 개선사항==
+  * EgovFieldExtractor :  Spring의 FlatFileItemWriter의 BeanWrapperFieldExtractor를 경량화하여 item(VO)에서 field value 추출 과정의 성능 개선. FlatFileItemWriter의 두가지 방식인 Delimited 방식과 Formatter 방식 성능 개선
+  * EgovFixedLengthLineAggregator : Spring의 FormatterLineAggregator는 Java의 format() 메소드를 이용하여 다양한 format으로 변환할 수 있지만 가장 기본 설정인 문자열 길이만 지정할 때 성능이 떨어지는 단점이 있다. 이에 사용자가 문자열 길이만 지정할 때의 성능을 개선 (format 지정은 VO에서 직접하여 FormatterLineAggregator와 같은 기능이지만 성능 개선 된 LineAggregator 사용 가능)
+    
+ EgovFlatFileItemWriter는 EgovFieldExtractor 개선으로 Spring의 FlatFileItemWriter(Delimited 방식, Formatter 방식)의 성능을 개선하였으며, FormatterLineAggregator의 경량화를 통해 Formatter 방식의 FlatFileItemWriter의 성능을 다시 한번 개선하였다.
+
+==== EgovFlatFileItemWriter의 설정 ====
+=== eGovDelimitedFlatFileItemWriter(Delimited 방식) ===
+
+^ 설정항목 ^ 내용 ^
+| delimiter | 필드의 경계를 구별해주는 문자를 나타낸다. |
+
+<code xml>
+<bean id="eGovDelimitedFlatFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <property name="resource" value="output resource path.." />
+    <property name="lineAggregator">
+        <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+            <property name="fieldExtractor">
+                <bean class="org.springframework.batch.item.file.transform.EgovFieldExtractor">
+                    <property name="names" value="name,credit" />
+                </bean>
+            </property>
+            <property name="delimiter" value="," />
+        </bean>
+    </property>
+</bean>
+</code>
+
+ 
+=== eGovFixedlengthFlatFileItemWriter(FixedLength 방식) ===
+
+^ 설정항목 ^ 내용 ^ 
+| fieldRanges | 필드 경계의 길이를 나타낸다. |
+
+<code xml>
+<bean id="eGovFixedlengthFlatFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+    <property name="resource" value="output resource path.." />
+    <property name="lineAggregator">
+	<bean class="org.springframework.batch.item.file.transform.EgovFixedLengthLineAggregator">
+	    <property name="fieldExtractor">
+	        <bean class="org.springframework.batch.item.file.transform.EgovFieldExtractor">
+       		    <property name="names" value="name,credit" />
+		</bean>
+	    </property>
+	    <property name="fieldRanges" value="10,2" />						
+	</bean>
+    </property>
+</bean>
+</code>
+
+===== 참고자료 =====
+FlatFileItemWriter

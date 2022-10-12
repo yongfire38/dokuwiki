@@ -1,0 +1,136 @@
+===== 개요 =====
+모니터링 에이전트는 프레임워크 클래스 모듈, 스케줄, 캐쉬를 모니터링하기 위한 MBean 모듈로 구성된다.
+
+===== MBean 모니터링 Agent 설치 절차 =====
+
+
+^NO^단계^확인사항^
+|1| 모니터링 대상 WAS RMI Port 설정 단계| 정의된 Port 통신 확인 |
+|2| monitoring-mbean.jar 설치 단계 | context-monitoring-mbean.xml 정의 |
+|3| 설치 확인 단계 | JAVA SDK에 내장된 jconsole 실행 | 
+
+==== 1. 모니터링 대상 WAS RMI Port 설정 ==== 
+
+모니터링 대상 서버의 IP를 192.168.200.21이고 RMI Port는 8992라고 임의로 정의하였다. 
+
+=== 1. JEUS 설정 ===
+JEUSMain.xml
+<code:XML>
+<engine-container>
+…
+<command-option> 
+-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.port=8992 
+-Dcom.sun.management.jmxremote.authenticate=false 
+-Dcom.sun.management.jmxremote.ssl=false
+</command-option>
+</code>
+
+=== 2. WebLogic 설정 ===
+startWeblogic.sh
+<code>
+JAVA_OPTIONS="
+-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.port=8992 
+-Dcom.sun.management.jmxremote.ssl=false 
+-Dcom.sun.management.jmxremote.authenticate=false 
+-Djava.rmi.server.hostname=192.168.200.21" 
+</code>
+
+=== 3. JBoss 설정 ===
+startJboss.sh
+<code>
+JAVA_OPTS="
+-Dcom.sun.management.jmxremote
+-Dcom.sun.management.jmxremote.port=8992
+ -Dcom.sun.management.jmxremote.authenticate=false
+ -Dcom.sun.management.jmxremote.ssl=false
+-Djava.rmi.server.hostname=192.168.200.21"
+</code>
+
+=== 4. Tomcat 설정 ===
+.profile
+<code>
+CATALINA_OPTS="
+-Dcom.sun.management.jmxremote 
+-Dcom.sun.management.jmxremote.port=8992  
+-Dcom.sun.management.jmxremote.authenticate=false  
+-Dcom.sun.management.jmxremote.ssl=false
+-Djava.rmi.server.hostname=192.168.200.21"
+</code>
+
+모니터링 대상 WAS RMI Port 설정하고 정의된 Port WAS 부팅후 netstat -na | grep [rmi port]로 rmi port 떠 있는지 확인
+
+
+==== 2. monitoring-mbean.jar 설치 ==== 
+모티터링 대상 서버의 WEB-INF에 jar를 설치하고 환경 설정 xml파일을(context-monitoring-mbean.xml) 정의한다.
+모니터링 대상 서버에 여러개의 Application 이 등록 된 경우 Application 별로 ScheduleExtractMBean과 CacheInfoMBean을 다른 export 명으로 등록하여야 하며 ModelExtractMBean 은 한개의 Application 에만 등록하여야 한다.
+<code:XML>
+ <!-- MBean Server 등록 -->
+  <bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean"/>
+  <!-- MBean Export 에서 등록한 beans 에 export 명 지정 -->
+  <bean id="namingStrategy" class="org.springframework.jmx.export.naming.KeyNamingStrategy">
+    <property name="mappings">
+      <props>       
+        <!--  ModelExtractMBean은 하나의 Container 에 하나만 등록-->
+        <prop key="ModelExtractMBean">bean:name=EgovModelExtractMBean</prop>  
+        <!--  ScheduleExtractMBean, CacheInfoMBean 은 Application별 다른 이름으로 등록-->
+        <prop key="ScheduleExtractMBean">bean:name=EgovScheduleExtractMBean</prop>         
+        <prop key="CacheInfoMBean">bean:name=EgovCacheExtractMbean</prop>         
+      </props>   
+    </property>
+  </bean>
+  <!-- spring bean 을 JMX Mbean Server 에 등록  -->
+   <bean id="exporter" class="org.springframework.jmx.export.MBeanExporter">
+    <property name="beans">
+      <map>
+        <entry key="ModelExtractMBean" value-ref="ModelExtractMBean"/>
+        <entry key="ScheduleExtractMBean" value-ref="ScheduleExtractMBean"/>        
+        <entry key="CacheInfoMBean" value-ref="CacheInfoMBean" />
+      </map>
+    </property>
+    <property name="namingStrategy" ref="namingStrategy"/>      
+  </bean>
+
+  <!-- 운영서버에서 호출할 대상 MBean 클래스 등록 -->
+  <bean id="ModelExtractMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovModelExtractMBeanImpl"></bean>
+  <bean id="ScheduleExtractMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovScheduledExtractMBeanImpl"></bean>
+  <bean id="CacheInfoMBean" class="egovframework.oe2.agt.aggregator.mbean.service.impl.EgovCacheInfoMBeanImpl"></bean>   
+</code>
+
+==== 3. jconsole 실행 테스트 수행 ==== 
+
+실행 테스트 순서는 RMI Port 접속 확인과 기본 MBean 노출 확인, 설치한 monitoring-mbean.jar의 순서로 수행하여 각 단계별 문제를 발견 및 해결 할 수 있다.
+
+=== RMI Port 접속 확인 ===
+{{:egovframework:oe2:설치:jconsole.exe.png|}}\\
+JAVA SDK에 내장된 jconsole.exe를 실행하고 "Advanced" 탭 JMX URL란에 "service:jmx:rmi:///jndi/rmi://192.168.200.21:8992/jmxrmi" 입력하여 접속(서버 IP : RMI Port) 테스트 수행하여 RMI Port에 정상적으로 떠있을 경우 확인할 수 있다.
+
+=== MBean Export 확인 ===
+{{:egovframework:oe2:설치:jconsole_rmi.png|}}\\
+정상적일 경우 기본 내장된 MBean이 노출됨을 확인할 수 있다.
+
+=== monitoring-mbean.jar 설치 확인 ===
+{{:egovframework:oe2:설치:jconsole_wasagent.png|}} \\
+정상적으로 설치된 경우 EgovCacheExtractMbean, EgovModelExtractMbean, EgovScheduleExtractMbean MBean이 노출됨을 확인할 수 있다.
+
+
+===== MBean 종류 별 RMI/ Default JNDI PORT  =====
+
+^MBean 종류^ JEUS ^ JBoss ^ WebLogic ^ Tomcat ^
+|Operating System & RunTime| RMI(8992) |||| 
+| Memory | RMI(8992) |||| 
+| Load Class | RMI(8992)  |||| 
+| Garbage Collection| RMI(8992)  |||| 
+| JDBC  | JNDI(9736) | JNDI(8992) |JNDI(1099) |RMI(8992) | 
+| Session | JNDI(9736) | JNDI(8992) |JNDI(1099) |RMI(8992) | 
+| Thread | JNDI(9736) | JNDI(8992) |JNDI(1099) |RMI(8992) | 
+| egovModelExtractMBean | RMI(8992)  |||| 
+| egovScheduleExtractMBean | RMI(8992)  |||| 
+| egovEhCacheExtractMBean| RMI(8992) |||| 
+** RMI Port는 8992를 권장하며 JNDI Port는 WAS에 위와 같이 Default값으로 저장되어 있다. 
+
+===== 참고자료 =====
+
+[[http://java.sun.com/j2se/1.5/pdf/rmi-spec-1.5.0.pdf|Java Remote Method Invocation 1.5.0 Specification ]] \\
+[[http://jcp.org/aboutJava/communityprocess/final/jsr154/index.html|JSR-000154 JavaTM Servlet 2.4 Specification ]]

@@ -1,0 +1,23 @@
+====== Spring Web Flow 의 정의  ======
+Spring Web Flow 는 Spring기반의 Web Application 개발 흐름의 한 모듈이라 할 수 있겠다. \\
+SpringWebFlow의 목표는 웹어플리케이션의 페이지흐름의 최선의 솔루션을 제공하는 것이다. \\
+SWF는 한트랜잭션이 여러단계의 페이지로 구성된, 다시말해 사용자가 여러 단계를 밟아가며 한 트랜잭션을 수행하는 그런 환경에서 최상의 제어방식을 제공한다.\\
+
+Spring Web Flow 는 단어에서 이야기 하는 것처럼 Web 의 Flow 를 정의하여 구현하는 Framework 이자 도구 이다.\\
+그렇다면 Flow 란 어떤 것일까 ?\\
+
+Flow 란 상이한 상황(context)에서 실행될 수 있는 재사용이 가능한 여러 단계들의 흐름을 캡슐화한 것을 의미한다. \\
+아래는 호텔 예약 프로세스의 각 단계들을 캡슐화한 flow를 설명하고 있는 Garrett Information Architecture다이어그램이다.
+
+{{:egovframework:rte:bsl:swf01.png|}}
+
+그렇다면 Flow는 무엇으로 구성될까? \\
+SWF에서 플로우는 "상태(state)"로 부르는 일련의 단계들로 구성된다. \\
+플로우로 진입하게 되는 상태는 일반적으로 사용자에게 보여지는 뷰가 된다. 이 뷰에서는 상태를 제어하게 되는 이벤트가 발생한다. \\
+이들 이벤트는 결과적으로 다른 뷰로 이동하게 되는 전이(transition)을 일으키게 된다.\\
+간단하게 말하자면 뷰(state), 전이(transition) 로 구성된다.
+호텔 예약 프로세스 상으로는 아래와 같이 표현할 수 있다.\\
+
+{{:egovframework:rte:bsl:swf02.png|}}
+
+

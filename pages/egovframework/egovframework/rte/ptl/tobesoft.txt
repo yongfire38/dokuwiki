@@ -1,0 +1,148 @@
+=====전자정부 프레임 워크와 마이플랫폼 연동을 위한 기본 가이드=====
+
+마이플랫폼 전자정부 표준 프레임워크 연동은 입력 파라메터 또는 입력 데이터가 없는 경우와 있는 경우 두 가지로 크게 나눌 수 있다.
+
+
+====입력 데이터가 있는 경우(입력, 수정 등)====
+
+1.입력 데이터 셋이 있을 경우, 모든 파라메터(마이플랫폼 Transaction함수의 input dataset 또는 parameters)는  서버단의 VOClass 와 1대 1 맵핑을 기본원칙으로 한다.
+2. 모든 입력/수정의 처리(모든 레코드의 처리)는 단건 레코드를 기준으로 처리한다.
+3. VO Class와 데이터 셋의 맵핑을 위해 마이플랫폼의 Transaction시 ds_voInfo 데이터 셋에 해당 데이터 셋에 맞는 VO Class 정보를 셋팅해서 보내 준다.
+
+  - 데이터 셋을 전달하는 실제 코딩 시에는 Transaction함수 대신 common.js 의 fnCmTr함수를 사용하세요
+  - 해당 폼에는 ds_voInfo 가 반드시 존재해야 함.
+
+마이플랫폼에서 fnCmTr의 사용 예
+<code java>
+파라메터 설명
+/**
+ * @ strSvcid : 서비스 아이디
+* @ strController : 서버 컨트롤러 주소
+ * @ strVoClass : 입력 데이타 셋이 맵핑될 VOClass
+ * @ strInputDs : 입력 데이타 셋 정보
+ * @ strOutputDs : 출력 데이타 셋 정보
+ * @ strParam : 파라메터 정보
+ * @ strFnCallback : 콜백 함수 정보 -> 폼에 있어야 함
+ */
+</code>
+4. Input 데이터 셋의 아이디는 반드시 ds_input 으로 전송해야 서버에서 받을 수 있다.
+5. 서버쪽의 컨트롤러를 작성할 시에는 반드시 아래처럼 Parameter 정보에 Object를 명시하여 해당 Argument Resolver를 수행할 수 있도록 해야 한다.
+
+(서버단 컨트롤러 작성 예)
+<code java>
+	@RequestMapping(value = "/miplatform/egovSampleDetailDS.do")
+	public ModelAndView detailSampleList4MiByDataset(Object vo, Model model)
+	        throws Exception {
+		
+		ModelAndView mav = new ModelAndView("miplatformViewByVO");
+		
+		try
+		{
+			mav.addObject("MiDTO", selectSample((SampleVO)vo, new SampleDefaultVO()));
+			
+			mav.addObject("MiResultCode", "0");
+			mav.addObject("MiResultMsg", "success");
+
+		} catch ( Exception e )
+		{
+			e.printStackTrace();
+			mav.addObject("MiResultCode", "-1");
+			mav.addObject("MiResultMsg", e.toString());
+		}
+		return mav;
+	}
+</code>
+
+▣ 입력 데이터가 없는 경우
+
+1.	입력 데이터(데이터셋이나 파라메터)가 없는 경우는 별다른 제약 없이 사용된다
+(사용 예)
+<code java>
+	@RequestMapping(value = "/miplatform/egovSampleList.do")
+	public ModelAndView selectSampleList4Mi(@ModelAttribute("searchVO") SampleDefaultVO udDtoVO)
+	        throws Exception {
+		
+		ModelAndView mav = new ModelAndView("miplatformViewByMap");
+		
+		try
+		{
+			PaginationInfo paginationInfo = new PaginationInfo();
+			paginationInfo.setCurrentPageNo(udDtoVO.getPageIndex());
+			paginationInfo.setRecordCountPerPage(udDtoVO.getPageUnit());
+			paginationInfo.setPageSize(udDtoVO.getPageSize());
+
+			udDtoVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+			udDtoVO.setLastIndex(paginationInfo.getLastRecordIndex());
+			udDtoVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+			
+			List sampleList = sampleService.selectSampleList(udDtoVO);
+			
+			System.out.println("sampleList 레코드 카운드는 ==========> "+sampleList.size());
+			int totCnt = sampleService.selectSampleListTotCnt(udDtoVO);
+			paginationInfo.setTotalRecordCount(totCnt);
+			//mav.addAttribute("paginationInfo", paginationInfo);
+			
+
+			mav.addObject("MiResultCode", "0");
+			mav.addObject("MiResultMsg", "success");
+			
+			mav.addObject("MiDTO", sampleList);
+
+		} catch ( Exception e )
+		{
+			e.printStackTrace();
+			mav.addObject("MiResultCode", "-1");
+			mav.addObject("MiResultMsg", e.toString());
+		}
+		return mav;
+	}
+</code>
+
+2.	마이플랫폼에서 서비스를 호출할 때는 output dataset정보만 기술해 주면 된다.\\
+
+(마이플랫폼에서 호출 예)
+<code>transaction("list","svc::egovSampleList.do","","ds_list=ds_output","","fnCallback");</code>
+
+▣ 처리가 끝난 데이터를 마이플랫폼으로 전달하기
+
+1. 처리가 끝난 결과를 마이플랫폼으로 전송할 경우, 복수데이타(리스트 형)처리를 위해 java.util.Map으로 리턴된 정보와 데이터 셋을 맵핑하는 경우와 VO Class로 리턴된 정보를 맵핑하는(단건처리) 두 가지 경우로 나누어 처리한다.\\
+
+(Sample-servlet.xml 파일에 기술된 ViewResolver 정의)
+<code xml>
+<bean id="miplatformViewByMap" class="egovframework.rte.cmmn.ria.support.MiPlatformViewByMap" />
+<bean id="miplatformViewByVO" class="egovframework.rte.cmmn.ria.support.MiPlatformViewByVO" />
+</code>
+
+  *1.1	Java.util.Map으로 리턴된 경우
+egovframework.rte.cmmn.ria.support.MiPlatformViewByMap 을 사용한다.\\
+(사용 예)
+
+
+  *1.2	VO Class로 리턴된 경우
+egovframework.rte.cmmn.ria.support.MiPlatformViewByVO 를 사용한다.
+
+ArgumentResolver를 통해 처리가 끝난 Object형의 vo를 사용할 경우, 해당 VO 타입으로(예에서는 SampleVO타입) 타입 캐스팅 하여 사용하여야 한다.
+VO로 리턴되는 결과에 대해 마이플랫폼 데이터 셋과 맵핑할 경우는 miplatformViewByVO를 사용하여야 한다.
+
+(컨트롤러에서의 사용 예)
+ 
+
+
+
+▣ 마이플랫폼 Transaction함수의 parameters로 전달하는 조회키의 처리 방법
+
+특이 사항으로 조회성 데이터 처리시 조회의 키를 데이터 셋으로 전달하지 않고 마이플랫폼의 파라메터로 전달할 경우가 있는데, 이때는 다음과 같이 해당 컨트롤러의 파라메터로 UdDTO를 사용하여 처리할 수 있다.
+
+1.	조회 파라메터를 입력할 경우(마이플랫폼 Transaction함수의 parameter로 전송할 경우)
+
+<마이플랫폼에서 호출 시 - selectedId 로 파라메터 전달>
+ 
+
+2.	이 때에는 VO로 바로 맵핑되지 않기 때문에 miDto로부터 Map를 받아, 해당 Map에서 서비스의 파라메터로 필요한 VO에 셋팅해주는 작업을 해 주어야 한다.
+
+(서버단의 컨트롤러 작성의 예)
+-	컨트롤러의 파라메터에 UdDTO를 선언해 주고, 필요한 VOClass에 클라이언트로부터 전달받은 파라메터 아이디로 찾은 파라메터를 셋팅해 준다.
+ 
+
+이상과 같은 절차를 통해 전자정부 표준 프레임워크와 마이플랫폼을 연동할 수 있다.
+

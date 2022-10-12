@@ -1,0 +1,7 @@
+====== [적용 예] Naming Service ======
+
+===== 개요 =====
+[[egovframework:rte:itl:naming_service|Naming Service]] Service 를 적용해서
+===== 설명 =====
+==== Configuration ====
+==== Source ====

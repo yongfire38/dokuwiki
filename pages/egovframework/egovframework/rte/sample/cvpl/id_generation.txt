@@ -1,0 +1,77 @@
+====== [적용 예] ID Generation ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:id_generation|ID Generation]] Service 중 Table Id Generation Service 를 적용해서
+민원접수번호, FAQ접수번호를 생성한다.
+
+===== 설명 =====
+==== DB Schema ====
+<code sql>
+CREATE TABLE ids ( table_name varchar(16) NOT NULL, 
+		   next_id DECIMAL(30) NOT NULL,
+		   PRIMARY KEY (table_name));
+
+INSERT INTO IDS VALUES('RTETNCVPL', 0);
+INSERT INTO IDS VALUES('RTETNFAQ', 0);
+</code>
+  
+==== Configuration ====
+=== resources\spring\context-idgen.xml ===
+<code xml>   
+// 민원접수번호
+<bean name="egovCvplCnsltIdGnr"
+	class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+	destroy-method="destroy">
+	<property name="dataSource" ref="dataSource" />
+	<property name="strategy" ref="mixPrefixCvplCnslt" />
+	<property name="blockSize" value="10"/>
+	<property name="table" value="ids"/>
+	<property name="tableName" value="RTETNCVPL"/>
+</bean>
+
+<bean name="mixPrefixCvplCnslt"
+	class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+	<property name="prefix" value="CVPL" />
+	<property name="cipers" value="5" />
+	<property name="fillChar" value="0" />
+</bean>	
+			
+// FAQ접수번호
+<bean name="egovCvplFaqIdGnr"
+	class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+	destroy-method="destroy">
+	<property name="dataSource" ref="dataSource" />
+	<property name="strategy" ref="mixPrefixCvplFaq" />
+	<property name="blockSize" value="10"/>
+	<property name="table" value="ids"/>
+	<property name="tableName" value="RTETNFAQ"/>
+</bean>
+
+<bean name="mixPrefixCvplFaq"
+	class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+	<property name="prefix" value="FAQ" />
+	<property name="cipers" value="6" />
+	<property name="fillChar" value="0" />
+</bean>	
+</code>
+  * blockSize: Id Generation 내부적으로 사용하는 정보로 ID 요청시마다 DB접속을 하지 않기 위한 정보(지정한 횟수 마다 DB 접속 처리)
+  * table: 생성하는 테이블 정보
+  * tableName: 사용하고자 하는 아이디 개별 인식을 위한 키 값
+==== Source ====
+=== egovframework\rte\cvpl\web\EgovCvplCnsltController.java ===
+<code java>
+// 민원접수번호
+@Resource(name="egovCvplCnsltIdGnr")    
+private EgovIdGnrService egovCvplCnsltIdGnr;
+
+String id = egovCvplCnsltIdGnr.getNextStringId();
+</code>
+=== egovframework\rte\cvpl\web\EgovCvplFaqController.java ===
+<code java>			
+// FAQ접수번호
+@Resource(name="egovCvplFaqIdGnr")    
+private EgovIdGnrService egovCvplFaqIdGnr;
+    
+String id = egovCvplFaqIdGnr.getNextStringId();
+
+</code>

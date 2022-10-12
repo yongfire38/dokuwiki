@@ -1,0 +1,41 @@
+====== 공통 컴포넌트  ======
+===== 개요 =====
+정보시스템을 구축할 때 여러 기관이 공통적으로 활용하기 위하여 재사용이 가능하도록 기능 위주로 개발한 컴포넌트 소프트웨어를 말한다.
+== 공통컴포넌트 개념 ==
+{{:egovframework:mcom:모바일개념.gif|공통컴포넌트 개념}}
+
+== 공통컴포넌트 아키텍처 구성도 ==
+{{:egovframework:mcom:모바일아키텍처.gif|공통컴포넌트 아키텍처}}
+
+== 공통컴포넌트 내부 흐름 관계 ==
+{{:egovframework:mcom:모바일시퀀스다이어그램.gif|공통컴포넌트 시퀀스다이어그램}}
+
+===== 공통컴포넌트의 배포 =====
+공통컴포넌트는 여러 세부기능을 서비스가 가능한 묶음으로 분류하여 그 배포 파일을 구성하였으며, 각각의 개별 배포 zip파일만으로도 컴포넌트가 정상적으로 구동이 가능하도록 구성하였다.
+
+
+**사용법**
+
+
+eGovframework Web Project를 생성 후, 첨부파일(egovframework-XXXXXXXX-2.0.0.zip)을 Import한다.
+
+자세한 사용법은 다음과 같다.
+
+① 첨부된 파일을 다운받는다. 
+
+② eGovframework 개발 환경에서 File->New->eGovframework Web Project를 선택한다. 
+
+③ Project name과 Group Id, Artifact Id를 입력 후, Finish 버튼을 클릭하여 eGovframework Web Project를 생성한다. 
+
+④ 생성된 프로젝트를 선택하고, 우클릭하여 Import를 선택한다. 
+
+⑤ Import 선택 창에서 General->Archive File을 선택하고 Next 버튼을 클릭한다. 
+
+⑥ Archive File 선택 창에서 Browser 버튼을 클릭하고,  다운 받은 첨부파일을 선택한다. 
+
+⑦ Finish 버튼을 클릭 후, Overwrite 질문 창에서 Yes To All 버튼을 클릭한다. 
+
+⑧ 프로젝트를 선택하고, 우클릭하여 Maven->Update Project Configuration을 선택하여 필요 라이브러리를 다운로드한다. 
+
+⑨ eGovframework 개발 툴 상단 Project 메뉴의  Clean을 통해 프로젝트를 Clean후, Maven Install을 하고 실행한다.
+

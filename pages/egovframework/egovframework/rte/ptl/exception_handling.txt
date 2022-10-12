@@ -1,0 +1,116 @@
+====== Exception 화면 Handling  ======
+===== 개요 =====
+
+화면단의 Exception 처리는 Controller 로 전달된 Excpetion 따른 지정된 에러 화면으로 이동으로 이루어져 있다.
+
+Controller 인터페이스의 handleRequest() 메소드는 Excetpion 을 발생하도록 정의되어 있다.
+<code java>
+  ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception;
+</code>
+
+따라서 Controller 에서 발생하는 Exception 은 Controller 를 통해 실행된 로직(UI/BIZ/DB) 에서 발생한 Exception 에 대해 처리할 수 있도록 하고 있다.
+
+Exception 에 따라 에러 화면을 출력할 때는 HandlerExceptionResolver 를 이용한다.
+
+**DispathcherServlet 은 HandlerExceptionResolver가 등록 되어 있는 경우 Exception 발생하는 경우 HandlerExceptionResolver에게 위임한다.**
+
+HandlerExceptionResolver는 아래와 같은 인터페이스이다.
+<code java>
+  public interface HandlerExceptionResolver {
+  
+  	ModelAndView resolveException(
+  			HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex);
+  
+  }
+</code>
+
+그럼 실제로 구현된 클래스는 어떤 것일까?.
+
+현재 스프링에서 제공되는 실 구현체는 SimpleMappingExceptionResolver 이다. 
+
+SimpleMappingExceptionResolver를 이용하려면 어떻게 설정해야 할까. 알아보도록 하자.
+===== 설명 =====
+
+==== Bean Configuration  ====
+SimpleMappingExceptionResolver 는 defaultErrorView, exceptionMappings 을 property 로 취할 수 있다.\\
+defaultErrorView 는 발생한 Exception 종류에 맞는 별도의 설정에 없는 ModelAndView 명으로 전송되어 지정된 화면을 보여주게 된다.\\
+exceptionMappings 은 여러개의 키와 값을 취한다. 이 예에서는 org.egovframe.exception.ACaseException 발생에 따른 화면을 exception/ACaseException 로 지정되는 것이다.\\
+
+sample-servlet.xml 
+<code xml>
+  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+  	<property name="defaultErrorView" value="exception/CommonCaseException"/>
+  	<property name="exceptionMappings">
+  		<props>
+  			<prop key="org.egovframe.exception.ACaseException">exception/ACaseException</prop>
+  			<prop key="org.egovframe.exception.BCaseException">exception/BCaseException</prop>
+  		</props>
+  	</property>
+  </bean>
+  </code>
+  
+이 설정에 대해 다시 설명을 하자면, \\
+발생한 Exception 의 종류를 ACaseException, BCaseException , 기타 Exception 이 발생하는 경우\\
+ACaseException 은 exceptionMapping 규칙에서 보이는 것 처럼 해당 Exception 과 매핑된 excpetion/ACaseExcetpion 을 결과값을 가져오게 된다.\\
+BCaseException 의 경우도 마찬가지다. 가져온 값은 ViewResolver에 의해 해당 화면으로 이동을 하게 된다.\\
+그리고 excpetionMappings 에서 정의되지 않은 Exception 인 경우 defaultErrorView 에 매핑된 exception/CommonCaseExceptio 을 리턴하게 된다. \\
+결과적으로 보면 발생한 Exception 에 대한 별도의 정의를 하지 않는 다면 defaultErrorView 에 지정된 값의 화면으로 이동하게 된다는 것이다. \\
+SimpleMappingExceptionResolver의 분기로직은 아래와 같다.\\
+<code java>
+	protected ModelAndView doResolveException(
+			HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+    ....
+		// Expose ModelAndView for chosen error view.
+		String viewName = determineViewName(ex, request);
+		if (viewName != null) {
+			...
+			return getModelAndView(viewName, ex, request);
+		}
+		else {
+			return null;
+		}
+	}
+	
+....
+	protected String determineViewName(Exception ex, HttpServletRequest request) {
+		String viewName = null;
+		// 특정한 Excpetion 별 세팅이 있는 경우에 findMatchingViewName(this.exceptionMappings, ex)에서 해당 viewName 이 넘어오고 아닌 경우 null 이 넘어온다. 
+		if (this.exceptionMappings != null) {
+			viewName = findMatchingViewName(this.exceptionMappings, ex);
+		}
+		
+		//viewName 에 null 오고 defaultErrorView 가 존재하면 디폴트 화면으로 viewNmae을 설정하여 ViewResolver 로 보내어진다. 
+		if (viewName == null && this.defaultErrorView != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Resolving to default view '" + this.defaultErrorView +
+						"' for exception of type [" + ex.getClass().getName() + "]");
+			}
+			viewName = this.defaultErrorView;
+		}
+		return viewName;
+	}
+...
+</code>
+
+  
+==== 발생한 Exception을 화면으로 보여주기  ====
+
+여기서는 간단한 에러 화면을 보여주도록 하겠다.
+
+<code html>
+  <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+  <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+  <html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <title>요청 처리상에 문제가 발생하였습니다. </title>
+  </head>
+  <body>
+  <h2>요청 처리상에 문제가 발생하였습니다.<br>
+  Exception : ${exception.message}</h2>
+  <p/>
+  </body>
+  </html>
+</code>

@@ -1,0 +1,66 @@
+====== CivilAppeal ======
+
+===== 개요 =====
+온라인 민원상담 시스템(egovframework.guideprogram.civilappeal)으로 가이드프로그램을 구성했다.
+
+가이드프로그램의 각 메뉴는 기본적인 CRUD 형식으로 구현되어 있으며,
+가이드프로그램의 Business, web 구현을 위해 실행환경의 기능을 사용했다.
+==== [구성 메뉴] ====
+=== 사용자관리 ===
+  * 사용자목록 : 사용자관리 메뉴로 관리자 권한만 사용가능하며 사용자 등록, 사용자 정보 수정, 사용자 정보 조회, 사용자 삭제, 사용자 목록 다운로드등을 할 수 있다.
+  * 나의정보 : 로그인한 사용자 정보를 조회, 수정 할 수 있다.
+
+=== 온라인민원상담실 ===
+  * 민원목록 : 온라인민원상담실 메뉴로 등록된 민원의 답변작성, 민원 관리 할 수 있다.
+  * 민원등록 : 민원을 등록 할 수 있다.
+  * 나의민원 : 로그인한 사용자의 민원을 등록, 수정, 조회, 삭제, 민원 목록 다운로드등을 할 수 있다.
+
+=== 민원FAQ ===
+  * FAQ목록 : 민원FAQ 메뉴로 민원FAQ 조회, 수정, 삭제, 목록 다운로드등을 할 수 있다.
+  * FAQ등록 : 민원FAQ를 등록 할 수 있다.
+
+===== 설치 가이드 =====
+  * [[egovframework:rte:sample:cvpl:binary|Binary 설치]]
+  * [[egovframework:rte:sample:cvpl:source|Source 설치]]
+
+===== 구현 가이드 =====
+==== 실행환경 Layer별 기능 적용사항 ====
+=== [화면처리] Presentation Layer ===
+  * [[egovframework:rte:sample:cvpl:validation|Validation]]
+  * [[egovframework:rte:sample:cvpl:ajax_support|Ajax Support]]
+  * [[egovframework:rte:sample:cvpl:spring_mvc|Spring MVC]]
+  * [[egovframework:rte:sample:cvpl:internationalization|Internationalization]]
+
+=== [업무처리] Biz. Logic Layer ===
+  * [[egovframework:rte:sample:cvpl:exception_handling|Exception Handling]]
+
+=== [데이터처리] Persistent Layer ===
+  * [[egovframework:rte:sample:cvpl:data_access|Data Access]]
+  * [[egovframework:rte:sample:cvpl:data_source|Data Source]]
+  * [[egovframework:rte:sample:cvpl:orm|ORM]]
+  * [[egovframework:rte:sample:cvpl:transaction|Transaction]]
+
+=== [연계통합] Integration Layer ===
+  * [[egovframework:rte:sample:cvpl:naming_service|Naming Service]]
+  * [[egovframework:rte:sample:cvpl:integration_service|Integration Service ]]
+  * [[egovframework:rte:sample:cvpl:webservice|WebService]]
+
+=== [공통기반] Foundation Layer ===
+  * [[egovframework:rte:sample:cvpl:scheduling|Scheduling]]
+  * [[egovframework:rte:sample:cvpl:ioc_container|IoC Container]]
+  * [[egovframework:rte:sample:cvpl:aop|AOP]]
+  * [[egovframework:rte:sample:cvpl:id_generation|ID Generation]]
+  * [[egovframework:rte:sample:cvpl:property|Property]]
+  * [[egovframework:rte:sample:cvpl:cache|Cache]]
+  * [[egovframework:rte:sample:cvpl:resource|Resource]]
+  * [[egovframework:rte:sample:cvpl:marshalling_unmarshalling|Marshalling/Unmarchalling]]
+  * [[egovframework:rte:sample:cvpl:xml_manipulation|XML Manipulation]]
+  * [[egovframework:rte:sample:cvpl:encryption_decryption|Encryption/Decryption]]
+  * [[egovframework:rte:sample:cvpl:mail|Mail]]
+  * [[egovframework:rte:sample:cvpl:file_upload_download|File Upload/Download]]
+  * [[egovframework:rte:sample:cvpl:string_util|String Util]]
+  * [[egovframework:rte:sample:cvpl:excel|Excel]]
+  * [[egovframework:rte:sample:cvpl:server_security|Server Security ]]
+  * [[egovframework:rte:sample:cvpl:logging|Logging ]]
+  * [[eGovframework:rte:sample:cvpl:file_handling|File Handling]]
+  * [[eGovframework:rte:sample:cvpl:object_pooling:Object Pooling]]

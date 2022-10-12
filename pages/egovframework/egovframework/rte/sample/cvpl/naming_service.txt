@@ -1,0 +1,27 @@
+====== [적용 예] Naming Service ======
+
+===== 개요 =====
+[[egovframework:rte:itl:naming_service|Naming Service]] Service 를 적용해서 Datasource를 사용한다.
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-datasource.xml ===
+<code xml>
+    <!-- mysql-->
+     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://db2:1621/rte"/>
+        <property name="username" value="rte"/>
+        <property name="password" value="rte01"/>
+        <property name="defaultAutoCommit" value="false"/>
+        <property name="poolPreparedStatements" value="true"/>
+    </bean>
+</code>
+설정되어 있는 위 내용을 해당 WAS 서버 JDBC 에 "mysqlDB"로 추가하고
+
+<code xml>
+    <!-- mysql-->
+    <jee:jndi-lookup id="dataSource" jndi-name="/mysqlDB"/>
+</code>
+위와 같이 기술한다.
+
+

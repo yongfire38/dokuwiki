@@ -1,0 +1,422 @@
+====== 협업 - 모바일 기기 식별 ======
+
+===== 개요 =====
+모바일 기기 식별은 접속한 모바일 단말기의 User-Agent를 비교하여 운영체제, 브라우저 종류 및 버전 등을 확인할 수 있는 기능을 제공한다.
+
+User-Agent란 브라운저의 정보를 담고 있는 HTTP Protocol Header의 User-Agent 필드 값을 말한다. User-Agent는 운영체제, 브라우저 별로 \\
+서로 다른 값을 나타내므로, 이를 통해 현재 접속하고 있는 단말기의 운영체제 및 브라우저의 정보를 얻을 수 있다.
+
+ * 기능흐름
+
+{{:egovframework:mcom:mdi_flow.jpg?800}}
+
+
+ * 기기 식별 흐름
+
+=== 사용자 측면에서의 모바일 기기 정보 조회 ===
+
+{{:egovframework:mcom:mdi_flow_device.jpg?800}}
+
+사용자는 모바일 단말기를 통해 기기 정보 조회를 요청하면, 서버에서는 User-Agent값을 1차적으로 "EgovDeviceIdent.xml" 파일에서 탐색하여 \\
+정보를 제공해준다. 이 때 XML 파일 내 해당 기기의 정보가 존재하지 않으면, DB에 User-Agent값을 등록하고, Unknown 정보를 제공하게 된다.
+
+=== 관리자 측면에서의 모바일 기기 정보 관리 ===
+
+{{:egovframework:mcom:mdi_flow_web.jpg?800}}
+
+관리자는 모바일 기기 정보 관리 페이지를 통해 새로 등록된 User-Agent의 정보를 입력할 수 있다. 관리 페이지에서 모바일 기기 정보를 \\
+입력 및 수정하면 수정 내용이 "EgovDeviceIdent.xml" 파일에 반영된다. 
+
+본 컴포넌트의 모바일 화면은 모바일 디바이스에 탑재된 브라우저를 대상으로 개발 및 테스트 검증이 완료되었다. \\
+또한 동일 제조사의 동일한 브랜드라도 PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 \\
+개발시 유의가 필요함을 밝혀둔다.
+
+검증 대상 디바이스와 브라우저로는 각각 갤럭시S2, 갤럭시S, iPad2, iPhone4, 갤럭시탭1 등의 디바이스와 \\
+android용 웹 브라우저, Firefox, Safari, opera mobile 등의 모바일 브라우저를 사용하였다.
+
+검증결과는 아래와 같다.
+
+Android \\
+android용 웹 브라우저, Firefox(6.xx), opera mobile은  android OS 2.3(gingerbread) 에서 HTML5, CSS3 및 컴포넌트의 \\
+실행이 안정적으로 실행되는 것을 확인 하였다. \\
+반면 android OS 2.3(gingerbread) 하위 브라우저인 android 2.1, 2.2에서는 컴포넌트 실행에 있어 매끄럽지 못한 HTML5, CSS3 지원으로 인하여 \\
+컴포넌트의 UI 구현이 원할하지 못한 모습을 보였다. 
+
+opera mobile의 경우 UI처리시 색상 및 이벤트 처리에 문제를 야기하였으며 \\
+그로인해 opera mobile은 3종 지원브라우저 대상에서 제외 되었다. \\
+테스트 모바일 디바이스로는 갤럭시, 갤럭시S2, 갤럭시탭1을 채택하였다.
+
+iOS \\
+iOS는 3종 지원브라우저 대상중 하나로 Safari 4.2, 4.3 버전에서 검증을 하였으며 비교적 원활한 HTML5, CSS3를 지원을 하였다.\\
+테스트 모바일 디바이스로는 iPhone4, iPad2를 채택하였다.
+
+===== 설명 =====
+모바일 기기 식별은 크게 모바일 기기 정보의 관리기능인 **모바일 기기 정보 목록조회, 상세조회, 등록, 수정, 삭제**로 구성되어 있으며,\\
+모바일 기기 정보를 조회하는 **모바일 기기 정보 조회** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:mcom:mdi_class.jpg?800}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.mbl.com.mdi.web.EgovDeviceIdentController.java|모바일 기기 식별 Controller Class|
+|Service|egovframework.mbl.com.mdi.service.EgovDeviceIdentService.java|모바일 기기 식별 Service Class|
+|ServiceImpl|egovframework.mbl.com.mdi.service.impl.EgovDeviceIdentServiceImpl.java|모바일 기기 식별 ServiceImpl Class|
+|Model|egovframework.mbl.com.mdi.service.DeviceIdent.java|모바일 기기 식별 Model Class|
+|VO|egovframework.mbl.com.mdi.service.DeviceIdentVO.java|모바일 기기 식별 VO Class|
+|DAO|egovframework.mbl.com.mdi.service.impl.DeviceIdentDAO.java|모바일 기기 식별 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mdi/EgovDeviceIdentList.jsp|모바일 기기 정보 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mdi/EgovDeviceIdentRegist.jsp|모바일 기기 정보 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mdi/EgovDeviceIdentUpdt.jsp|모바일 기기 정보 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mdi/EgovDeviceIdentDetail.jsp|모바일 기기 정보 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mdi/EgovMobileDeviceIdentList.jsp|모바일 기기 정보 조회 페이지|
+|QUERY XML|resources/egovframework/sqlmap/mbl/com/mdi/EgovDeviceIdent_SQL_XXX.xml|모바일 기기 식별 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/mbl/com/mdi/EgovDeviceIdent.xml|모바일 기기 식별 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|모바일 기기 식별 Message properties|
+|Idgen XML|resources/egovframework/spring/com/context-idgen-mobile.xml|모바일 기기 정보 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 MDI_ID (모바일 기기 정보 아이디) 항목을 추가해야 한다. 
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|모바일 기기 정보|COMTNDEVICE|모바일 기기 정보를 관리|
+
+== 로그인/회원관리/권한관리 ==
+
+모바일 기기 식별은 **모바일 기기 정보 조회, 모바일 기기 정보 목록조회, 상세조회, 등록, 수정, 삭제**에서 사용자/관리자 인증이 필요하다.\\
+인증을 위해 로그인/회원관리/권한관리 컴포넌트와 연계하여 사용할 수 있다.
+Spring Security를 통해 인증을 할 경우 다음과 같이 변경하면 된다.
+
+== src/main/java/resources/egovframework/spring/com/context-egovuserdetailshelper.xml ==
+
+<code xml>
+    <!--인증된 유저의 LoginVO, 권한, 인증 여부를 확인 할 수있는 서비스 클래스-->
+    <bean id="egovUserDetailsHelper" class="egovframework.com.cmm.util.EgovUserDetailsHelper">
+        <property name="egovUserDetailsService">
+            <ref bean="egovUserDetailsSecurityService" />
+        </property> 
+    </bean>
+
+    <!-- 시큐리티를 이용한 인증을 사용할 빈 -->
+    <bean id="egovUserDetailsSecurityService" class="egovframework.com.sec.ram.service.impl.EgovUserDetailsSecurityServiceImpl"/>
+</code>
+
+== web.xml ==
+
+<code xml>
+    <!-- 2. 스프링 시큐리티 설정-->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.security.ui.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    <!-- security 끝 -->
+
+    <!-- 4. Spring Security 로그아웃 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLogoutFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<url-pattern>/uat/uia/actionLogout.do</url-pattern>
+    </filter-mapping>
+
+    <!-- 4. Spring Security 로그인 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<url-pattern>*.do</url-pattern>
+    </filter-mapping>
+</code>
+web.xml에 위 내용과 같은 Spring Security 관련 필터를 추가 하여야 한다.
+
+로그인/회원관리/권한관리에 대한 자세한 내용은 다음을 참조한다.
+
+  * 로그인 : [[egovframework:일반_로그인#일반로그인]]
+  * 회원관리 : [[egovframework:사용자_관리|사용자관리]]
+  * 권한관리 : [[egovframework:권한관리|권한관리]]
+
+사용자/관리자 권한이 필요한 페이지는 다음과 같다.
+^권한 종류^페이지 경로^설명^
+|사용자|/mbl/com/mdi/goMobileDeviceIdent.mdo|모바일 기기 정보 조회 화면|
+|관리자|/mbl/com/mpa/selectDeviceIdentList.mdo|모바일 기기 정보 목록조회 화면|
+|관리자|/mbl/com/mpa/selectDeviceIdent.mdo|모바일 기기 정보 상세조회 화면|
+|관리자|/mbl/com/mpa/goDeviceIdentRegist.mdo|모바일 기기 정보 등록 화면|
+|관리자|/mbl/com/mpa/insertDeviceIdent.mdo|모바일 기기 정보 등록|
+|관리자|/mbl/com/mpa/goDeviceIdentUpdt.mdo|모바일 기기 정보 수정 화면|
+|관리자|/mbl/com/mpa/updateDeviceIdent.mdo|모바일 기기 정보 수정|
+|관리자|/mbl/com/mpa/deleteDeviceIdent.mdo|모바일 기기 정보 삭제|
+
+==== 설정 및 주의사항 ====
+* 현재 배포된 모바일 공통컴포넌트는 HTML5, CSS3를 적용하고 있다.\\
+* 그에 따라, 현재 모바일OK, W3C의 모바일 웹 사이트 유효성 검사의 표준에 맞지 않으며, 정확한 유효성 검사에 대한 문의는 해당 전문기관에 문의가 필요하다.\\
+* 현재 배포된 모바일 공통컴포넌트 V 2.0은 소스코드에 대한  보안성 검증이 완료 되었다.\\
+
+===== 환경설정 =====
+모바일 기기 식별 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+=== 프로퍼티 파일 설정 ===
+
+== mdi.properties ==
+
+<code xml>
+#-----------------------------------------------------------------------
+#
+#   mdi.properties : 모바일 기기  정보를 나타내는 Config 파일
+#   
+#-----------------------------------------------------------------------
+#   1.  key = value 구조
+#   2.  key값은 공백문자를 포함불가, value값은 공백문자를 가능
+#   3.  key값으로 한글을 사용불가,   value값은 한글사용이 가능
+#   4.  줄을 바꿀 필요가 있으면 '\'를 라인의 끝에 추가(만약  '\'문자를 사용해야 하는 경우는 '\\'를 사용)
+#   5.  Windows에서의 디렉토리 표시 : '\\' 또는 '/' ('\' 사용하면 안됨)
+#   6.  Unix에서의 디렉토리 표시 : '/'
+#   7.  주석문 처리는  #사용
+#   8.  value값 뒤에 스페이스가 존재하는 경우 서블릿에서 참조할때는 에러발생할 수 있으므로 trim()하거나 마지막 공백없이 properties 값을 설정할것
+#-----------------------------------------------------------------------
+
+# 모바일 기기 정보 XML 파일
+deviceIdentXMLPath = c:/EgovDeviceIdent.xml
+</code>
+
+위에서 설정을 해주어야 할 부분은 #DeviceIdentXMLPath 항목이다. 이 항목은 모바일 기기 정보를 담고 있는 XML 파일 경로를 지정한다.
+
+== EgovDeviceIdent.xml ==
+
+<code xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<DeviceIdents>
+  <DeviceIdent>
+    <UserAgent>Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_2_1 like Mac OS X; ko-kr) AppleWebKit/533.17.9 (KHTML, like Gecko) Version/5.0.2 Mobile/8C148 Safari/6533.18.5</UserAgent>
+    <Browser>Safari 5.0.2</Browser>
+    <OS>iPhone</OS>
+  </DeviceIdent>
+  <DeviceIdent>
+    <UserAgent>Mozilla/5.0 (Android; Linux armv7l; rv:5.0) Gecko/20110615 Firefox/5.0 Fennec/5.0</UserAgent>
+    <Browser>Firefox 5.0</Browser>
+    <OS>Android</OS>
+  </DeviceIdent>
+  <DeviceIdent>
+    <UserAgent>Opera/9.80 (Android 2.3.3; Linux; Opera Mobi/ADR-1107051709; U; ko) Presto/2.8.149 Version/11.10</UserAgent>
+    <Browser>Opera 9.80</Browser>
+    <OS>Android</OS>
+  </DeviceIdent>
+  <DeviceIdent>
+    <UserAgent>Mozilla/5.0 (Linux; U; Android 2.3.3; ko-kr; Build/GINGERBREAD) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1</UserAgent>
+    <Browser>Android 2.3.3</Browser>
+    <OS>Android</OS>
+  </DeviceIdent>
+</DeviceIdents>
+</code>
+
+위 파일은 브라우저의 User-Agent 별 브라우저 및 운영체제 정보를 담고 있는 XML 파일이다. 만약 사용자가 모바일 기기 식별로 접속 하면 \\
+User-Agent와 XML 내용과 비교하여 해당 브라우저와 운영체제 정보를 얻을 수 있다. 이 파일은 관리자 페이지를 통해 편집이 가능하다.
+
+===== 관련기능 =====
+모바일 기기 식별은 크게 사용자가 사용하는 **모바일 기기 정보 조회** 기능 및 관리자가 사용하는 **모바일 기기 정보 목록조회**, **모바일 기기 정보 상세조회**,\\
+**모바일 기기 정보 등록**, **모바일 기기 정보 수정**, **모바일 기기 정보 삭제** 기능으로 구성되어있다.
+
+==== 모바일 기기 정보 조회 ====
+
+=== 비즈니스 규칙 ===
+식별된 모바일 기기 정보를 조회할 수 있다.
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|기기정보조회|/mbl/com/mdi/selectMobileDeviceIdent.mdo|selectMobileDeviceIdentList|"DeviceIdentDAO.selectDeviceIdentList"|
+
+{{:egovframework:mcom:egovmobiledevice.jpg}}
+
+==== 모바일 기기 식별 정보 목록조회 ====
+
+=== 비즈니스 규칙 ===
+조회조건으로 목록조회를 할 수 있고, 등록버튼을 클릭하여 모바일 기기 식별 정보 등록 화면으로 이동하여 모바일 기기 식별 정보를 등록 처리 할 수 있다.
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/mbl/com/mdi/selectDeviceIdentList.mdo|selectDeviceIdentList|"DeviceIdentDAO.selectDeviceIdentList"|
+| |/mbl/com/mdi/selectDeviceIdentList.mdo|selectDeviceIdentListTotCnt|"DeviceIdentDAO.selectDeviceIdentListTotCnt"|
+|등록|/mbl/com/mdi/goDeviceIdentRegist.mdo|goDeviceIdentRegist| |
+|목록클릭|/mbl/com/mdi/selectDeviceIdent.mdo|selectDeviceIdent|"DeviceIdentDAO.selectDeviceIdent"|
+
+모바일 기기 식별 정보 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 브라우저, 운영체제, 등록상태에 대해서 수행된다.\\ 
+페이지 당 검색 범위를 변경하고자 하는 경우 context-properties.xml 파일의 pageUnit, pageSize를 변경한다.\\
+(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:mcom:egovdevicelist.jpg|기기식별정보 목록조회}}
+
+조회: 모바일 기기 식별 정보를 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색어를 입력 후 조회 버튼을 클릭한다. \\
+등록: 모바일 기기 식별 정보를 등록하기 위해서는 상단의 등록 버튼을 통해서 **모바일 기기 식별 정보 등록** 화면으로 이동한다. \\
+목록클릭: **모바일 기기 식별 정보 상세조회** 화면으로 이동한다.
+
+==== 모바일 기기 식별 정보 상세조회 ====
+
+=== 비즈니스 규칙 ===
+모바일 기기 식별 정보 목록조회에서 목록 클릭 시 이동되는 화면으로 모바일 기기 식별 정보에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/mbl/com/mdi/goDeviceIdentUpdt.mdo|goDeviceIdentUpdt| |
+|삭제|/mbl/com/mdi/deleteDeviceIdent.mdo"|deleteDeviceIdent|"DeviceIdentDAO.deleteDeviceIdent"|
+|목록|/mbl/com/mdi/selectDeviceIdentList.mdo|selectDeviceIdentList|"DeviceIdentDAO.selectDeviceIdentList"|
+
+모바일 기기 식별 정보 상세조회 화면은 모바일 기기 식별 정보 수정, 모바일 기기 식별 정보 삭제, 모바일 기기 식별 정보 목록조회를 할 수 있다.
+
+{{:egovframework:mcom:egovdevicedetail.jpg|기기식별정보 상세조회}}
+
+수정: 수정버튼 클릭 시 모바일 기기 식별 정보를 수정할 수 있는 **모바일 기기 식별 정보 수정** 화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **모바일 기기 식별 정보 목록조회** 화면으로 이동한다.
+
+==== 모바일 기기 식별 정보 등록 ====
+
+=== 비즈니스 규칙 ===
+입력명 우측의 빨간* 표시는 반드시 입력해야할 항목을 표시한다. \\
+
+저장처리 시 MDI_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 자동으로 부여된다.\\
+  Primary Key => MDI_ID : 일련번호로 자동생성 부여된다.
+
+	<bean name="egovDeviceIdentGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="MDI_ID"/>
+	</bean>		
+
+=== 관련코드  ===
+
+모바일 기기 식별에서 사용되는 코드 및 그에 따른 설정 값의 반영사항은 다음과 같다.
+
+^코드분류^코드분류명^코드ID^코드명^
+|COM083|브라우저구분|BRS001|Unknown|
+|COM083|브라우저구분|BRS002|Chrome|
+|COM083|브라우저구분|BRS003|Chrome 11|
+|COM083|브라우저구분|BRS004|Chrome 12|
+|COM083|브라우저구분|BRS005|Chrome 13|
+|COM083|브라우저구분|BRS006|Chrome 14|
+|COM083|브라우저구분|BRS007|Firefox|
+|COM083|브라우저구분|BRS008|Firefox 3|
+|COM083|브라우저구분|BRS009|Firefox 4|
+|COM083|브라우저구분|BRS010|Firefox 5|
+|COM083|브라우저구분|BRS011|Firefox 6|
+|COM083|브라우저구분|BRS012|Firefox 7|
+|COM083|브라우저구분|BRS013|IEMobile|
+|COM083|브라우저구분|BRS014|IEMobile 6|
+|COM083|브라우저구분|BRS015|IEMobile 7|
+|COM083|브라우저구분|BRS016|IEMobile 8|
+|COM083|브라우저구분|BRS017|Opera|
+|COM083|브라우저구분|BRS018|Opera 4|
+|COM083|브라우저구분|BRS019|Opera 5|
+|COM083|브라우저구분|BRS020|Opera 6|
+|COM083|브라우저구분|BRS021|Opera 7|
+|COM083|브라우저구분|BRS022|Opera 8|
+|COM083|브라우저구분|BRS023|Opera 9|
+|COM083|브라우저구분|BRS024|Opera 10|
+|COM083|브라우저구분|BRS025|Opera 11|
+|COM083|브라우저구분|BRS026|Opera 12|
+|COM083|브라우저구분|BRS027|Opera Mini|
+|COM083|브라우저구분|BRS028|Opera Mini 3|
+|COM083|브라우저구분|BRS029|Opera Mini 4|
+|COM083|브라우저구분|BRS030|Opera Mini 5|
+|COM083|브라우저구분|BRS031|Opera Mini 6|
+|COM083|브라우저구분|BRS032|Opera Mobile|
+|COM083|브라우저구분|BRS033|Opera Mobile 10|
+|COM083|브라우저구분|BRS034|Opera Mobile 11|
+|COM083|브라우저구분|BRS035|Safari|
+|COM083|브라우저구분|BRS036|Safari 3|
+|COM083|브라우저구분|BRS037|Safari 4|
+|COM083|브라우저구분|BRS038|Safari 5|
+|COM083|브라우저구분|BRS039|Android|
+|COM083|브라우저구분|BRS040|Android 1.5|
+|COM083|브라우저구분|BRS041|Android 1.6|
+|COM083|브라우저구분|BRS042|Android 2.1|
+|COM083|브라우저구분|BRS043|Android 2.2|
+|COM083|브라우저구분|BRS044|Android 2.3|
+|COM083|브라우저구분|BRS045|Android 3.0|
+|COM083|브라우저구분|BRS046|Android 4.0|
+|COM084|운영체제구분|OS01|Unknown|
+|COM084|운영체제구분|OS02|Android|
+|COM084|운영체제구분|OS03|iOS|
+|COM084|운영체제구분|OS04|Symbian|
+|COM084|운영체제구분|OS05|BrackBerry|
+|COM084|운영체제구분|OS06|Windows Mobile|
+|COM084|운영체제구분|OS07|Windows Phone|
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/mbl/com/mdi/insertDeviceIdent.mdo|insertDeviceIdent|"DeviceIdentDAO.insertDeviceIdent"|
+|목록|/mbl/com/mdi/selectDeviceIdentList.mdo|selectDeviceIdentList|"DeviceIdentDAO.selectDeviceIdentList"|
+
+모바일 기기 식별 정보에 관한 기본정보를 입력 저장처리한다.
+
+{{:egovframework:mcom:egovdeviceregist.jpg|사진 정보 등록}}
+
+
+등록: 입력한 모바일 기기 식별 정보가 저장 처리된다. \\
+목록: **모바일 기기 식별 정보 목록조회** 화면으로 이동한다.
+
+==== 모바일 기기 식별 정보 수정 ====
+
+=== 비즈니스 규칙 ===
+입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/mbl/com/mdi/updateDeviceIdent.mdo|updateDeviceIdent|"DeviceIdentDAO.updateDeviceIdent"|
+|목록|/mbl/com/mdi/selectDeviceIdentList.mdo|selectDeviceIdentList|"DeviceIdentDAO.selectDeviceIdentList"|
+
+입력한 모바일 기기 식별 정보를 저장 처리한다.
+
+{{:egovframework:mcom:egovdeviceupdt.jpg|기기식별정보 수정}}
+
+수정: 수정 입력한 모바일 기기 식별 정보가 저장 처리된다. \\
+목록: **모바일 기기 식별 정보 목록조회** 화면으로 이동한다.
+
+===== 참고자료 =====
+
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]
+  * 관련 데이터베이스 구조 및 스키마 : [[모바일_관련_데이터베이스_구조_및_스키마|관련 데이터베이스 구조 및 스키마]]

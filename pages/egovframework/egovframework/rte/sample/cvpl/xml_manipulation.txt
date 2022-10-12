@@ -1,0 +1,37 @@
+====== [적용 예] XML Manipulation ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:xml_manipulation|XML Manipulation]] Service 를 적용해서 **[[http://www.w3.org/DOM/|DOM(Document Object Model)]]** 으로 XML문서로 되어 있는 사용자 등록 정보를 읽어 Element 를 변경한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-common.xml ===
+<code xml> 
+<bean id="domconcreteCont" class="egovframework.rte.fdl.xml.EgovConcreteDOMFactory"/>
+</code>
+=== resources\spring\egovxmlCfg.xml ===
+<code xml> 
+<context:property-placeholder location="classpath*:spring/egovxml.properties" />
+						
+<bean id="xmlconfig" class="egovframework.rte.fdl.xml.XmlConfig">
+	<property name="xmlpath" value="${egovxmlsaved.path}" />
+</bean>
+</code>
+=== resources\spring\egovxml.properties ===
+<code xml> 
+egovxmlsaved.path=C:\\Temp\\
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\web\EgovCvplUserController.java ===
+<code java>
+/** XML Manipulation */
+@Resource(name = "domconcreteCont")
+EgovConcreteDOMFactory domconcrete;
+
+List<SharedObject> sobject = new ArrayList<SharedObject>();
+			
+SAXBuilder builder = new SAXBuilder();
+Document doc = builder.build(new File(propertiesService.getString("marshallingDir") + "cvplUserMarshalling.xml"));
+
+domconcrete.CreateDOMValidator().updElement(doc, "user-name", "userName", null);	
+</code>

@@ -1,0 +1,46 @@
+====== 개요 ====== 
+어플리케이션 모니터링 정보의 모니터링 정책을 관리하기 위한 화면을 제공한다.
+
+\\
+====== 기능 설명 ======
+  - 어플리케이션 에이전트 설정 : 모니터링 대상 서버의 어플리케이션 모니터링 정책을 관리한다.
+
+\\
+====== 화면 설명 ======
+
+===== 어플리케이션 에이전트 설정 =====
+{{:egovframework:oe2:가이드:어드민:applicationagent.gif|}}
+
+
+  * 저장 : 설정한 모니터링 정책을 DB에 저장하고 스케줄링에 반영한다.
+  * 초기화 : 입력한 정책내용을 초기화 한다.
+
+\\
+
+==== 어플리케이션 에이전트 설정시 주의사항 ====
+
+
+=== 1.설정관리포트 ===
+설정관리포트는 에이전트 설치에서 설정한 RMI포트번호를 입력한다. [[egovframework:oe2:설치:에이전트_설치|에이전트 설치]]참조
+
+설정관리포트를 입력한 후, 동기화 버튼을 클릭하여 현재 어플리케이션에 설정된 모니터링 정책 정보를 읽어온다.
+
+=== 2.컨텍스트명 ===
+컨텍스트명은 web.xml에서 작성한 <display>명과 같은지 확인한다.
+
+Ex) web.xml의 <display-name>이 **egovframework-potal**일 경우 컨텍스트명은 **egovframework-potal**이다. 
+<code:XML>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+	<display-name>egovframework-potal</display-name>
+         ...
+</web-app>
+</code>  
+
+
+context-monitoring-mbean.xml의 bean:name과도 컨텍스트명을 맞추도록 한다.
+<code:XML>
+<prop key="InfraredProperties">bean:name=InfraredProperties.egovframework-potal</prop>    
+</code>
+위 예시에서는 <del>InfraredProperties.</del>**egovframework-potal**이 컨텍스트 명이다.

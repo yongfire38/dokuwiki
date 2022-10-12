@@ -1,0 +1,71 @@
+====== [적용 예] Cache ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:cache|Cache]] Service 를 적용해서 공통코드를 생성한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-cache.xml ===
+<code xml>   
+<bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+    <property name="cacheManager">
+        <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+            <property name="configLocation" value="classpath:/spring/ehcache-default.xml"/>
+        </bean>
+    </property>    
+</bean>
+</code>
+=== resources\spring\ehcache-default.xml ===
+<code xml>   
+<ehcache>
+    <diskStore path="user.dir/second"/>
+    <defaultCache maxElementsInMemory="10000" 
+                  eternal="false" 
+                  timeToIdleSeconds="120" 
+                  timeToLiveSeconds="120" 
+                  overflowToDisk="true" 
+                  diskPersistent="true"  
+                  diskExpiryThreadIntervalSeconds="120"/>
+                  
+    <cache name="cvplCmmCd"
+           maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="360"
+           timeToLiveSeconds="1000"
+           overflowToDisk="false"
+           diskPersistent="false"  
+           memoryStoreEvictionPolicy="LRU">
+    </cache>    
+</ehcache>
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\web\EgovCvplMainController.java ===
+<code java>
+@Resource(name="ehcache")
+Ehcache gCache ;
+		
+Ehcache cache = gCache.getCacheManager().getCache("cvplCmmCd");
+        
+String chCode = "";
+List cvplCmmnCdList = cvplCmmnCdService.selectCvplCmmnCdList();
+List<CvplCmmnCdVO> mainCdList = new ArrayList<CvplCmmnCdVO>();
+
+for (Iterator i = cvplCmmnCdList.iterator(); i.hasNext(); ) {
+	CvplCmmnCdVO cvlpCmmnCdVO = (CvplCmmnCdVO)i.next();
+	.
+	.
+	.
+	cache.put(new Element(chCode, mainCdList));
+	.
+	.
+	.
+}
+</code>
+=== egovframework\rte\cvpl\common\EgovCvplCmmn.java ===
+<code java>
+@Resource(name="ehcache")
+Ehcache gCache ;		
+
+Ehcache cache = gCache.getCacheManager().getCache("cvplCmmCd");
+Element el = cache.get(key);
+</code>

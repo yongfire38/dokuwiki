@@ -1,0 +1,7 @@
+====== [적용 예] Web Service ======
+
+===== 개요 =====
+[[egovframework:rte:itl:webservice|Web Service]] Service 를 적용해서
+===== 설명 =====
+==== Configuration ====
+==== Source ====

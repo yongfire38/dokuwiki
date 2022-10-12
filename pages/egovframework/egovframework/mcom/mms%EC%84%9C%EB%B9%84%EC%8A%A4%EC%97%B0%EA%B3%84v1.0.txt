@@ -1,0 +1,486 @@
+====== 시스템/서비스 연계 - MMS 서비스연계 v1.0 ======
+
+===== 개요 =====
+MMS 서비스연계는 행정기관이 이동통신서비스를 이용하여 기관의 필요에 따라 각종 행정업무에 활용할 수 있도록 \\
+행정안전부 정부통합전산센터 M-Gov(http://www.mgov.go.kr)에서 구축/제공하는 이동통신 기반의 MMS 서비스를 인터페이싱한 컴포넌트이다.\\
+\\
+실제 메시지는 정부통합전산센터 M-Gov(http://www.mgov.go.kr)에서 제공하는 API가 전송 처리, 결과값 반환처리를 하고,\\
+본 컴포넌트는 사용자 입력값을 넘겨주고, 반환받은 결과값을 처리하는 역할을 한다.\\
+장문 메시지, 이미지, 동영상, 벨소리 등을 전송할 수 있도록 기반환경을 지원한다.\\
+\\
+본 컴포넌트는 사용자가 MMS를 전송하며, 관리자가 MMS 첨부파일 및 전송결과를 관리하는 기능을 제공한다.\\
+\\
+※ 본 컴포넌트는 v1.0에서 v2.0으로 버전업되면서 컴포넌트 사용 시 사전환경설정이 간소화 되었기에 v2.0 사용을 권장한다.\\
+
+ * 기능흐름
+
+{{:egovframework:mcom:mms_flow.jpg?800|}}
+
+본 컴포넌트의 모바일 화면은 모바일 디바이스에 탑재된 브라우저를 대상으로 개발 및 테스트 검증이 완료되었다. \\
+또한 동일 제조사의 동일한 브랜드라도 PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 \\
+개발시 유의가 필요함을 밝혀둔다.
+
+검증 대상 디바이스와 브라우저로는 각각 갤럭시S2, 갤럭시S, iPad2, iPhone4, 갤럭시탭1 등의 디바이스와 \\
+android용 웹 브라우저, Firefox, Safari, opera mobile 등의 모바일 브라우저를 사용하였다.
+
+검증결과는 아래와 같다.
+
+Android \\
+android용 웹 브라우저, Firefox(6.xx), opera mobile은  android OS 2.3(gingerbread) 에서 HTML5, CSS3 및 컴포넌트의 \\
+실행이 안정적으로 실행되는 것을 확인 하였다. \\
+반면 android OS 2.3(gingerbread) 하위 브라우저인 android 2.1, 2.2에서는 컴포넌트 실행에 있어 매끄럽지 못한 HTML5, CSS3 지원으로 인하여 \\
+컴포넌트의 UI 구현이 원할하지 못한 모습을 보였다. 
+
+opera mobile의 경우 UI처리시 색상 및 이벤트 처리에 문제를 야기하였으며 \\
+그로인해 opera mobile은 3종 지원브라우저 대상에서 제외 되었다. \\
+테스트 모바일 디바이스로는 갤럭시, 갤럭시S2, 갤럭시탭1을 채택하였다.
+
+iOS \\
+iOS는 3종 지원브라우저 대상중 하나로 Safari 4.2, 4.3 버전에서 검증을 하였으며 비교적 원활한 HTML5, CSS3를 지원을 하였다.\\
+테스트 모바일 디바이스로는 iPhone4, iPad2를 채택하였다.
+
+===== 전제조건 =====
+모바일MMS서비스를 사용하기 위해서는 별도로 MMS 서비스를 신청하여야 하며,\\
+이는 행정안전부 정부통합전산센터 M-Gov(http://www.mgov.go.kr)에서 주관하고 있다.\\
+\\
+서비스 신청 절차는 다음과 같다.
+
+{{:egovframework:mcom:mms전송서비스_이용절차.jpg|}}
+
+① 신청준비 : 이용희망기관은 통합센터 서비스 이용을 위한 기관자체 준비사항 확인(시스템 사양, 네트워크 환경)\\
+  ㆍ 시스템 사양 : JAVA 1.4이상, Unix, Linux, Windows 계열 모두 가능
+  ㆍ 네트워크 환경 : 단독 구성이 아니어도 가능(홈페이지를 운영중인 서버 또는 해당 업무서버에 일부 자원 이용가능)
+  ㆍ 기타 : 해당 시스템은 인터넷 또는 행정망에 연결되어야 하며, 고정IP만 이용 가능
+② 서비스이용신청 : 서비스 종류에 따라 이용신청서를 작성하여 정부통합전산센터에 제출(해당 사이트 이용규정 참조) \\
+③ 이용통보 : 통합센터는 서비스 이용신청서 검토 결과를 접수일로부터 15일 이내에 이용신청기관에게 서면으로 통보 \\
+④ 서비스준비 : 이용신청기관은 센터에서 제공하는 "M-Gov 연동 API"를 사용하여 연동 \\
+⑤ 서비스개통 : 이용신청기관은 승인 후 60일 이내에 서비스 개통을 하지 않을 경우 센터는 이용통보를 취소할 수 있음 \\
+\\
+기타 자세한 정보 확인 및 문의는 정부통합전산센터 M-gov(http://www.mgov.go.kr)를 참고한다.
+
+===== 설명 =====
+모바일MMS서비스는 크게 MMS 첨부파일의 관리기능인 **MMS첨부파일 목록조회, 상세조회, 등록, 수정, 삭제**와 MMS 전송결과 관리기능인 **MMS전송결과 목록조회**로 구성되어 있으며, \\
+**MMS 전송** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:mcom:mms_class.jpg?1000|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.mbl.com.mms.web.EgovMmsController.java|MMS Controller Class|
+|Service|egovframework.mbl.com.mms.service.EgovMmsService.java|MMS Service Class|
+|ServiceImpl|egovframework.mbl.com.mms.service.impl.EgovMmsServiceImpl.java|MMS ServiceImpl Class|
+|Class|egovframework.mbl.com.mms.service.impl.MmsSender.java|MMS 전송 Class|
+|Class|egovframework.mbl.com.mms.service.impl.MmsReceiver.java|MMS 전송결과 수신 Class|
+|Model|egovframework.mbl.com.mms.service.MmsTransInfo.java|MMS 전송정보 Model Class|
+|Model|egovframework.mbl.com.mms.service.AttachFile.java|첨부파일 Model Class|
+|VO|egovframework.mbl.com.mms.service.MmsTransInfoVO.java|MMS 전송정보 VO Class|
+|VO|egovframework.mbl.com.mms.service.AttachFileVO.java|첨부파일 VO Class|
+|DAO|egovframework.mbl.com.mms.service.impl.MmsDAO.java|MMS Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsAttachFileList.jsp|첨부파일 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsAttachFileRegist.jsp|첨부파일 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsAttachFileUpdt.jsp|첨부파일 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsAttachFileDetail.jsp|첨부파일 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMmsTransResultList.jsp|MMS전송결과 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMobileMmsRegist.jsp|모바일 MMS 전송 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mms/EgovMobileAttachFileList.jsp|모바일 첨부파일 조회 페이지|
+|QUERY XML|resources/egovframework/sqlmap/mbl/com/mms/EgovMms_SQL_XXX.xml|MMS QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/mbl/com/mms/EgovMms.xml|MMS Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|MMS Message properties|
+|Idgen XML|resources/egovframework/spring/com/context-idgen.xml|MMS 전송결과 Id, 첨부파일 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 MMS_ID (MMS 전송결과 아이디), ATCH_ID (첨부파일 아이디) 항목을 추가해야 한다. 
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|MMS전송결과|COMTNMMS|MMS 전송결과를 관리|
+|첨부파일|COMTNMMSATTACH|첨부파일을 관리|
+|공통상세코드|COMTCCMMNDETAILCODE|전송결과코드, 요청결과코드|
+|파일|COMTNFILE|첨부파일 정보를 관리|
+|파일상세|COMTNFILEDETAIL|첨부파일 상세정보를 관리|
+
+== 로그인/회원관리/권한관리 ==
+
+MMS 서비스 연계는 ** MMS 작성 및 전송, 전송결과 목록조회, 첨부파일 목록조회, 상세조회, 등록, 수정, 삭제**에서 사용자/관리자 인증이 필요하다.\\
+인증을 위해 로그인/회원관리/권한관리 컴포넌트와 연계하여 사용할 수 있다.
+Spring Security를 통해 인증을 할 경우 다음과 같이 변경하면 된다.
+
+== src/main/java/resources/egovframework/spring/com/context-egovuserdetailshelper.xml ==
+
+<code xml>
+    <!--인증된 유저의 LoginVO, 권한, 인증 여부를 확인 할 수있는 서비스 클래스-->
+    <bean id="egovUserDetailsHelper" class="egovframework.com.cmm.util.EgovUserDetailsHelper">
+        <property name="egovUserDetailsService">
+            <ref bean="egovUserDetailsSecurityService" />
+        </property> 
+    </bean>
+
+    <!-- 시큐리티를 이용한 인증을 사용할 빈 -->
+    <bean id="egovUserDetailsSecurityService" class="egovframework.com.sec.ram.service.impl.EgovUserDetailsSecurityServiceImpl"/>
+</code>
+
+== web.xml ==
+
+<code xml>
+    <!-- 2. 스프링 시큐리티 설정-->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.security.ui.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    <!-- security 끝 -->
+
+    <!-- 4. Spring Security 로그아웃 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLogoutFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<url-pattern>/uat/uia/actionLogout.do</url-pattern>
+    </filter-mapping>
+
+    <!-- 4. Spring Security 로그인 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<url-pattern>*.do</url-pattern>
+    </filter-mapping>
+</code>
+web.xml에 위 내용과 같은 Spring Security 관련 필터를 추가 하여야 한다.
+
+로그인/회원관리/권한관리에 대한 자세한 내용은 다음을 참조한다.
+
+  * 로그인 : [[egovframework:일반_로그인#일반로그인]]
+  * 회원관리 : [[egovframework:사용자_관리|사용자관리]]
+  * 권한관리 : [[egovframework:권한관리|권한관리]]
+
+사용자/관리자 권한이 필요한 페이지는 다음과 같다.
+^권한 종류^페이지 경로^설명^
+|사용자|/mbl/com/mms/goMmsWrite.mdo|MMS 작성 화면|
+|사용자|/mbl/com/mms/goAtchFileSelect.mdo|MMS 첨부파일 선택 화면|
+|사용자|/mbl/com/mms/sendMms.mdo|MMS 전송|
+|관리자|/mbl/com/mms/selectMmsTransResultList.mdo|MMS 전송 결과 목록조회 화면|
+|관리자|/mbl/com/mms/getMmsTransmissionResult.mdo|MMS 전송 결과|
+|관리자|/mbl/com/mms/selectMmsAttachFileList.mdo|MMS 첨부파일 목록조회 화면|
+|관리자|/mbl/com/mms/selectMmsAttachFile.mdo|MMS 첨부파일 상세조회 화면|
+|관리자|/mbl/com/mms/goMmsAttachFileRegist.mdo|MMS 첨부파일 등록 화면|
+|관리자|/mbl/com/mms/insertMmsAttachFile.mdo|MMS 첨부파일 등록|
+|관리자|/mbl/com/mms/goMmsAttachFileUpdt.mdo|MMS 첨부파일 수정 화면|
+|관리자|/mbl/com/mms/updateMmsAttachFile.mdo|MMS 첨부파일 수정|
+|관리자|/mbl/com/mms/deleteMmsAttachFile.mdo|MMS 첨부파일 삭제|
+
+==== 설정 및 주의사항 ====
+* 현재 배포된 모바일 공통컴포넌트는 HTML5, CSS3를 적용하고 있다.\\
+* 그에 따라, 현재 모바일OK, W3C의 모바일 웹 사이트 유효성 검사의 표준에 맞지 않으며, 정확한 유효성 검사에 대한 문의는 해당 전문기관에 문의가 필요하다.\\
+* 현재 배포된 모바일 공통컴포넌트 V 2.0은 소스코드에 대한  보안성 검증이 완료 되었다.\\
+
+===== 환경설정 =====
+
+모바일MMS서비스 기능을 사용하기 위해서는 별도의 프로그램을 통해서 반영된다. \\
+이 프로그램은 MMS서비스 이용신청시 이용승인받은IP 의 서버 내에서 실행되어야 하며, 클리이언트와 소켓통신을 한다.\\
+\\
+- MmsSender : MMS를 전송하기 위한 daemon으로 3000번 포트를 사용한다.\\
+- MmsReceiver : MMS 전송 결과를 처리하기 위한 daemon으로 4000번 포트를 사용한다.\\
+\\
+위의 프로그램을 실행하기 전에 정부통합전산센터 M-Gov Gateway Server와의 접속 정보를 먼저 설정하여야 한다.\\
+다음의 코드는 **MmsSender.java**의 **sendMms** 메소드와 **MmsReceiver.java**의 **receiveMms** 메소드 내에 존재한다.\\
+
+<code>
+ int timeOut = 10000;                // 10 second  - 연결시도 10초후 연결되지 않으면 타임아웃
+ int port = 14000;                   // Service Port : 13000, Test Port : 14000
+ String host = "M-Gov GW 접속 IP";   // Host IP
+ String connID = "승인ID";           // ID
+ String connPW = "승인패스워드";      // Password
+</code>
+
+위의 코드에서 **host** 는 정부통합전산센터 M-Gov에서 제공하는 가이드를 참조해서 입력하며, **connID**, **connPW**는 MMS서비스 이용신청시 승인받은 정보를 입력한다.\\
+**port**의 경우 개발테스트 시에는 14000번 포트를 이용하고, 실제 서비스시 13000번 포트를 이용한다.\\
+(14000번 포트 사용시 사용자에게 실제로 메시지가 전송되는 것이 아니라 M-Gov Gateway Server에서 임의 결과값을 전송 요청자에게 되돌려 준다는 사실을 참고한다.)\\
+\\
+설정 완료 후 컴파일 하기 전에 다음의 라이브러리들이 필요하며 이 라이브러리를 classpath로 추가한다.\\
+<code>
+activation.jar
+commons-codec-1.3.jar
+commons-httpclient-3.1-alpha1.jar
+commons-logging-1.0.4.jar
+dom.jar
+log4j-1.2.9.jar
+mail.jar
+mose-api-1.5.1.jar
+saaj-api.jar
+saaj-impl.jar
+soap.jar
+xalan.jar
+xercesImpl.jar
+</code>
+
+위의 라이브러리는 정부통합전산센터(http://www.mgov.go.kr)에서 다운로드 받을 수 있다.\\
+(정부통합전산센터홈 > 서비스 소개 > FAQ > QUESTION 6번에서 다운로드)
+
+classpath 설정 완료 후 다음의 명령어로 각 프로그램을 컴파일한다.
+
+{{:egovframework:mcom:mmssender_compile.jpg|}}\\
+\\
+{{:egovframework:mcom:mmsreceiver_compile.jpg|}}
+
+\\
+컴파일 완료 후 다음의 명령어로 각 프로그램을 실행한다.
+
+{{:egovframework:mcom:mmssender_run.jpg|}}\\
+\\
+{{:egovframework:mcom:mmsreceiver_run.jpg|}}
+
+Unix의 경우는 "&"를 뒷부분에 추가하므로써 백그라운드로 실행할 수 있다.\\
+※ MmsSender, MmsReceiver 실행 테스트에 사용한 서버 환경 : IBM AIX 5.3, JAVA 1.5\\
+※ MmsSender, MmsReceiver는 패키지 설정 없이 원하는 위치에서 독립적으로 실행이 가능하며, 기본적으로 문자 인코딩 타입이 **'EUC-KR'**임을 참고한다.\\
+\\
+소켓통신을 위해 클라이언트 부분도 설정이 필요하다.\\
+egoveframework/mbl/com/mms/service/impl/EgovMmsServiceImpl.java 파일의 **requestMms** 메소드내의 402번 라인 \\
+<code>
+  socket = new Socket("xxx.xxx.xxx.xxx", 3000);
+</code>
+**xxx.xxx.xxx.xxx** 부분을 MmsSender가 실행되고 있는 서버의 IP 주소로 수정한다.\\
+\\
+egoveframework/mbl/com/mms/service/impl/EgovMmsServiceImpl.java 파일의 **receiveResult** 메소드내의 478번 라인 \\
+<code>
+  socket = new Socket("xxx.xxx.xxx.xxx", 4000);
+</code>
+**xxx.xxx.xxx.xxx** 부분을 MmsReceiver가 실행되고 있는 서버의 IP 주소로 수정한다.
+
+===== 관련기능 =====
+모바일MMS서비스는 크게 일반사용자가 사용하는 **모바일 MMS 전송**, **모바일 첨부파일 선택** 기능 및 관리자가 사용하는 **MMS 전송결과 목록조회**, **MMS 첨부파일 목록조회**, \\
+**MMS 첨부파일 상세조회**, **MMS 첨부파일 등록**, **MMS 첨부파일 수정**, **MMS 첨부파일 삭제** 기능으로 구성되어있다.\\
+
+==== 모바일 MMS 전송 ====
+
+=== 비즈니스 규칙 ===
+MMS를 작성 후 전송할 수 있다. 전송요청 결과가 메시지창으로 출력되며, 전송실패시 재전송할 수 있다. \\
+첨부파일 선택 버튼을 클릭하여 첨부파일 선택 화면으로 이동하여 첨부파일을 선택할 수 있다. \\ 
+또한 MMS를 전송할 때마다 전송 정보가 전송요청결과와 함께 MMS발송이력 테이블에 자동으로 등록된다. \\
+등록처리 시 MMS_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 \\
+  Primary Key => MMS_ID : 일련번호로 자동생성 부여된다.
+
+	<bean name="egovMmsIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="MMS_ID"/>
+	</bean>	
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|전송|/mbl/com/mms/sendMms.mdo|sendMms| |
+|재전송|/mbl/com/mms/sendMms.mdo|sendMms| |
+|첨부파일 선택|/mbl/com/mms/goAtchFileSelect.mdo|goAtchFileSelect| |
+|전송정보 등록|/mbl/com/mms/sendMms.mdo|insertMmsTransmissionResult|"MmsDAO.insertMmsTransmissionResult"|
+
+{{:egovframework:mcom:egovmobilemmsregist.jpg|}} {{:egovframework:mcom:egovmobilemmsregistsuccess.jpg|}} {{:egovframework:mcom:egovmobilemmsregistfail.jpg|}}
+
+전송: 입력한 MMS 정보를 전송한다. \\
+재전송: 전송요청 실패한 MMS를 재전송한다. \\
+첨부파일 선택: MMS 첨부파일을 선택하기 위해서는 선택 버튼을 통해서 첨부파일 선택 화면으로 이동한다. 
+
+==== 모바일 첨부파일 선택 ====
+
+=== 비즈니스 규칙 ===
+MMS에 첨부할 파일을 선택할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/mbl/com/mms/selectMblMmsAttachFileList.mdo|selectMblMmsAttachFileList|"MmsDAO.selectAttachFileList"|
+
+{{:egovframework:mcom:egovmobileattachfilelist.jpg|}}
+
+목록클릭: 선택한 첨부파일 정보를 가지고 **모바일 MMS 전송** 페이지로 이동한다.
+
+==== MMS 전송결과 목록조회 ====
+
+=== 비즈니스 규칙 ===
+조회조건으로 목록조회를 할 수 있고, 결과확인버튼을 클릭하여 MMS 전송결과를 확인할 수 있다.
+
+
+=== 관련코드  ===
+
+^코드분류^코드분류명^코드ID^코드명^
+|COM079|전송결과|TSR01|전송수신성공|
+|COM079|전송결과|TSR02|전송수신실패|
+|COM080|요청결과|RQR01|요청성공|
+|COM080|요청결과|RQR02|요청실패|
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/mbl/com/mms/selectMmsTransResultList.mdo|selectMmsTransResultList|"MmsDAO.selectMmsTransmissionResultList"|
+| |/mbl/com/mms/selectMmsTransResultList.mdo|selectMmsTransResultListCnt|"MmsDAO.selectMmsTransmissionResultListCnt"|
+|확인|/mbl/com/mms/getMmsTransmissionResult.mdo|getMmsTransmissionResult|"MmsDAO.updateMmsTransmissionResult"|
+
+MMS 전송결과 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 송신번호, 수신번호, 전송결과, 요청결과에 대해서 수행된다.\\ 페이지 당 검색 범위를 변경하고자 하는 경우 context-properties.xml 파일의 pageUnit, pageSize를 변경한다.\\
+(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:mcom:egovmmstransresultlist.jpg|}}
+
+조회: MMS 전송결과를 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색문자를 입력 후 조회 버튼을 클릭한다. \\
+확인: MMS 전송결과를 확인한다.
+
+==== MMS 첨부파일 목록조회 ====
+
+=== 비즈니스 규칙 ===
+조회조건으로 목록조회를 할 수 있고, 등록버튼을 클릭하여  MMS 첨부파일 등록 화면으로 이동하여  MMS 첨부파일을 등록 처리 할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/mbl/com/mms/selectMmsAttachFileList.mdo|selectMmsAttachFileList|"MmsDAO.selectAttachFileList"|
+| |/mbl/com/mms/selectMmsAttachFileList.mdo|selectMmsAttachFileListCnt|"MmsDAO.selectAttachFileListCnt"|
+|등록|/mbl/com/mms/goMmsAttachFileRegist.mdo|goMmsAttachFileRegist| |
+|목록클릭|/mbl/com/mms/selectMmsAttachFile.mdo|selectMmsAttachFile|"MmsDAO.selectAttachFile"|
+
+MMS 첨부파일 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 제목, 파일명에 대해서 수행된다.\\ 페이지 당 검색 범위를 변경하고자 하는 경우 context-properties.xml 파일의 pageUnit, pageSize를 변경한다.\\
+(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:mcom:egovmmsattachfilelist.jpg|}}
+
+조회: MMS 첨부파일을 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색문자를 입력 후 조회 버튼을 클릭한다. \\
+등록: MMS 첨부파일을 등록하기 위해서는 상단의 등록 버튼을 통해서 MMS 첨부파일 등록 화면으로 이동한다. \\
+목록클릭: **MMS 첨부파일 상세조회** 화면으로 이동한다.
+
+==== MMS 첨부파일 상세조회 ====
+
+=== 비즈니스 규칙 ===
+MMS 첨부파일 목록조회에서 목록 클릭 시 이동되는 화면으로 MMS 첨부파일에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^Action^URL^Controller method^QueryID^
+|수정|/mbl/com/mms/goMmsAttachFileUpdt.mdo|goMmsAttachFileUpdt| |
+|삭제|/mbl/com/mms/deleteMmsAttachFile.mdo|deleteMmsAttachFile|"MmsDAO.deleteAttachFile"|
+|목록|/mbl/com/mms/selectMmsAttachFileList.mdo|selectMmsAttachFileList|"MmsDAO.selectAttachFileList"|
+
+MMS 첨부파일 상세조회화면은 MMS 첨부파일 수정, MMS 첨부파일 삭제, MMS 첨부파일 목록조회를 할 수 있다.
+
+{{:egovframework:mcom:egovmmsattachfiledetail.jpg|}}
+
+수정: 수정버튼 클릭 시 MMS 첨부파일을 수정할 수 있는 화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **MMS 첨부파일 목록조회** 화면으로 이동한다.
+
+==== MMS 첨부파일 등록 ====
+
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 반드시 입력해야할 항목을 표시한다. \\
+
+- 저장처리 시 ATCH_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 \\
+  Primary Key => ATCH_ID : 일련번호로 자동생성 부여된다.
+
+	<bean name="egovAttachFileIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="ATCH_ID"/>
+	</bean>		
+
+
+- 행정안전부 정부통합전산센터 M-Gov(http://www.mgov.go.kr)에서 제공하는 MMS서비스 API는 첨부파일 전송시 제약사항이 존재한다.\\
+따라서 첨부파일 등록시에도 파일 형식과 크기에 제약이 존재한다. 아래의 표를 참고한다.\\
+^컨텐츠^^내용^
+|이미지|지원타입|jpg, sis|
+| |용량|20 KB|
+|벨소리|지원타입|mmf|
+| |용량|20 KB|
+|동영상|지원타입|skm, k3g|
+| |용량|300 KB|
+※ mmf 파일은 피처폰에서만 재생 가능.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/mbl/com/mms/insertMmsAttachFile.mdo|insertMmsAttachFile|"MmsDAO.insertAttachFile"|
+|목록|/mbl/com/mms/selectMmsAttachFileList.mdo|selectMmsAttachFileList|"MmsDAO.selectAttachFileList"|
+
+MMS 첨부파일에 관한 기본정보를 입력 저장처리한다.
+
+{{:egovframework:mcom:egovmmsattachfileregist.jpg|}}
+
+등록: 입력한 MMS 첨부파일이 저장 처리된다. \\
+목록: **MMS 첨부파일 목록조회** 화면으로 이동한다.
+
+==== MMS 첨부파일 수정 ====
+
+=== 비즈니스 규칙 ===
+입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/mbl/com/mms/updateMmsAttachFile.mdo|updateMmsAttachFile|"MmsDAO.updateAttachFile"|
+|목록|/mbl/com/mms/selectMmsAttachFileList.mdo|selectMmsAttachFileList|"MmsDAO.selectAttachFileList"|
+
+입력한 MMS 첨부파일을 저장 처리한다.
+
+{{:egovframework:mcom:egovmmsattachfileupdt.jpg|}}
+
+수정: 수정 입력한 MMS 첨부파일이 저장 처리된다. \\
+목록: **MMS 첨부파일 목록조회** 화면으로 이동한다.
+
+===== 참고자료 =====
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 공통컴포넌트 참조 : [[egovframework:파일관리|File Manage 서비스]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]
+  * 관련 데이터베이스 구조 및 스키마 : [[모바일_관련_데이터베이스_구조_및_스키마|관련 데이터베이스 구조 및 스키마]]

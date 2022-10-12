@@ -1,0 +1,11 @@
+====== Spring Cloud 기반 마이크로서비스 이해 ======
+
+===== 배경 =====
+응용프로그램 개발은 Spring 프레임워크의 확산 및 보급에 따라 보다 간단하고 빠른 개발이 가능한 패러다임으로의 변화가 이루어 졌다.\\
+Spring 프레임워크의 기반이 되는 의존성 주입(DI : Dependency Injection)과 관점 지향 프로그래밍(AOP : Aspect Oriented Programming) 방식은 응용 프로그램의 새로운 기준으로 자리 잡았다.
+그러나 Spring 프레임워크 발전함에 따라 관련된 설정의 복잡성을 높아졌으며, 배포(deploy) 측면에서 보면 큰 변화가 없는 상태이다. 특히, 응용 프로그램의 복잡성 및 대화형에 대한 근본적인 개발 방식과 배포 방식의 변화가 필요하다.\\
+이를 해결하기 위한 방안으로 마이크로 서비스 아키텍처(MSA : MicroServcie Architecture) 기반의 시스템 개발 및 운영 방안이 제시되었다. 이 마이크로 서비스 아키텍처는 개별적으로 운영되는 컴포넌트들로 대형 시스템을 구축하고, Spring은 컴포넌트 레벨에서 Spring이 항상 수행해 왔던 프로세스 레벨에서 느슨하게 결합된(loosely-coupled) 컴포넌트의 프로세스 구성을 제공한다.
+본 가이드에서는 전자정부 표준프레임워크에서 다음과 같은2가지 Spring 프로젝트 적용을 통하여 효율적인 마이크로 서비스 개발 및 운영을 지원한다.
+
+  * Spring Boot : 컴포넌트 레벨에서 마이크로 서비스 아키텍처로 설정 간소화 및 독립 서비스를 지원 (Embedded Web Server, Stand-alone application 등의 Inner Architecture 영역 지원)
+  * Spring Cloud : 시스템 레벨에서의 마이크로 서비스 아키텍처로 컴포넌트들 간의 효율적인 분산 서비스를 지원 (Load Balancing, Service Discovery 등의 Outer Architecture 영역 지원)

@@ -1,0 +1,361 @@
+====== Object Pooling 서비스 ======
+
+===== 개요 =====
+객체에 대한 Pooling기능을 제공하는 서비스이다.객체의 생성 비용이 크고,생성 횟수가 많으면, 
+평균적으로 사용되는 객체의 수가 적은 경우,성능을 향상시키기 위해서 사용한다. \\
+**Object Pool**은 소프트웨어 디자인 패턴으로서, 객체를 필요에 따라 생성하고 파괴하는 방식이 아닌,적절한 개수의 객체를 미리 사용
+가능한 상태로 생성하여 이를 이용하는 방식이다.Client는 Pool에 객체를 요청하여 객체를 얻은 후, 업무를 수행한다.
+얻어온 객체를 이용하여 업무 수행을 끝마친 후, 객체를 파괴하는 것이 아니라 Pool에게 돌려주어 다른 Cliet가 사용할 수 있도록 한다.
+**Object Pooling**은 객체 생성 비용이 크고,객체 생성 횟수가 많으며,평균적으로 사용되는 객체의 수가 적은 경우,높은 성능의 향상을 가져다 준다.
+
+===== 설명 =====
+
+==== ObjectPool ====
+**ObjectPool**은 아래와 같은 interface이다.
+<code java>
+public interface ObjectPool {
+    Object borrowObject();
+    void returnObject(Object borrowed);
+}
+</code>
+**[[http://commons.apache.org/pool/api-1.4/org/apache/commons/pool/ObjectPool.html|ObjectPool]]** interface를 구현하여 코드를 작성하여 사용한다.
+
+=== BaseObjectPool ===
+**ObjectPool**을 구현한 추상 클래스이다.
+<code java>
+public abstract class BaseObjectPool implements ObjectPool {
+    public abstract Object borrowObject() throws Exception;
+    public abstract void returnObject(Object obj) throws Exception;
+    public abstract void invalidateObject(Object obj) throws Exception;
+
+    public int getNumIdle() throws UnsupportedOperationException {
+        return -1;
+    }
+
+    public int getNumActive() throws UnsupportedOperationException {
+        return -1;
+    }
+
+    public void clear() throws Exception, UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public void addObject() throws Exception, UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    public void close() throws Exception {
+        closed = true;
+    }
+
+    public void setFactory(PoolableObjectFactory factory) throws IllegalStateException,
+    UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    protected final boolean isClosed() {
+        return closed;
+    }
+
+    protected final void assertOpen() throws IllegalStateException {
+        if(isClosed()) {
+            throw new IllegalStateException("Pool not open");
+        }
+    }
+    
+    private volatile boolean closed = false;
+}
+</code>
+^ METHOD ^ 설 명 ^
+|borrowObject | 객체 할당|
+|returnObject | 객체 반환|
+|invalidateObject | 객체 할당시 유효성검사|
+|getNumIdle | Idle 상태 객체수 리턴|
+|getNumActive | Active 상태 객체수 리턴|
+|clear | 객체 삭제|
+|addObject | Pool에 객체 추가|
+|setFactory | PoolableObjectFactory를 구현한 객체 설정|
+|isClosed | 객체 close여부 판단|
+|assertOpen | 객체가 사용가능한 상태판단|
+
+=== KeyedObjectPool ===
+[[http://commons.apache.org/pool/api-1.4/org/apache/commons/pool/KeyedObjectPool.html|KeyedObjectPool]]은 이기종(異機種) 객체들로 구성된 pool 구현을 위한 interface
+<code java>
+public interface KeyedObjectPool {
+    Object borrowObject(Object key);
+    void returnObject(Object key, Object borrowed);
+}
+</code>
+^ METHOD ^ 설 명 ^
+|borrowObject | 객체 할당|
+|returnObject | 객체 반환|
+
+==== PoolableObjectFactory ====
+**org.apache.commons.pool** package는 Object Pool객체 생성과 pool로부터 생성되는 object의 created와 destoryed 부분을 분리하여 구현 할 수 있도록 지원한다.
+**PoolableObjecFactory**는 pooled object의 생존주기 관리를 위한 interface이다.
+<code java>
+public interface PoolableObjectFactory {
+    Object makeObject();
+    void activateObject(Object obj);
+    void passivateObject(Object obj);
+    boolean validateObject(Object obj);
+    void destroyObject(Object obj);
+}
+</code>
+^ METHOD ^ 설 명 ^
+|makeObject | 객체 생성 |
+|activateObject | Pool로 부터 객체를 할당 받을때 호출된다(재초기화 할때 이용). |
+|passivateObject | Pool로 객체를 반환할 때 호출된다(초기화 할때 이용). |
+|validateObject | 객체가 유호한지 측정하기 위해 호출된다. |
+|destroyObject | 객체를 삭제할떄 호출된다. |  
+ObjectPool 구현한 프로그램은 PoolableObjectFactory를 구현한 프로그램을 받아드리도록 구현한다면, 다양하고 독특한 ObjectPool을 구현 할 수 있다.
+
+=== BasePoolableObjectFactory ===
+**PoolableObjecFactory**를 구현한 추상클래스이다.
+<code java>
+public abstract class BasePoolableObjectFactory implements PoolableObjectFactory {
+    public abstract Object makeObject()
+        throws Exception;
+
+    /** No-op. */
+    public void destroyObject(Object obj)
+        throws Exception  {
+    }
+
+    /**
+     * This implementation always returns <tt>true</tt>.
+     * @return <tt>true</tt>
+     */
+    public boolean validateObject(Object obj) {
+        return true;
+    }
+
+    /** No-op. */
+    public void activateObject(Object obj)
+        throws Exception {
+    }
+
+    /** No-op. */
+    public void passivateObject(Object obj) 
+        throws Exception {
+    }
+</code>
+
+=== KeyedPoolableObjectFactory ===
+**KeyedObjectPools**를 위한 **PoolableObjecFactory**이다.
+<code java>
+public interface KeyedPoolableObjectFactory {
+    Object makeObject(Object key);
+    void activateObject(Object key, Object obj);
+    void passivateObject(Object key, Object obj);
+    boolean validateObject(Object key, Object obj);
+    void destroyObject(Object key, Object obj);
+}
+</code>
+^ METHOD ^ 설 명 ^
+|makeObject | 객체 생성 |
+|activateObject | Pool로 부터 객체를 할당 받을때 호출된다(재초기화 할때 이용). |
+|passivateObject | Pool로 객체를 반환할 때 호출된다(초기화 할때 이용). |
+|validateObject | 객체가 유호한지 측정하기 위해 호출된다. |
+|destroyObject | 객체를 삭제할떄 호출된다. |
+
+=== BaseKeyedPoolableObjectFactory ===
+**KeyedPoolableObjectFactory**를 구현한 추상클래스이다.
+<code java>
+public abstract class BaseKeyedPoolableObjectFactory implements KeyedPoolableObjectFactory {
+    public abstract Object makeObject(Object key)
+        throws Exception;
+
+    /** No-op. */
+    public void destroyObject(Object key, Object obj)
+        throws Exception {
+    }
+
+    /**
+     * This implementation always returns <tt>true</tt>.
+     * @return <tt>true</tt>
+     */
+    public boolean validateObject(Object key, Object obj) {
+        return true;
+    }
+
+    /** No-op. */
+    public void activateObject(Object key, Object obj)
+        throws Exception {
+    }
+
+    /** No-op. */
+    public void passivateObject(Object key, Object obj) 
+        throws Exception {
+    }
+}
+</code>
+
+==== 가이드 프로그램(Guide Program) ====
+
+=== 프로그램 설정 ===
+<code xml>
+<bean id="dbcpObjectpool" class="egovframework.rte.fdl.objectpool.dbcp.dbcpObjectpoolset">
+        <property name="pool" ref="dbcpObjectPooler" />
+</bean>
+<bean id="dbcpObjectPooler" class="egovframework.rte.fdl.objectpool.dbcp.DbcpObjectpool"/>
+</code>
+^ PARAMETER ^ 설 명 ^
+|pool | egovframework.rte.fdl.objectpool.dbcp.DbcpObjectpool |
+
+=== 프로그램 소스 ===
+**DbcpObjectpool.java**는 **[[http://commons.apache.org/dbcp/apidocs/org/apache/commons/dbcp/package-summary.html|org.apache.commons.dbcp]]** package를 사용하여 만든 가이드프로그램이다.
+Source설명은 중요부분을 나누어서 하겠다.
+
+<code java>
+import org.apache.commons.dbcp.ConnectionFactory;
+import org.apache.commons.dbcp.DriverManagerConnectionFactory;
+import org.apache.commons.dbcp.PoolableConnectionFactory;
+import org.apache.commons.dbcp.PoolingDriver;
+import org.apache.commons.pool.impl.GenericObjectPool;
+</code>
+**[[http://commons.apache.org/dbcp/apidocs/org/apache/commons/dbcp/package-summary.html|org.apache.commons.dbcp]]** package를 import한다.
+
+<code java>
+   int maxActive = 1;  
+   byte whenExhaustedAction = 2; 
+   long maxWait = 1000;
+   int maxIdle = 2; 
+   int minIdle = 1;
+   boolean testOnBorrow = true;
+   boolean testOnReturn = true;
+   long timeBetweenEvctionRunsMillis = 600000;
+   int numTestsPerEvictionRun = 5;
+   long minEvictableIdleTimeMillis = 3600000;
+   boolean testWhileIdle = true;
+</code>
+ObjectPool 생성시 사용할 정보를 설정하는 필드를 정의한다.
+^ 설 정 ^ 설 명 ^
+| maxActive | 커넥션 풀이 제공할 최대 커넥션 개수 |
+| whenExhaustedAction | 커넥션 풀에서 가져올 수 있는 커넥션이 없을 때 어떻게 동작할지를 지정한다. |
+| maxWait | 사용되지 않고 풀에 저장될 수 있는 최대 커넥션 개수. 음수일 경우 제한이 없다.|
+| maxIdle | 사용되지 않고 풀에 저장될 수 있는 최소 커넥션 개수.|
+| testOnBorrow | true일 경우 커넥션 풀에서 커넥션을 가져올 때 커넥션이 유효한지의 여부를 검사한다.|
+| testOnReturn | true일 경우 커넥션 풀에 커넥션을 반환할 때 커넥션이 유효한지의 여부를 검사한다.|
+| timeBetweenEvctionRunsMillis | 사용되지 않은 커넥션을 추출하는 쓰레드의 실행 주기를 지정한다. |
+| numTestsPerEvictionRun | 사용되지 않는 커넥션을 몇 개 검사할지 지정한다.|
+| minEvictableIdleTimeMillis | 사용되지 않는 커넥션을 추출할 때 이 속성에서 지정한 시간 이상 비활성화 상태인 커넥션만 추출한다. |
+| testWhileIdle | true일 경우 비활성화 커넥션을 추출할 때 커넥션이 유효한지의 여부를 검사해서 유효하지 않은 커넥션은 풀에서 제거한다.|
+
+<code java>
+private void loadProperties() throws IOException
+{
+   String fileName_ = Thread.currentThread().getContextClassLoader().getResource("jdbc.properties").getFile();
+   Properties props = null; 
+   FileInputStream fis = null; 
+   
+   props = new Properties();
+   fis = new FileInputStream(fileName_);
+   props.load(new BufferedInputStream(fis));
+   fis.close();
+   
+   g_Driver = props.getProperty("driver"); 
+   g_URL = props.getProperty("dburl"); 
+   g_User = props.getProperty("username"); 
+   g_Password = props.getProperty("password"); 
+}
+</code>
+  - jdbc.properties 파일을 설정한다.
+  - jdbc_driver,username,password를 jdbc.properties로 부터 읽어온다.
+jdbc.properties를 통해서 데이타베이스 접속정보를 얻어온다.
+
+<code java>
+private void setupDriver(String driver,String url,String user,String password)throws Exception
+{
+   Class.forName(driver);
+   
+   GenericObjectPool connectionPool = new GenericObjectPool(null);
+   connectionPool.setMaxActive(maxActive); 
+   connectionPool.setMaxIdle(maxIdle); 
+   connectionPool.setMaxWait(maxWait); 
+   connectionPool.setWhenExhaustedAction(whenExhaustedAction);
+   connectionPool.setMinIdle(minIdle);
+   connectionPool.setMinEvictableIdleTimeMillis(minEvictableIdleTimeMillis);
+   connectionPool.setTimeBetweenEvictionRunsMillis(timeBetweenEvctionRunsMillis);
+   connectionPool.setTestOnBorrow(testOnBorrow);
+   connectionPool.setTestOnReturn(testOnReturn);
+   connectionPool.setTestWhileIdle(testWhileIdle);
+   connectionPool.setNumTestsPerEvictionRun(numTestsPerEvictionRun);
+   
+  ConnectionFactory connectionFactory = 
+		 new DriverManagerConnectionFactory(url,user,password);
+   
+   PoolableConnectionFactory poolableConnectionFactory =
+	   new PoolableConnectionFactory(connectionFactory,
+						connectionPool,
+						null,
+						null,
+						false,						
+                                                       true);
+					       
+   PoolingDriver poolingDriver = new PoolingDriver();
+   
+  poolingDriver.registerPool("database", connectionPool);
+}
+</code>
+  - setMaxWait : 최대 대기시간
+  - setWhenExhaustedAction : pool에서 할당할 객체가 없을 경우 어떻게 처리할지를 설정
+  - setMinIdle : pool에서 사용되지 않고 저장될 수 최소수
+  - setMinEvictableIdleTimeMillis : 사용되지 않는 커넥션을 추출할 때 이 속성에서 지정한 시간 이상 비활성화 상태인 객체만 추출
+  - setTimeBetweenEvictionRunsMillis : 사용되지 않은 커넥션을 추출하는 쓰레드의 실행 주기를 지정
+  - setTestOnBorrow : true일 경우 커넥션 풀에서 커넥션을 가져올 때 커넥션이 유효한지의 여부를 검사
+  - setTestOnReturn : true일 경우 커넥션 풀에 커넥션을 반환할 때 커넥션이 유효한지의 여부를 검사
+  - setTestWhileIdle : true일 경우 비활성화 커넥션을 추출할 때 커넥션이 유효한지의 여부를 검사해서 유효하지 않은 커넥션은 풀에서 제거
+  - setNumTestsPerEvictionRun : 사용되지 않는 커넥션을 몇 개 검사할지 지정
+  - 실제 DB와의 커넥션을 연결해주는 팩토리 생성 
+  - Connection Pool이 PoolableConnection 객체를 생성할 때 사용할  PoolableConnectionFactory 생성
+  - Pooling을 위한 PoolingDriver 생성
+  - PoolingDriver에 connection pool을 등록
+
+위에서 정의한 설정정보를 GenericObjectPool(ObjectPool)를 생성한 후 각각 해당 메소드를 호출하여 설정한다.
+PoolableObjectFactory를 구현한 PoolableConnectionFactory를 사용하였다.
+
+**DbcpObjectpoolTest.java**은 가이드프로그램을 이용한 테스트 프로그램이다.
+<code java>
+@Resource(name = "dbcpObjectPooler")
+private DbcpObjectpool pool;
+/**
+ * Object pool 테스트 모듈
+ * @see 개발프레임웍크 실행환경 개발팀
+ */
+@Test
+public void runModule()
+{
+	Connection con = null; 
+	PreparedStatement pstmt = null; 
+	ResultSet rs = null; 
+	String sql = "select * from emp"; 
+	try
+	{
+		con = pool.getConnection();
+		pstmt = con.prepareStatement(sql);
+		rs = pstmt.executeQuery();
+		logger.debug("module1");
+		while(rs.next())
+		{
+			logger.debug(rs.getString("ename"));
+		}
+	}catch(Exception e)
+	{
+		e.printStackTrace();
+	}finally
+	{
+		pool.freeConnection(con, pstmt,rs);
+	}
+}
+</code>
+
+
+=== 가이드프로그램 실행순서 ===
+  - 실행관리 Repository에서 egovframework.rte.fdl.objectpool-1.0.0-SNAPSHOT.jar를 Classpath 설정한다.
+  - spring폴더를 생성 후 Classpath 설정한다. 
+  - 실행관리 Repository에서 context-dbcppool.xml를 spring폴더에 저장한다.
+  - jdbc.properties는 복사하여 원하는 위치에 저장하고 properties내용은 수정한다.
+  - DbcpObjectpoolTest.java를 실행한다.(DbcpObjectpoolTest.java 내용도 수정해 테스트 한다.)
+
+===== 참고자료 =====

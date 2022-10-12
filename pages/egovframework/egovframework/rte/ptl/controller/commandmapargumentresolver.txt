@@ -1,0 +1,131 @@
+====== CommandMapArgumentResolver(@Deprecated) ======
+
+===== 개요 =====
+Controller에서 화면(JSP) 입력값을 받기 위해서 일반적으로 Command(Form Class) 객체를 사용하지만, Map 객체를 사용하는걸 선호할 수 있다.\\
+org.springframework.web.bind.support.WebArgumentResolver의 구현클래스인 CommandMapArgumentResolver은 HTTP request 객체에 있는 파라미터이름과 값을 Map 객체에 담아 Controller에서 사용도록 제공한다.
+
+===== 설명 =====
+==== WebArgumentResolver ====
+Sping MVC의 @Controller의 메소드의 argument로 사용할 수 있는 유형(이에 관한 정보는 [[egovframework:rte:ptl:annotation-based_controller#유연해진 메소드 시그니쳐|이곳]]을 참조하라.)은 기존의 계층형 Controller보다 다양해 졌지만,\\
+필요에 따라 기본 유형외의 custom argument를 사용해야 할때가 있을 것이다.\\
+Sping MVC는 Controller의 argument 유형을 customizing 할 수 있는 WebArgumentResolver라는 interface를 제공한다.\\
+
+아래와 같이 Controller의 메소드에서 MySpecialArg라는 custom argument를 argument로 사용하려 한다면, 
+<code java>
+@Controller
+public class HelloController{
+    public String hello(MySpecialArg mySpecialArg,...){
+       ...
+       return "...";
+    }
+}
+</code>
+
+인터페이스 WebArgumentResolver를 구현한 클래스를 만든다. 구현해야 할 메소드는 아래와 같다.
+<code java>
+Object resolveArgument(MethodParameter methodParameter, NativeWebRequest webRequest) throws Exception;
+</code>
+<code java>
+public class MySpecialArgumentResolver implements WebArgumentResolver {
+
+   public Object resolveArgument(MethodParameter methodParameter, NativeWebRequest webRequest) {
+     //메소드 argument 유형중에 MySpecialArg.class이 있다면,
+     if (methodParameter.getParameterType().equals(MySpecialArg.class)) {
+       //new MySpecialArg("myValue")을 값으로 부여한다.
+       return new MySpecialArg("myValue");
+     }
+     return UNRESOLVED;
+   }
+}
+</code>
+
+이 WebArgumentResolver의 구현 클래스는 아래의 메소드에서 사용된다. \\
+AnnotationMethodHandlerAdapter.setCustomArgumentResolver(org.springframework.web.bind.support.WebArgumentResolver) - 단수의 WebArgumentResolver \\
+AnnotationMethodHandlerAdapter.setCustomArgumentResolvers(org.springframework.web.bind.support.WebArgumentResolver[]) - 복수의 WebArgumentResolver \\
+
+따라서, 빈 설정 파일에서 AnnotationMethodHandlerAdapter의 customArgumentResolvers 프로퍼티에 해당 MySpecialArgumentResolver을 등록한다.\\
+list 유형인걸 보면 알겠지만, WebArgumentResolver은 여러개도 등록할수 있다.\\
+<code xml>
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="customArgumentResolvers">
+			<list>
+				<bean class="...MySpecialArgumentResolver"/>
+			</list>
+		</property>
+	</bean>
+</code>
+
+==== CommandMapArgumentResolver ====
+HTTP request 객체에 있는 파라미터이름과 값을 특정 폼 빈에 담아서 사용하는 방식이 일반적이지만, Map 객체에 담아서 사용하는걸 선호하는 경우도 있다.\\
+HTTP request 객체의 파라미터를 꺼내서 Map 객체에 담는 작업을 Controller에서 반복적으로 수행하는것 보다는 Interceptor에서 선처리하고 request 객체에서 저장하는게 간편하지만,\\
+아래와 같이 메소드의 파라미터로 전달되는게 더 깔끔하다.\\
+<code java>
+public String helloPost(Map commandMap, ModelMap model) {
+...
+}
+</code>
+하지만, Map commandMap에 파라미터의 이름과 값이 들어 있게 하려면 위에서 언급한 WebArgumentResolver를 이용해야 한다.\\
+WebArgumentResolver의 구현 클래스인 CommandMapArgumentResolver는 \\
+Controller 메소드의 argument중에 commandMap이라는 이름의 Map 객체가 있다면, HTTP request 객체에 있는 파라미터이름과 값을 commandMap Map객체에 담는다.\\
+<code java>
+package egovframework.rte.ptl.mvc.bind;
+...
+public class CommandMapArgumentResolver implements WebArgumentResolver{
+	
+	/**
+	 * Controller의 메소드 argument에 commandMap이라는 Map 객체가 있다면 
+	 * HTTP request 객체에 있는 파라미터이름과 값을 commandMap에 담아 returng한다.
+	 * 배열인 파라미터 값은 배열로 Map에 저장한다.
+	 */
+	public Object resolveArgument(MethodParameter methodParameter,
+			NativeWebRequest webRequest) throws Exception {
+		
+		Class<?> clazz = methodParameter.getParameterType();
+		String paramName = methodParameter.getParameterName();
+		
+		if(clazz.equals(Map.class) && paramName.equals("commandMap")){
+			
+			Map<String, Object> commandMap = new HashMap<String, Object>();
+			HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();			
+			Enumeration<?> enumeration = request.getParameterNames();
+			
+			while(enumeration.hasMoreElements()){
+				String key = (String) enumeration.nextElement();
+				String[] values = request.getParameterValues(key);
+				if(values!=null){
+					commandMap.put(key, (values.length > 1) ? values:values[0] );
+				}
+			}
+			return commandMap;
+		}
+		return UNRESOLVED;
+	}
+}
+</code>
+
+CommandMapArgumentResolver를 사용하려면 HandlerAdaptor에 등록해야 한다.
+<code xml>
+<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+	<property name="customArgumentResolvers">
+		<list>
+			<bean class="egovframework.rte.ptl.mvc.bind.CommandMapArgumentResolver"/>
+		</list>
+	</property>
+</bean>
+</code>
+
+테스트를 위한 Form에 데이터를 아래와 같이 등록하고 폼을 제출했을때, \\
+{{:egovframework:rte:ptl:controller:commandmap.jpg|}}\\
+
+commandMap 객체의 데이터는 key, value 형태로 아래와 같이 들어 있다.
+같은 파라미터 이름으로 여러값이 들어 있는 값은 배열로 들어 있다. 
+<code>
+key:text1   value:{aaa,bbb}
+key:text2   value:ccc
+key:text3   value:ddd
+key:cb   value:{on,on}
+key:rb2   value:on
+key:rb1   value:on
+</code>
+
+===== 참고자료 =====

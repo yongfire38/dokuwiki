@@ -1,0 +1,225 @@
+====== 업그레이드 ======
+
+===== 개요 =====
+표준프레임워크 3.0(Spring Security 3.2.3)에서 3.7(Spring Security 4.0.3)로 업그레이드 Server security의 경우 설정 변경뿐만 아니라 소스 상의 변경 작업이 필요하다.
+
+
+===== 주요 변경내용 (Spring Security 부분) =====
+
+==== dependencies 및 패키지 변경 ====
+  * spring-security-core (org.springframework.security.core, org.springframework.security.access, etc.)
+  * spring-security-web (org.springframework.security.web)
+  * spring-security-config (org.springframework.security.config) 
+ 
+==== API 변경 ====
+  * MethodSecurityInterceptor 설정 방식 변경
+  * accessDecisionManager 설정 방식 변경
+  * ConcurrentSessionFilter 선언 방식 변경
+
+==== 기타 ====
+  * sniff 설정 지원
+  * xss protection 설정 지원
+  * csrf 설정 지원
+  * hasRole prefix 설정 지원
+  * 등등
+
+
+===== 실행환경 부분 업그레이드 절차 =====
+==== 1. dependency 수정 ====
+<code xml>
+<dependency>
+    <groupId>egovframework.rte</groupId>
+    <artifactId>egovframework.rte.fdl.security</artifactId>
+    <version>4.0.3</version>
+</dependency>
+</code>
+  * 적용 버전은 최신 버전 확인 후 적용(patch 버전 등)
+
+
+==== 3. Spring Security 설정 수정 ====
+다음 설정을 참조하여 관련 설정을 변경한다. \\
+보안 옵션 추가(sniff, xframeOptions, xssProtection, csrf)
+
+<code xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:egov-security="http://www.egovframe.go.kr/schema/egov-security"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
+		http://www.egovframe.go.kr/schema/egov-security http://www.egovframe.go.kr/schema/egov-security/egov-security-3.7.xsd">
+
+
+	<security:http pattern="/css/**" security="none"/>
+	<security:http pattern="/html/**" security="none"/>
+	<security:http pattern="/images/**" security="none"/>
+ 	<security:http pattern="/js/**" security="none"/>
+ 	<security:http pattern="/resource/**" security="none"/>
+ 	<security:http pattern="\A/WEB-INF/jsp/.*\Z" request-matcher="regex" security="none"/>
+
+    <egov-security:config id="securityConfig"
+		loginUrl="/uat/uia/egovLoginUsr.do"
+		logoutSuccessUrl="/EgovContent.do"
+		loginFailureUrl="/uat/uia/egovLoginUsr.do?login_error=1"
+		accessDeniedUrl="/sec/ram/accessDenied.do"
+
+		dataSource="egov.dataSource"
+		jdbcUsersByUsernameQuery="SELECT USER_ID, ESNTL_ID AS PASSWORD, 1 ENABLED, USER_NM, USER_ZIP,
+                                                              USER_ADRES, USER_EMAIL, USER_SE, ORGNZT_ID, ESNTL_ID,
+                                                              (select a.ORGNZT_NM from COMTNORGNZTINFO a where a.ORGNZT_ID = m.ORGNZT_ID) ORGNZT_NM
+                                                       FROM COMVNUSERMASTER m WHERE CONCAT(USER_SE, USER_ID) = ?"
+		jdbcAuthoritiesByUsernameQuery="SELECT A.SCRTY_DTRMN_TRGET_ID USER_ID, A.AUTHOR_CODE AUTHORITY
+                                                             FROM COMTNEMPLYRSCRTYESTBS A, COMVNUSERMASTER B
+                                                             WHERE A.SCRTY_DTRMN_TRGET_ID = B.ESNTL_ID AND B.USER_ID = ?"
+		jdbcMapClass="egovframework.com.sec.security.common.EgovSessionMapping"
+
+		requestMatcherType="regex"
+		hash="plaintext"
+		hashBase64="false"
+
+		concurrentMaxSessons="1"
+		concurrentExpiredUrl="/EgovContent.do"
+
+		defaultTargetUrl="/EgovContent.do"
+		
+		sniff="true"
+		xframeOptions="SAMEORIGIN" 
+		xssProtection="true" 
+		csrf="false"
+	/>
+
+	<egov-security:secured-object-config id="securedObjectConfig"
+		sqlHierarchicalRoles="
+			SELECT a.CHLDRN_ROLE child, a.PARNTS_ROLE parent
+			FROM COMTNROLES_HIERARCHY a LEFT JOIN COMTNROLES_HIERARCHY b on (a.CHLDRN_ROLE = b.PARNTS_ROLE)"
+		sqlRolesAndUrl="
+			SELECT a.ROLE_PTTRN url, b.AUTHOR_CODE authority
+			FROM COMTNROLEINFO a, COMTNAUTHORROLERELATE b
+			WHERE a.ROLE_CODE = b.ROLE_CODE
+				AND a.ROLE_TY = 'url'  ORDER BY a.ROLE_SORT"
+		sqlRolesAndMethod="
+			SELECT a.ROLE_PTTRN method, b.AUTHOR_CODE authority
+			FROM COMTNROLEINFO a, COMTNAUTHORROLERELATE b
+			WHERE a.ROLE_CODE = b.ROLE_CODE
+			AND a.ROLE_TY = 'method'  ORDER BY a.ROLE_SORT"
+		sqlRolesAndPointcut="
+			SELECT a.ROLE_PTTRN pointcut, b.AUTHOR_CODE authority
+			FROM COMTNROLEINFO a, COMTNAUTHORROLERELATE b
+			WHERE a.ROLE_CODE = b.ROLE_CODE
+			AND a.ROLE_TY = 'pointcut'  ORDER BY a.ROLE_SORT"
+		sqlRegexMatchedRequestMapping="
+			SELECT a.ROLE_PTTRN uri, b.AUTHOR_CODE authority
+			FROM COMTNROLEINFO a, COMTNAUTHORROLERELATE b
+			WHERE a.ROLE_CODE = b.ROLE_CODE
+			AND a.ROLE_TY = 'regex'  
+			ORDER BY a.ROLE_SORT"
+	/>
+
+	<egov-security:initializer id="initializer" supportMethod="true" supportPointcut="false" />
+
+</beans>
+</code>
+
+==== 4. LoginFilter 변경 ====
+spring security 로그인 필터 처리시 경로 및 파리미터 적용 \\
+  * 기존 :
+<code java>
+Map<String, UsernamePasswordAuthenticationFilter> beans = act.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
+if (beans.size() > 0) {
+	springSecurity = (UsernamePasswordAuthenticationFilter) beans.values().toArray()[0];
+} else {
+	LOGGER.error("No AuthenticationProcessingFilter");
+	throw new IllegalStateException("No AuthenticationProcessingFilter");
+}
+...
+class RequestWrapperForSecurity extends HttpServletRequestWrapper {
+	private String username = null;
+	private String password = null;
+
+	public RequestWrapperForSecurity(HttpServletRequest request, String username, String password) {
+		super(request);
+
+		this.username = username;
+		this.password = password;
+	}
+
+	@Override
+	public String getRequestURI() {
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/j_spring_security_check";
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if (name.equals("j_username")) {
+			return username;
+		}
+
+		if (name.equals("j_password")) {
+			return password;
+		}
+
+		return super.getParameter(name);
+	}
+}
+</code>
+
+  * 변경 :
+<code java>
+Map<String, UsernamePasswordAuthenticationFilter> beans = act.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
+if (beans.size() > 0) {
+	springSecurity = (UsernamePasswordAuthenticationFilter) beans.values().toArray()[0];
+	springSecurity.setUsernameParameter("egov_security_username");
+	springSecurity.setPasswordParameter("egov_security_password");
+	springSecurity.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(request.getServletContext().getContextPath() +"/egov_security_login", "POST"));
+} else {
+	LOGGER.error("No AuthenticationProcessingFilter");
+	throw new IllegalStateException("No AuthenticationProcessingFilter");
+}
+...
+class RequestWrapperForSecurity extends HttpServletRequestWrapper {
+	private String username = null;
+	private String password = null;
+
+	public RequestWrapperForSecurity(HttpServletRequest request, String username, String password) {
+		super(request);
+
+		this.username = username;
+		this.password = password;
+	}
+	
+	@Override
+	public String getServletPath() {
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/egov_security_login";
+	}
+
+	@Override
+	public String getRequestURI() {
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/egov_security_login";
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if (name.equals("egov_security_username")) {
+			return username;
+		}
+
+		if (name.equals("egov_security_password")) {
+			return password;
+		}
+
+		return super.getParameter(name);
+	}
+}
+
+</code>
+==== 5. LogoutFilter 변경 ====
+spring security 로그아웃 필터 처리시 egov_security_logout 적용 \\
+  * 기존 :
+<code java>
+((HttpServletResponse)response).sendRedirect(((HttpServletRequest)request).getContextPath() + "/j_spring_security_logout");
+</code>
+\\
+  * 변경 :
+<code java>
+((HttpServletResponse)response).sendRedirect(((HttpServletRequest)request).getContextPath() + "/egov_security_logout");
+</code>

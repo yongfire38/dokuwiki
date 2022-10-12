@@ -1,0 +1,21 @@
+====== 개요 ======
+어플리케이션은 사용자의 request가 발생할 때 호출되는 Service를 각 layer별로 시간 측정 및 추적을 하여 그 상세내용을 보여준다.
+
+HTTP, Application, JDBC, SQL 등의 각 Layer 별로 호출되고 수행된 시간을 조회하며, 발생한 Exception에 대한 정보도 제공한다.
+
+또한 접속한 사용자의 OS유형과 브라우저 유형정보도 제공한다.
+
+\\
+\\
+
+====== 기능설명 ======
+    * [[eGovframework:oe2:가이드:어플리케이션:종합]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:HTTP 서비스]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:어플리케이션 서비스]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:JDBC 서비스]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:SQL 서비스]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:Exception]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:Sequence 현황]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:OS 사용현황]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:브라우저 사용현황]] 
+    * [[eGovframework:oe2:가이드:어플리케이션:어플리케이션 선택]] 

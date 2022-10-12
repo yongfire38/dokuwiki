@@ -1,0 +1,279 @@
+======뷰(View) 보여주기======
+=====개요=====
+=====설명=====
+====뷰 상태(view state) 정의하기====
+view-state 구성요소로 정의. view-state는 해당 뷰를 보여준 다음, 사용자의 응답을 기다림.\\
+<code xml>
+<view-state id="enterBookingDetails">
+	<transition on="submit" to="reviewBooking" />
+</view-state>
+</code>
+
+
+
+====뷰 식별자 지정하기====
+뷰 속성을 여러 방법으로 지정할 수 있다.
+  * 상대 경로 사용
+<code xml><view-state id="enterBookingDetails" view="bookingDetails.xhtml"></code>
+  * 절대 경로 사용
+<code xml><view-state id="enterBookingDetails" view="/WEB-INF/hotels/booking/bookingDetails.xhtml></code>
+  * 논리적인 경로 사용: Spring MVC 등과 통합 시
+<code xml><view-state id="enterBookingDetails" view="bookingDetails"></code>
+
+====뷰 범위====
+view-state 내부에서 유지되는 변수. Ajax 요청처럼 동일한 뷰가 여러번 보여줘야 하는 경우 유용.
+  * var 태그를 사용해서 view 변수 선언.
+<code xml><var name="searchCriteria" class="com.mycompany.myapp.hotels.SearchCriteria" /></code>
+  * viewScope 변수에 할당하기
+<code xml>
+<on-render>
+	<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels"/>
+</on-render>
+</code>
+
+====화면을 보여줄 때 액션 실행하기====
+뷰를 보여주기 전에 특정 액션을 실행하려면 on-render 사용.
+<code xml>
+<on-render>
+<evaluate expression="bookingService.findHotels(searchCriteria)" result="viewScope.hotels" />
+</on-render>
+</code>
+
+====모델 바인딩 하기====
+<code xml><view-state id="enterBookingDetails" model="booking"></code>
+뷰 이벤트가 발생했을 때 지정된 모델에 대해서 다음 행동이 일어난다.\\
+  - view-to-model 바인딩.
+  - 모델 유효성 검증.
+
+====타입 변환 수행하기====
+===변환기(Converter) 구현하기===
+org.springframework.binding.convert.converters.TwoWayConverter을 구현하면 됨. StringToObject를 구현하는게 더 좋다.
+<code java>
+protected abstract Object toObject(String string, Class targetClass) throws Exception;
+protected abstract String toString(Object object) throws Exception;
+</code>
+구현 예.
+<code java>
+public class StringToMonetaryAmount extends StringToObject {
+	public StringToMonetaryAmount() {
+	super(MonetaryAmount.class);
+  }
+  @Override
+  protected Object toObject(String string, Class targetClass) {
+  	return MonetaryAmount.valueOf(string);
+  }
+  @Override
+  protected String toString(Object object) {
+  	MonetaryAmount amount = (MonetaryAmount) object;
+  	return amount.toString();
+  }
+}
+</code>
+org.springframework.binding.convert.converters에 이미 구현된 변환기가 위치.
+
+=== 변환기 등록하기===
+org.springframework.binding.convert.service.DefaultConversionService을 상속해서 addDefaultConverters() 메소드를 재정의 하면 된다.\\
+
+====바인딩 금지하기====
+bind 속성으로 특정 뷰 이벤트에서 모델 바인딩과 유효성 검증을 안 하게 할 수도 있다.\\
+<code xml>
+<view-state id="enterBookingDetails" model="booking">
+	<transition on="proceed" to="reviewBooking">
+	<transition on="cancel" to="bookingCancelled" bind="false" />
+</view-state>
+</code>
+
+====명시적으로 바인딩 지정하기====
+binder 속성으로 바인딩 할 프로퍼티를 명시적으로 지정할 수 있음.
+<code xml>
+<view-state id="enterBookingDetails" model="booking">
+	<binder>
+		<binding property="creditCard" />
+		<binding property="creditCardName" />
+		<binding property="creditCardExpiryMonth" />
+		<binding property="creditCardExpiryYear" />
+	</binder>
+	<transition on="proceed" to="reviewBooking" />
+	<transition on="cancel" to="cancel" bind="false" />
+</view-state>
+</code>
+binder로 지정하지 않으면 모든 프로퍼티를 바인딩. 변환기 지정 가능.
+<code xml>
+<view-state id="enterBookingDetails" model="booking">
+	<binder>
+		<binding property="checkinDate" converter="shortDate" />
+		<binding property="checkoutDate" converter="shortDate" />
+		<binding property="creditCard" />
+		<binding property="creditCardName" />
+		<binding property="creditCardExpiryMonth" />
+		<binding property="creditCardExpiryYear" />
+	</binder>
+	<transition on="proceed" to="reviewBooking" />
+	<transition on="cancel" to="cancel" bind="false" />
+</view-state>
+</code>
+
+====모델 유효성 검증하기====
+===프로그램 내에서 유효성 검증 하기===
+첫 번째 방법으로 유효성 검증 로직을 모델 객체 내에 정의하는 방법이다. view-state 생명주기에서 자동으로 호출 된다.\\
+<code xml>
+<view-state id="enterBookingDetails" model="booking">
+	<transition on="proceed" to="reviewBooking">
+</view-state>
+</code>
+<code java>
+public class Booking {
+	private Date checkinDate;
+	private Date checkoutDate;
+  ...
+	public void validateEnterBookingDetails(ValidationContext context) {
+		MessageContext messages = context.getMessages();
+		if (checkinDate.before(today())) {
+			messages.addMessage(new MessageBuilder().error().source("checkinDate").
+
+			defaultText("Check in date must be a future date").build());
+		} else if (!checkinDate.before(checkoutDate)) {
+			messages.addMessage(new MessageBuilder().error()
+			                                        .source("checkoutDate")
+			                                        .defaultText("Check out date must be later than check in date")
+			                                        .build());
+		}
+	}
+}
+</code>
+enterBookingDetails에 대한 이벤트가 발생했을 때 자동으로 validateEnterBookingDetails이 호출 된다. \\
+메소드 이름을 validate$<state> 로 정의하면 된다.
+
+== Validator 구현하기==
+Validator로 불리는 별도의 객체로 정의할 수도 있다. 클래스 이름을 $<model>Validator 로 하자. \\
+메소드 이름은 역시 validate$<state>로 하자.
+
+<code java>
+@Component
+public class BookingValidator {
+	public void validateEnterBookingDetails(Booking booking, ValidationContext context) {
+		MessageContext messages = context.getMessages();
+		if (booking.getCheckinDate().before(today())) {
+			messages.addMessage(new MessageBuilder().error()
+			                                        .source("checkinDate")
+			                                        .defaultText("Check in date must be a future date")
+			                                        .build());
+		} else if (!booking.getCheckinDate().before(booking.getCheckoutDate())) {
+			messages.addMessage(new MessageBuilder().error()
+			                                        .source("checkoutDate")
+			                                        .defaultText("Check out date must be later than check in date")
+			                                        .build());
+		}
+	}
+}
+</code>
+spring mvc의 Error 객체도 받을 수 있다.
+
+===ValidationContext===
+유효성 검증 동안에 MessageContext에 접근할 수 있게 해주며, 다양한 객체에 접근 가능하게 해준다.
+
+====유효성 검증 하지 않기====
+<code xml>
+<view-state id="chooseAmenities" model="booking">
+	<transition on="proceed" to="reviewBooking">
+	<transition on="back" to="enterBookingDetails" validate="false" />
+</view-state>
+</code>
+
+====뷰 전이 실행하기====
+전이 대상은 (1)다른 뷰, (2)현재 뷰를 다시, (3)action을 실행, (4)Ajax 이벤트를 제어할 때 
+'fragments'로 불리는 일부 뷰를 보여주라는 요청일 수도 있다.\\
+
+===전이 액션(Transition actions)===
+<code xml>
+<transition on="submit" to="bookingConfirmed">
+	<evaluate expression="bookingAction.makeBooking(booking, messageContext)" />
+</transition>
+</code>
+<code java>
+public class BookingAction {
+	public boolean makeBooking(Booking booking, MessageContext context) {
+		try {
+			bookingService.make(booking);
+			return true;
+		} catch (RoomNotAvailableException e) {
+			context.addMessage(builder.error().defaultText("No room is available at this hotel").build());
+			return false;
+		}
+	}
+}
+</code>
+
+=== 글로벌 전이(Global transitions)===
+<code xml>
+<global-transitions>
+	<transition on="login" to="login">
+	<transition on="logout" to="logout">
+</global-transitions>
+</code>
+
+=== 이벤트 핸들러(Event handlers)=== 
+<code xml>
+<transition on="event">
+	<!-- Handle event -->
+</transition>
+</code>
+
+=== 프레그먼트 보여주기(fragments)=== 
+현재 뷰 중 일부만을 다시 보여줄 수 있는 방법으로, Ajax 기반일 때 주로 사용한다.
+<code xml>
+<transition on="next">
+	<evaluate expression="searchCriteria.nextPage()" />
+	<render fragments="searchResultsFragment" />
+</transition>
+</code>
+','로 구분해서 다수의 fragment를 지정할 수도 있다.
+====메세지 사용하기====
+MessageContext는 플로우 실행 동안에 메세지를 저장하는데 사용되는 API다. \\
+일반 메세지나 국제화가 지원된 메세지 모두 사용 가능하다.\\
+메세지 수준도 지정 가능하며, 지원되는 수준은 info, warning, error이 있다. 메세지를 추가할 때는 MessageBuilder를 사용하자.\\
+
+  * 일반 메세지 추가
+<code java>
+MessageContext context = ...
+MessageBuilder builder = new MessageBuilder();
+context.addMessage(builder.error().source("checkinDate").defaultText("Check in date must be a future date").build());
+context.addMessage(builder.warn().source("smoking").defaultText("Smoking is bad for your health").build());
+context.addMessage(builder.info().defaultText("We have processed your reservation - thank you and enjoy your stay").build());
+</code>
+  * 국제화가 지원되는 메세지 추가
+<code java>
+MessageContext context = ...
+MessageBuilder builder = new MessageBuilder();
+context.addMessage(builder.error().source("checkinDate").code("checkinDate.notFuture").build());
+context.addMessage(builder.warn().source("smoking").code("notHealthy").resolvableArg("smoking").build());
+</code>
+
+=== 메세지 번들 사용하기=== 
+스프링의 MessageSource를 사용해서 메세지 번들을 정의가 가능하다.  간단히 프로퍼티 파일로 관리하면 된다.\\
+<code>
+#messages.properties
+checkinDate=Check in date must be a future date
+notHealthy={0} is bad for your health
+reservationConfirmation=We have processed your reservation - thank you and enjoy your stay
+</code>
+뷰나 플로우에서는 resourceBundle EL 변수로 접근도 가능하다.\\
+<code xml><h:outputText value="#{resourceBundle.reservationConfirmation}" /></code>
+
+===시스템 생성 메세지 이해하기===
+시스템에서 발생한 예외에 대해 메세지 지정 가능하다. 예를 들어 타입 변환 시 예외가 발생하면 typeMismatch를 통해서 메세지 지정 가능하다. \\
+<code>
+booking.checkinDate.typeMismatch=The check in date must be in the format yyyy-mm-dd.
+</code>
+
+====팝업 띄우기====
+모달 팝업 다이얼로그를 뷰로 렌더링하고 싶다면, \\
+<code xml><view-state id="changeSearchCriteria" view="enterSearchCriteria.xhtml" popup="true"></code>
+특히 스프링 자바 스크립트와 함께 사용하면, 팝업을 보여주는데 클라이언트 코드가 전혀 필요 없다. SWF가 클라이언트 요청을 팝업으로 재전송(redirect)해준다.\\
+
+====뷰 백트랙킹(View backtracking)====
+기본적으로 브라우저의 백 버튼으로 이전 view-state로 돌아갈 수 있다. history를 사용해서 이에 대한 설정이 가능하다.\\
+  * 'discard'로 설정하면 백트랙킹(backtracking) 예방 가능
+<code xml><transition on="cancel" to="bookingCancelled" history="discard"></code>
+  * #'invalidate'로 설정하면 이전에 보여줬던 모든 뷰 뿐만 아니라 현재 뷰까지도 백트랙킹 예방(더 강력한 예방이 된다는 뜻..)
+<code xml><transition on="confirm" to="bookingConfirmed" history="invalidate"></code>

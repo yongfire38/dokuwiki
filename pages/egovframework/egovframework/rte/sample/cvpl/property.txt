@@ -1,0 +1,61 @@
+====== [적용 예] Property ======
+
+===== 개요 =====
+[[egovframework:rte:fdl:property|Property]] Service 중 Spring Bean 설정 파일에 정보를 입력(Bean 설정 파일 사용) 설정한다.
+
+===== 설명 =====
+==== Configuration ====
+=== resources\spring\context-common.xml ===
+<code xml>
+<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+	<property name="basenames">
+		<list>
+			<value>classpath:/egovframework/rte/fdl/property/messages/properties</value>
+		</list>
+	</property>
+	<property name="cacheSeconds">
+		<value>60</value>
+	</property>
+</bean>
+</code>
+=== resources\spring\context-properties.xml ===
+<code xml>
+<bean name="propertiesService" class="egovframework.rte.fdl.property.impl.EgovPropertyServiceImpl" destroy-method="destroy">
+	<property name="properties">
+        <map>
+        	<entry key="pageUnit" value="10"/>
+        	<entry key="pageSize" value="10"/>
+        	
+        	<entry key="fileDir" value="C:\\temp\\"/>
+        	<entry key="filePath" value="C:\\temp\\"/>
+        	
+        	<entry key="emailServer" value="smtp.gmail.com"/>
+        	<entry key="emailAuthId" value="dongdo.lee@gmail.com"/>
+        	<entry key="emailAuthPwd" value="dongdo04"/>
+        	<entry key="emailFromAddr" value="egov@egov.gov"/>
+        	<entry key="emailFromName" value="EgovFramwork"/>
+        	
+        	<entry key="myAdmnstmachValue" value="001"/>
+        	<entry key="cvplOthbcValueOpen" value="001"/>
+        	
+        	<entry key="cvplOthbcCode" value="001"/>
+        	<entry key="userDeptCode" value="002"/>
+        	<entry key="userRspofcCode" value="003"/>
+        	<entry key="admnstmachCode" value="004"/>
+        	
+            <entry key="marshallingDir" value="C:/svn_egovframework/SAMPLE/civilappealSample/trunk/egovframework-civilappealsample-web/src/main/webapp/WEB-INF/config/egovframework/"/>
+        </map>
+	</property>
+</bean>
+</code>
+==== Source ====
+=== egovframework\rte\cvpl\web\EgovCvplCnsltController.java ===
+<code java>
+@Resource(name = "propertiesService")
+protected EgovPropertyService propertiesService;
+
+propertiesService.getInt("pageUnit");
+propertiesService.getInt("pageSize");
+
+propertiesService.getString("marshallingDir");
+</code>

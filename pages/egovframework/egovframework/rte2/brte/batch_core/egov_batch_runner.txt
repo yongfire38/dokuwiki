@@ -1,0 +1,116 @@
+====== Batch Runner ======
+
+===== 개요 =====
+표준프레임워크의 배치작업 실행유형에 따른 편의 기능을 제공하는 서비스이다.  
+
+===== 설명 =====
+
+배치작업 실행을 위해서는 실행의 주체가 되는 Job(작업)과 Job Parameter, 그리고 Job을 실행하는 Job Launcher가 필요하다. 일반적으로 개발자가 Job Launcher를 이용하여 응용 어플리케이션이나 운영환경등에서 사용할 기능을 직접 구현해야 했기 때문에 표준을 제시하기 힘들었다. 이를 해소하기 위해 전자정부 표준프레임워크에서는 작업실행 유형에 따라 미리 구현된 표준 Batch Runner를 제공한다.
+
+일괄처리 작업의 실행 유형에 따라 아래와 같이 3가지의 Batch Runner를 제공한다.
+  * EgovBatchRunner: Web, Java Application 등을 이용하여 범용적으로 실행되는 일괄처리 작업에 사용한다.
+  * EgovCommandLineRunner: 외부 프로그램(Windows: / Unix/Linux: crontab 등)이나 명령 프롬프트(Windows: bat / Unix/Linux: Shell)에서 독립적으로 실행되는 일괄처리 작업에 사용한다.
+  * EgovSchedulerRunner: 주기적으로 실행되어야 하는 일괄처리 작업에 사용한다.
+
+각 Batch Runner가 제공하는 기능은 아래와 같다.
+
+
+^ Batch Runner 종류 ^ Java Application 실행 ^ Web 실행 ^ Job 상태 모니터링 ^ Scheduling 기능 ^ 외부 프로그램 연동 지원 ^ 
+| EgovBatchRunner |           O            |          O            |          O            |          X            |          △            |
+| EgovCommandLineRunner |           O            |          X            |          O            |           X             |          O            |
+| EgovSchedulerRunner |           O            |          O            |          X            |          O            |          △            |
+
+==== EgovBatchRunner ====
+
+=== 설정방법 ===
+
+EgovBatchRunner를 사용하기 위해서는 XML 파일에 JobOperator, JobExplorer 그리고 JobRepository가 정의되어야 한다. 그리고 JobOperator를 생성하기 위해서는 JobLauncher와 JobRegistry의 정의가 필요하다.
+ 
+<code xml>
+
+<bean id="jobOperator"
+	class="org.springframework.batch.core.launch.support.SimpleJobOperator"
+	p:jobLauncher-ref="jobLauncher" p:jobExplorer-ref="jobExplorer"
+	p:jobRepository-ref="jobRepository" p:jobRegistry-ref="jobRegistry" />
+
+<bean id="jobLauncher"
+	class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+	<property name="jobRepository" ref="jobRepository" />
+</bean>
+
+<bean id="jobRepository"
+	class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean"
+	p:dataSource-ref="egov.dataSource" p:transactionManager-ref="transactionManager"
+	p:lobHandler-ref="lobHandler" />
+
+<bean id="jobExplorer"
+	class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"
+	p:dataSource-ref="egov.dataSource" />
+
+<bean id="jobRegistry"
+	class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+</code>
+
+EgovBatchRunner의 생성자에 JobOperator, JobExplorer, JobRepository를 전달한다.
+
+<code xml>
+<bean id="jobBatchRunner" class="egovframework.brte.core.launch.support.EgovBatchRunner">
+	<constructor-arg ref="jobOperator" />
+	<constructor-arg ref="jobExplorer" />
+	<constructor-arg ref="jobRepository" />
+</bean>
+
+</code>
+
+=== 클래스 ===
+
+EgovBatchRunner 클래스에서는 Job Operator, Job Explorer에서 제공하는 주요 메소드를 기반으로 하여 Job 시작, 재시작, 정지 등의 기능을 제공한다.
+Job Repository의 경우는 직접 기능을 제공하지 않고, 필요에 따라 구현할 수 있도록 Job Repository 객체에 접근할 수 있는 통로를 제공한다. 
+
+
+
+^ METHOD ^ 의 미 ^ 설 명 ^  
+|getJobOperator | Job Operator 객체 접근 | JobOperator의 메소드에 접근해야 할 필요가 있을 경우 EgovBatchRunner에 설정한 JobOperator 객체를 가져온다. |
+|getJobExplorer | Job Explorer 객체 접근 | JobExplorer의 메소드에 접근해야 할 필요가 있을 경우 EgovBatchRunner에 설정한 JobExplorer 객체를 가져온다. |
+|getJobRepository | Batch Job 시작 | JobRepository의 메소드에 접근해야 할 필요가 있을 경우 EgovBatchRunner에 설정한 JobRepository 객체를 가져온다. |
+|start | Batch Job 시작 | 각각 문자열 형태의 Job 이름, Job Parameter를 이용하여 Job을 시작한다. 이 때, Job Parameter는 기존에 실행했던 Job Parameter와 다른 고유한 값을 가져야 한다.  | 
+|restart | Batch Job 재시작 | Job의 Execution ID를 이용하여, 정지되었거나 이미 종료 된 Job 중 재실행 가능한 Job을 재시작한다. |
+|stop | Batch Job 정지 | Job의 Execution ID를 이용하여, 실행중인 Job을 정지시킨다. |
+|createUniqueJobParameters | 유일한 Job Parameter 생성 | Timestamp를 이용하여 유일한 값을 지니는 Job Parameter 문자열을 생성한다. |
+|addJobParameter| Job Parameter 추가 | 이미 생성된 Job Parameter 문자열에 Job Parameter 문자열을 추가한다. |
+|convertJobParametersToString| Job Parameters | Job Parameter 객체를 start 메소드에서 사용할 수 있는 Job Parameter 문자열로 변환한다. |
+|getJobExecution| 유일한 Job Parameter 생성 | Job의 Execution ID를 이용하여, Job의 특정 Execution을 가져온다. |
+|getJobExecutions| 유일한 Job Parameter 생성 | Job의 Execution ID를 이용하여, Job의 Execution 목록을 가져온다. |
+|getLastJobExecution| 최근에 실행된 Job Execution 접근 | Job의 Execution ID를 이용하여, 해당 Job의 Execution 정보를 가져온다. |
+|getLastStepExecution| 최근에 실행된 Step Execution 접근| Job의 Execution ID를 이용하여, 해당 Job이 실행한 가장 최근의 Step Execution 정보를 가져온다. |
+|getJobInstance| Job Instance 접근 | Job의 Execution ID를 이용하여, 해당 Job의 Job Instance를 가져온다. |
+
+
+=== 사용방법 ===
+
+[[egovframework:rte2:brte:batch_example:batch_runner|배치 Runner 예제 ]]
+
+==== EgovCommandLineRunner  ====
+
+<code xml>
+<bean id="jobBatchRunner" class="egovframework.brte.core.launch.support.EgovBatchRunner">
+	<constructor-arg ref="jobOperator" />
+	<constructor-arg ref="jobExplorer" />
+	<constructor-arg ref="jobRepository" />
+</bean>
+</code>
+
+==== EgovSchedulerRunner ====
+
+<code xml>
+<bean id="jobBatchRunner" class="egovframework.brte.core.launch.support.EgovBatchRunner">
+	<constructor-arg ref="jobOperator" />
+	<constructor-arg ref="jobExplorer" />
+	<constructor-arg ref="jobRepository" />
+</bean>
+</code>
+
+===== 참고자료 =====
+
+
+Quartz
