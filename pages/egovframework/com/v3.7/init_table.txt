@@ -1,0 +1,58 @@
+====== 공통컴포넌트 테이블 구성 정보======
+
+===== 개요 =====
+공통컴포넌트를 적용 시 공통컴포넌트의 종류별 특징을 고려하여 현장 상황에 맞게 적용할 수 있도록 관련 정보를 제공한다.
+     * 공통기술의 데이터 엔터티 및 어트리뷰트는 공통기술 웹 어플리케이션이 구동되기 위한 최소한의 필수 항목들로 구성되어 있으며, 공통컴포넌트를 이용하여 개발하는 각 기관에서 기관의 업무환경 및 시스템 구성에 맞도록 구체화하여 사용하여야 한다.(관련ERD 참조)
+     * 요소기술은 Util과 같이 타 어플리케이션 개발 시 참조하여 기능이 재구현되어야 하는 패키지이고, 공통기술은 각 배포단위별로 웹 어플리케이션을 실행 가능한 패키지로 구성되어 있다.
+     * 요소기술은 관련 데이터 엔터티가 존재하지 않으며, 공통기술은 관련 데이터 엔터티가 존재한다.
+
+|1|1|-|COMTECOPSEQ|Sequence 저장테이블\\ 실행환경 제공기능 사용을 위한 테이블|
+|2|2|사용자디렉토리/통합인증|COMTNGNRLMBER|일반회원|
+|3|3|사용자디렉토리/통합인증|COMTNORGNZTINFO|조직정보|
+|4|4|사용자디렉토리/통합인증|COMTNEMPLYRINFO|업무사용자정보|
+|4|5|사용자디렉토리/통합인증|COMTNENTRPRSMBER|기업회원|
+|6|6|사용자디렉토리/통합인증|COMVNUSERMASTER|사용자정보뷰|
+|7|7|사용자디렉토리/통합인증|COMTNEMPLYRSCRTYESTBS|사용자보안설정|
+|8|8|사용자디렉토리/통합인증|COMTHEMPLYRINFOCHANGEDTLS|업무사용자정보변경내역|
+|9|9|보안관리|COMTNAUTHORGROUPINFO|권한그룹정보|
+|10|10|보안관리|COMTNAUTHORINFO|권한정보|
+|11|11|보안관리|COMTNROLES_HIERARCHY|롤 계층구조|
+|12|12|보안관리|COMTNROLEINFO|롤정보|
+|13|13|보안관리|COMTNAUTHORROLERELATE|권한롤관계|
+|14|14|협업|COMTNTMPLATINFO|템플릿|
+|15|15|협업|COMTNBBSMASTER|게시판마스터|
+|16|16|협업|COMTNBBS|게시판|
+|17|17|협업|COMTNBBSUSE|게시판활용|
+|18|18|협업|COMTNBLOG|블로그 게시판|
+|19|19|협업|COMTNCOMMENT|댓글|
+|20|20|협업|COMTNSCRAP|스크랩|
+|21|21|사용자지원|COMTNQUSTNRTMPLAT|설문템플릿|
+|22|22|사용자지원|COMTNQESTNRINFO|설문지정보|
+|23|23|사용자지원|COMTNQUSTNRQESITM|설문문항|
+|24|24|사용자지원|COMTNQUSTNRIEM |설문항목관리|
+|25|25|사용자지원|COMTNQUSTNRRSPNSRESULT|설문응답결과|
+|26|26|사용자지원|COMTNQUSTNRRESPONDINFO|설문응답자정보|
+|27|27|사용자지원|COMTNNOTE|쪽지관리|
+|28|28|사용자지원|COMTNNOTERECPTN|받은쪽지함관리|
+|29|29|사용자지원|COMTNNOTETRNSMIT|보낸쪽지함관리|
+|30|30|시스템관리|COMTCCMMNCLCODE|공통분류코드|
+|31|31|시스템관리|COMTCCMMNCODE|공통코드|
+|32|32|시스템관리|COMTCCMMNDETAILCODE|공통상세코드|
+|33|33|시스템관리|COMTCZIP|우편번호|
+|34|34|시스템관리|COMTRDNMADRZIP|도로명주소|
+|35|35|시스템관리|COMTNSYSLOG|로그관리|
+|36|36|시스템관리|COMTNUSERLOG|사용로그관리|
+|37|37|시스템관리|COMTNWEBLOG|웹로그관리|
+|38|38|시스템관리|COMTNLOGINLOG|접속로그관리|
+|39|39|시스템관리|COMTNPRIVACYLOG|개인정보로그관리|
+===== 테이블/초기데이터 생성 스크립트 =====
+공통컴포넌트는 배포파일을 통해 테이블/초기데이터 생성 스크립트를 제공하므로 전체 테이블/초기데이터 생성 스크립트는 공통컴포넌트의 all-in-one 파일을 통해 얻을 수 있다.\\
+하지만, 전체 테이블/초기데이터에 대한 생성 스크립트만 필요한 경우를 위해 아래의 링크를 통해 제공하니 필요시 참조한다. 스크립트는 Altibase, Oracle, MySQL 및 Tibero 네 개의 DBMS에 해당하는 스크립트가 제공되며, Tibero는 Oracle의 테이블 생성 스크립트와 동일하다. 스크립트 파일은 기본적으로 **UTF-8**로 인코딩 되어있다.
+
+
+ ※ 제공되는 초기 데이터에는 테스트용 사용자 정보가 포함되어 있다.(__**대소문자**__ 유의)
+^구분^ID^PW^비고^
+| 업무사용자 | TEST1 | rhdxhd12 | 영문으로 공통12 |
+| | webmaster | rhdxhd12 | 영문으로 공통12 |
+| 일반사용자 | USER | rhdxhd12 | 영문으로 공통12 |
+| 기업사용자 | ENTERPRISE | rhdxhd12 | 영문으로 공통12 |

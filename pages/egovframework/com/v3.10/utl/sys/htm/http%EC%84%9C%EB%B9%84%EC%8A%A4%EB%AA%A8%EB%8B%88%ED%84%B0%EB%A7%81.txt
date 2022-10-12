@@ -1,0 +1,230 @@
+====== 요소기술 - HTTP서비스모니터링 ======
+===== 개요 =====
+
+**HTTP서비스모니터링**은 웹 서비스(웹서버 및 WAS 점검)가 정상적인지 주기적인 점검을 수행하고, 문제 발생시 해당 정보를 관리자에게 통보하는 기능을 제공한다.
+
+===== 설명 =====
+
+  * **HTTP서비스모니터링**은 HTTP서비스모니터링을 등록하기 위한 목적으로 HTTP서비스모니터링의 등록, 수정, 삭제, 조회, 목록조회의 기능을 수반한다.
+
+    ① HTTP서비스모니터링목록조회 : HTTP서비스모니터링으로 정의된 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② HTTP서비스모니터링등록 : HTTP서비스모니터링정보를 등록하고, 등록 결과를 조회한다.
+    ③ HTTP서비스모니터링수정 : 기 등록된 HTTP서비스모니터링정보의 항목들을 수정한다.
+    ④ HTTP서비스모니터링삭제 : 기 등록된 HTTP서비스모니터링정보를 삭제한다.
+    ⑤ HTTP서비스모니터링조회 : 등록된 HTTP서비스모니터링정보를 조회한다. 
+    ⑥ HTTP서비스모니터링로그목록조회 : HTTP서비스모니터링로그로 정의된 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ⑦ HTTP서비스모니터링조회 : 등록된 HTTP서비스모니터링로그정보를 조회한다. 
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.utl.sys.htm.web.EgovHttpMonController.java|HTTP서비스모니터링을 위한 컨트롤러 클래스|
+|Service|egovframework.com.utl.sys.htm.service.EgovHttpMonService.java|HTTP서비스모니터링을 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.utl.sys.htm.service.impl.EgovHttpMonServiceImpl.java|HTTP서비스모니터링을 위한 서비스 구현 클래스|
+|DAO|egovframework.com.utl.sys.htm.service.impl.HttpMonDAO.java|HTTP서비스모니터링을 위한 데이터처리 클래스|
+|Model|egovframework.com.utl.sys.htm.service.HttpMon.java|HTTP서비스모니터링을 위한 Model 클래스|
+|Model|egovframework.com.utl.sys.htm.service.HttpMonLog.java|HTTP서비스모니터링로그정보를 위한 Model 클래스|
+|VO|egovframework.com.utl.sys.htm.service.HttpMonVO.java|HTTP서비스모니터링로그정보를 위한 VO 클래스|
+|VO|egovframework.com.utl.sys.htm.service.HttpMonLogVO.java|HTTP서비스모니터링로그정보를 위한 VO 클래스|
+|스케쥴링|egovframework.com.utl.sys.htm.service.HttpMntrngScheduling.java|HTTP서비스모니터링로그정보를 위한 스케쥴링 클래스|
+|스케쥴링|egovframework.com.utl.sys.htm.service.HttpMntrngChecker.java|HTTP서비스모니터링로그정보를 위한 스케쥴링 클래스|
+|기타|egovframework.com.utl.sys.htm.service.HttpMonResult.java|HTTP서비스모니터링에 대한 결과를 처리하기 위한 클래스|
+|JSP|/WEB-INF/jsp/egovframework/utl/sys/htm/EgovHttpMonList.jsp|HTTP서비스모니터링목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/utl/sys/htm/EgovHttpMonRegist.jsp|HTTP서비스모니터링 등록을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/utl/sys/htm/EgovHttpMonUpdt.jsp|HTTP서비스모니터링 수정을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/utl/sys/htm/EgovHttpMonDetail.jsp|등록된 HTTP서비스모니터링을 조회하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/utl/sys/htm/EgovHttpMonLogList.jsp|HTTP서비스모니터링로그목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/utl/sys/htm/EgovHttpMonLogDetail.jsp|등록된 HTTP서비스모니터링로그을 조회하기 위한 jsp페이지|
+|Query XML|resources/egovframework/mapper/com/utl/sys/htm/EgovUtlSysHttpMon_SQL_altibase.xml|HTTP서비스모니터링을 위한 Altibase용 Query XML|
+|Query XML|resources/egovframework/mapper/com/utl/sys/htm/EgovUtlSysHttpMon_SQL_cubrid.xml|HTTP서비스모니터링을 위한 Cubrid용 Query XML|
+|Query XML|resources/egovframework/mapper/com/utl/sys/htm/EgovUtlSysHttpMon_SQL_maria.xml|HTTP서비스모니터링을 위한 MariaDB용 Query XML|
+|Query XML|resources/egovframework/mapper/com/utl/sys/htm/EgovUtlSysHttpMon_SQL_mysql.xml|HTTP서비스모니터링을 위한 MySQL용 Query XML|
+|Query XML|resources/egovframework/mapper/com/utl/sys/htm/EgovUtlSysHttpMon_SQL_oracle.xml|HTTP서비스모니터링을 위한 Oracle용 Query XML|
+|Query XML|resources/egovframework/mapper/com/utl/sys/htm/EgovUtlSysHttpMon_SQL_postgres.xml|HTTP서비스모니터링을 위한 PostgreSQL용 Query XML|
+|Query XML|resources/egovframework/mapper/com/utl/sys/htm/EgovUtlSysHttpMon_SQL_tibero.xml|HTTP서비스모니터링을 위한 Tibero용 Query XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/utl/sys/htm/EgovHttpMon.xml|HTTP서비스모니터링을 위한 Validator XML|
+|Message properties|resources/egovframework/message/com/utl/sys/htm/message_ko.properties|HTTP서비스모니터링을 위한 Message properties(한글)|
+|Message properties|resources/egovframework/message/com/utl/sys/htm/message_en.properties|HTTP서비스모니터링을 위한 Message properties(영문)|
+|Idgen XML|resources/egovframework/spring/com/idgn/context-idgn-HttpManage.xml|HTTP서비스모니터링을 위한 Id생성 Idgen XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:utl:sys:htm:httpMon_class.png?740|}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|HTTP서비스모니터링|COMTNHTTPMON|HTTP서비스모니터링정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+|HTTP서비스모니터링로그정보|COMTHHTTPMONLOGINFO|HTTP서비스모니터링로그정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+=== ID Generation 관련 DDL 및 DML ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **HTTP_ID, HTTL_ID** 항목을 추가해야 한다. 
+
+<code sql>
+    CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+                               next_id DECIMAL(30) NOT NULL,
+                               PRIMARY KEY (table_name)
+    );
+
+    INSERT INTO COMTECOPSEQ VALUES ('HTTP_ID','0');
+    INSERT INTO COMTECOPSEQ VALUES ('HTTL_ID','0');
+</code>
+
+=== ID Generation 환경설정(context-idgn-HttpManage.xml) ===
+
+<code xml>
+    <!-- HTTP서비스모니터링 -->
+    <bean name="egovHttpManageIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="httpManageStrategy" />
+        <property name="blockSize"  value="10" />
+        <property name="table"      value="COMTECOPSEQ" />
+        <property name="tableName"  value="HTTP_ID" />
+    </bean>
+    <bean name="httpManageStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"     value="HTTP_" />
+        <property name="cipers"     value="15" />
+        <property name="fillChar"   value="0" />
+    </bean>     
+    
+    <!-- HTTP서비스모니터링 로그 -->       
+    <bean name="egovHttpLogManageIdGnrService" class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrServiceImpl" destroy-method="destroy">
+        <property name="dataSource" ref="egov.dataSource" />
+        <property name="strategy"   ref="httLManageStrategy" />
+        <property name="blockSize"  value="10" />
+        <property name="table"      value="COMTECOPSEQ" />
+        <property name="tableName"  value="HTTL_ID" />
+    </bean>
+    <bean name="httLManageStrategy" class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+        <property name="prefix"     value="HTTL_" />
+        <property name="cipers"     value="15" />
+        <property name="fillChar"   value="0" />
+    </bean>
+</code>
+
+=== 스케줄러 등록 ===
+
+  * HTTP서비스모니터링 스케줄러를 등록하기 위해서 **context-scheduling.xml** 파일에 다음과 같이 등록한다.
+
+<code xml> 
+	<!-- HTTP서비스모니터링   -->
+	<bean id="httpMon"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="httpMntrngScheduling" />
+		<property name="targetMethod" value="monitorHttp" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<!-- HTTP서비스모니터링  트리거-->
+	<bean id="httpMntrngTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="httpMon" />
+		<!-- 시작하고 1분후에 실행한다. (milisecond) -->
+		<property name="startDelay" value="60000" />
+		<!-- 매 10분마다 실행한다. (milisecond) -->
+		<property name="repeatInterval" value="600000" />
+	</bean>
+</code>
+
+    startDelay는 서버 시작후 몇초 뒤에 시작할지를 설정한다.(ms 단위 : 현재 1분)
+    repeatInterval는 몇 초에 한번씩 실행될지를 설정한다.(ms 단위 : 현재 10분)
+
+<code xml> 
+	<!-- 모니터링 스케줄러 -->
+	<bean id="mntrngScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="httpMntrngTrigger" />
+			</list>
+		</property>
+	</bean>
+</code>
+
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== HTTP서비스모니터링 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/utl/sys/htm/selectHttpMonList.do|selectHttpMonList|"HttpMonDAO.selectHttpMonList"|
+|조회|/utl/sys/htm/selectHttpMonList.do|selectHttpMonList|"HttpMonDAO.selectHttpMonListCnt"|
+
+HTTP서비스모니터링 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 상태,관리자명에 대해서 수행된다.
+
+{{:egovframework:com:v3.9:utl:sys:htm:EgovComUtlHttpMonList.png|}}
+
+조회 : 기 등록된 HTTP서비스모니터링의 목록을 조회한다.\\
+등록 : 신규 HTTP서비스모니터링를 등록하기 위해서는 상단의 등록 버튼을 통해서 **HTTP서비스모니터링 등록** 화면으로 이동한다.\\
+로그 : HTTP서비스모니터링로그 확인하기 위해서는 상단의 로그 버튼을 통해서 **HTTP서비스모니터링 로그목록** 화면으로 이동한다.\\
+이메일전송 : HTTP서비스모니터링 **상태가 비정상**일때 관리자에게 **이메일을 발송**한다.\\
+----
+
+=== HTTP서비스모니터링 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/utl/sys/htm/addHttpMon.do|insertHttpMon|"HttpMonDAO.insertHttpMon"|
+
+HTTP서비스모니터링의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:v3.9:utl:sys:htm:EgovComUtlHttpMonRegist.png|}}
+
+저장 : 신규 HTTP서비스모니터링를 등록하기 위해서는 HTTP서비스모니터링 속성을 입력한 뒤 상단의 **저장 버튼**을 통해서 HTTP서비스모니터링를 등록한다.\\
+목록 : HTTP서비스모니터링 목록조회 화면으로 이동한다.\\
+----
+
+=== HTTP서비스모니터링 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/utl/sys/htm/updateHttpMon|updateHttpMon|"HttpMonDAO.updateHttpMon"|
+
+HTTP서비스모니터링의 속성정보를 변경한 후 저장한다. 
+
+{{:egovframework:com:v3.9:utl:sys:htm:EgovComUtlHttpMonUpdt.png|}}
+
+저장 : 기 등록된 HTTP서비스모니터링 속성을 수정한 뒤 상단의 **저장 버튼**을 통해서 HTTP서비스모니터링정보를 수정한다.\\
+목록 : HTTP서비스모니터링 목록조회 화면으로 이동한다.\\
+----
+
+=== HTTP서비스모니터링 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/utl/sys/htm/getHttpMon.do|selectHttpMon|"HttpMonDAO.selectHttpMon"|
+|삭제|/utl/sys/htm/deleteHttpMon.do|deleteHttpMon|"HttpMonDAO.deleteHttpMon"|
+
+HTTP서비스모니터링의 속성정보를 조회한다. 
+
+{{:egovframework:com:v3.9:utl:sys:htm:EgovComUtlHttpMonDetail.png|}}
+
+수정 : 기 등록된 HTTP서비스모니터링 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 HTTP서비스모니터링수정화면으로 이동한다.\\
+삭제 : 기 등록된 HTTP서비스모니터링정보를 삭제한다.\\
+목록 : HTTP서비스모니터링 목록조회 화면으로 이동한다.\\
+----
+
+=== HTTP서비스모니터링로그 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/utl/sys/htm/selectHttpMonLogList.do|selectHttpMonLogList|"HttpMonDAO.selectHttpMonLogList"|
+|조회|/utl/sys/htm/selectHttpMonLogList.do|selectHttpMonLogList|"HttpMonDAO.selectHttpMonLogListCnt"|
+
+HTTP서비스모니터링로그 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 상태,관리자명, 모니터링시각에 대해서 수행된다.
+
+{{:egovframework:com:utl:sys:htm:EgovComUtlHttpMonLogList.png|}}
+
+조회 : 기 등록된 HTTP서비스모니터링로그의 목록을 조회한다.\\
+----
+
+=== HTTP서비스모니터링로그 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/utl/sys/htm/getHttpMonLog.do|selectHttpMonLog|"HttpMonDAO.selectHttpMonLog"|
+
+HTTP서비스모니터링로그의 속성정보를 조회한다. 
+
+{{:egovframework:com:utl:sys:htm:EgovComUtlHttpMonLogDetail.png|}}
+
+목록 : HTTP서비스모니터링로그 목록조회 화면으로 이동한다.\\
+----

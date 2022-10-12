@@ -1,0 +1,107 @@
+====== 공통서비스 - 커뮤니티 템플릿 ======
+
+===== 개요 =====
+커뮤니티 템플릿 기능은 커뮤니티에 대한 메인 화면과 같은 디자인 요소를 적용할 수 있는 기능을 제공한다.
+
+===== 설명 =====
+커뮤니티 템플릿은 JSP를 기반으로 제공되며 커뮤니티 생성시 지정하도록 되어 있고, 커뮤니티 관리 기능을 통해 다른 템플릿으로 변경할 수 있다.
+추가적으로 템플릿 등록, 삭제 등의 템플릿 관리 기능은 커뮤니티 기능과 분리되어 제공된다.
+
+== 관련소스 ==
+
+템플릿 관리 기능과 관련된 소스는 게시판, 커뮤니티 및 동호회 템플릿 공통 사항으로 **[[게시판템플릿#관련소스|게시판 템플릿 부분]]**을 참조한다.
+
+
+ 
+== 관련테이블 ==
+
+템플릿 관리 기능과 관련된 테이블은 게시판, 커뮤니티 및 동호회 템플릿 공통 사항으로 **[[게시판템플릿#관련테이블|게시판 템플릿 부분]]**을 참조한다.
+
+
+===== 환경설정 =====
+해당없음
+
+===== 사용방법 =====
+
+==== 템플릿 관리 ====
+템플릿 관리(등록/수정/목록조회)기능은 게시판, 커뮤니티, 동호회 공통적으로 적용되며 각각 다음을 참조한다.
+
+  * 템플릿 목록 조회 : 게시판 템플릿의 **[[게시판템플릿#템플릿 목록조회|템플릿 목록조회]]**
+  * 템플릿 등록 : 게시판 템플릿의 **[[게시판템플릿#템플릿 등록|템플릿 등록]]**
+  * 템플릿 수정 : 게시판 템플릿의 **[[게시판템플릿#템플릿 수정|템플릿 수정]]**
+
+----
+==== 커뮤니티 기본 템플릿 ====
+기본적으로 제공되는 커뮤니티 템플릿 경로는 다음과 같다.
+<code>
+/cop/com/template/EgovCmmntyBaseTmpl
+</code>
+※ 뒤 부분에 ".jsp"가 없음에 주의
+
+기본 템플릿은 다음과 같이 정보를 등록하면 된다.
+
+{{:egovframework:com:v3.9:cop:templatecmmnty.png|커뮤니티 기본 템플릿 등록}}
+
+또는 DB에 다음과 같이 직접 등록도 가능하다.
+
+<code language='query'>
+INSERT INTO COMTNTMPLATINFO
+(TMPLAT_ID, TMPLAT_NM, TMPLAT_SE_CODE, TMPLAT_COURS, USE_AT, FRST_REGISTER_ID, FRST_REGISTER_PNTTM )
+VALUES
+('TMPLAT_CMNTY_DEFAULT', '커뮤니티 기본템플릿', 'TMPT02', '/cop/com/template/EgovCmmntyBaseTmpl', 
+'Y', 'SYSTEM', SYSDATE)	
+</code>
+
+
+----
+
+==== 커뮤니티 템플릿 활용 ====
+
+기본적으로 제공되는 커뮤니티 템플릿 파일은 다음과 같으며 해당 파일을 참조하여 신규 템플릿을 만들어 등록 후 사용하면 된다.
+
+<code>
+.../WEB-INF/jsp/egovframework/cop/com/template/EgovCmmntyBaseTmpl.jsp
+.../WEB-INF/jsp/egovframework/cop/com/template/EgovCmmntyBaseTmplContents.jsp
+</code>
+
+JSP에 사용되는 Model 및 VO(ValueObject) 정보는 다음과 같다. 해당 정보는 JSTL 방식의 EL(Expression Language) 사용을 권장한다. 
+
+* EgovCmmntyBaseTmpl.jsp 부분
+
+^Model(VO)^Property^제공 자료^사용 예^비고^
+|cmmntyVO|cmmntyNm|커뮤니티명|<title><c:out value='${cmmntyVO.cmmntyNm}' /></title>| |
+| |cmmntyId|커뮤니티ID|<c:out value='${cmmntyVO.cmmntyId}' />| |
+| |cmmntyIntrcn|커뮤니티소개|<c:out value='${cmmntyVO.cmmntyIntrcn}' />| |
+|cmmntyUser|mngrAt|관리자여부|<c:if test="${cmmntyUser.mngrAt == 'Y'}">|'Y' or other|
+| |useAt|사용여부|<c:when test="${cmmntyUser.useAt=='Y'}">|'Y' or other|
+|bbsList| |게시판 List|<c:forEach var="bbs" items="${bbsList}" varStatus="status">| |
+| |bbsNm|게시판명|<c:out value="${bbs.bbsNm}" />| |
+| |bbsId|게시판ID|<c:out value="${bbs.bbsId}"/>| |
+| |bbsAttrbCode|게시판속성코드|<c:out value="${bbs.bbsAttrbCode}"/>|유효,갤러리,일반|
+| |bbsTyCode|게시판유형코드|<c:out value="${bbs.bbsTyCode}"/>|일반,익명,공지,방명록|
+|clubList| |동호회 List|<c:forEach var="club" items="${clubList}" varStatus="status">| |
+| |clbId|동호회ID|<c:out value="${club.clbId}"/>| |
+| |clbNm|동호회명|<c:out value="${club.clbNm}"/>| |
+|preview| |미리보기여부|<c:when test="${preview == 'true'}">|'true' or other|
+|isAuthenticated| |인증여부|<c:if test="${isAuthenticated=='Y'}">|'Y' or other|
+
+
+* EgovCmmntyBaseTmplContents.jsp 부분
+
+^Model(VO)^Property^제공 자료^사용 예^비고^
+|preview| |미리보기여부|<c:when test="${preview == 'true'}">|'true' or other|
+|bbsList| |게시판 List| | |
+| |bbsNm|게시판명|<c:out value="${bbsList[0].bbsNm}" />| |
+| |bbsId|게시판ID|<c:out value="${bbsList[0].bbsId}" />| |
+| |bbsAttrbCode|게시판속성코드|<c:out value="${bbsList[0].bbsAttrbCode}"/>|유효,갤러리,일반|
+| |bbsTyCode|게시판유형코드|<c:out value="${bbsList[0].bbsTyCode}"/>|일반,익명,공지,방명록|
+|articleList| |게시물 List|<c:forEach var="article" items="${articleList[0]}" varStatus="status">| |
+| |frstRegisterPnttm|등록일자|<c:out value="${article.frstRegisterPnttm}" />| |
+| |bbsId|게시판ID|<c:out value="${article.bbsId}" />| |
+| |nttId|게시물ID|<c:out value="${article.nttId}" />| |
+| |nttSj|게시물 제목|<c:out value="${article.nttSj}" />| |
+
+
+===== 참고자료 =====
+  * 게시판 템플릿 참조 : [[egovframework:com:v3.9:cop:게시판템플릿]]
+

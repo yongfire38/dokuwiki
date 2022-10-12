@@ -1,0 +1,41 @@
+====== 공통컴포넌트 배포파일의 구성 ======
+
+===== 배포파일, 패키지, 테이블 간 관계 =====
+
+배포파일을 구성할 때에 패키지간의 종속성과 업무적 연관성을 포함하여 구성하였다. 한 개의 배포파일은 독립적으로 설치하여 동작할 수 있으며, 2개 이상의 배포파일을 설치할 때에는 [[egovframework:com:v2:init_configration|환경설정]]에 유의하여야 한다.
+배포파일, 배포파일에 포함된 패키지, 그리고 패키지에 포함되어 있는 소스코드들이 사용하는 테이블 정보는 아래의 표에서 보는 바와 같다. 배포파일에는 소스코드와 테이블 생성 스크립트가 함께 제공된다. 
+
+^번호^3.7버전번호^컴포넌트명^패키지^배포파일명^포함패키지^포함 테이블^비고^
+|1|1\\ 2 \\ 3 |기업회원관리\\ 사용자관리\\ 회원관리|egovframework.com.uss.umt|egovframework-membermanagement-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.utl.fcc\\ egovframework.com.utl.sim\\ egovframework.com.uss.umt\\ egovframework.com.sec.rnc\\ egovframework.com.sym.ccm.zip| COMTECOPSEQ\\ COMTNSTPLATINFO\\ COMTCCMMNCLCODE\\ COMTCCMMNCODE\\ COMTCCMMNDETAILCODE\\ COMTNAUTHORGROUPINFO\\ COMTNORGNZTINFO\\ COMTNFILE\\ COMTNFILEDETAIL\\ COMTHEMPLYRINFOCHANGEDTLS\\ COMTHEMAILDSPTCHMANAGE\\ COMTNGNRLMBER\\ COMTNEMPLYRINFO\\ COMTNENTRPRSMBER| |
+|2|4\\ 5\\ 6|공통분류코드\\ 공통상세코드\\ 공통코드|egovframework.com.sym.ccm.cde|egovframework-commoncode-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.sym.ccm.cde\\ egovframework.com.sym.ccm.cca\\ egovframework.com.sym.ccm.ccc|COMTCCMMNCLCODE\\ COMTCCMMNCODE\\ COMTCCMMNDETAILCODE | |
+|3|7|로그관리|egovframework.com.sym.log.lgm|egovframework-syslogmanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.sym.log.lgm|COMTECOPSEQ\\ COMTNSYSLOG\\ COMTSSYSLOGSUMMARY\\ COMTCCMMNCLCODE\\ COMTCCMMNCODE\\ COMTCCMMNDETAILCODE\\ COMVNUSERMASTER | |
+|4|8|사용로그관리|egovframework.com.sym.log.ulg|egovframework-userlogmanage-2.0.0.zip |egovframework.com.cmm\\ egovframework.com.sym.log.ulg|COMTECOPSEQ\\ COMTNSYSLOG\\ COMTNUSERLOG\\ COMVNUSERMASTER| |
+|5|9|웹로그관리|egovframework.com.sym.log.wlg|egovframework-weblogmanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.sym.log.wlg|COMTECOPSEQ\\ COMTNWEBLOG\\ COMTSWEBLOGSUMMARY\\ COMVNUSERMASTER| |
+|6|10|접속로그관리|egovframework.com.sym.log.clg|egovframework-loginlogmanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.sym.log.clg|COMTECOPSEQ\\ COMTNLOGINLOG\\ COMVNUSERMASTER\\ COMTHEMAILDSPTCHMANAGE| 테이블추가 COMTHEMAILDSPTCHMANAGE|
+|7|11|개인정보로그관리|egovframework.com.sym.log.plg|egovframework-privacylogmanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.sym.log.plg|COMTECOPSEQ\\ COMTNPRIVACYLOG\\ COMVNUSERMASTER| |
+|8|12|쪽지관리|egovframework.com.uss.ion.ntm|egovframework-notemanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.uss.ion.ntm|COMTECOPSEQ\\ COMTNEMPLYRINFO\\ COMTNNOTE\\ COMTNNOTETRNSMIT\\ COMTNNOTERECPTN| |
+|9|13|받은쪽지함관리|egovframework.com.uss.ion.ntr|egovframework-noterecptnmanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.uss.ion.ntr\\ egovframework.com.uss.ion.nts|COMTECOPSEQ\\ COMTNEMPLYRINFO\\ COMTNNOTE\\ COMTNNOTETRNSMIT\\ COMTNNOTERECPTN| |
+|10|14|보낸쪽지함관리|egovframework.com.uss.ion.nts|egovframework-notetrnsmitmanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.uss.ion.nts|COMTECOPSEQ\\ COMTNEMPLYRINFO\\ COMTNNOTE\\ COMTNNOTETRNSMIT\\ COMTNNOTERECPTN| |
+|11|15\\ 16\\ 17\\ 18\\ 19\\ 20|설문관리\\ 설문조사\\ 설문템플릿관리\\ 응답자관리\\ 질문관리\\ 항목관리|egovframework.com.uss.olp.qtm|egovframework-onlineparticipation-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.uss.olp.qmc \\ egovframework.com.uss.olp.qri \\ egovframework.com.uss.olp.qrm \\ egovframework.com.uss.olp.qtm \\ egovframework.com.uss.olp.qqm \\ egovframework.com.uss.olp.qim|COMTECOPSEQ\\ COMTNEMPLYRINFO \\ COMTNQUSTNRTMPLAT\\ COMTNQESTNRINFO\\ COMTNQUSTNRRESPONDINFO\\ COMTNQUSTNRQESITM\\ COMTNQUSTNRRSPNSRESULT\\ COMTNQUSTNRIEM| |
+|12|21\\ 22|도로명주소찾기\\ 우편번호관리|egovframework.com.sym.ccm.zip|egovframework-zipcodemanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.sym.ccm.zip|COMTCZIP\\ COMTRDNMADRZIP\\ COMTCCMMNCLCODE\\ COMTCCMMNCODE\\ COMTCCMMNDETAILCODE\\ COMTNAUTHORGROUPINFO\\ COMTNORGNZTINFO\\ COMTNFILE\\ COMTNFILEDETAIL| |
+|13|23|주소정보연계|egovframework.com.sym.adr|egovframework-adrcodemanage-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.sym.adr|X|API 사용|
+|14|24\\ 25\\ 26\\ 27\\ 28\\ 29\\ 30|게시판\\ 게시판생성관리\\ 공지사항관리\\ 디자인템플릿\\ 유효게시판\\ 익명게시판\\ 자료실관리|egovframework.com.cop.bbs|egovframework-bbsmanagement-2.0.0.zip|egovframework.com.cmm\\ egovframework.com.utl.fcc\\ egovframework.com.cop.bbs\\ egovframework.com.cop.com\\ egovframework.com.utl.sim|COMTECOPSEQ\\ COMTNTMPLATINFO\\ COMTNRESTDE\\ COMTCCMMNCLCODE\\ COMTCCMMNCODE\\ COMTCCMMNDETAILCODE\\ COMTNAUTHORGROUPINFO\\ COMTNGNRLMBER\\ COMTNORGNZTINFO\\ COMTNEMPLYRINFO\\ COMTNENTRPRSMBER\\ COMVNUSERMASTER\\ COMTNBBSMASTER\\ COMTNBBSUSE\\ COMTNBBS\\ COMTNCMMNTY\\ COMTNFILE\\ COMTNFILEDETAIL\\ COMTNCLUB\\ COMTNBBSMASTEROPTN\\ COMTNBLOGUSER\\ COMTNBLOG| |
+|15|31|댓글관리\\ (게시판 포함)|egovframework.com.cop.cmt\\ egovframework.com.cop.bbs\\ egovframework.com.cop.tpl|egovframework-replymanagement-2.0.0.zip  |egovframework.com.cmm\\ egovframework.com.utl.fcc\\ egovframework.com.cop.bbs\\ egovframework.com.cop.com\\ egovframework.com.utl.sim\\ egovframework.com.cop.cmt\\ egovframework.com.cop.tpl\\ egovframework.com.sym.cal\\ egovframework.com.utl.wed|COMTECOPSEQ\\ COMTNTMPLATINFO\\ COMTCCMMNCLCODE\\ COMTCCMMNCODE\\ COMTCCMMNDETAILCODE\\ COMTNAUTHORGROUPINFO\\ COMTNGNRLMBER\\ COMTNORGNZTINFO\\ COMTNEMPLYRINFO\\ COMTNENTRPRSMBER\\ COMVNUSERMASTER\\ COMTNBBSMASTER\\ COMTNBBSUSE\\ COMTNBBS\\ COMTNCMMNTY\\ COMTNCOMMENT\\ COMTNFILE\\ COMTNFILEDETAIL\\ COMTNCLUB\\ COMTNBBSMASTEROPTN|게시판의 부가기능|
+|16|32|스크랩기능\\ (게시판 포함)|egovframework.com.cop.scp\\ egovframework.com.cop.bbs\\ egovframework.com.cop.tpl|egovframework-scrapmanagement-2.0.0.zip  |egovframework.com.cmm\\ egovframework.com.utl.fcc\\ egovframework.com.cop.bbs\\ egovframework.com.cop.com\\ egovframework.com.utl.sim\\ egovframework.com.cop.scp\\ egovframework.com.cop.tpl\\ egovframework.com.sym.cal\\ egovframework.com.utl.wed|COMTECOPSEQ\\ COMTNSCRAP\\ COMTNTMPLATINFO\\ COMTCCMMNCLCODE\\ COMTCCMMNCODE\\ COMTCCMMNDETAILCODE\\ COMTNAUTHORGROUPINFO\\ COMTNGNRLMBER\\ COMTNORGNZTINFO\\ COMTNEMPLYRINFO\\ COMTNENTRPRSMBER\\ COMVNUSERMASTER\\ COMTNBBSMASTER\\ COMTNBBSUSE\\ COMTNBBS\\ COMTNCMMNTY\\ COMTNFILE\\ COMTNFILEDETAIL\\ COMTNCLUB\\ COMTNBBSMASTEROPTN| |
+
+===== 공통환경 설정파일 =====
+
+^구분^경로 및 파일명^설명^
+|maven config|/pom.xml|maven project config|
+|Web Application config|/WEB-INF/web.xml|Web Application 단위 config 설정|
+|Web Application config|/java/egovframework/com/cmm/config/EgovWebApplicationInitializer.java|Web Application 단위 config 설정|
+|servlet context config|/WEB-INF/config/egovframework/springmvc/com/egov-com-servlet.xml|DispatcherServlet application context 설정|
+|context bean 정의|/resources/egovframework/spring/com/context-*.xml|bean 정의|
+|범용 properties 정의|/resources/egovframework/egovProp/globals.properties|global 상수 정의|
+|추가 properties 정의|/WEB-INF/conf/*.properties|추가적인 상수 정의|
+|message properties 정의|/resources/egovframework/message/com/*.properties|message 정의|
+|sql mapper config 파일|/resources/egovframework/mapper/config/mapper-config.xml|sql mapper config 정의|
+|sql mapper 파일|/resources/egovframework/mapper/com/*.xml|sql mapper 파일|
+|validator rule 파일|/resources/egovframework/validator/validator-rules.xml|validator를 이용할 시 rule을 정의|
+|validator rule 파일|/resources/egovframework/validator/com-rules.xml|validator를 이용할 시 공통컴포넌트 rule을 정의|
+|log 설정|/resources/log4j.xml|log 관련 설정|

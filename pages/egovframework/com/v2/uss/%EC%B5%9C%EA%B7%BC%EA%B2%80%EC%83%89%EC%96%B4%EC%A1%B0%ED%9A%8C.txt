@@ -1,0 +1,240 @@
+====== 최근검색어관리======
+
+===== 개요 =====
+
+사이트에서 빈번히 일어나는 검색창에서 최근 검색한 검색어를 리스트로 보여주는 기능을 제공한다.
+
+  * 기능흐름
+
+{{:egovframework:com:uss:ion:rsm:기능흐름도.jpg?740|근검색어관리 기능흐름도}}
+
+※ 일반회원 및 기업회원은 해당 없음
+
+===== 설명 =====
+
+
+==== 패키지 참조 관계 ====
+
+최근검색어조회 패키지는 요소기술의 공통 패키지(cmm)에 대해서만 직접적인 함수적 참조 관계를 가진다. 
+
+  * 패키지 간 참조 관계 : [[egovframework:com:v2:init_pkg_dependency#사용자지원|사용자지원 Package Dependency]]
+
+==== 관련소스 ====
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.rsm.web.EgovRecentSrchwrdController.java|최근검색어관리 Controller Class|
+|Controller|egovframework.com.uss.ion.rsm.web.AjaxXmlView.java|AJAX처리 XML결과 Class|
+|Service|egovframework.com.uss.ion.rsm.service.EgovRecentSrchwrdService.java|최근검색어관리 Service Class|
+|ServiceImpl|egovframework.com.uss.ion.rsm.service.impl.EgovRecentSrchwrdServiceImpl.java|최근검색어관리 ServiceImpl Class|
+|Model|egovframework.com.uss.ion.rsm.service.RecentSrchwrd.java|최근검색어관리 Model Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|DAO|egovframework.com.uss.ion.rsm.service.impl.RecentSrchwrdDao.java|최근검색어관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/rsm/EgovRecentSrchwrdList.jsp|최근검색어관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/rsm/EgovRecentSrchwrdRegist.jsp|최근검색어관리 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/rsm/EgovRecentSrchwrdModify.jsp|최근검색어관리 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/rsm/EgovRecentSrchwrdDetail.jsp|최근검색어관리 상세조회 페이지|
+|QUERY XML|resources/egovframework/sqlmap/com/uss/ion/rsm/EgovRecentSrchwrd_SQL_Mysql.xml|최근검색어관리 MySQL용 QUERY XML| 
+|QUERY XML|resources/egovframework/sqlmap/com/uss/ion/rsm/EgovRecentSrchwrd_SQL_Oracle.xml|최근검색어관리 Oracle용 QUERY XML| 
+|QUERY XML|resources/egovframework/sqlmap/com/uss/ion/rsm/EgovRecentSrchwrd_SQL_Tibero.xml|최근검색어관리 Tibero용 QUERY XML| 
+|QUERY XML|resources/egovframework/sqlmap/com/uss/ion/rsm/EgovRecentSrchwrd_SQL_Altibase.xml|최근검색어관리 Altibase용 QUERY XML| 
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/ion/rsm/RecentSrchwrd.xml|최근검색어관리 Validator XML|
+|Message properties|resources/egovframework/message/com/message-common_ko_KR.properties|최근검색어관리 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|최근검색어관리 Id생성 Idgen XML|
+
+==== 클래스 다이어그램 ==== 
+
+{{:egovframework:com:v2:uss:최근검색어조회_클래스다이어그램.jpg?740|}} 
+
+==== ID Generation ====
+=== ID Generation 관련 DDL 및 DML ===
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **SRCHWRD_ID**, **SRCHWRD_MANAGEID** 항목을 추가해야 한다. 
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+
+  INSERT INTO COMTECOPSEQ VALUES('SRCHWRD_ID','0');
+  INSERT INTO COMTECOPSEQ VALUES('SRCHWRD_MANAGEID','0');
+ </code>
+
+=== ID Generation 환경설정(context-idgen.xml) ===
+<code xml>
+	<!-- 최근검색어관리 -->
+	<bean name="egovSrchwrdManageIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="srchwrdManageIdMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="SRCHWRD_MANAGEID"/>
+	</bean>
+	<bean name="srchwrdManageIdMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="SRCMGR_" />
+		<property name="cipers" value="13" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+	<!-- 최근검색어 -->
+	<bean name="egovSrchwrdIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="egov.dataSource" />
+		<property name="strategy" ref="srchwrdIdMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="SRCHWRD_ID"/>
+	</bean>
+	<bean name="srchwrdIdMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="SRC_" />
+		<property name="cipers" value="16" />
+		<property name="fillChar" value="0" />
+	</bean>
+</code>
+
+==== 관련테이블 ====
+
+^테이블명^테이블명(영문)^비고^
+|최근검색어관리|COMTNRECENTSRCHWRDMANAGE|최근검색어를 관리 한다.|	
+|최근검색어결과|COMTNRECENTSRCHWRD|최근검색어결과를 관리 한다.|
+
+===== 관련기능 =====
+최근검색어관리기능은 크게 **최근검색어관리 목록조회**, **최근검색어관리 상세조회**, **최근검색어관리 내용등록**, **최근검색어관리 내용수정**기능으로 구성되어 있다.
+
+==== 최근검색어관리 목록조회 ====
+
+=== 비즈니스 규칙 ===
+관리자가 기(記) 등록된 최근검색어관리 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행메뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록조회|/uss/ion/rsm/listRecentSrchwrd.do|egovRecentSrchwrdList|"RecentSrchwrd.selectRecentSrchwrd",|
+| | | |"RecentSrchwrd.selectRecentSrchwrdCnt"|
+
+{{:egovframework:com:uss:ion:rsm:최근검색어관리_목록.jpg|최근검색어관리 목록}}
+
+등록: 등록하기 위해서는 상단의 등록 버튼을 통해서 **최근검색어관리 등록** 화면으로 이동한다. \\
+목록 최근검색어명: **최근검색어관리 상세조회** 화면으로 이동한다
+
+
+
+==== 최근검색어관리 상세조회 ====
+
+=== 비즈니스 규칙 ===
+최근검색어관리 목록에서 목록 클릭 시 이동되는 화면으로 최근검색어관리에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행메뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/uss/ion/rsm/detailRecentSrchwrd.do|egovRecentSrchwrdDetail|"RecentSrchwrd.selectRecentSrchwrdDetail"|
+|삭제|/uss/ion/rsm/detailRecentSrchwrd.do|egovRecentSrchwrdDetail|"RecentSrchwrd.deleteRecentSrchwrd"|
+
+{{:egovframework:com:uss:ion:rsm:최근검색어관리_상세보기.jpg|최근검색어관리 상세보기}}
+
+삭제: 삭제버튼 클릭시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다.\\
+목록: **최근검색어관리 목록** 화면으로 이동한다.
+수정: 수정버튼 클릭 시 **최근검색어관리 수정** 화면으로 이동한다. \\
+
+
+
+
+==== 최근검색어관리내용 등록 ====
+=== 비즈니스 규칙 ===
+최근검색어관리에 관한 기본정보를 입력 저장처리한다. 입력명 우측의 빨간* 표시는 반드시 입력해야할 항목을 표시한다. \\
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행메뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/uss/ion/rsm/registRecentSrchwrd.do|egovRecentSrchwrdRegist|"RecentSrchwrd.insertRecentSrchwrd"|
+
+
+{{:egovframework:com:uss:ion:rsm:최근검색어관리_등록.jpg|최근검색어관리 등록}}
+
+목록: **최근검색어관리 목록** 화면으로 이동한다. \\
+저장: 입력한 최근검색어관리 정보들이 저장 처리된다. \\
+
+
+==== 최근검색어관리 내용수정 ====
+
+=== 비즈니스 규칙 ===
+입력한 최근검색어관리 정보를(을) 저장 처리한다. 입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+N/A
+
+
+=== 관련화면 및 수행메뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/ion/rsm/updtRecentSrchwrd.do|egovRecentSrchwrdModify|"RecentSrchwrd.updateRecentSrchwrd"|
+
+
+{{:egovframework:com:uss:ion:rsm:최근검색어관리_수정.jpg|최근검색어관리 수정}}
+
+수정: 수정된 정보들이 저장 처리된다.  \\ 
+저장: **최근검색어관리 목록** 화면으로 이동한다. \\ 
+
+
+===== 사용방법 =====
+
+  * 태그 라이브러리 선언
+<code html>
+<%@ taglib prefix="ajax" ri="http://ajaxtags.sourceforge.net/tags/ajaxtags" %>
+</code>
+
+  * Javascript, CSS 선언
+<code html>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/egovframework/com/uss/ion/rsm/prototype-1.6.0.3.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/ajaxtags/js/scriptaculous/scriptaculous.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/ajaxtags/js/overlibmws/overlibmws.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/ajaxtags/js/ajaxtags.js"></script>
+<script type="text/javascript" src="<%=request.getContextPath()%>/js/egovframework/com/uss/ion/rsm/recentSrchwrd.js"></script>
+
+<link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/ajaxtags/css/ajaxtags.css">
+<link type="text/css" rel="stylesheet" href="<%=request.getContextPath()%>/ajaxtags/css/displaytag.css">
+</code>
+
+  * Ajax Tags 등록 : 검색창에 입력한 글자를 DB에 자동으로 입력
+<code html>
+<input type="hidden" name="rsm_url" id="rsm_url" value="<c:url value='/uss/ion/rsm/registRecentSrchwrdResult.do'/>" >
+<a href="javascript:fn_egov_regist_RecentSrchwrdResult('SRCMGR_0000000000001',$('searchKeyword').value,'fn_egov_search_RecentSrchwrd()', document.listForm)" id="btnInquire">
+<spring:message code="button.inquire" /></a></span>
+</code>
+fn_egov_regist_RecentSrchwrdResult 함수는 recentSrchwrd.js에 구현되어 있다.
+
+<code html>
+function fn_egov_regist_RecentSrchwrdResult(SrchwrdManageId, searchKeyword, excFunction, frm)
+</code>
+※ SrchwrdManageId는 최근검색어관리 상세보기에서 **최근검색어관리번호**를 찾아서 적어주어야 한다.
+
+  * Ajax Tags Script : 자동완성 기능을 구현
+<code html>
+<ajax:autocomplete
+  baseUrl="${pageContext.request.contextPath}/uss/ion/rsm/listRecentSrchwrdResultSerach.do"
+  source="searchKeyword"
+  target="searchKeyword"
+  className="autocomplete"
+  parameters="srchwrdManageId=SRCMGR_0000000000001"
+  minimumCharacters="1" />
+</code>
+※ SrchwrdManageId는 최근검색어관리 상세보기에서 **최근검색어관리번호**를 찾아서 적어주어야 한다.
+
+  * 최근검색어관리 상세보기 화면
+{{:egovframework:com:v2:uss:최근검색어_상세보기.jpg|}}
+
+===== 참고자료 =====
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]],  [[egovframework:rte2:ptl:ajax_support|Ajax 지원 서비스]]
