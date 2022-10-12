@@ -1,0 +1,446 @@
+===== File =====
+
+
+==== 설명 ====
+  * W3C의  File API를 기반으로 파일 읽기와 쓰기 기능의 API를 제공한다.
+
+==== 제약사항 ====
+  * File API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+
+== DirectoryEntry  ==
+  * W3C Directories and Systems 규약 기반이다.. 
+  * 다음은 W3C에서 정의하고 있지만, PhoneGap에서는 따르지 않는다: filesystem:  DirectoryEntry 에 설정되어 있는 FileSystem 객체. (FileSystem)
+
+== FileEntry ==
+  * W3C Directories and Systems 규약 기반이다.. 
+  * 다음은 W3C에서 정의하고 있지만, PhoneGap에서는 따르지 않는다: filesystem:  DirectoryEntry 에 설정되어 있는 FileSystem 객체. (FileSystem)
+ 
+
+=== iOS ===
+
+== FileReader ==
+  * Encoding 파라미터는 지원하지 않음
+  * UTF8 인코딩이 항상 사용된다.
+
+== FileUploadResult ==
+  * 업로드 성공 시, FileUploadResult 객체에 responseCode와 bytesSent을 갖지 않는다.
+
+
+== DirectoryEntry  ==
+  * W3C Directories and Systems 규약 기반이다.. 
+  * 다음은 W3C에서 정의하고 있지만, PhoneGap에서는 따르지 않는다: filesystem:  DirectoryEntry 에 설정되어 있는 FileSystem 객체. (FileSystem)
+
+== FileEntry ==
+  * W3C Directories and Systems 규약 기반이다.. 
+  * 다음은 W3C에서 정의하고 있지만, PhoneGap에서는 따르지 않는다: filesystem:  DirectoryEntry 에 설정되어 있는 FileSystem 객체. (FileSystem)
+ 
+  
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="File" value="org.apache.cordova.FileUtils" />
+<plugin name="FileTransfer" value="org.apache.cordova.FileTransfer" />
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/Cordova.plist
+<code>
+<key>Plugins</key>
+<dict>
+    <key>File</key>
+    <string>CDVFile</string>
+</dict>
+
+<key>Plugins</key>
+<dict>
+    <key>FileTransfer</key>
+    <string>CDVFileTransfer</string>
+</dict>
+</code>
+
+==== 관련 함수 ====
+	* N/A
+
+==== 파라미터 ====
+	* N/A
+
+==== Objects ====
+
+=== File ===
+  * 단일 파일의 정보를 갖는 객체.
+
+
+
+
+	* properties:
+
+^유형^설명^타입^비고^
+|name| 파일의 이름 |DOMString | |
+|fullPath | 파일의 이름을 포함하는 전체 경로. |DOMString | |
+|type| 파일의 mime 타입|DOMString | |
+|lastModifiedDate |파일이 마지막으로 수정된 날짜 |Date | |
+|size|bytes 단위의 파일 크기 |long | |
+
+
+=== FileReader ===
+  * 파일을 읽을 수 있도록 하는 객체.
+
+
+<code>
+function win(file) {
+    var reader = new FileReader();
+    reader.onloadend = function(evt) {
+        console.log("read success");
+        console.log(evt.target.result);
+    };
+    reader.readAsDataURL(file);
+};
+
+var fail = function(evt) {
+    console.log(error.code);
+};
+
+entry.file(win, fail);
+</code>
+
+	* properties:
+
+^유형^설명^타입^비고^
+| readyState| 객체의 상태 값을 제공한다 |(EMPTY, LOADING, DONE | |
+| result| 읽어온 파일의 내용을 가지고 있는 속성|DOMString | |
+| error|오류 정보를 가지고 있는 속성|FileError | |
+|onloadstart| 파일을 읽기 시작했을 때 호출하는 함수|Function | |
+|onload | 파일을 성공적으로 읽었을 때 호출하는 함수| Function| |
+| onabort|abort() 함수에 의해서 중단되거나 기타 다른 사유로 인해 중단 됐을 때 실행할 함수 |Function | |
+|onerror |파일을 읽는 도중, 에러가 발생했을 때 호출하는 함수 | Function| |
+| onloadend| 성공, 실패와 무관하게 파일 읽기 완료했을 때 호출하는 함수| Function| |
+
+
+
+	* Methods:
+
+^유형^설명^비고^
+| abort|파일 읽기를 강제로 중단 시키는 함수. | |
+| readAsDataURL|Base64 인코딩으로 읽고 오는 함수. | | 
+|readAsText | 파일을 텍스트로 읽어오는 함수.| | 
+
+
+
+
+=== FileWriter ===
+  * 파일 쓰기 정보를 갖고있는 객체.
+
+
+<code>
+function win(writer) {
+    // fast forwards file pointer to end of file
+    writer.seek(writer.length); 
+};
+
+var fail = function(evt) {
+    console.log(error.code);
+};
+
+entry.createWriter(win, fail);
+</code>
+
+	* properties:
+
+^유형^설명^타입^비고^
+|readyState |객체의 상태 값 | INIT, WRITING, DONE| |
+| fileName|쓰기할 파일의 이름 | DOMString| |
+| length| |쓰기할 파일의 길이long | |
+|position |쓰기할 파일 포인터의 위치 |long | |
+|error | 오류 정보를 갖고 있는 객체| FileError| |
+|onwritestart |쓰기를 시작할 때 호출하는 함수 |Function | |
+|onwrite | 쓰기를 완료했을 때 호출하는 함수| Function| |
+|onabort |abort() 함수에 의해서 중단되거나 기타 다른 사유로 인해 중단 됐을 때 실행할 함수 |Function | |
+|onerror | 파일을 쓰는 도중, 에러가 발생했을 때 호출하는 함수|Function | |
+| onloadend|성공, 실패와 무관하게 파일 쓰기 완료했을 때 호출하는 함수 |Function | |
+
+
+	* Methods:
+
+^유형^설명^비고^
+|abort |파일 쓰기를 강제로 중단하는 함수. | | 
+| seek| 지정한 위치로 파일 포인터를 이동하는 함수.| | 
+|truncate |지정한 위치까지만 보존하고, 그 이후 데이터는 삭제하는 함수. | | 
+| write|현재 파일 포인터로부터 문자열을 파일에 쓰는 함수. | | 
+
+
+
+
+=== FileSystem ===
+  * 파일 시스템 정보를 갖는 객체.
+
+
+<code>
+function onSuccess(fileSystem) {
+    console.log(fileSystem.name);
+    console.log(fileSystem.root.name);
+}
+
+// request the persistent file system
+windo
+</code>
+
+	* properties:
+
+^유형^설명^타입^비고^
+|name | 파일 시스템의 이름|DOMString | |
+|root | 파일 시스템의 루트(root) 디렉토리 객체. | DirectoryEntry| |
+
+
+
+
+=== FileEntry ===
+  * 파일 시스템에 있는 디렉토리를 지정하는 객체.
+
+
+<code>
+function success(metadata) {
+    console.log("Last Modified: " + metadata.modificationTime);
+}
+
+function fail(error) {
+    alert(error.code);
+}
+
+// Request the metadata object for this entry
+entry.getMetadata(success, fail);
+</code>
+	
+	* properties:
+
+^유형^설명^타입^비고^
+|isFile |  항상 true이다|boolean | |
+|isDirectory |항상 false이다 |boolean | |
+|name |경로를 제외한 최종 파일 이름 | DOMString| |
+|fullPath |루트(root)를 포함하는 전체 경로 |DOMString | |
+
+	* Note:다음은 W3C에서 정의하고 있지만, PhoneGap에서는 따르지 않는다:
+
+^유형^설명^타입^비고^
+|filesystem|  FileEntry 에 설정되어 있는 FileSystem | FileSystem| |
+
+	* Methods:
+
+^유형^설명^비고^
+|getMetadata| 파일에 대한 메타데이터.| | 
+|moveTo| 파일 시스템의 다른 위치로 파일을 이동한다.| | 
+|copyTo| 파일 시스템의 다른 위치로 파일을 복사한다.| | 
+|toURI| 파일의 위치를 URI 형식으로 변환하여 리턴한다.| | 
+|remove| 파일을 삭제한다| | 
+|getParent| 현재 디렉토리의 상위 경로를 구한다.| | 
+|createWriter| FileWriter 객체를 생성한다.| | 
+|file| 파일 정보를 가지는 File 객체를 생성한다.| | 
+
+
+
+
+
+
+=== DirectoryEntry===
+  * W3C Directories and Systems을 따르는 파일 시스템 디렉토리 관련 객체.
+
+
+
+<code>
+function success(metadata) {
+    console.log("Last Modified: " + metadata.modificationTime);
+}
+
+function fail(error) {
+    alert(error.code);
+}
+
+// Request the metadata object for this entry
+entry.getMetadata(success, fail);
+</code>
+	
+	* properties:
+
+^유형^설명^타입^비고^
+|isFile |항상 false 이다|boolean | |
+|isDirectory |항상 true 이다 |boolean | |
+|name |경로를 제외한 DirectoryEntry의 이름 | DOMString| |
+|fullPath |루트(root)로 부터의 절대경로 |DOMString | |
+
+	* Note:다음은 W3C에서 정의하고 있지만, PhoneGap에서는 따르지 않는다:
+
+^유형^설명^타입^비고^
+|filesystem| DirectoryEntry 에 설정되어 있는 FileSystem 객체| FileSystem| |
+
+	* Methods:
+
+^유형^설명^비고^
+|getMetadata| 파일에 대한 메타데이터.| | 
+|moveTo| 파일 시스템의 다른 위치로 파일을 이동한다.| | 
+|copyTo| 파일 시스템의 다른 위치로 파일을 복사한다.| | 
+|toURI| 디렉토리의 위치를 URI 형식으로 변환하여 리턴한다.| | 
+|remove| 디렉토리를 삭제한다| | 
+|getParent| 현재 디렉토리의 상위 경로를 구한다.| | 
+|createWriter| FileWriter 객체를 생성한다.| | 
+|getDirectory| 폴더를 가져오거나, 생성한다| | 
+|getFile| 파일을 생성하거나, 가져온다| | 
+|removeRecursively|하위 폴더의 모든 컨텐츠를 삭제한다| | 
+
+=== DirectoryReader ===
+  * 디렉토리 내의 파일들과 디렉토리들을 읽는 객체.
+  + Directories and Systems 규약을 따른다.
+
+
+
+	* Methods:
+
+^유형^설명^비고^
+|readEntries| 디렉토리 내의 객체들을 읽어온다.||
+
+
+=== FileTransfer ===
+  * 서버에 파일을 업로드할 수 있도록 하는 파일 전송 객체.
+
+
+
+	
+
+	* Methods:
+
+^유형^설명^비고^
+|upload|서버로 파일을 전송한다||
+
+=== FileUploadOptions ===
+  * 파일 업로드시, 전달할 매개변수를 정의하는 업로드 속성객체
+
+
+
+
+	* properties:
+
+^유형^설명^타입^비고^
+|fileKey| 업로드할 파일의 변수명|DOMString|설정하지 않으면 “file” 로 정의된다|
+|fileName| 서버에 저장될 파일의 변수명|DOMString|설정하지 않으면 "image.jpg“ 로 정의된다.|
+|mimeType| 데이터를 업로드시, mimeType을 설정한다|DOMString|설정하지 않으면 "image/jpeg“ 로 정의된다.|
+|params| 서버에 추가로 전달할 매개변수|Object||
+|chunkedMode| 대형 스트림 모드 여부|Boolean|설정하지 않으면 "true“ 로 정의된다.|
+
+
+=== FileUploadResult===
+  * FileTransfer 객체를 통해 업로드에 성공했을 때 서버에서 받아오는 객체.
+
+
+
+
+	
+
+	* properties:
+
+^유형^설명^타입^비고^
+|bytesSent | 서버에 업로드한 용량 정보|long||
+|responseCode |서버에서 받아온 HTTP 응답코드|long||
+|response |서버에서 응답받은 데이터|DOMString||
+
+=== Flags === 
+  * 파일이나 디렉토리를 호출할 때, 존재하지 않으면 생성할 것인지를 설정하는 객체
+
+
+
+
+	* properties:
+
+^유형^설명^타입^비고^
+|create| 파일이나 디렉토리가 없을 때, 생성할 것인지의 여부|boolean||
+|exclusive| create 속성과 같이 사용해야 하며, 이미 파일이나 디렉토리가 있을 경우 생성 실패로 처리할 것인지의 여부|boolean||
+
+=== LocalFileSystem === 
+  * 단말기의 루트(root) 파일 시스템에 접근할 수 있도록 지원하는 파일 시스템
+
+
+
+
+	* Methods:
+
+^유형^설명^비고^
+|requestFileSystem| filesystem 객체를 요청하는 함수|Function||
+|resolveLocalFileSystemURI| URI로 DirectoryEntry 나 FileEntry 객체를 요청하는 함수|Function||
+
+	* Constants  :
+^유형^설명^비고^
+|LocalFileSystem.PERSISTENT| 보관용 저장 공간이며, 사용자가 임의로 삭제할 수 없는 공간이다||
+|LocalFileSystem.TEMPORARY| 임시용 저장 공간이며, 안정성을 보장하지 못하는 공간이다||
+
+
+=== Metadata === 
+  * 파일이나 디렉토리의 상태 정보를 제공하는 객체.
+
+
+
+	
+
+	* properties:
+
+^유형^설명^타입^비고^
+|modificationTime| 파일이나 디렉토리의 최종 수정일 정보|Date||
+
+=== FileError === 
+  * File API 함수 수행 시, 에러가 발생했을 때 에러 정보를 갖는 객체
+
+
+	
+
+	* properties:
+
+^유형^설명^타입^비고^
+|code| 다음과 같은 에러 코드를 갖는다|int||
+
+
+	* Constants  :
+^유형^
+|FileError.NOT_FOUND_ERR|
+|FileError.SECURITY_ERR|
+|FileError.ABORT_ERR|
+|FileError.NOT_READABLE_ERR|
+|FileError.ENCODING_ERR|
+|FileError.NO_MODIFICATION_ALLOWED_ERR|
+|FileError.INVALID_STATE_ERR|
+|FileError.SYNTAX_ERR|
+|FileError.INVALID_MODIFICATION_ERR|
+|FileError.QUOTA_EXCEEDED_ERR|
+|FileError.TYPE_MISMATCH_ERR|
+|FileError.PATH_EXISTS_ERR|
+
+=== FileTransferError === 
+  * 파일 전송 시, 에러가 발생했을 때 에러 정보를 갖는 객체
+
+
+
+
+	* properties:
+
+^유형^설명^타입^비고^
+|code| 다음과 같은 에러 코드를 갖는다|int||
+
+
+	* Constants  :
+^유형^
+|FileTransferError.FILE_NOT_FOUND_ERR|
+|FileTransferError.INVALID_URL_ERR|
+|FileTransferError.CONNECTION_ERR|
+
+
+
+==== 참고 자료 ====
+  * Phonegap : http://docs.phonegap.com/en/2.9.0/cordova_file_file.md.html#File
+
+
+

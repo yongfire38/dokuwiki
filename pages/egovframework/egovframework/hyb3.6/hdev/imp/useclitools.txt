@@ -1,0 +1,218 @@
+====== 코도바 CLI 툴 사용하기 ======
+
+===== 개요 =====
+PhoneGap Cordovar 4.0이상 에서는 CLI툴을 이용하여 플랫폼을 관리할수 있도록 변경되었다.
+
+===== 설명 =====
+폰갭 Cordova CLI로 프로젝트를 추가하고 플랫폼 및 폰갭 플러그인을 관리 하는 방법에 대하여 알아본다.
+
+==== 프로젝트 추가 ====
+
+=== 프로젝트 추가 ===
+첫번째 아규먼트 hello를 생성디렉토리이고, 두번째 아규먼트는 안드로이드는 기본 패키지명이며 아이폰은 Bundle ID가 된다. 세번째 아규먼트는 앱의 명칭으로 설정된다.
+<code>
+    $ cordova create hello com.example.hello HelloWorld
+</code>
+
+=== 아규먼트 의미 ===
+cordova create arg1 arg2 arg3\\
+  - arg1 = 생성디렉토리
+  - arg2 = 안드로이드 기본 패키지명, 아이폰 Bundle ID ( 점(dot)를 사용하여 서술 )
+  - arg3 = 앱의 명칭
+
+
+==== 폰갭 플러그인 권한 오류대응 ====
+=== Mac OSX ===
+Error: EACCES: permission denied, open '/Users/dcsc/.config/configstore/update-notifier-cordova.json'\\
+You don't have access to this file.\\
+위와 같은 오류가 발생한다면 sudo cordova plugin add ~~~와 같이 root권한을 사용한다. \\
+
+
+==== 플랫폼 추가 ====
+
+=== 플랫폼 추가 ===
+cd 명령으로 프로젝트 디렉토리로 먼저 이동해야 한다.
+<code>
+    $ cd hello
+</code>
+
+생성하고자 하는 플랫폼을 platform add아규먼트로 생성한다. 전자정부 표준프레임워크에서는 아이폰및 안드로이드를 지원한다.
+<code>
+    $ cordova platform add ios
+    $ cordova platform add amazon-fireos
+    $ cordova platform add android
+    $ cordova platform add blackberry10
+    $ cordova platform add firefoxos
+</code>
+
+설치한 플랫폼의 목록을 확인한다.
+<code>
+    $ cordova platforms ls
+</code>
+
+삭제하고자 하는 플랫폼은 명령어로 삭제할수 있다.
+<code>
+    $ cordova platform remove blackberry10
+    $ cordova platform rm amazon-fireos
+    $ cordova platform rm android
+</code>
+
+
+==== 코도바 앱 빌드 ====
+
+=== build 아규먼트는 해당 모바일 OS 플랫폼을 빌드한다.=== 
+<code>
+    $ cordova build ios
+</code>
+
+
+=== prepare는 platforms/{os} 서브디렉토리에 코도바 코드를 생성하여 실행할수 있도록 준비한다.=== 
+<code>
+    $ cordova prepare ios
+    $ cordova compile ios
+</code>
+
+
+==== 플러그인 추가 ====
+
+=== 플러그인 검색 ===
+<code>
+    $ cordova plugin search bar code
+
+    com.phonegap.plugins.barcodescanner - Scans Barcodes
+</code>
+
+
+== Basic device information (Device API):==
+<code>
+$ cordova plugin add org.apache.cordova.device
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-device
+</code>
+
+== Network Connection and Battery Events:== 
+<code>
+$ cordova plugin add org.apache.cordova.network-information
+$ cordova plugin add org.apache.cordova.battery-status
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-network-information
+$ cordova plugin add cordova-plugin-battery-status
+</code>
+
+== Accelerometer, Compass, and Geolocation:== 
+<code>
+$ cordova plugin add org.apache.cordova.device-motion
+$ cordova plugin add org.apache.cordova.device-orientation
+$ cordova plugin add org.apache.cordova.geolocation
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-device-motion
+$ cordova plugin add cordova-plugin-device-orientation
+$ cordova plugin add cordova-plugin-geolocation
+</code>
+
+== Camera, Media playback and Capture:== 
+<code>
+$ cordova plugin add org.apache.cordova.camera
+$ cordova plugin add org.apache.cordova.media-capture
+$ cordova plugin add org.apache.cordova.media
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-camera
+$ cordova plugin add cordova-plugin-media-capture
+$ cordova plugin add cordova-plugin-media
+</code>
+
+== Access files on device or network (File API):== 
+<code>
+$ cordova plugin add org.apache.cordova.file
+$ cordova plugin add org.apache.cordova.file-transfer
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-file
+$ cordova plugin add cordova-plugin-file-transfer
+</code>
+
+== Notification via dialog box or vibration:== 
+<code>
+$ cordova plugin add org.apache.cordova.dialogs
+$ cordova plugin add org.apache.cordova.vibration
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-dialogs
+$ cordova plugin add cordova-plugin-vibration
+</code>
+
+== Contacts:== 
+<code>
+$ cordova plugin add org.apache.cordova.contacts
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-contacts
+</code>
+
+== Globalization:== 
+<code>
+$ cordova plugin add org.apache.cordova.globalization
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-globalization
+</code>
+
+== Splashscreen:== 
+<code>
+$ cordova plugin add org.apache.cordova.splashscreen
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-splashscreen
+</code>
+
+== Open new browser windows (InAppBrowser):== 
+<code>
+$ cordova plugin add org.apache.cordova.inappbrowser
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-inappbrowser
+</code>
+
+== Debug console:== 
+<code>
+$ cordova plugin add org.apache.cordova.console
+//* 최신버전에서 다음과 같이 변경되었다.
+$ cordova plugin add cordova-plugin-console
+</code>
+
+== Whitelist:== 
+URL 접근제어 보안 플러그인으로 반드시 설치되어야 한다. ( 6.x버전에서 기본적으로 프로젝트 생성시 포함된다 )
+<code>
+$ cordova plugin add cordova-plugin-whitelist
+</code>
+
+== Push:== 
+<code>
+$ cordova plugin add cordova-push-notifications
+</code>
+
+== file opener:== 
+<code>
+$ cordova plugin add cordova-plugin-file-opener2
+</code>
+
+== StreamingMedia:== 
+<code>
+$ cordova plugin add cordova-plugin-streaming-media
+</code>
+
+== barcodescanner:== 
+<code>
+$ cordova plugin add cordova-plugin-barcodescanner
+</code>
+
+== JailbreakDetection:== 
+<code>
+(iOS)
+$ cordova plugin add cordova-plugin-jailbreak-detection
+(Android)
+$ cordova plugin add cordova-plugin-root-detection
+</code>
+
+== SQLite:== 
+<code>
+$ cordova plugin add cordova-sqlite-storage
+</code>
+
+
+
+

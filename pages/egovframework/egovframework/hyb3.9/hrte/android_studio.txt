@@ -1,0 +1,85 @@
+====== Device API -> Android_Studio Import 설명 ======
+
+===== 개요 =====
+   전자정부 Device API를 Android_Studio로 Import 설명입니다.
+ ==*시작 전 알아두기!!*==
+   1. Android_Studo로 Import 후에는 다시 Eclipse 프로젝트로 변환 불가(프로젝트 복사본 만들기)
+   2. SDK는 Android_Studo에서 제공하는 SDK로 사용(Eclipse SDK와 같이 사용시 에러 발생)
+   3. 예제프로젝트는 3.5.1 교육교재 중 lab404 -Device 프로젝트로 진행.
+
+  
+====== Device API -> Android_Studio Import 설명 ======
+
+===== 개요 =====
+   전자정부 Device API를 Android_Studio로 Import 설명입니다.
+ ==*시작 전 알아두기!!*==
+   1. Android_Studo로 Import 후에는 다시 Eclipse 프로젝트로 변환 불가(프로젝트 복사본 만들기)
+   2. SDK는 Android_Studo에서 제공하는 SDK로 사용(Eclipse SDK와 같이 사용시 에러 발생)
+   3. 예제프로젝트는 3.5.1 교육교재 중 lab404 -Device 프로젝트로 진행.
+
+  
+===== Import 방법 =====
+==1. Android_Studio 실행==
+
+{{:egovframework:hyb3.5:init:add:1android_str.jpg|}}
+
+==2. Quick Start==
+
+{{:egovframework:hyb3.5:hrte:2android_import.jpg|}}
+
+==Quick Start 안보일때 설정 방법==
+  * File -> Settings -> Appearance & Behavior -> System Settings -> Un-check "Reopen last project on startup" -> Click apply
+  
+==3. Import project(Eclipse ADT)==
+
+{{:egovframework:hyb3.5:hrte:3import.jpg|}}
+
+   Device API(Eclipse)제작한 프로젝트 폴더 선택 후 "OK" 버튼 클릭
+  *주의,프로젝트 변환시 다시 복귀 불가
+
+{{:egovframework:hyb3.5:hrte:4sync.jpg|}}
+
+
+==4.Project 변환 후 오류 해결 방법 ==
+
+{{:egovframework:hyb3.5:hrte:5project2.jpg?1024|}}
+
+*오류 내용부분 클릭 시 자동 변환
+
+==5. Android Virtual Device(AVD) Manager ==
+
+{{:egovframework:hyb3.5:hrte:6manager.jpg?1024|}}
+
+ * Android Virtual Device(AVD) 생성 방법 Eclipse와 동일
+ * virtual 버전 : v5.0.1(API 21) 추천
+
+==6. Android Virtual Device(AVD) 실행 시 오류 발생 ==
+
+  * Android_Studio에서 JAR 추가시 gradle에서 아래와 같은 에러가 발생함. 
+
+{{:egovframework:hyb3.5:hrte:7notice.jpg?1024|}}
+
+
+==  * 조치방법==
+   
+{{:egovframework:hyb3.5:hrte:8build.jpg?1024|}}
+
+  * build.gradle 소스 추가
+<code xml>
+
+android {
+    packagingOptions {
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/notice.txt'
+    }
+}
+
+</code>
+
+== 완료 화면 ==
+
+{{:egovframework:hyb3.5:hrte:9test1.jpg?400|}}
+
+== Eclipse 웹서버 실행 후 데이터(입력,수정,삭제) 연동 ==
+
+{{:egovframework:hyb3.5:hrte:10deviceapi.jpg?1024|}}

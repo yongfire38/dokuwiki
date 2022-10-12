@@ -1,0 +1,51 @@
+====== 표준프레임워크 모바일 디바이스 API 개발환경 3.5 ======
+ 
+===== 모바일 디바이스 API 개발환경 =====
+  * [[egovframework:hyb3.5:hdev:imp:Overview|표준프레임워크 디바이스API 개발환경 소개]] \\ 전자정부 표준프레임워크 개발환경 내, 모바일 디바이스 API 개발환경의 목표, 제공 서비스 정보 등을 안내한다. \\
+
+==== 개발자 개발환경 설치가이드 ====
+
+=== Android ===
+  * [[egovframework:hyb3.5:hdev:imp:ClntInstall|개발자 개발환경 설치가이드]] \\ 개발자 개발환경을 다운로드 받아 설치 후 프로젝트를 생성해서 실행하기까지의 가이드를 제공한다.
+
+=== iOS ===
+  * [[egovframework:hyb3.5:init:ios:getting_started#개발 환경 설치|개발자 개발환경 설치가이드]]
+  * 폰갭의 프로젝트 생성방식이 변경됨에 따라 전자정부 표준프레임워크 모바일 디바이스 API 2.5 버전에서 제공되는 Xcode 템플릿은 사용하지 않는다.
+  * 모바일 디바이스 API 실행환경 프로젝트를 설치하여 템플릿으로 사용한다.
+
+==== 모바일 디바이스 API 개발환경 구현도구  ====
+
+=== Andoird ===
+모바일 디바이스 API 개발환경 Android 기반의 구현도구는 기존의 전자정부 표준프레임워크 개발환경을 이용한다.
+
+  * [[egovframework:hyb3.5:hdev:imp:install|설치하기]]
+
+  * [[egovframework:hyb3.5:hdev:imp:deviceapi_new_template_project_wizard|모바일 디바이스 API New Template Project Wizard]] \\ 개발자의 편의성을 위하여 eGovFrame기반의 디바이스API 프로젝트 생성 마법사를 제공한다. \\
+
+  * [[egovframework:hyb3.5:hdev:imp:deviceapi_add_template_wizard|모바일 디바이스 API Add Template Wizard]] \\ 개발자의 편의성을 위하여 ADT를 통해 생성한 프로젝트를 eGovFrame 기반의 디바이스 API 프로젝트로 변환하는 마법사를 제공한다.
+
+  * [[egovframework:hyb3.5:hrte:Android_Studio|Android_Studio(Intelli J) DeViceAPI Import 방법]] \\ 개발자의 편의성을 위하여 전자정부 DeviceAPI를 Android_Studio import 방법 가이드를 제공한다.
+
+=== iOS ===
+iOS 기반의 디바이스API 개발환경 구현도구는 Mac OS X환경하에서 Cocoa Touch 프레임워크로 개발하여야 하므로 Xcode를 이용한다.
+
+==== 폰갭(코도바) API 개발환경 CLI(Command Line Interface) 도구  ====
+  * 폰갭 3.0 이상부터는 CLI 도구를 이용하여 플랫폼(모바일OS)을 추가할수 있고 프로젝트및 플러그인을 추가,삭제 할수 있다.
+
+=== Windows ===
+NodeJS기반의 CLI 도구를 설치하여 코도바 CLI도구의 초기설치 및 구성 업데이트의 일괄 적용을 손쉽게 할수 있다. Windows에서 Cordova CLI도구를 이용하여 안드로이드 플랫폼을 관리할수 있다.
+
+  * [[egovframework:hyb3.5:hdev:imp:wincliinstall|CLI도구 설치하기]]
+
+=== 맥 OSX ===
+NodeJS기반의 CLI 도구를 설치하여 코도바 CLI도구의 초기설치 및 구성 업데이트의 일괄 적용을 손쉽게 할수 있다. Mac OSX에서 Cordova CLI도구를 이용하여 아이폰및 안드로이드 플랫폼을 모두 관리할수 있다.
+
+  * [[egovframework:hyb3.5:hdev:imp:maccliinstall|CLI도구 설치하기]]
+
+
+=== 코도바 CLI 도구 사용하기 ===
+코도바 CLI 도구를 이용하여 플랫폼을 추가,삭제할수 있고 프로젝트 생성 및 플러그인의 추가,삭제등을 전반적으로 다룰수 있다.
+
+  * [[egovframework:hyb3.5:hdev:imp:useclitools|코도바 CLI도구 사용하기]]
+
+

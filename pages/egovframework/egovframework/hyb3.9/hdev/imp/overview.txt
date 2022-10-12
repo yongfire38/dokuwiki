@@ -1,0 +1,96 @@
+====== 디바이스API 개발환경 소개 ======
+
+===== 개요 =====
+전자정부 표준프레임워크의 개발환경중 하나인 디바이스API 개발환경에 대해 전체적인 개요를 설명한다. 
+
+
+
+===== 설명 =====
+전자정부 표준프레임워크 개발환경에 대한 전체적인 설명은 [[egovframework:dev3.9:dev3.9|전자정부 표준프레임워크 개발환경 3.9]]을 참고한다.
+
+==== 디바이스API 개발환경 ====
+
+  * 전자정부 디바이스API 개발환경은 Android 환경에서의 개발을 위한 Eclipse 플러그인과 iOS 환경에서의 개발을 위한 Xcode내의 프레임워크 프로젝트로 구성되어 있다.
+
+=== Android ===
+
+Android 환경에서는 기존의 전자정부 표준프레임워크 개발환경을 이용한다. \\
+전자정부 표준 프레임워크 디바이스API Android 개발환경은 비즈니스 프로그램 개발, 버전관리, 단위 테스트, 빌드 등의 개발 Life-Cycle 전반에 대한 지원 도구를 제공하고 있으며, \\
+디바이스API 개발환경은 SDK와 ADT를 이용하여 디바이스API 개발에 대한 지원 도구를 제공하고 있다.
+  * DeviceAPI IDE (Editor, Debug, IDE)
+  * SDK
+  * ADT
+  * Android Configurator for M2E
+
+||^전체 구조 및 구성요소||
+||  {{:egovframework:hyb:hdev:imp:Android_전체구조.png?500|}}  ||
+|^IDE | 전자정부 표준 프레임워크 개발환경 기반의 디바이스API 개발환경|
+|^SDK | Android 기반의 개발을 하기 위한 Development Kit |
+|^ADT | Eclipse 기반의 개발환경에서 Android 앱 개발을 도와주는 Android Development Tool |
+|^Android Configurator for M2E | Maven을 이용한 Android 설정 플러그인|
+ \\
+
+=== iOS ===
+iOS 환경에서는 Mac OS에서 iOS 앱 개발을 위해 제공되어지는 Xcode 개발환경을 이용한다. \\
+전자정부 표준 프레임워크 디바이스API iOS 개발환경은 프레임워크의 집합과 리소스로 이루어진 프로젝트 생성 도구를 제공한다.
+
+|^전체 구조 및 구성요소|
+|  {{:egovframework:hyb:hdev:imp:ios_전체구조.png?500|}}  |
+
+
+
+
+
+===== 환경 설정 =====
+
+==== 기본 환경 ====
+=== Android (Android Studio) ===
+^  항목  ^  권장버전  ^  비고  |
+|Required OS |Winodws, Mac OSX, Linux | |
+|Java Development Kit|7.0| JDK 8.0 권장|
+|Android Studio| |https://developer.android.com/studio|
+|Android OS |Android v4.4 이상 |API 19(Kitkat) 이상 |
+
+
+=== Android (Eclipse) ===
+^  항목  ^  권장버전  ^  비고  |
+|Required OS |Winodws, Mac OSX, Linux | |
+|Java Development Kit|7.0| |
+|Eclipse IDE for Java EE Developers|4.8(Photon)|http://www.eclipse.org/downloads/|
+|Android OS |Android v4.4 이상 |API 19(Kitkat) 이상 |
+
+=== iOS ===
+^  항목  ^  권장버전  ^  비고  |
+|Required OS |macOS 10.10.4 (Yosemite) 이상 | |
+|Xcode |v7.0 이상 | |
+|iOS |v8.0 이상 |iPhone 4S 이상  |
+
+==== WAS ====
+  * WAS는 기존 전자정부 표준 프레임워크 개발환경을 기반으로 한다.
+
+^이름 ^권장버전 ^자바호환성 ^비고 |
+|Jboss application platform |4.3.0 |JDK 5.0 | |
+|Tmax JEUS |6.0.0.5 |JDK 5.0 이상 | |
+|Oracle WebLogic Server |9.2 |JDK 5.0 이상 | |
+
+
+==== DBMS ====
+
+^이름 ^권장버전 ^비고 |
+|Mysql |5.1.30 | |
+|Tibero |3.0(sp2) | |
+|Altibase DBMS Server |5.1.3.18 | |
+|Oracle |9.2(mp3) | |
+
+==== Open Source Software 사용 현황 ====
+
+=== Android ===
+^서비스 그룹^서비스^^오픈소스 소프트웨어^버전^라이선스^확장 및 개발^
+|DeviceAPI|Editor|Source Editor|Eclipse|4.8 Photon|EPL & EDL| |
+| | IDE|DeviceAPI IDE| N/A ||| 신규 개발 ||
+| |Debug|Local Debug|Eclipse| 4.8 |EPL & EDL| |
+|Android SDK| | |SDK| Revision 24 이상 |The Apache License, Version 2.0| |
+|ADT| | |Android Development Tool|최신 버전 사용 |Eclipse Public License 1.0, kxml2-2.3.0.jar은 BSD | |
+
+=== iOS ===
+N/A

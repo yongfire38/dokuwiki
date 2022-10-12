@@ -1,0 +1,154 @@
+===== Geolocation =====
+
+==== 설명 ====
+  * 디바이스의 GPS 센서에 의해 제공되는 geolocatino 객체에 접근하는 API
+
+==== 제약사항 ====
+  * Geolocation API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+== Coordinates  ==
+  * altitudeAccuracy: 단말기에서 지원하지 않는다.  항상 null 이다.
+
+== geolocationOptions ==
+  * 안드로이드 2.x 버전의 가상기기에서는 enableHighAccuracy 을 ‘true’ 로 설정해야만 위치정보를 가져올 수 있다.
+
+
+
+=== iOS ===
+
+== Position ==
+  * timestamp: milliseconds 단위 대신에 seconds 단위를 쓴다
+  
+== geolocationOptions  ==
+  * frequency:  milliseconds 단위로 위치 정보를 감지하는 특정 시간 간격. W3C 스펙을 따르지 않고 있기 때문에 곧 삭제될 예정이다. 
+
+
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Geolocation" value="org.apache.cordova.GeoBroker" />
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/Cordova.plist
+<code xml>
+<key>Plugins</key>
+<dict>
+    <key>Geolocation</key>
+    <string>CDVLocation</string>
+</dict>
+</code>
+
+==== 관련 함수 ====
+
+=== geolocation.getCurrentPosition === 
+  * 단말기의 현재 위치를 Position 객체에 담아 구한다.
+
+<code>
+navigator.geolocation.getCurrentPosition(geolocationSuccess, 
+                                         [geolocationError], 
+                                         [geolocationOptions]);
+
+</code>
+
+=== geolocation.watchPosition  === 
+  * 단말기의 위치 변동을 감지한다.
+
+<code>
+var watchId = navigator.geolocation.watchPosition(geolocationSuccess,
+                                                  [geolocationError],
+                                                  [geolocationOptions]);
+
+
+</code>
+
+=== geolocation.clearWatch === 
+  * watchID 파라미터를 통해 단말기의 위치 변동 감지를 중단시킬 수 있다
+
+<code>
+navigator.geolocation.clearWatch(watchID);
+
+</code>
+
+==== 파라미터 ====
+
+=== geolocationSuccess===
+  * 위치 정보를 성공적으로 가져왔을 경우, 수행하는 사용자 정의 함수
+
+  * Parameters :
+
+^유형^설명^타입^비고^
+| position|  단말기의 위치 정보| Position| |
+
+=== geolocationError ===
+  * geolocation 관련 함수 수행 시, 에러가 발생했을 경우 수행하는 함수
+
+  * Parameters :
+
+^유형^설명^타입^비고^
+|error| 단말기의 에러 정보|PositionError| |
+
+=== geolocationOptions ===
+  * 위치 정보를 구할 경우, 선택적으로 설정할 수 있는 옵션
+
+  * Options :
+
+# frequency: milliseconds 단위로 특정 간격간에 위치 정보를 설정한다. W3C 스펙을 따르지 않고 있기 때문에, 앞으로 phoneGap에서 지원하지 않을 예정이다. (Number) (기본: 10000)
+# enableHighAccuracy: 어플리케이션이 가장 정확한 정보를 감지하도록 설정하는 옵션이다. (Boolean)
+# timeout: 위치 감지 요청의 제한시간이다.(geolocation.getCurrentPosition, geolocation.watchPosition 요청 후, geolocationSuccess이 호출될 때까지의 시간.) (Number)
+# maximumAge: milliseconds 단위로 위치 정보를 저장하고 있는 시간. (Number)
+
+
+==== Objects ====
+
+=== Position ===
+  * geolocation API들을 통해 구해지는 위치 정보를 갖고 있는 객체
+
+
+^유형^설명^타입^비고^
+|coords| 위성 좌표|Coordinates| |
+|timestamp| milliseconds 단위로 위치 정보를 구하는 특정 시간 간격|DOMTimeStamp| |
+
+=== PositionError ===
+  * 에러가 발생하였을 때, 에러 정보를 가지는 객체
+
+
+^유형^설명^비고^
+|code| 에러 코드는 아래와 같다| |
+|message| 에러 메시지를 나타낸다| |
+
+	* Constants :
+PositionError.PERMISSION_DENIED: 권한 부족.
+PositionError.POSITION_UNAVAILABLE: 위치를 감지할 수 없음.
+PositionError.TIMEOUT: 감지 시간 초과.
+
+
+=== Coordinates ===
+  * Position 객체의 coords 속성 객체이며, 위성 좌표의 정보를 가지고 있는 객체
+
+
+
+^유형^설명^타입^비고^
+|latitude| 위도|Number| |
+|longitude| 경도|Number| |
+|altitude| 타원체로부터 위치까지의 미터 단위 높이 | Number| |
+|accuracy| 위도, 경도(미터 단위의 정확도)|Number| |
+|altitudeAccuracy| 고도(미터 단위의 정확도)|Number| |
+|heading| 진북 방향을 시계 방향의 각도로 나타낸 값 | Number| |
+|speed| 초 단위의 단말기 속도(ground speed)|Number| |
+
+==== 참고 자료 ====
+  * Phonegap : http://docs.phonegap.com/en/2.9.0/cordova_geolocation_geolocation.md.html#Geolocation
+
+

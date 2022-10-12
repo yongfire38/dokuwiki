@@ -1,0 +1,50 @@
+====== 실행환경 프로젝트로 Cordova Core 라이브러리 프로젝트 Import - 안드로이드  ======
+
+===== 개요 =====
+Eclipse 실행환경 프로젝트에서 Cordova Core Library를 포함시키는 방법은 2가지로\\
+컴파일된 jar(Java Archive)형태로 포함하거나 라이브러리 프로젝트를 참조 형태로 포함하여 빌드할수 있다.\\
+Apache Cordova Core 프로젝트를 참조프로젝트로 포함하여 실행환경이 빌드될때 포함되어 같이 빌드 하는 방법을 확인한다.\\
+\\
+\\
+===== 라이브러리 프로젝트 Import  =====
+안드로이드 DeviceAPI 실행환경에는 Cordova Project가 다음과 같이 포함되어 있다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_01.png|}}\\
+\\
+우클릭 메뉴에서 Import를 선택하면 다음 팝업화면이 나온다.\\
+Android > Existing Android Code into Workspace를 선택한 후 Next를 누른다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_02.png|}}\\
+\\
+Browse 버튼을 선택한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_03.png|}}\\
+\\
+실행환경 프로젝트에 포함된 CordovaLib디렉토리를 선택한후 열기를 한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_04.png|}}\\
+\\
+Copy projects into workspace를 선택하지 말고 Finish를 선택하여 마무리 한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_05.png|}}\\
+\\
+\\
+===== 프로젝트 설정  =====
+라이브러리 프로젝트를 추가한후 몇가지 설정을 맞춰야 정상적으로 사용이 가능하다.\\
+실행환경에서 사용자 편의를 위해 배포한 컴파일된 코도바 jar파일이 포함되어 있다.\\
+충돌이 날수 있으므로 삭제한다. \\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_06.png|}}\\
+\\
+프로젝트명 > 우클릭 메뉴 > Properties를 선택한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_07.png|}}\\
+\\
+팝업화면에서 좌측 Android를 선택한후 Add버튼을 눌러 참조 프로젝트를 설정한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_08.png|}}\\
+\\
+MainActivity-CordovaLib를 선택하고 OK를 선택한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_09.png|}}\\
+\\
+참조 라이브러리 프로젝트이므로 Is Library를 체크하고 OK를 선택한다. \\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_10.png|}}\\
+\\
+\\
+정상적으로 적용된 결과는 다음과 같다.\\
+Android Dependencies가 추가 되어 있고 오류없는 상태로 마무리 된다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaandroid:import_and_lib_11.png|}}\\
+\\
+\\

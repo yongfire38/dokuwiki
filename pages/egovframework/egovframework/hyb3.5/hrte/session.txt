@@ -1,0 +1,271 @@
+===== 세션동기화 (안드로이드) =====
+아이폰 iOS의 경우 OS차원에서 세션을 관리해주지만 Android의 경우는 자동으로 동기화 되지 않으므로 서버 호출시 개별적으로 대응을 해줘야 한다.
+
+
+==== CookieManager 추가 ====
+    * CookieManager의 싱글톤 Instance를 얻어 관리한다.
+    * SessionCommTask().execute(cookieManager,baseUrl);를 통하여 서버에 지정된 URL을 호출하여 세션정보를 얻어온 후에 CookieManager에 저장한다.
+    * CookieManager에 저장된 쿠키정보는 필요시 꺼내어 URL 연결시 바인딩하여 활용한다.
+<code>
+
+public class MainActivity extends CordovaActivity
+{
+
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        super.init();
+                
+        super.appView.getSettings().setAppCacheEnabled(false); 
+        super.appView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        //super.appView.setVerticalScrollbarOverlay(true);
+        super.appView.clearCache(true);
+        super.appView.getSettings().setJavaScriptEnabled(true);
+        super.appView.getSettings().setDomStorageEnabled(true);
+
+        //super.appView.getSettings().setSaveFormData(false);
+        //super.appView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        //super.appView.getSettings().setBuiltInZoomControls(true);
+        //super.appView.getSettings().setSupportZoom(true);
+        //super.appView.getSettings().setSavePassword(false);
+
+        CookieSyncManager.createInstance(this);
+        CookieManager cookieManager = CookieManager.getInstance();
+        CookieSyncManager.getInstance().startSync();
+        //cookieManager.setCookie("http://192.168.100.120:8280", "JSESSIONID=998822185E5713BE7188A163F33C5433");
+        
+        String baseUrl = this.getString(R.string.SERVER_URL);
+        new SessionCommTask().execute(cookieManager,baseUrl);
+        
+        // Set by <content src="index.html" /> in config.xml
+        loadUrl(launchUrl);
+    }
+    
+    
+    
+	public class SessionCommTask extends AsyncTask<Object, Integer, String> {
+
+		CookieManager cookieManager;
+		String baseUrl;
+		
+		@Override
+		protected void onPreExecute() {
+		
+			super.onPreExecute();
+		}
+
+		@Override
+		protected String doInBackground(Object... params) {
+			
+			cookieManager = (CookieManager)params[0];
+			baseUrl = (String)params[1];
+			
+	        int errorCode = ERROR_CODE_NOERROR;
+	        
+	        try {
+	        	String addr = baseUrl+"/dvc/xml/deviceInfoList.do";
+	        	URL url = new URL(addr);
+	        	Log.d(this.getClass().getSimpleName(),"addr : "+addr);
+	        	HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        	if( conn != null ) {
+	        		Log.d(this.getClass().getSimpleName(),"http conn OK");
+	        		int resCode = conn.getResponseCode();
+	        		if( resCode == HttpURLConnection.HTTP_OK ) {
+
+	        			String resultCookie = conn.getHeaderField("Set-Cookie");
+	        			Log.d(this.getClass().getSimpleName(),"main > resultCookie1 : "+resultCookie);
+	        			if (resultCookie!=null) {
+	        				String[] cookieItems = resultCookie.split(";");
+	        				//if (cookieItems.length>0) {
+	        					for(String cookieItem : cookieItems) {
+		        				//for(int i =0; i < cookieItems.length ; i++) {
+		        					Log.d(this.getClass().getSimpleName(),"cookie Itme : "+cookieItem);
+		        					cookieManager.setCookie(baseUrl, cookieItem);
+		        				}
+	        				//}
+	        			}
+	        			
+	        			Log.d(this.getClass().getSimpleName(),"main > resultCookie2 : "+cookieManager.getCookie(baseUrl));
+	        			
+	        			// DISCONNECT 
+	        			conn.disconnect();
+	        		}
+	        	} else {
+	        		Log.d(this.getClass().getSimpleName(),"http conn FAIL");
+	        		errorCode = ERROR_CODE_HTTP_ELSE;
+	        	}
+	        } catch(Exception e) {
+	        	e.printStackTrace();
+	        	errorCode = ERROR_CODE_HTTP_EXCEPTION;
+	        }
+			
+			return null;
+		}
+		
+		protected void onProgressUpdate(Integer... progress) {
+			Log.d(this.getClass().getSimpleName(),"onProgressUpdate:["+progress[0]+"]");
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			
+			super.onPostExecute(result);
+		}
+
+		@Override
+		protected void onCancelled() {
+			// TODO Auto-generated method stub
+			super.onCancelled();
+		}  
+
+		
+	}
+</code>
+
+==== EgovInterfacePlugin에 쿠키 바인딩 ====
+    * Restful 통신을 할때 CookieManager에서 url에 해당하는 cookie를 꺼내어 바인딩한다.
+    * requestHeaders.add("Cookie", cookies); 구문처럼 바인딩을 위해 헤더정보에 Cookie정보를 추가한다.
+    * 만약 이시점에서 바인딩하지 않으면 Android OS에서 자동으로 바인딩 해주지 않기 때문에 서버에서는 다른 Client로 인식한다. 따라서 같은 Application에서 접속하는데도 서로다른 연결로 서버가 인식하므로 정상적인 인증처리를 할수 없다.
+
+<code>
+@Override
+protected String doInBackground(Object... params) {
+	
+	action = (String)params[0];
+	url = (String)params[1];
+	data = (JSONArray)params[2];
+	callbackContext = (CallbackContext)params[3];
+	
+	if (action.equals(HTTP_METHOD_GET)) {
+    try {
+
+	String uri = data.getString(0);
+	JSONObject param = data.getJSONObject(2);
+	Log.d(this.getClass().getSimpleName()," $$$$$ : "+uri);
+	Log.d(this.getClass().getSimpleName()," $$$$$ : "+param.toString());
+	Log.d(this.getClass().getSimpleName()," $$$$$ : "+data.getString(1));
+
+	
+	HttpHeaders requestHeaders = new HttpHeaders();
+	requestHeaders
+		.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+	if ("json".equals(data.getString(1))) {
+	    requestHeaders.setAccept(Collections
+		    .singletonList(MediaType.APPLICATION_JSON));
+	} else if ("xml".equals(data.getString(1))) {
+	    requestHeaders.setAccept(Collections
+		    .singletonList(MediaType.APPLICATION_XML));
+	    List<Charset> charset = new ArrayList<Charset>(Charset
+		    .availableCharsets().values());
+	    charset.add(Charset.forName("UTF-8"));
+	    requestHeaders.setAcceptCharset(charset);
+	} else {
+		callbackContext.error(ERROR_MESSAGE_PARAM);
+	    return null;
+	}
+	
+	
+	
+	String cookies = cookieManager.getCookie(url);
+	Log.d(this.getClass().getSimpleName(),"cookies > "+cookies);
+	//requestHeaders.add("Cookie", "JSESSIONID=E7A4058A9BD6B26D8A9D5F869F1E24E4");
+	requestHeaders.add("Cookie", cookies);
+	
+	
+	HttpEntity<String> requestEntity = new HttpEntity<String>("",
+		requestHeaders);
+
+	// Create a new RestTemplate instance
+	RestTemplate restTemplate = new RestTemplate();
+
+	// Add the String message converter
+	restTemplate.getMessageConverters().add(
+		new StringHttpMessageConverter());
+
+	if (url == null) {
+	    url = "";
+	}
+
+	if (uri == null) {
+	    uri = "";
+	}
+	
+	// Make the HTTP GET request, marshaling the response to a
+	// String
+	ResponseEntity<String> responseEntity = restTemplate.exchange(
+		url + uri + "?" + parseParameter(param),
+		HttpMethod.GET, requestEntity, String.class);
+
+	String result = responseEntity.getBody();
+	
+	
+	Log.d(this.getClass().getSimpleName(),"cookies result > "+responseEntity.getHeaders());
+	
+
+	callbackContext.success(result);
+    } catch (RestClientException e) {   
+	callbackContext.error(e.getLocalizedMessage());
+    } catch (JSONException e) {            	
+	callbackContext.error(ERROR_MESSAGE_JSON);
+    } catch (Exception e) {
+	callbackContext.error(ERROR_MESSAGE_IO);
+    }
+
+... 중략 ...
+</code>
+
+==== Interceptor 추가 ====
+    * dispatcher-servlet.xml에 추가 인증을 위한 인터셉터를 추가할수 있다.
+    * <mvc:mapping>로 인터셉터를 태울 URL을 지정한다.
+    * <mvc:exclude-mapping>로 인터셉터를 태우지 않을 예외 URL을 지정한다.
+
+<code>
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**/*.do" />
+            <mvc:exclude-mapping path="/uat/uia/**" />
+            <mvc:exclude-mapping path="/index.do" />
+            <bean class="egovframework.com.cmm.interceptor.AuthenticInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>	
+</code>
+
+==== Interceptor에서 인증 점검 ====
+    * session.getId()를 통하여 제대로 Cookie가 바인딩되었는지 점검한다. 제대로 바인딩되었으면 동일한 ID를 반환한다.
+
+<code>
+public class AuthenticInterceptor extends HandlerInterceptorAdapter {
+
+	/**
+	 * 세션에 계정정보(LoginVO)가 있는지 여부로 인증 여부를 체크한다.
+	 * 계정정보(LoginVO)가 없다면, 로그인 페이지로 이동한다.
+	 */
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		
+		boolean isPermittedURL = false;
+		HttpSession session = request.getSession();
+		
+		System.out.println(">>>>> AuthenticInterceptor sessionID : "+session.getId());   
+		System.out.println(">>>>> AuthenticInterceptor~~~~~");
+		/*
+		LoginVO loginVO = (LoginVO) EgovUserDetailsHelper.getAuthenticatedUser();
+		loginVO.setId("OK");
+
+		if(loginVO != null){
+			return true;
+		} else if(!isPermittedURL){
+				ModelAndView modelAndView = new ModelAndView("redirect:/dvc/logout.do");
+				throw new ModelAndViewDefiningException(modelAndView);
+		} else {
+				return true;
+		}
+		*/
+		return true;
+	}
+
+}
+
+</code>
+

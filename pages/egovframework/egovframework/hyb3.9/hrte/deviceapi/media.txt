@@ -1,0 +1,311 @@
+===== Media =====
+
+==== 설명 ====
+  * 디바이스의 오디오 파일을 재생 또는 녹음 할 수 있는 API 
+
+==== 제약사항 ====
+  * Media API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+  * N/A
+
+=== iOS ===
+
+== media.startRecord ==
+  * 녹음할 파일이 존재하거나, .wav 파일을 미리 생성해야 한다. File API는 파일을 생성해주지 않는다.
+
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Media" value="org.apache.cordova.AudioHandler" />
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/config.xml
+<code xml>
+    <feature name="Media">
+        <param name="ios-package" value="CDVSound"/>
+    </feature>
+</code>
+
+==== 관련 함수 ====
+
+=== media.getCurrentPosition === 
+  * 오디오 파일의 현재 재생 위치 값을 구한다
+<code>
+media.getCurrentPosition(mediaSuccess, [mediaError]);
+</code>
+
+  * Quick Example : 
+<code>
+// Audio player
+    //
+    var my_media = new Media(src, onSuccess, onError);
+
+    // Update media position every second
+    var mediaTimer = setInterval(function() {
+        // get media position
+        my_media.getCurrentPosition(
+            // success callback
+            function(position) {
+                if (position > -1) {
+                    console.log((position) + " sec");
+                }
+            },
+            // error callback
+            function(e) {
+                console.log("Error getting pos=" + e);
+            }
+        );
+    }, 1000);
+</code>
+
+=== media.getDuration === 
+  * 오디오 파일의 재생 지연 시간
+<code>
+media.getDuration();
+</code>
+
+  * Quick Example : 
+<code>
+ // Audio player
+    //
+    var my_media = new Media(src, onSuccess, onError);
+
+    // Get duration
+    var counter = 0;
+    var timerDur = setInterval(function() {
+        counter = counter + 100;
+        if (counter > 2000) {
+            clearInterval(timerDur);
+        }
+        var dur = my_media.getDuration();
+        if (dur > 0) {
+            clearInterval(timerDur);
+            document.getElementById('audio_duration').innerHTML = (dur) + " sec";
+        }
+   }, 100);
+</code>
+
+=== media.pause === 
+  * 오디오 파일의 재생을 멈춘다
+<code>
+media.pause();
+</code>
+
+  * Quick Example : 
+<code>
+// Play audio
+//
+function playAudio(url) {
+    // Play the audio file at url
+    var my_media = new Media(url,
+        // success callback
+        function() {
+            console.log("playAudio():Audio Success");
+        },
+        // error callback
+        function(err) {
+            console.log("playAudio():Audio Error: "+err);
+    });
+
+    // Play audio
+    my_media.play();
+
+    // Pause after 10 seconds
+    setTimeout(function() {
+        media.pause();
+    }, 10000);        
+}
+</code>
+
+=== media.play === 
+  * 오디오 파일 재생을 시작하거나, 재실행한다
+<code>
+media.play();
+</code>
+
+  * Quick Example : 
+<code>
+// Play audio
+//
+function playAudio(url) {
+    // Play the audio file at url
+    var my_media = new Media(url,
+        // success callback
+        function() {
+            console.log("playAudio():Audio Success");
+        },
+        // error callback
+        function(err) {
+            console.log("playAudio():Audio Error: "+err);
+    });
+
+    // Play audio
+    my_media.play();
+}
+</code>
+
+=== media.release === 
+  * 운영체제(OS) 혹은 메모리 내의 Media 객체에 등록된 오디오 파일을 해제한다
+<code>
+media.release();
+</code>
+
+  * Quick Example : 
+<code>
+    // Audio player
+    //
+    var my_media = new Media(src, onSuccess, onError);
+
+    my_media.play();
+    my_media.stop();
+    my_media.release();
+</code>
+
+=== media.seekTo === 
+  * 오디오 파일의 재생 위치를 설정한다
+<code>
+media.seekTo(milliseconds);
+</code>
+  * Quick Example : 
+<code>
+ // Audio player
+    //
+    var my_media = new Media(src, onSuccess, onError);
+    my_media.play();
+    // SeekTo to 10 seconds after 5 seconds
+    setTimeout(function() {
+        my_media.seekTo(10000);
+    }, 5000);
+</code>
+
+
+=== media.startRecord  === 
+  * 오디오 파일의 녹음을 시작한다
+<code>
+media.startRecord();
+</code>
+
+  * Quick Example : 
+<code>
+// Record audio
+// 
+function recordAudio() {
+    var src = "myrecording.mp3";
+    var mediaRec = new Media(src,
+        // success callback
+        function() {
+            console.log("recordAudio():Audio Success");
+        },
+
+        // error callback
+        function(err) {
+            console.log("recordAudio():Audio Error: "+ err.code);
+        });
+
+    // Record audio
+    mediaRec.startRecord();
+}
+</code>
+
+=== media.stop === 
+  * 오디오 파일의 재생을 멈춘다
+<code>
+media.stop();
+</code>
+  * Quick Example : 
+<code>
+// Play audio
+//
+function playAudio(url) {
+    // Play the audio file at url
+    var my_media = new Media(url,
+        // success callback
+        function() {
+            console.log("playAudio():Audio Success");
+        },
+        // error callback
+        function(err) {
+            console.log("playAudio():Audio Error: "+err);
+    });
+
+    // Play audio
+    my_media.play();
+
+    // Pause after 10 seconds
+    setTimeout(function() {
+        my_media.stop();
+    }, 10000);        
+}
+</code>
+
+=== media.stopRecord === 
+  * 오디오 파일의 녹음을 멈춘다
+<code>
+media.stopRecord();
+</code>
+  * Quick Example : 
+<code>
+// Record audio
+// 
+function recordAudio() {
+    var src = "myrecording.mp3";
+    var mediaRec = new Media(src,
+        // success callback
+        function() {
+            console.log("recordAudio():Audio Success");
+        },
+
+        // error callback
+        function(err) {
+            console.log("recordAudio():Audio Error: "+ err.code);
+        });
+
+    // Record audio
+    mediaRec.startRecord();
+
+    // Stop recording after 10 seconds
+    setTimeout(function() {
+        mediaRec.stopRecord();
+    }, 10000);
+}
+</code>
+
+
+==== 파라미터 ====
+
+
+=== mediaError ===
+  * (선택) 에러가 발생하였을 때, 호출되는 함수. (Function)
+
+<code>
+function(error) {
+    // Handle the error
+}
+</code>
+
+  * Constants : 
+
+^유형^
+|MediaError.MEDIA_ERR_ABORTED|
+|MediaError.MEDIA_ERR_NETWORK|
+|MediaError.MEDIA_ERR_DECODE|
+|MediaError.MEDIA_ERR_NONE_SUPPORTED|
+
+
+
+
+
+==== 참고 자료 ====
+  * Cordova : https://cordova.apache.org/docs/en/8.x/reference/cordova-plugin-media/index.html

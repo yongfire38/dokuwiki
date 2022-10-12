@@ -1,0 +1,16 @@
+====== 디바이스 API 실행환경 시작하기(Getting Started) ======
+
+
+===== 개요 =====
+
+
+===== Android Platform =====
+  * [[egovframework:hyb:init:add:설치|설치]]
+  * [[egovframework:hyb:init:add:프로젝트 생성 및 셋업|프로젝트 생성 및 셋업]]
+  * [[egovframework:hyb:init:add:자세히 들여다 보기|자세히 들여다 보기]]
+
+
+===== iOS Platform =====
+  * [[egovframework:hyb:init:ios:설치|설치]]
+  * [[egovframework:hyb:init:ios:프로젝트 생성 및 셋업|프로젝트 생성 및 셋업]]
+  * [[egovframework:hyb:init:ios:자세히 들여다 보기|자세히 들여다 보기]]

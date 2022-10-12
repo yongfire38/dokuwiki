@@ -1,0 +1,370 @@
+====== Vibrator 디바이스API 가이드 프로그램 ======
+
+
+
+===== 개요 =====
+
+VibratorAPI 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발하시는 분들이 구현 시 참고 및 활용될 수 있도록 구현된 전자정부 디바이스 API에 대한 가이드 앱으로써, 모바일 스마트 디바이스의 Notification 관련 기능을 JavaScript 기반으로 구성된 Vibrator DeviceAPI 를 통하여 조회할 수 있도록 지원한다.
+
+또한, 전자정부 표준 프레임워크 기반의 웹 서버 어플리케이션과 연계하여 디바이스 내, 알림 정보를 서버로 전송 및 조회할 수 있는 기능으로 구성되어 있다.
+
+==== 특징 ====
+본 가이드 프로그램 에서는 알람 기능을 가이드 할 수 있도록 **소리로 알림** , **진동으로 알림** , **알림 목록 보기** 기능을 제공하고 있다.\\
+
+Notification API를 이용하여, 사용자가 설정한 시간에 알람 정보를 표시한다.
+
+
+
+==== 기능흐름도 ==== 
+{{:egovframework:hyb:guide:add:egovframework_hyb_guideadd_vibrator_알림기능흐름도.png?740|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:add:알림_기능시퀀스.png|}}
+
+==== 전제 조건 ====
+
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경| 전자정부표준프레임워크 개발환경3.6, Android SDK API 23(version 6.0 Marshmallow)|
+|서버 사이드 개발 환경| 전자정부표준프레임워크 개발환경3.6|
+|Mash up Open API 연계| N/A|
+|테스트 디바이스 | Galaxy S3, G5|
+|테스트 플랫폼 | Android 2.3, Android 6.0 |
+|추가 라이브러리 적용|N/A |
+
+==== 제약사항 ====
+
+^           구분            ^             내용             ^
+|크로스 도메인 사용|폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Res/xml/config.xml에서 <access origin="" />에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.|
+
+===== 설명 ===== 
+Vibrator 디바이스API 가이드 프로그램은 크게 알림 정보를 설정 및 표시 하는 기능과 설정한 알림 정보를 웹 서버 어플리케이션으로 전송 및 조회하는 기능으로 구성되어 있다.(관련기능 부분참조)
+
+=== 클래스 다이어그램 ===
+{{:egovframework:hyb:guide:add:egovframework_hyb_guide_add_vibrator_클래스다이어그램.png?1024}}
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Activity|kr.go.egovframework.hyb.vibratorapi.VibratorAPIGuide_AndroidActivity|VibratorAPI 가이드 프로그램 Activity Class|
+|CSS|assets/www/css/egovframwork/mbl/hyb/VibratorAPI.css |VibratorAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |assets/www/images/egovframwork/mbl/hyb/ |VibratorAPI 가이드 프로그램 주요 Image 폴더|
+|JS |assets/www/js/egovframwork/mbl/hyb/VibratorAPI.js |VibratorAPI 가이드 프로그램 주요 JavaScript|
+|JS |assets/www/js/egovframwork/mbl/hyb/messages_ko.js |Validate 메세지 처리 JavaScript|
+|RES |assets/www/res/ |VibratorAPI 가이드 프로그램 주요 Resource 폴더|
+|XML |AndroidManiFest.xml |안드로이드 어플리케이션 설정 XML|
+|HTML|assets/www/VibratorAPI.html|VibratorAPI 메인 페이지|
+|HTML|assets/www/Intro.html|VibratorAPI Intro 페이지|
+|HTML|assets/www/license.html|VibratorAPI 라이센스 페이지|
+|HTML|assets/www/overview.html|VibratorAPI 기능설명 페이지|
+
+=== 활용 API ===
+
+== notification.beep ==
+  * 단말기의 비프(beep)음을 재생한다. \\
+  * times: 반복되는 비프(beep)음 재생 횟수 \\
+
+<code>
+navigator.notification.beep(times);
+</code>
+
+== notification.vibrate ==
+  * 지정한 시간 동안 단말기의 진동을 울리게 한다. \\
+  * Milliseconds 단위의 진동이 울리는 시간. \\
+
+<code>
+navigator.notification.vibrate(milliseconds);
+</code>
+
+
+==== Server Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.hyb.add.vbr.web.EgovVibratorAndroidAPIController.java|VibratorAPI 가이드 프로그램 Controller Class|
+|Service|egovframework.hyb.add.vbr.service.EgovVibratorAndroidAPIService.java|VibratorAPI 가이드 프로그램  Service Class|
+|ServiceImpl|egovframework.hyb.add.vbr.service.impl.EgovVibratorAndroidAPIServiceImpl.java|VibratorAPI 가이드 프로그램  ServiceImpl Class|
+|VO|egovframework.hyb.add.vbr.service.VibratorAndroidAPIDefaultVO.java|VibratorAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.add.vbr.service.VibratorAndroidAPIVO.java|VibratorAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.add.vbr.service.VibratorAndroidAPIXmlVO.java|VibratorAPI 가이드 프로그램 XML 관련 VO Class|
+|DAO|egovframework.hyb.add.vbr.service.impl.VibratorAndroidAPIDAO.java|VibratorAPI 가이드 프로그램 Dao Class|
+|QUERY XML|resources/egovframework/sqlmap/hyb/add/vbr/EgovVibratorAndroidAPIGuide_XXX_mysql.xml|VibratorAPI 가이드 프로그램 QUERY XML|
+|Idgen XML|resources/egovframework/spring/com/context-idgen.xml|VibratorAPI 가이드 프로그램 Id생성 Idgen XML|
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|Vibrator|VIBRATOR|알림 정보 관리|
+
+=== 테이블 정의서 ===
+
+   * VIBRATOR
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|TIMESTAMP|timestamp|VARCHAR|20|Null|
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+===== 환경설정 ===== 
+
+Vibrator 디바이스API 가이드 프로그램에서 제공하는 모바일 디바이스의 알림 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== res/xml/config.xml ===
+
+<code xml>
+<plugin name="Notification" value="org.apache.cordova.Notification"/>
+</code>
+
+=== res/values/serverinfo.xml ===
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+	<string name="SERVER_URL">http://192.168.100.222:8080/DeviceAPIGuideTotal_Web_V1.7.1</string>
+    </resources>
+</code>
+
+=== AndroidManifest.xml ===
+
+<code xml>
+<uses-permission android:name="android.permission.VIBRATE" />
+</code>
+
+==== Server Application ====
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/add/vbr/EgovDeviceAndroidAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+===== 관련기능 ===== 
+
+==== 소리로 알림 ====
+
+=== 비즈니스 규칙 ===
+
+알림 설정 시간이 되면 Beep를 사용하여 사용자에게 알린다.
+
+=== 관련코드  ===
+
+<code>
+function fn_egov_save_notificationConfig() {
+	
+        ...
+
+        var setTime = $("#txtNotification").val();
+        if(fn_egov_network_check(true)) {
+
+        	setTimeout ( "fn_egov_set_alram()", setTime * 1000);
+        	jAlert("알람이 " + setTime + " 초 뒤에 설정 되었습니다.", "알림", "b");
+        }
+
+        ...
+}
+</code>
+
+<code>
+function fn_egov_set_alram() {
+	
+    console.log("DeviceAPIGuide fn_egov_set_alram Success");
+	
+    if($("#swchBeep").val() === "on") {
+    	
+        navigator.notification.beep(3);
+    }
+    
+   ...
+    
+    fn_egov_insert_data();
+    
+    jAlert("알람", "알림", "b");
+}
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|알림정보전송|/vbr/addVibratorAndroidInfo.do|insertVibrator|"vibratorAndroidAPIDAO.insertVibrator"|
+
+^ 알람설정 화면 ^
+|{{:egovframework:hyb3.6:guide:add:vibrator:vibrator_set.png?320|}}|
+
+소리로 알림 버튼을 On 으로 선택한 후, 설정시간과 함께 설정 완료 버튼을 클릭한다. \\
+단, 모든 입력데이터에 대해서 기본적인 validation을 확인하고, 조건이 불충분 할 경우 오류 메시지가 출력된다.
+
+기능설명 : **기능설명** 화면으로 이동한다. \\
+라이선스 : **라이선스** 화면으로 이동한다. \\
+소리로 알림 : 소리로 알림 기능을 위하여 On으로 선택한다. \\
+알림목록 : 알림 목록 조회 화면으로 이동한다. \\
+설정완료 : 해당 설정을 바탕으로 알림을 설정한다. \\
+
+==== 진동으로 알림 ====
+
+=== 비즈니스 규칙 ===
+
+알림 설정 시간이 되면 Vibrator를 사용하여 사용자에게 알립니다.
+
+=== 관련코드  ===
+
+<code>
+function fn_egov_save_notificationConfig() {
+	
+        ...
+
+        var setTime = $("#txtNotification").val();
+        if(fn_egov_network_check(true)) {
+
+        	setTimeout ( "fn_egov_set_alram()", setTime * 1000);
+        	jAlert("알람이 " + setTime + " 초 뒤에 설정 되었습니다.", "알림", "b");
+        }
+
+        ...
+}
+</code>
+
+<code>
+function fn_egov_set_alram() {
+	
+    console.log("DeviceAPIGuide fn_egov_set_alram Success");
+
+   ...	
+
+    if($("#swchVibration").val() === "on") {
+    	
+        navigator.notification.vibrate(3000);
+    }
+    
+   ...
+    
+    fn_egov_insert_data();
+    
+    jAlert("알람", "알림", "b");
+}
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|알림정보전송|/vbr/addVibratorAndroidInfo.do|insertVibrator|"vibratorAndroidAPIDAO.insertVibrator"|
+
+^ 알람설정 화면 ^
+|{{:egovframework:hyb3.6:guide:add:vibrator:vibrator_set.png?320|}}|
+
+진동으로 알림 버튼을 On 으로 선택한 후, 설정시간과 함께 설정 완료 버튼을 클릭한다. \\
+단, 모든 입력데이터에 대해서 기본적인 validation을 확인하고, 조건이 불충분 할 경우 오류 메시지가 출력된다.
+
+기능설명 : **기능설명** 화면으로 이동한다. \\
+라이선스 : **라이선스** 화면으로 이동한다. \\
+진동으로 알림 : 소리로 알림 기능을 위하여 On으로 선택한다. \\
+알림목록 : 알림 목록 조회 화면으로 이동한다. \\
+설정완료 : 해당 설정을 바탕으로 알림을 설정한다. \\
+
+==== 알림 목록 보기 ====
+
+=== 비즈니스 규칙 ===
+
+서버에 저장된 알림 설정 정보를 화면에 표시한다.
+
+=== 관련코드  ===
+
+<code>
+function fn_egov_select_data() {
+    var url = "/vbr/VibratorAndroidInfoList.do";
+	var acceptType = "xml";
+	
+    $.mobile.showPageLoadingMsg();
+	egovHyb.post(url, acceptType, {}, function(xmldata) {
+		
+		console.log("DeviceAPIGuide fn_egov_select_data request Completed");
+		
+		fn_egov_go_detailPage(xmldata);
+	});
+}
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|알림정보조회|/vbr/VibratorAndroidInfoList.do|selectVibratorInfoList|"vibratorAndroidAPIDAO.selectVibratorList"|
+
+^알람목록 보기 화면 ^
+|{{:egovframework:hyb3.6:guide:add:vibrator:vibrator_list.png?320|}}|
+
+서버에 저장된 알림 정보 목록을 디바이스의 화면에 표시한다.
+
+기능설명 : **기능설명** 화면으로 이동한다. \\
+라이선스 : **라이선스** 화면으로 이동한다. \\
+
+===== 컴파일 디버깅 배포 ===== 
+
+==== 컴파일 ====
+
+=== Device Applicaton 컴파일 방법 === 
+
+  * 프로젝트 선택 > 오른쪽 클릭 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일1.png?740|}}
+
+  * 상단의 메뉴 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일2.png?740|}}
+
+ 
+  * 실행할 타겟 선택 > 에뮬레이터, 디바이스(디버깅모드)
+
+{{:egovframework:hyb:guide:add:디바이스컴파일.png?740|}}
+
+  * 디바이스를 이용한 실행 화면
+
+{{:egovframework:hyb3.6:guide:add:vibrator:vibrator_run.png?320|}}
+
+=== Server Applicaton 컴파일 방법 ===  
+
+  * 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+{{:egovframework:hyb:guide:add:서버실행결과_콘솔.png?840|}}
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 Phonegap 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+ 
+
+ console.log의 작성 방법은 다음과 같다.
+<code>
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    ...
+}
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+{{:egovframework:hyb:guide:add:FileReadWriteconsolelog.png?700|}}
+
+
+Vibrator 디바이스 API 가이드 프로그램 에서는 디버깅을 위하여 다음과 같이 콘솔 정보를 출력한다.
+
+^디버그 코드^디버깅 내용^
+|DeviceAPIGuide fn_egov_insert_data request Completed | 디바이스의 알림 설정 정보를 웹 서버 어플리케이션에 저장 성공 시.|
+|DeviceAPIGuide fn_egov_select_data request Completed | 웹 서버 어플리케이션에 저장된 알림 설정 정보를 성공적으로 조회 시.|
+|DeviceAPIGuide fn_egov_set_alram Success | 사용자가 설정한 알림이 성공적으로 동작 수행 시.|
+
+==== 배포 ====
+Vibrator 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1275&menu=3&submenu=9|Click]] \\
+
+===== 참고자료 ===== 
+  * Cordova : [[https://cordova.apache.org|Click]] \\
+  * UX/UI 라이브러리 : jQuery Mobile[[http://jquerymobile.com/demos/1.4.5/|Click]] \\

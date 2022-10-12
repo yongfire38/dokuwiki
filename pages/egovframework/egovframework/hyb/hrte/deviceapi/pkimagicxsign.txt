@@ -1,0 +1,140 @@
+===== PKIMagicXSign=====
+
+==== 설명 ====
+  * PhoneGap Plugin을 사용하여 iPhone, Android에서 드림시큐리티 MagicXSign 과 MagicSE2 그리고 MagicMES 를 사용할 수 있도록 하는 기능을 제공한다.
+
+==== 제약사항 ====
+  * **iOS**에서만 올레 인증서 관련 함수를 사용할 수 있다.
+
+==== 환경 설정 ====
+
+=== Android ===
+  * Activity Class : MagicXSignPlugin.init(this);
+<code java>
+public void onCreate(Bundle savedInstanceState) {
+
+MagicXSignPlugin.init(this);
+super.onCreate(savedInstanceState);
+super.loadUrl("file:///android_asset/www/index.html");
+};
+</code>
+
+  * app/res/xml/plugins.xml
+<code xml>
+<plugin name="MagicXSignPlugin" value="com.dreamsecurity.magicxsign.PhoneGapPlugin" />
+</code>
+
+==== 관련 함수 ====
+
+=== window.plugins.magicxsign.init ===
+  * MagicXSign을 사용하기 위해 초기화를 한다.
+<code javascript>
+window.plugins.magicxsign.init(DebugFlag);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|DebugFlag|MagicXSign Debug 출력 여부| true, false|
+
+  * Sample Code
+<code javascript>
+window.plugins.magicxsign.init("false");
+window.plugins.magicxsign.init("true");
+</code>
+
+=== window.plugins.magicxsign.getcertlist ===
+  * MagicXSign을 사용하기 위해 초기화를 한다.
+<code javascript>
+window.plugins.magicxsign.getcertlist(success, fail, jsonString);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|success|성공 시, 수행되는 함수| |
+|fail|실패 시, 수행되는 함수| |
+|jsonString|인증서의 정보 요청| |
+
+  * jsonString
+
+^속성^내용^속성^내용^
+|issuser|인증서 발급 기관|name|사용자이름|
+|ver|버전|sn|일련번호|
+|issuedn|발급자|start|만료일(시작)|
+|end|만료일(끝)|subjdn|주체자|
+|pubkeyalgo|공개키 알고리즘|pubkey|공개 키|
+|aia|기관 정보 접근|aki|발급자 키식별자|
+|ski|주체자 키식별자|keyuse|키사용|
+|policy|정책|policyid|정책 ID|
+|subaltname|주체 대체이름|crl|CRL 위치|
+
+  * Sample Code
+<code javascript>
+var setDefine = ["oidname", "issuer", "name", "subjdn", "start", "end"];
+window.plugins.magicxsign.getcertlist(getcertlistSuccess, getcertlistFail, JSON.stringify(setDefine));
+</code>
+
+=== window.plugins.magicxsign.makesign ===
+  * 서명 데이터를 생성한다.
+<code javascript>
+window.plugins.magicxsign.makesign(success, fail, jsonString);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|success |성공 시, 수행되는 함수| |
+|fail |실패 시, 수행되는 함수| |
+|certIndex |인증서 Index, 구/신 비밀번호를 jsonString 전달 | |
+
+  * Sample Code
+<code javascript>
+var setDefine = {};
+
+// 서명원문
+setDefine["plaintext"] = encodeURIComponent(MagicXSign_makeQueryString(form));
+
+window.plugins.magicxsign.makesign(makesign_ok, JSON.stringify(setDefine));
+</code>
+
+==== 올레 인증서 관련 함수 ====
+  * **iOS**에서만 관련 기능을 제공한다.
+
+=== window.plugins.magicxsign.ollecert_check ===
+  * 올레인증서 인스톨 여부 확인
+<code javascript>
+window.plugins.magicxsign.ollecert_check(success, fail);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|success |올레 인증서가 설치되어 있음. | |
+|fail |올레 인증서가 설치되어 있지 않음. | |
+
+  * Sample Code
+<code javascript>
+window.plugins.magicxsign.ollecert_check(ollehcert_Check_Success, ollehcert_Check_Fail);
+</code>
+
+=== window.plugins.magicxsign.ollecert_getcert ===
+  * 올레인증서에서 인증서를 요청하여 인증서 저장한다.
+<code javascript>
+window.plugins.magicxsign.ollecert_getcert(success, fail, jsonString);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|success |성공 시, 수행되는 함수. | |
+|fail |실패 시, 수행되는 함수. | |
+|jsonString | 얻어온 인증서의 정보 보기용| |
+
+  * Sample Code
+<code javascript>
+window.plugins.magicxsign.ollecert_getcert(success, fail, jsonString);
+</code>
+
+==== 참고 자료 ====
+N/A

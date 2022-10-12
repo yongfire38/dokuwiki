@@ -1,0 +1,112 @@
+===== Interface (iOS) =====
+
+==== 설명 ====
+  * Device Application과 Web Application의 연결 기능을 제공한다.
+
+==== 제약사항 ====
+
+N/A
+
+==== 환경 설정 ====
+
+
+==== 관련 함수 ====
+
+=== initWithURL:delegate: === 
+  * 초기화와 기본적인 설정을 한다.
+<code>
+initWithURL:@"http://www.egovframe.go.kr" delegate:self];
+</code>
+
+== 파라미터 ==
+
+^유형^설명^
+|uri|통신할 곳의 HTTP URI를 NSSString으로 받는다.|
+|delegate|통신 결과 이벤트를 받을 UIViewController|
+
+=== setURL: === 
+  * 통신할 곳의 URI를 설정한다.
+<code>
+[m_eGovComModule setURL:@"http://www.egovframe.go.kr"];
+</code>
+
+== 파라미터 ==
+
+^유형^설명^
+|uri|호출하고자 하는uri|
+
+=== setTimeOutSeconds: === 
+  * time out 초를 설정한다. 
+  * Default로 10초로 설정되어 있다.
+<code>
+[m_eGovComModule setTimeOutSeconds:10];
+</code>
+
+== 파라미터 ==
+
+^유형^설명^
+|Seconds |초 단위 값 NSInteger 를 받는다.|
+
+=== addPost:key: === 
+  * 입력하고자 하는 값을 key값의 request 파라미터에 설정한다.
+<code>
+[m_eGovComModule addPost:@"값" key:@"키"];
+</code>
+
+== 파라미터 ==
+
+^유형^설명^
+|Post |입력하고자 하는 NSString의 값.|
+|key |request 파라미터 NSString 값.|
+
+=== startAsynchronous === 
+  * 설정하고 입력한 값으로 비동기 통신을 시작한다.
+  * URL값이 설정되어 있지 않으면, onNetworkFailed delegate를 발생한다.
+<code>
+[m_eGovComModule startAsynchronouse];
+</code>
+
+=== isWifi === 
+  * 현재 wi-fi에 연결되어 있는지 검사한다.
+<code>
+[m_eGovComModule isWifi] == YES
+</code>
+
+=== isNetworkConnected === 
+  * 현재 wi-fi 또는 3G 네트워크에 연결되어 있는지 검사한다.
+<code>
+[m_eGovComModule isNetworkConnected] == YES
+</code>
+
+=== onNetworkStarted === 
+  * 통신이 시작된 후 일어나는 이벤트
+<code>
+(void)onNetworkStarted { }
+</code>
+
+=== onNetworkFailed === 
+  * 통신이 실패한 후 일어나는 이벤트
+<code>
+(void)onNetworkFailed:(NSError*)error { }
+</code>
+
+== 파라미터 ==
+
+^유형^설명^
+|error|발생된 error 내용|
+
+=== onNetworkFinished:responseString:responseStatusCode: === 
+  * 통신이 성공한 후 일어나는 이벤트
+<code>
+(void)onNetworkFinished:(NSData*)responseData responseString:(NSString*)responseString responseStatusCode:(NSInteger)responseStatusCode { }
+</code>
+
+== 파라미터 ==
+
+^유형^설명^
+|responseData |결과값 NSData 형식|
+|responseString |결과값 NSString 형식 |
+|responseStatusCode |결과 상태 값 NSInteger 형식 |
+
+==== 참고자료 ====
+N/A

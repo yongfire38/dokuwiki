@@ -1,0 +1,267 @@
+====== 디바이스 API 가이드 프로그램 테이블 구성정보 ======
+
+===== 개요 =====
+디바이스 API 가이드 프로그램을 적용 시 디바이스 API의 종류별 특징을 고려하여 현장 상황에 맞게 적용할 수 있도록 관련 정보를 제공한다.
+     * 각 디바이스 API 가이드 프로그램의 데이터 엔터티 및 어트리뷰트는 가이드 프로그램이 구동되기 위한 최소한의 필수 항목들로 구성되어 있으며, 디바이스 API 별 디바이스 하이드리드 어플리케이션 구현 시 참고 및 활용이 용이하도록 구성되어 있다.(관련ERD 참조)
+
+===== 테이블 목록 ======
+
+^NO^구분^테이블ID^테이블명^
+|	1	|	디바이스API실행환경	|	CONTACT_INFO	|	Contact	|
+|	2	|	디바이스API실행환경	|	GPS	|	GPS	|
+|	3	|	디바이스API실행환경	|	ACCELERATOR	|	Accelerator	|
+|	4	|	디바이스API실행환경	|	COMPASS	|	Compass	|
+|	5	|	디바이스API실행환경	|	FILE_DETAIL_INFO	|	파일상세정보	|
+|	6	|	디바이스API실행환경	|	FILE_READER_WRITE	|	FileReader/Write	|
+|	7	|	디바이스API실행환경	|	CAMERA	|	Camera	|
+|	8	|	디바이스API실행환경	|	MEDIA	|	Media	|
+|	9	|	디바이스API실행환경	|	DEVICE	|	Device	|
+|	10	|	디바이스API실행환경	|	NETWORK	|	Network	|
+|	11	|	디바이스API실행환경	|	PKI	|	PKI	|
+|	12	|	디바이스API실행환경	|	INTERFACE_EGOV	|	Interface(eGov)	|
+|	13	|	디바이스API실행환경	|	CODE	|	코드	|
+|	14	|	디바이스API실행환경	|	VIBRATOR	|	Vibrator	|
+|	15	|	디바이스API실행환경	|	push_device	|	푸쉬디바이스정보	|
+|	16	|	디바이스API실행환경	|	push_message	|	푸쉬메세지정보	|
+|	17	|	디바이스API실행환경	|	file_opener_list	|	문서목록	|
+|	18	|	디바이스API실행환경	|	barcode_info	|	바코드정보관리	|
+|	19	|	디바이스API실행환경	|	RESOURCE_UPDATE	|	웹소스 버전관리 정보	|
+|	20	|	디바이스API실행환경	|	DETECTION	|	탈옥정보	|
+
+
+
+
+
+===== 테이블 정의서 ======
+
+
+   * CONTACT_INFO
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|ID|id|VARCHAR|20|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|NAME|이름|VARCHAR|60|Null|
+|4|TELNO|전화번호|VARCHAR|20|Null|
+|5|EMAILS|이메일|VARCHAR|50|Null|
+|6|USEYN|활성화여부|CHAR|1|Null|
+
+   * GPS
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|LA|위도|VARCHAR|48|Null|
+|4|LO|경도|VARCHAR|48|Null|
+|5|ACCRCY|정확도|VARCHAR|10|Null|
+|6|USEYN|활성화여부|CHAR|1|Null|
+
+
+   * ACCELERATOR
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|XAXIS|X축값|VARCHAR|20|Null|
+|4|YAXIS|Y축값|VARCHAR|20|Null|
+|5|ZAXIS|Z축값|VARCHAR|20|Null|
+|6|TIMESTAMP|timestamp|VARCHAR|20|Null|
+|7|USEYN|활성화여부|CHAR|1|Null|
+
+
+   * COMPASS
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|DRC|방향|VARCHAR|40|Null|
+|4|ACCRCY|정확도|VARCHAR|10|Null|
+|5|USEYN|활성화여부|CHAR|1|Null|
+|6|TIMESTAMP|timestamp|VARCHAR|20|Null|
+
+   * FILE_DETAIL_INFO
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|FILE_SN|파일연번|NUMERIC|20|NotNull|
+|2|FILE_STRE_COURS|파일저장경로|VARCHAR|2000|Null|
+|3|STRE_FILE_NM|저장파일명|VARCHAR|255|Null|
+|4|ORIGNL_FILE_NM|원파일명|VARCHAR|255|Null|
+|5|FILE_EXTSN|파일확장자|VARCHAR|20|Null|
+|6|FILE_CN|파일내용|BLOB||Null|
+|7|FILE_SIZE|파일크기|NUMERIC|8|Null|
+
+
+   * FILE_READER_WRITE
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|FILE_SN|파일연번|NUMERIC|20|NotNull|
+|4|FILE_NM|파일명|VARCHAR|255|Null|
+|5|FILE_COURS|파일경로|VARCHAR|2000|Null|
+|6|FILE_TYPE|파일타입|VARCHAR|40|Null|
+|7|UPDT_DT|수정일시|DATE||Null|
+|8|FILE_SIZE|파일크기|NUMERIC|8|Null|
+|9|USEYN|활성화여부|CHAR|1|Null|
+
+
+   * CAMERA
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|PHOTO_SJ|사진제목|VARCHAR|255|Null|
+|4|FILE_SN|파일연번|NUMERIC|20|NotNull|
+|5|USEYN|활성화여부|CHAR|1|Null|
+
+   * MEDIA
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|FILE_SN|파일연번|NUMERIC|20|NotNull|
+|4|MD_CODE|미디어구분코드|VARCHAR|40|Null|
+|5|MD_SJ|미디어제목|VARCHAR|255|Null|
+|6|USEYN|활성화여부|CHAR|1|Null|
+|7|REVIV_CO|재생횟수|VARCHAR|40|Null|
+
+
+   * DEVICE
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|TELNO|전화번호|VARCHAR|20|Null|
+|4|STRGE_INFO|스토리지정보|VARCHAR|40|Null|
+|5|LANG|언어|VARCHAR|15|Null|
+|6|NTWRK_DEVICE_INFO|네트워크디바이스정보|VARCHAR|20|Null|
+|7|PG_VER|폰갭버전|VARCHAR|40|Null|
+|8|DEVICE_NM|디바이스명|VARCHAR|200|Null|
+|9|USEYN|활성화여부|CHAR|1|Null|
+
+
+   * NETWORK
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|NTWRK_TYPE|네트워크type|VARCHAR|20|Null|
+|4|USEYN|활성화여부|CHAR|1|Null|
+
+
+   * PKI
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|DM|DM|VARCHAR|255|Null|
+|4|CRTFC_DT|인증일시|DATE||Null|
+|5|ENTRPRS_SE_CODE|기업구분코드|CHAR|15|Null|
+
+
+   * INTERFACE_EGOV
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|EMAILS|이메일|VARCHAR|50|Null|
+|4|USER_ID|사용자ID|VARCHAR|20|Null|
+|5|USER_PW|사용자PW|VARCHAR|2000|Null|
+
+
+   * CODE
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|CODE|코드|CHAR|3|NotNull|
+|2|CODE_ID|코드ID|VARCHAR|6|NotNull|
+|3|CODE_NM|코드명|VARCHAR|60|Null|
+|4|CODE_DC|코드설명|VARCHAR|200|Null|
+
+
+   * VIBRATOR
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|TIMESTAMP|timestamp|VARCHAR|20|Null|
+
+
+   * push_device
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|OS_VER|디바이스 버전|VARCHAR|2000|Null|
+|4|DEVICE_NM|디바이스 코도바 버전|VARCHAR|20|Null|
+|5|TOKEN_ID|앱 고유 번호|VARCHAR|250|NotNull|
+|6|osType|디바이스 OS타입|VARCHAR|20|Null|
+|7|USEYN|활성화여부|CHAR|1|Null|
+
+
+   * push_message
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|MESSAGE|메세지|VARCHAR|2000|Null|
+|4|SND_DT|메세지 발송 시간|VARCHAR|20|Null|
+|5|TOKEN_ID|앱 고유 번호|VARCHAR|250|NotNull|
+|6|osType|디바이스 OS타입|VARCHAR|20|Null|
+|7|PG_VER|폰갭버전|VARCHAR|40|Null|
+|8|DEVICE_NM|디바이스명|VARCHAR|200|Null|
+|9|USEYN|활성화여부|CHAR|1|Null|
+
+
+   * FILE_OPENER_LIST
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^KEY^
+|1|SN|일련번호|NUMERIC|6|NotNull|pk|
+|2|USE_YN|사용유무|VARCHAR|1|Null| |
+|3|UPD_DT|업데이트날짜|datetime| |Null| |
+|4|FILE_SN|파일상세정보 테이블의 일련번호|NUMERIC|20|Null|fk|
+
+
+   * Barcodescanner
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|11|NotNull|
+|2|CODE_TYPE|바코드 종류|VARCHAR|45|NotNull|
+|3|CODE_TEXT|바코드 데이터의 텍스트|VARCHAR|45|Null|
+|4|USEYN|활성화여부|VARCHAR|45|Null|
+|5|CODE_DT|등록일자|VARCHAR|45|Null|
+
+
+   * RESOURCE_UPDATE
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull
+|2|APP_ID|앱ID|VARCHAR|45|Null|
+|3|OS_TYPE|운영환경|VARCHAR|10|Null| 
+|4|RES_VERSION|소스버전|VARCHAR|10|Null| 
+|5|USE_YN|사용유무|VARCHAR|10|Null| 
+|6|UPDATE_CONTENT|상세내용|VARCHAR|1000|Null| 
+|7|UPD_DT|업데이트날짜|NUMERIC|10|Null| 
+|8|FILE_SN|파일상세정보 테이블의 일련번호|NUMERIC|20|Null|
+
+
+   * DETECTION
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|45|NotNull|
+|3|OS|OS|VARCHAR|45|NotNull|
+|4|PG_VER|폰갭버전|VARCHAR|45|NotNull|
+|5|DETECTION|탈옥여부|VARCHAR|45|NotNull|
+
+
+===== ERD =====
+디바이스 API 가이드 테이블의 상세 내역과 테이블 간 관계를 파악하고자 할 경우에는 아래의 ERD를 통해 제공되는 논리모델 및 물리모델을 참조한다. 
+
+{{:egovframework:hyb3.6:guide:mbl:newapi_erd.jpg?800|}}
+
+===== 테이블/초기데이터 생성 스크립트 =====
+디바이스 API 가이드 프로그램은 배포파일을 통해 테이블/초기데이터 생성 스크립트를 제공하므로 전체 테이블/초기데이터 생성 스크립트는 각각의 디바이스API가이드 배포 파일을 통해 얻을 수 있다.\\
+하지만, 전체 테이블/초기데이터에 대한 생성 스크립트만 필요한 경우를 위해 아래의 링크를 통해 제공하니 필요시 참조한다. 스크립트는 Altibase, Oracle, MySQL 및 Tibero 네 개의 DBMS에 해당하는 스크립트가 제공되며, Tibero는 Oracle의 테이블 생성 스크립트와 동일하다. 스크립트 파일은 기본적으로 **UTF-8**로 인코딩 되어있다.
+
+{{:egovframework:hyb3.6:guide:script_3.6.zip|전체_테이블_생성_스크립트-3.6}}
+
+__**※ 데이터베이스 성능 개선을 위하여 Index 추가 생성 및 query tuning 과 같은 작업을 각 프로젝트에 맞도록 시행해야 한다.**__

@@ -1,0 +1,417 @@
+====== Accelerator 디바이스API 가이드 프로그램 ======
+
+===== 개요 =====
+Accelerator 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현 된 전자정부 디바이스 API에 대한 가이드 앱으로써,
+모바일 스마트 디바이스의 Accelerator 관련 기능을 JavaScript 기반으로 구성 된 Accelerator DeviceAPI 를 통하여 조회 할 수 있도록 지원한다. \\
+
+또한, 전자정부 표준프레임워크 기반의 웹 서버 어플리케이션과 연계하여 디바이스 내 Accelerator 정보를 서버로 전송 및 조회 할 수 있는 기능으로 구성되어 있다. \\
+
+==== 특징 ====
+본 가이드 프로그램 에서는 Accelerator 기능을 가이드 할 수 있도록 ** 가속도 정보 조회 **, ** 가속도 정보 저장 **, ** 가속도 정보 목록 **, ** 리스트 삭제 ** 기능을 제공하고 있으며. \\
+
+효율적인 가속도 정보 변화의 조회를 위해 상단의 알림 창 이외에 3D 형태의 도형의 움직임을 통해 정보를 조회할 수 있으며, 3D 형태의 도형은 오픈 소스인 Three.js 를 활용하여 구현 된 것으로서, 디바이스의 가속도 정보의 변화에 따라 해당 방향으로 회전한다.
+
+==== 기능흐름도 ==== 
+{{:egovframework:hyb:guide:add:accelerator기능흐름도.png?800|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:ios:accelerator.jpg|}}
+
+==== 전제조건 ====
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경  |Xcode 6.3.2, PhoneGap 4.3.0|
+|서버 사이드 개발 환경  |전자정부표준프레임워크 개발환경 3.5|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스  |iPhone4, iPhone6 |
+|테스트 플랫폼  |iOS 7.1.2, iOS 8.3 |
+|추가 라이브러리 적용|3D UI 표현을 위해 three.js 라이브러리 적용|
+
+
+==== 제약사항 ====
+
+^           구분            ^             내용             ^
+|지원 디바이스 및 플랫폼|가속도 정보 조회의 시각적 효과를 위해 3D 렌더링을 지원하는 JavaScript 라이브러리 적용에 따라 일부 로딩속도가 느릴 수 있다.\\ 가로 모드로 보기 시 화면이 잘려 보이는 경우가 발생할 수 있어 디바이스 API 가이드 프로그램 실행 시 가로보기 모드는 자동변환 되지 않도록 설정하고 테스트 하는것이 좋다.|
+|크로스 도메인 사용|폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Resource/Cordova.plist에서 <key>ExternalHosts</key> 항목에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.|
+|라이선스|N/A|
+
+===== 설명 ===== 
+Accelerator 디바이스API 가이드 프로그램은 크게 디바이스의 Accelerator 정보를 조회하고 조회 한 정보를 웹 서버 어플리케이션으로 전송 및 조회하는 기능으로 구성되어 있다.(관련기능 부분참조)
+
+=== 클래스 다이어그램 ===
+{{:egovframework:hyb:guide:ios:accelerator_class.jpg?1024|}}
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|CSS|www/css/egovframwork/mbl/hyb/AcceleratorAPI.css |AcceleratorAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |www/images/egovframwork/mbl/hyb/ |AcceleratorAPI 가이드 프로그램 주요 Image 폴더|
+|JS |www/js/egovframwork/mbl/hyb/AcceleratorAPI.js |AcceleratorAPI 가이드 프로그램 주요 JavaScript|
+|RES |AcceleratorAPIGuide_iOS_V1.9/Resources/ |AcceleratorAPI 가이드 프로그램 주요 Resource 폴더|
+|PLIST|AcceleratorAPIGuide_iOS_V1.9/AcceleratorAPIGuide_iOS_V1.9-Info.plist |iOS 어플리케이션 설정 파일|
+|HTML|www/AcceleratorAPI.html|AcceleratorAPI 메인 페이지|
+|HTML|www/license.html|AcceleratorAPI 라이센스 페이지|
+|HTML|www/overview.html|AcceleratorAPI 기능설명 페이지|
+
+=== 활용 API ===
+
+== accelerator.getPicture ==
+  * 카메라로 사진을 찍고 찍은 사진을 가져오거나, 단말기의 앨범에서 사진을 선택해서 가져온다. \\
+  * base64로 인코딩된 이미지를 가져오거나 사진 파일의 경로을 통해 사진을 가져온다. \\
+
+<code>
+navigator.accelerometer.getCurrentAcceleration(accelerometerSuccess, accelerometerError);
+</code>
+
+<code>
+function onSuccess(acceleration) {
+    alert('Acceleration X: ' + acceleration.x + '\n' +
+          'Acceleration Y: ' + acceleration.y + '\n' +
+          'Acceleration Z: ' + acceleration.z + '\n' +
+          'Timestamp: '      + acceleration.timestamp + '\n');
+};
+</code>
+
+== acceleratorOption == 
+
+^Option^설명^비고^
+| frequency |가속도 정보를 조회하는 빈도를 의미한다.| |
+
+==== Server Application ====
+
+=== 관련 소스 ===
+^유형^대상소스명^비고^
+|Controller|egovframework.hyb.ios.acl.web.EgovAcceleratorAndroidAPIController.java|AcceleratorAPI 가이드 프로그램 Controller Class|
+|Service|egovframework.hyb.ios.acl.service.EgovAcceleratorAndroidAPIService.java|AcceleratorAPI 가이드 프로그램  Service Class|
+|ServiceImpl|egovframework.hyb.ios.acl.service.impl.EgovAcceleratorAndroidAPIServiceImpl.java|AcceleratorAPI 가이드 프로그램  ServiceImpl Class|
+|VO|egovframework.hyb.ios.acl.service.AcceleratorAndroidAPIDefaultVO.java|AcceleratorAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.ios.acl.service.AcceleratorAndroidAPIFileVO.java|AcceleratorAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.ios.acl.service.AcceleratorAndroidAPIVO.java|AcceleratorAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.ios.acl.service.AcceleratorAndroidAPIXmlVO.java|AcceleratorAPI 가이드 프로그램 XML 관련 VO Class|
+|DAO|egovframework.hyb.ios.acl.service.impl.AcceleratorAndroidAPIDAO.java|AcceleratorAPI 가이드 프로그램 Dao Class|
+|Util|egovframework.hyb.ios.acl.service.impl.EgovAcceleratorAndroidFileMngUtil.java|AcceleratorAPI 가이드 프로그램 Util Class|
+|QUERY XML|resources/egovframework/sqlmap/hyb/ios/acl/EgovAcceleratorAndroidAPIGuide_XXX_mysql.xml|AcceleratorAPI 가이드 프로그램 QUERY XML|
+|Idgen XML|resources/egovframework/spring/com/context-idgen.xml|AcceleratorAPI 가이드 프로그램 Id생성 Idgen XML|
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|accelerator|ACCELERATOR|가속도 정보 관리|
+
+
+=== 테이블 정의서 ===
+
+   * ACCELERATOR
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|XAXIS|X축값|VARCHAR|20|Null|
+|4|YAXIS|Y축값|VARCHAR|20|Null|
+|5|ZAXIS|Z축값|VARCHAR|20|Null|
+|6|TIMESTAMP|timestamp|VARCHAR|20|Null|
+|7|USEYN|활성화여부|CHAR|1|Null|
+
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+
+===== 환경설정 ===== 
+
+Accelerator 디바이스API 가이드 프로그램에서 제공하는 모바일 디바이스의 Accelerator 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== Cordova.plist ===
+<code xml>
+    <feature name="Accelerometer">
+        <param name="ios-package" value="CDVAccelerometer"/>
+    </feature>
+    <feature name="InterfaceAPI">
+        <param name="ios-package" value="EgovInterface"/>
+    </feature>
+</code>
+
+=== [Project_Name]/eGovModule/EGovComModule.h ===
+<code>
+    #define kSERVER_URL     @"Suerver_URL"
+</code>
+
+
+
+==== Server Application ====
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/ios/dvc/EgovAcceleratoriOSAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+
+===== 관련기능 ===== 
+Accelerator 디바이스 API 가이드 프로그램은 크게 디바이스의 가속도 정보를 조회 하는 **가속도 정보 조회** 기능 및 서버 연계를 통한 **가속도 정보 저장**, ** 가속도 정보 목록 조회**, **가속도 정보 삭제** 기능으로 구성되어있다.
+==== 가속도 정보 조회 ====
+
+=== 비즈니스 규칙 ===
+디바이스 API를 통해 현재 가속도 정보를 호출하여, 가속도 정보를 모니터링 창에 표시 및 3D 도형을 통해 가속도 방향으로 도형을 회전한다.
+
+=== 관련코드  ===
+
+디바이스 API 내의 Accelerator 함수를 사용하는 JavaScript 코드를 통해 실시간 가속도 정보를 조회 한다.
+<code>
+function fn_egov_update_Acceleration(accelInfo) 
+{
+	xaxis = accelInfo.x;
+	yaxis = accelInfo.y;
+	zaxis = accelInfo.z;
+	timeStamp = accelInfo.timestamp;
+// accelInfo 객체내의 가속도 정보(x, y, z, timestamp)를 저장한다.	
+
+    var html = "X : " + xaxis + "<BR />" + "Y : " +  yaxis + "<BR />" + "Z : "  + zaxis;
+    
+    $("#infoDetail").css("text-align", "center");
+    $("#infoDetail").css("margin-left", "1px");    
+    
+    html += ""
+    $("#infoDetail").html(html);
+    
+	if (firstRefresh)
+	{
+		accInitX = xaxis;
+		accInitY = yaxis;
+		accInitZ = zaxis;
+		firstRefresh = false;
+	}
+
+    console.log("DeviceAPIGuide fn_egov_update_Acceleration Success"); 
+	
+}
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^가속도 정보 조회 화면^
+{{:egovframework:hyb:guide:ios:가속도정보조회.png?320|}}
+
+가속도 정보 저장 : 가속도 정보를 서버로 송신하기 위해서는 하단의 가속도 정보 저장 버튼을 클릭한다. \\
+가속도 정보 목록 : **가속도 정보 목록** 화면으로 이동한다. \\ 
+
+==== 가속도 정보 저장 ====
+
+
+=== 비즈니스 규칙 ===
+
+조회 된 가속도 정보를 서버에 전송하여 리스트 형태로 저장한다. \\
+
+=== 관련코드  ===
+
+<code>
+function fn_registAcceleratorInfo() {
+	
+	useYn = "Y";
+			
+	var url = "/acl/xml/addAcceleratorInfo.do"; 
+	var accept_type = "json";
+	var params = {uuid :  device.uuid,
+			xaxis: xaxis + '', 
+			yaxis: yaxis + '', 
+			zaxis: zaxis + '', 
+			timestamp: timeStamp + '', 
+			useYn:  useYn};	
+
+	// send the data
+	egovHyb.post(url, accept_type, params, function(jsondata) {
+		var data = JSON.parse(jsondata);
+		
+		if(data.useYn == "OK"){
+			fn_InquireAccelerationInfoListXml();
+		}else{
+			$("#alert_dialog").click( function() {
+				jAlert('데이터 전송 중 오류가 발생 했습니다.', '전송 오류', 'c');
+				});
+		}			
+		
+	});
+
+	console.log("DeviceAPIGuide fn_registAcceleratorInfo request Completed");
+    
+} 
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|가속도 정보 서버로 송신하기 | /acl/addAcceleratorInfo.do| EgovAcceleratorAndroidAPIController| addAcceleratorInfoXml |AcceleratorAPI.html|
+
+{{:egovframework:hyb:guide:ios:가속도정보저장.png?320|}}
+
+정보데이터를 서버로 송신하기 위해서는 가속도 정보 저장 버튼을 클릭하면 된다. \\
+
+가속도 정보 저장 : 가속도 정보를 서버로 송신하기 위해서는 하단의 가속도 정보 저장 버튼을 클릭한다. \\
+가속도 정보 목록 : **가속도 정보 목록** 화면으로 이동한다. \\
+
+==== 가속도 정보 목록 ====
+
+=== 비즈니스 규칙 ===
+
+서버에 저장 되어있는 가속도 정보 목록을 리스트 형태로 출력한다.
+
+=== 관련코드  ===
+
+<code>
+function fn_InquireAccelerationInfoListXml()
+{
+	if(!fn_egov_network_check(false)){
+		return;
+	}
+	
+	var url = "/acl/xml/acceleratorInfoList.do";
+	var accept_type = "xml";
+	// get the data from server
+	window.plugins.EgovInterface.get(url,accept_type, null, function(xmldata) {
+		var list_html = "";
+		
+		$(xmldata).find("acceleratorInfoList").each(function(){
+            		var uuid = $(this).find("uuid").text();
+ 		           var x = $(this).find("xaxis").text();
+     		  	var y = $(this).find("yaxis").text();
+     			var z = $(this).find("zaxis").text();
+            		var t = $(this).find("timestamp").text();
+
+			list_html += "<li><h3>UUID : " + uuid + "</h3>";
+			list_html += "<p><strong>xaxis : " + x + "</strong></p>";
+			list_html += "<p><strong>yaxis : " + y + "</strong></p>";
+			list_html += "<p><strong>zaxis : " + z + "</strong></p>";
+			list_html += "<p>timestamp : " + t + "</p></li>";
+        });
+		var theList = $('#theList');
+		theList.html(list_html);
+		$.mobile.changePage("#btnMoveAccelratorInfoList", "slide", false, false);
+		theList.listview("refresh");
+		if(myScroll != null) {
+			myScroll.refresh();
+		}
+		
+	});
+
+	console.log("DeviceAPIGuide fn_InquireAccelerationInfoListXml request Completed");
+} 
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|가속도 정보 목록 조회하기|/acl/acceleratorInfoList.do | EgovAcceleratorAndroidAPIController | selectAcceleratorInfoXMLList | AcceleratorAPI.html |
+
+{{:egovframework:hyb:guide:ios:가속도정보목록.png?320|}}
+
+서버에 저장 되어있는 가속도 정보 목록을 조회하기 위해서는 가속도 정보 목록 버튼을 클릭하면 된다. \\
+
+
+가속도 정보 조회 : **가속도 정보 조회** 화면으로 이동한다. \\ 
+리슽 삭제 : 서버에 저장 되어있는 가속도 목록을 초기화 하기 위해서는 가속도 정보 삭제 버튼을 클릭한다.\\
+
+==== 가속도 정보 삭제 ====
+
+=== 비즈니스 규칙 ===
+
+서버에 저장 되어있는 가속도 정보 목록을 초기화 한다.
+
+=== 관련코드  ===
+
+<code>
+function fn_DelAccelerationInfoList() {
+	
+	var url = "/acl/xml/withdrawal.do";
+	var accept_type = "json";
+	// send the data
+	egovHyb.post(url, accept_type, null, function(jsondata) {
+		var data = JSON.parse(jsondata);
+		
+		if(data.useYn == "OK"){
+			$.mobile.changePage("#acceleratorInfo", { transition: "slide", reverse: true });
+		}else{
+			$("#alert_dialog").click( function() {
+				jAlert('데이터 삭제 중 오류가 발생 했습니다.', '삭제 오류', 'c');
+				});
+		}
+		
+	});
+
+	console.log("DeviceAPIGuide fn_DelAccelerationInfoList request Completed");
+	    
+}
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|가속도 정보 목록 초기화하기|/acl/withdrawal.do| EgovAcceleratorAndroidAPIController | withdrawalXml| AcceleratorAPI.html |
+
+{{:egovframework:hyb:guide:ios:가속도정보삭제.png?320|}}
+
+서버에 저장 되어있는 가속도 정보 목록을 초기화하기 위해서는 가속도 정보 목록 화면 하단의 가속도 정보 삭제 버튼을 클릭하면 된다. \\
+
+가속도 정보 조회 : **가속도 정보 조회** 화면으로 이동한다. \\ 
+리스트 삭제 : 서버에 저장 되어있는 가속도 목록을 초기화 하기 위해서는 가속도 정보 삭제 버튼을 클릭한다.\\
+
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+=== Accelerator Device Applicaton 컴파일 방법=== 
+
+
+  * 왼쪽 상단의 삼각형 버튼을 클릭하면 가이드 프로그램이 빌드되어 아이폰 디바이스에 설치 된다.
+
+{{:egovframework:hyb:guide:ios:compile_device.jpg?740|}}
+
+ 
+
+  * 빌드가 성공하면 아래와 같은 어플리케이션 실행화면을 확인 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:가속도정보조회.png?320|}}
+
+
+=== Accelerator Server Applicaton 컴파일 방법=== 
+
+    - 프로젝트 우클릭>Run as>Maven install 을 클릭하여 빌드를 한다.\\ {{:egovframework:hyb:guide:ios:웹서버빌드.png?700|}} \\
+    - 빌드 성공 (콘솔 정보 확인)\\ {{:egovframework:hyb:guide:ios:웹서버빌드성공.png?700|}} \\
+    - 프로젝트 우클릭>Run as>Run on Server 를 클릭하여 실행시킨다.\\ {{:egovframework:hyb:guide:ios:웹서버실행.png?700|}} \\
+    - 프로젝트가 성공적으로 실행되었는지 확인한다. \\ {{:egovframework:hyb:guide:ios:웹서버실행성공.png?700|}} \\
+
+
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+    * 실제 콘솔 로그 예
+<code>
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    ...
+}
+</code>
+    * xCode 콘솔 창
+{{:egovframework:hyb:guide:ios:cameradebugxcode.png?700|}}\\
+    * Organizer 로그 창
+{{:egovframework:hyb:guide:ios:cameradebugorganizer.png?700|}}\\
+
+
+^디버그 코드^디버깅 내용^
+|[DeviceAPIGuide] fn_egov_dispatch_acceleratorInfoList : Completed| 디바이스의 Accelerator 정보목록 조회 성공 시|
+|[DeviceAPIGuide] fn_egov_registAcceleratorInfo : Completed |디바이스의 Accelerator 정보 조회 후 관련 변수에 해당 정보 저장 성공 시|
+|[DeviceAPIGuide] fn_egov_DelAccelerationInfoList : Completed |디바이스의 Accelerator 정보 삭제 성공 시|
+|[DeviceAPIGuide] fn_egov_get_acceleration : start |디바이스의 Accelerator 정보 조회 시작 시|
+|[DeviceAPIGuide] fn_egov_get_acceleration : stop |디바이스의 Accelerator 정보 조회 중지 시|
+
+
+==== 배포 ====
+Accelerator 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=675&menu=3&submenu=9|Click]]
+
+===== 참고자료 ===== 
+  * UX/UI 라이브러리 : jQuery Mobile[[http://jquerymobile.com/demos/1.4.5/|Click]] \\
+  * Phonegap 4.3.0 : [[http://docs.phonegap.com/en/4.0.0/|Click]] \\
+  * 3D 렌더링 : [[https://github.com/mrdoob/three.js|Three.js]] \\

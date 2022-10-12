@@ -1,0 +1,64 @@
+====== 디바이스API Add Template Wizard =====
+
+===== 개요 =====
+   * 기존의 안드로이드 프로젝트에 eGovFrame기반의 디바이스API 실행환경을 이용하여 앱 어플리케이션 개발시 개발자 편의성을 위하여 디바이스API 실행환경 코드 등을 포함하고 있는 디바이스API 템플릿 프로젝트 변환 마법사를 제공한다.
+
+===== 설명 =====
+
+  * 기존의 안드로이드 프로젝트르 이용하여 eGovFrame기반의 디바이스API 실행환경이 포함된 앱 어플리케이션 및 서버 어플리케이션 표준 코드와 가이드 프로그램 프로젝트로 변환한다.
+  * 본 Wizard는 ** 디바이스API 실행환경 표준코드, 표준 샘플 템플릿, 가이드 프로그램 프로젝트 변환** 기능을 제공한다.
+  {{:egovframework:hyb:hdev:imp:프로젝트기능흐름1.png?700}} \\
+
+  - ** 기존의 안드로이드 어플리케이션 프로젝트를 선택한다. **
+  - ** 템플릿 선택 ** (생성할 템플릿의 종류를 선택) - ** 선택 **
+  - ** 서버 어플리케이션 프로젝트를 설정한다. ** (프로젝트명, Maven 설정) - ** 선택 **
+  - ** 사용자 지정 DB에 테이블을 생성한다. ** (데이터베이스 접속 및 테이블 생성)  - ** 선택 **
+
+  * 전자정부 디바이스API 프로젝트로 변환된 프로젝트는 본 Wizard를 통해 다시 변환 및 수정할 수 없다.
+
+===== 사용법 =====
+
+==== 시작 ====
+
+   * ** File > New > eGovFrame DeviceAPI Template ** \\ {{:egovframework:hyb:hdev:imp:add_project_wizard_use_1.png?500}}
+   * ** eGovFrame > Implementation > Add DeviceAPI Template ** \\ {{:egovframework:hyb:hdev:imp:add_project_wizard_use_2.png}}
+
+==== 프로젝트 변환 ====
+
+=== 디바이스API 실행환경 코드 프로젝트 변환 및 생성 ===
+
+  - ** 안드로이드 프로젝트 선택 ** \\ {{:egovframework:hyb:hdev:imp:add_project_wizard_use_3.png}} \\ 
+  - ** Finish ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_4.png}} \\ 
+
+=== 디바이스API 표준 샘플 템플릿 프로젝트 변환 및 생성 ===
+
+  - ** 안드로이드 프로젝트 선택 ** \\ {{:egovframework:hyb:hdev:imp:add_project_wizard_use_3.png}} \\ 
+  - ** Generate Guide Program 선택 및 Sample Template 선택 후 Finish ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_5.png}} \\ 
+
+=== 디바이스API 가이드 프로그램 프로젝트 변환 및 생성 ===
+
+  * 가이드 프로그램 프로젝트는 전자정부 표준프레임워크 2.0 기반의 Web Project가 필요하기 때문에 선택적으로 Web Project를 만들 수 있다.
+  * Web Project를 생성하지 않고 기존의 Web Project에 접속 할 수 있도록 서버URL를 통해 생성할 디바이스API 앱 어플리케이션에 서버정보를 등록할 수 있다.
+  * Web Project는 가이드 프로그램별로 생성되지 않고, 전자정부 디바이스API 가이드 프로그램 15종을 포함하는 Web Project를 생성한다.
+
+  - ** 안드로이드 프로젝트 선택 ** \\ {{:egovframework:hyb:hdev:imp:add_project_wizard_use_3.png}} \\ 
+  - ** Generate Guide Program 선택 해당 가이드프로그램 선택 Web Project 선택** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_6.png}} \\ 
+  - ** Project Name 및 Maven 항목 입력 ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_7.png}} \\ 
+  - ** 서버 구동을 위한 Runtime 환경 설정 ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_8.png}} {{:egovframework:hyb:hdev:imp:new_project_wizard_use_9.png}} \\ 
+  - ** 프로젝트 생성 ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_10.png}} \\
+
+=== 사용자 지정 DB에 테이블 생성 ===
+
+  * Web Project를 생성 시에는 사용자 지정 데이터베이스에 가이드 프로그램 데이터베이스 접속을 위한 테이블을 생성할 수 있는 기능을 제공한다.
+  * [[egovframework:dev2:imp:editor:dbio_editor:data_source_explorer#Data Source Explorer|Data Source Explorer연결 가이드]]
+  * ** mysql, Oracle, Altibase, Tibero ** 4종의 데이터베이스를 지원한다.
+
+  - ** 사용자DB에 생성(사용자지정) 선택 ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_11.png}} \\
+  - ** DatabaseSource Explorer를 통해 생성된 데이터베이스 접속 정보 선택 후, 접속 테스트 ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_12.png}} \\
+  - ** 데이터베이스에 접속 성공 시, Creation Table ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_13.png}} \\
+  - ** 테이블 성공 후 프로젝트 생성 ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_14.png}} \\
+
+=== 프로젝트 생성 확인 ===
+
+  * ** 디바이스API 앱 어플리케이션 프로젝트와 웹 프로젝트 생성 확인 ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_15.png}} \\
+  

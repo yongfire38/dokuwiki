@@ -1,0 +1,31 @@
+====== Maven3 업데이트 ======
+
+===== 설명 =====
+
+  * 디바이스API New Template Project Wizard는 M2E Connector 플러그인 사용을 위하여 Maven3를 이용한다.
+  * 전자정부 표준 프레임워크 개발환경 2.0 은 M2E 플러그인의 Maven 버전이 Maven2 이기 때문에 Maven3로 변경하여야한다.
+  * Maven2를 포함하는 M2E 플러그인 사용하는 경우, 디바이스API New Template Project Wizard 실행 시, 다음과 같은 에러 메세지를 나타낸다. \\ {{:egovframework:hyb:hdev:maven3_error.png}} \\
+  * ** 기존 Maven3 를 사용하고 있는 경우에는 진행하지 않아도 된다.**
+
+===== M2E 버전 업그레이드  =====
+
+==== M2E 버전 확인 ====
+
+  * Maven3 를 사용하고 있는 환경에서는 아래를 진행하지 않아도 된다.
+  * Maven Integration for Eclipse : Version 0.12.1.20110112 **[기존 전자정부 표준 프레임워크 2.0 M2E - Maven2]**
+  * 개발환경 내, Maven 버전 확인 \\ {{:egovframework:hyb:hdev:maven2_확인.png}} \\
+
+==== M2E Uninstall ====
+
+  - ** Help > About Eclipse > Installation Details ** \\ {{:egovframework:hyb:hdev:maven2_uninstall_1.png?700}} \\
+  - ** M2E (Maven2) 선택 ** \\ {{:egovframework:hyb:hdev:maven2_uninstall_2.png?700}} \\
+  - ** Uninstall ** \\ {{:egovframework:hyb:hdev:maven2_uninstall_3.png?700}} \\
+  - ** Uninstall 진행 및 개발환경 재시작 ** \\ {{:egovframework:hyb:hdev:maven2_uninstall_4.png}} \\
+
+==== M2E Install ====
+
+  - ** Help > Install New Software... > Add ** \\ {{:egovframework:hyb:hdev:maven3_install_1.png?700}} \\
+  - ** http://download.eclipse.org/technology/m2e/releases/1.1/1.1.0.20120530-0009 업데이트 서버 추가 ** \\  - ** M2E 버전은 현재 1.2.0 버전이 나와있으나, 본 가이드는 1.1.0을 기반으로 진행한다. ** \\ {{:egovframework:hyb:hdev:maven3_install_2.png}} \\
+  - ** Install 서버 선택 및 대상 플러그인 선택 ** \\ {{:egovframework:hyb:hdev:maven3_install_3.png?700}} \\
+  - ** Next > 라이센스 동의 > Finish ** \\ {{:egovframework:hyb:hdev:maven3_install_4.png?700}} {{:egovframework:hyb:hdev:maven3_install_5.png?700}} \\
+  - ** Intall 진행 및 개발환경 재시작 ** \\ {{:egovframework:hyb:hdev:maven3_install_6.png}} {{:egovframework:hyb:hdev:maven3_install_7.png}} \\

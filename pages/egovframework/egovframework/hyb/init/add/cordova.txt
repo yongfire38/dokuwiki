@@ -1,0 +1,186 @@
+===== Cordova (Phonegap) =====
+  * [[http://docs.phonegap.com/en/2.0.0/guide_getting-started_android_index.md.html#Getting%20Started%20with%20Android|Cordova (Phonegap) 설치하기]]
+
+  - **New > others > Android Project 생성** \\ {{:egovframework:hyb:init:add:cordova_1.png?700}} \\
+
+  - **Application Name 입력, Build SDK : Android 2.2 (API 8)** \\ {{:egovframework:hyb:init:add:cordova_2.png?700}} \\
+
+  - **Next 계속 실행 후 Finish** \\ {{:egovframework:hyb:init:add:cordova_3.png?300}} {{:egovframework:hyb:init:add:cordova_4.png?300}} {{:egovframework:hyb:init:add:cordova_5.png?300}} \\
+
+  - **Window > Preference > Java Build Path > cordova-2.9.0.jar 선택** \\ {{:egovframework:hyb:init:add:cordova_6.png?700}} \\
+
+  - **lib, assests에 js 및 cordova-2.9.0.jar 추가** \\ {{:egovframework:hyb:init:add:cordova_7.png?700}} \\
+
+  - **index.html 추가 및 Activitt.java 에 코드 추가** \\ {{:egovframework:hyb:init:add:cordova_8.png?700}} \\
+
+  - **AndroidManifest.xml에 권한 코드 추가** \\ {{:egovframework:hyb:init:add:cordova_9.png?700}} \\
+
+  - **AndroidManifest.xml에 설정 변경에 대한 설정 코드 추가** \\ {{:egovframework:hyb:init:add:cordova_10.png?700}} \\
+
+  - **xml/cordova.xml, xml/plugin.xml 추가** \\ {{:egovframework:hyb:init:add:cordova_11.png?400}} \\
+
+==== Activity.java ====
+  * 앱 어플리케이션의 주요 설정과 디바이스 내에서 앱 어플리케이션 동작을 제어 하는 Activity Class 이다.
+
+<code>
+package com.example.egovtest;
+
+import org.apache.cordova.*;
+import android.os.Bundle;
+
+public class MainActivity extends DroidGap {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        super.loadUrl("file:///android_asset/www/intro.html");
+    }
+}
+</code>
+
+==== AndroidManifest.xml ====
+  * 앱 어플리케이션의 실행과 동작에 관련한 설정 및 디바이스 제어 권한을 설정하는 XML 이다.
+
+<code xml>
+<supports-screens 
+		    android:largeScreens="true" 
+		    android:normalScreens="true" 
+		    android:smallScreens="true" 
+		    android:resizeable="true" 
+		    android:anyDensity="true" />
+		<uses-permission android:name="android.permission.VIBRATE" />
+		<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+		<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+		<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+		<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+		<uses-permission android:name="android.permission.INTERNET" />
+		<uses-permission android:name="android.permission.RECEIVE_SMS" />
+		<uses-permission android:name="android.permission.RECORD_AUDIO" />
+		<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+		<uses-permission android:name="android.permission.READ_CONTACTS" />
+		<uses-permission android:name="android.permission.WRITE_CONTACTS" />
+		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+		<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> 
+		<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+		<uses-permission android:name="android.permission.BROADCAST_STICKY" />
+
+<android:configChanges="orientation|keyboardHidden"
+</code>
+
+==== config.xml ==== 
+  * Cordova (Phonegap) 가 지원하는 Plugin 형태의 디바이스API를 설정하는 XML이다.
+
+<code xml>
+
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        id        = "io.cordova.helloCordova"
+        version   = "2.0.0">
+    <name>Hello Cordova</name>
+
+    <description>
+        A sample Apache Cordova application that responds to the deviceready event.
+    </description>
+
+    <author href="http://cordova.io" email="dev@cordova.apache.org">
+        Apache Cordova Team
+    </author>
+
+    <access origin="*"/>
+
+    <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
+    <content src="index.html" />
+
+    <preference name="loglevel" value="DEBUG" />
+    <!--
+      <preference name="splashscreen" value="resourceName" />
+      <preference name="backgroundColor" value="0xFFF" />
+      <preference name="loadUrlTimeoutValue" value="20000" />
+      <preference name="InAppBrowserStorageEnabled" value="true" />
+      <preference name="disallowOverscroll" value="true" />
+    -->
+
+    <feature name="App">
+      <param name="android-package" value="org.apache.cordova.App"/>
+    </feature>
+    <feature name="Geolocation">
+      <param name="android-package" value="org.apache.cordova.GeoBroker"/>
+    </feature>
+    <feature name="Device">
+      <param name="android-package" value="org.apache.cordova.Device"/>
+    </feature>
+    <feature name="Accelerometer">
+      <param name="android-package" value="org.apache.cordova.AccelListener"/>
+    </feature>
+    <feature name="Compass">
+      <param name="android-package" value="org.apache.cordova.CompassListener"/>
+    </feature>
+    <feature name="Media">
+      <param name="android-package" value="org.apache.cordova.AudioHandler"/>
+    </feature>
+    <feature name="Camera">
+      <param name="android-package" value="org.apache.cordova.CameraLauncher"/>
+    </feature>
+    <feature name="Contacts">
+      <param name="android-package" value="org.apache.cordova.ContactManager"/>
+    </feature>
+    <feature name="File">
+      <param name="android-package" value="org.apache.cordova.FileUtils"/>
+    </feature>
+    <feature name="NetworkStatus">
+      <param name="android-package" value="org.apache.cordova.NetworkManager"/>
+    </feature>
+    <feature name="Notification">
+      <param name="android-package" value="org.apache.cordova.Notification"/>
+    </feature>
+    <feature name="Storage">
+      <param name="android-package" value="org.apache.cordova.Storage"/>
+    </feature>
+    <feature name="FileTransfer">
+      <param name="android-package" value="org.apache.cordova.FileTransfer"/>
+    </feature>
+    <feature name="Capture">
+      <param name="android-package" value="org.apache.cordova.Capture"/>
+    </feature>
+    <feature name="Battery">
+      <param name="android-package" value="org.apache.cordova.BatteryListener"/>
+    </feature>
+    <feature name="SplashScreen">
+      <param name="android-package" value="org.apache.cordova.SplashScreen"/>
+    </feature>
+    <feature name="Echo">
+      <param name="android-package" value="org.apache.cordova.Echo"/>
+    </feature>
+    <feature name="Globalization">
+      <param name="android-package" value="org.apache.cordova.Globalization"/>
+    </feature>
+    <feature name="InAppBrowser">
+      <param name="android-package" value="org.apache.cordova.InAppBrowser"/>
+    </feature>
+    <!-- Deprecated plugins element. Remove in 3.0 -->
+    <plugins>
+    	<plugin name="App" value="org.apache.cordova.App"/>
+    	<plugin name="Geolocation" value="org.apache.cordova.GeoBroker"/>
+    	<plugin name="Device" value="org.apache.cordova.Device"/>
+    	<plugin name="Accelerometer" value="org.apache.cordova.AccelListener"/>
+    	<plugin name="Compass" value="org.apache.cordova.CompassListener"/>
+    	<plugin name="Media" value="org.apache.cordova.AudioHandler"/>
+    	<plugin name="Camera" value="org.apache.cordova.CameraLauncher"/>
+    	<plugin name="Contacts" value="org.apache.cordova.ContactManager"/>
+    	<plugin name="File" value="org.apache.cordova.FileUtils"/>
+    	<plugin name="NetworkStatus" value="org.apache.cordova.NetworkManager"/>
+    	<plugin name="Notification" value="org.apache.cordova.Notification"/>
+    	<plugin name="Storage" value="org.apache.cordova.Storage"/>
+    	<plugin name="Temperature" value="org.apache.cordova.TempListener"/>
+    	<plugin name="FileTransfer" value="org.apache.cordova.FileTransfer"/>
+    	<plugin name="Capture" value="org.apache.cordova.Capture"/>
+    	<plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
+    	<plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
+    	<plugin name="EgovInterfacePlugin" value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+		<plugin name="StorageInfoPlugin" value="kr.go.egovframework.hyb.plugin.EgovStorageInfo" />
+		<plugin name="DeviceNumberPlugin" value="kr.go.egovframework.hyb.plugin.EgovDeviceNumber" />        
+    </plugins>
+</widget>
+</code>
+
+  
+  

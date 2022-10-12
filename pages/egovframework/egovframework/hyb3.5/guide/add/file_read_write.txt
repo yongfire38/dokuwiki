@@ -1,0 +1,548 @@
+====== FileReadWrite 디바이스API 가이드 프로그램 ======
+
+
+
+===== 개요 =====
+
+FileReadWrite 디바이스API 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현된 전자정부 디바이스 API에 대한 가이드 앱으로써, 
+모바일 스마트 디바이스의 파일 정보를 JavaScript 기반으로 구성 된 FileReadWrite 디바이스API를 통하여 조회 할 수 있도록 지원한다. \\
+또한, 전자정부 표준프레임워크 기반의 웹 서버 어플리케이션과 연계하여 디바이스 내 파일 정보를 조회하여 서버에 전송하고 조회할수 있는 기능으로 구성되어 있다.
+
+==== 특징 ====
+본 가이드 프로그램 에서는 디바이스의 파일 정보 조회 기능의 활용을 가이드 할 수 있도록 **모바일 기기 파일 읽기**, **모바일 기기 파일 쓰기**, 
+**생성된 파일을 서버로 전송하기**, **전송된 파일을 기기로 복구하기** 를 제공하고 있다. \\
+
+
+
+==== 기능흐름도 ==== 
+{{:egovframework:hyb:guide:add:FileReadWrite기능흐름도.png|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:add:FileReadWrite시퀀스다이어그램.png|}}
+
+==== 전제 조건 ====
+^구분^내용^
+|Local 디바이스 개발 환경|전자정부표준프레임워크 개발환경3.5, Android SDK API 22(version 5.0 Lollipop)|
+|서버 사이드 개발 환경|전자정부표준프레임워크 개발환경3.5|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스 |Galaxy S2|
+|테스트 플랫폼 |Android 2.3|
+|추가 라이브러리 적용|N/A|
+
+==== 제약사항 ====
+
+^           구분            ^             내용             ^
+|크로스 도메인 사용|폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Res/xml/config.xml에서 <access origin="" />에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.|
+
+===== 설명 ===== 
+FileReadWrite 디바이스API 가이드 프로그램은 크게 **모바일 기기 파일 읽기**, **모바일 기기 파일 쓰기**, **생성된 파일을 서버로 전송하기**, **전송된 파일을 기기로 복구하기**  \\
+기능으로 구성되어 있다.(관련기능 부분참조)
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:hyb:guide:add:FileReadWrite클래스다이어그램.png?1024|}}
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Activity|kr.go.egovframework.hyb.filereaderwriterapi.FileReadWriteAPIGuide_AndroidActivity|FileReadWriteAPI 가이드 프로그램 Activity Class|
+|CSS|assets/www/css/egovframwork/mbl/hyb/FileReaderWriterAPI.css |FileReadWriteAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |assets/www/images/egovframwork/mbl/hyb/ |FileReadWriteAPI 가이드 프로그램 주요 Image 폴더|
+|JS |assets/www/js/egovframwork/mbl/hyb/FileReaderWriterAPI.js |FileReadWriteAPI 가이드 프로그램 주요 JavaScript|
+|RES |assets/www/res/ |FileReadWriteAPI 가이드 프로그램 주요 Resource 폴더|
+|XML |AndroidManiFest.xml |안드로이드 어플리케이션 설정 XML|
+|HTML|assets/www/FileReaderWriterAPI.html|FileReadWriteAPI 메인 페이지|
+|HTML|assets/www/Intro.html|FileReadWriteAPI Intro 페이지|
+|HTML|assets/www/license.html|FileReadWriteAPI 라이센스 페이지|
+|HTML|assets/www/overview.html|FileReadWriteAPI 기능설명 페이지|
+
+=== 활용 API ===
+
+== LocalFileSystem ==
+  * 모바일 디바이스의 파일 시스템 정보를 최초 로드한다.
+
+
+<code>
+window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onSuccess, onError);
+</code>
+
+
+^파라미터^설명^비고^
+|LocalFileSystem.PERSISTENT|사용자 또는 어플리케이션에 의해 제거 될 수 없는 스토리지를 조회 할 때 사용된다.| |
+|onSuccess|파일 시스템 조회에 성공했을때 호출되는 콜백 함수| |
+|onError|파일 시스템 조회에 실패 했을때 호출되는 콜백 함수| |
+
+== FileTransfer[upload] == 
+  * 선택된 파일을 외부 시스템에 전송하는 기능
+<code>
+var ft = new FileTransfer();
+ft.upload(fileURI, encodeURI("http://some.server.com/upload.php"), win, fail, options);
+</code>
+
+==  FileTransfer[upload] == 
+  * 외부 시스템에 위치한 파일을 모바일 디바이스로 전송받는 기능
+<code>
+var ft = new FileTransfer();
+ft.download(fileURI, encodeURI("http://some.server.com/upload.php"), win, fail, options);
+</code>
+
+
+==== Server Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.hyb.add.frw.web.EgovFileReaderWriterAndroidAPIController.java|FileReadWriteAPI 가이드 프로그램 Controller Class|
+|Controller|egovframework.hyb.add.frw.service.impl.EgovFileMngAndroidUtil.java|FileReadWriteAPI 가이드 프로그램 File Controller Class|
+|Service|egovframework.hyb.add.frw.service.EgovFileReaderWriterAndroidAPIService.java|FileReadWriteAPI 가이드 프로그램  Service Class|
+|ServiceImpl|egovframework.hyb.add.frw.service.impl.EgovFileReaderWriterAndroidAPIServiceImpl.java|FileReadWriteAPI 가이드 프로그램  ServiceImpl Class|
+|VO|egovframework.hyb.add.frw.service.FileReaderWriterAndroidAPIVO.java|FileReadWriteAPI 가이드 프로그램 VO Class|
+|DAO|egovframework.hyb.add.frw.service.impl.FileReaderWriterAndroidAPIDAO.java|FileReadWriteAPI 가이드 프로그램 Dao Class|
+|QUERY XML|resources/egovframework/sqlmap/hyb/add/frw/EgovFileReaderWriterAndroidAPIGuide_SQL_xxx.xml|FileReadWriteAPI 가이드 프로그램 QUERY XML|
+
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|FileReader/Write|FILE_READER_WRITE|파일 정보 관리|
+|파일상세정보|FILE_DETAIL_INFO|파일 상세 정보 관리|
+
+=== 테이블 명세서 ===
+   * FileReader/Write
+
+^No.^컬럼^컬럼명^타입^길이^Null^KEY^
+|1|SN|일련번호|NUMERIC|6|NotNull|pk|
+|2|UUID|UUID|VARCHAR|50|NotNull|pk|
+|3|FILE_SN|파일연번|NUMERIC|20|NotNull|FK|
+|4|FILE_NM|파일명|VARCHAR|255|Null| |
+|5|FILE_COURS|파일경로|VARCHAR|2000|Null| |
+|6|FILE_TYPE|파일타입|VARCHAR|40|Null| |
+|7|UPDT_DT|수정일시|DATE| |Null| |
+|8|FILE_SIZE|파일크기|NUMERIC|8|Null| |
+|9|USEYN|활성화여부|CHAR|1|Null| |
+
+   * 파일상세정보
+
+^No.^컬럼^컬럼명^타입^길이^Null^KEY^
+|1|FILE_SN|파일연번|NUMERIC|20|NotNull|pk|
+|2|FILE_STRE_COURS|파일저장경로|VARCHAR|2000|Null| |
+|3|STRE_FILE_NM|저장파일명|VARCHAR|255|Null|pk|
+|4|ORIGNL_FILE_NM|원파일명|VARCHAR|255|Null| |
+|5|FILE_EXTSN|파일확장자|VARCHAR|20|Null| |
+|6|FILE_CN|파일내용|BLOB| |Null| |
+|7|FILE_SIZE|파일크기|NUMERIC|8|Null| |
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+===== 환경설정 ===== 
+
+FileReadWriteAPI 디바이스API 가이드 프로그램에서 제공하는 모바일 디바이스의 파일 정보 조회 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== res/xml/config.xml ===
+
+<code xml>
+<plugins>
+    <plugin name="File" value="org.apache.cordova.FileUtils"/>
+    <plugin name="FileTransfer" value="org.apache.cordova.FileTransfer"/>
+    <plugin name="Capture" value="org.apache.cordova.Capture"/>
+    <!--전자정부 Interface 디바이스 API를 사용하기 위한 Phonegap Plugin 클래스-->
+    <plugin name="EgovInterfacePlugin" value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+</plugins>
+</code>
+
+=== res/xml/config.xml ===
+
+<code xml>
+<cordova>
+    <!--FileTransfer 메소드를 사용하여 파일 다운로드를 위한 설정(허용하는 IP 또는 도메인)-->    
+    <access origin=".*"/>
+</cordova>
+</code>
+
+=== res/values/serverinfo.xml ===
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+	<string name="SERVER_URL">http://192.168.100.222:8080/DeviceAPIGuideTotal_Web_V1.7.1</string>
+    </resources>
+</code>
+
+
+==== Server Application ====
+=== context-properties.xml ===
+  * 업로드 된 파일 저장 위치
+
+<code xml>
+<entry key="fileStorePath" value="파일_저장_경로"/>
+</code>
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/add/dvc/EgovFileReaderWriterAndroidAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+===== 관련기능 ===== 
+FileReadWriteAPI 디바이스API 가이드 프로그램은 크게 디바이스 내 파일 정보 조회 기능과 조회된 파일 정보를 서버에 전송하고 조회할수 있는 기능으로 구성되어 있다.
+
+==== 모바일 기기 파일 읽기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+  * Android 플랫폼에서 조회 가능한 파일 시스템은 일반 user 권한으로 접근 가능한 폴더 및 파일로 제한된다.
+
+
+=== 관련 코드 ===
+
+== 장치의 File System 정보 조회 ==
+<code>
+function fn_egov_localStorageInfo() {
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
+                        function(fs){ // success get file system
+                             console.log('DeviceAPIGuide fn_egov_localStorageInfo Success');
+                             fileSystem = fs;
+                             dirEntry = fs.root;
+                             rootDirEntry = fs.root;
+                             fn_egov_readDirectory();
+                        }, function(evt){ // error get file system
+                             console.log('DeviceAPIGuide fn_egov_localStorageInfo Fail');
+                        }
+                    );
+}
+
+</code>
+
+== 디렉토리 정보 획득을 위한 인스턴스 생성 및 정보 획득 ==
+<code>
+function fn_egov_readDirectory() {
+    var directoryReader = dirEntry.createReader();
+    directoryReader.readEntries(fn_egov_listDir, fn_egov_fileError);
+}
+
+</code>
+
+== 디렉토리 위치 정보 획득 ==
+<code>
+function fn_egov_goDirectory(directoryEntry) {
+    console.log('DeviceAPIGuide fn_egov_readDirectory Success');
+    dirEntry = directoryEntry;
+    fn_egov_readDirectory();
+}
+
+</code>
+
+== 현재 파일 시스템 내, 위치 정보 획득 ==
+<code>
+function fn_egov_chdir(dir) {
+    if (dir == "../") {
+        dirEntry.getParent(fn_egov_goDirectory, fn_egov_fileError);
+    } else if (dir == "/") {
+        dirEntry = fileSystem.root;
+        fn_egov_readDirectory();
+    } else {
+        dirEntry.getDirectory(dir, {}, fn_egov_goDirectory, fn_egov_fileError);
+    }
+}
+
+</code>
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:guide:add:FileReadWrite파일읽기.png?320|}}
+{{:egovframework:hyb:guide:add:FileReadWrite파일삭제.png?320|}}
+
+
+delete : 선택된 파일 삭제 \\
+닫기 : 팝업 창 닫기 \\
+
+==== 모바일 기기 파일 쓰기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+  * 파일 쓰기를 위하여 동영상 캡처 기능을 이용한다.
+
+=== 관련 코드 ===
+
+== 디바이스의 동영상 캡처 기능을 호출 ==
+<code>
+function fn_egov_captureVideo() {
+    navigator.device.capture.captureVideo(fn_egov_captureSuccess, fn_egov_captureError, {limit: 2});
+}
+</code>
+
+== 조회된 동영상 파일을 루트 폴더로 복사 ==
+<code>
+function fn_egov_onResolveFileSuccess(fileEntry) {
+    console.log('DeviceAPIGuide fn_egov_onResolveFileSuccess Success');
+    var date = new Date().getTime();
+    fileEntry.copyTo(rootDirEntry, "M" + date + ".MOV", fn_egov_onFileCopySuccess, fn_egov_fail);
+}
+</code>
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+
+{{:egovframework:hyb:guide:add:FileReadWrite동영상촬영.png?320|}}
+
+촬영 : 동영상 촬영 및 파일 저장
+
+
+
+==== 생성된 파일을 서버로 전송하기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+  * 외부 시스템으로의 파일 전송은 FileTransfer API를 사용한다.
+
+=== 관련 코드 ===
+
+== 선택된 파일에 대한 파일 업로드 호출 ==
+
+<code>
+function fn_egov_request_uploadFile(fileName){
+    if(!fn_egov_network_check(true)) {
+        return;
+    }
+
+    $.mobile.showPageLoadingMsg();
+    dirEntry.getFile(fileName, null, fn_egov_uploadFile, fn_egov_fail);
+}
+
+</code>
+
+== 파라미터로 전달된 파일을 서버로 업로드  ==
+
+<code>
+function fn_egov_uploadFile(fileEntry) {
+    console.log('DeviceAPIGuide fn_egov_uploadFile Success');
+    var options = new FileUploadOptions();
+    options.fileKey="file";
+    options.fileName=fileEntry.name;
+    options.mimeType="video/mp4";
+    
+    var params = {uuid :  device.uuid};
+    options.params = params;
+    
+    window.plugins.EgovInterface.geturl(function(serverURL) {
+        var ft = new FileTransfer();
+        ft.upload(fileEntry.fullPath, serverURL + "/frw/xml/fileUpload.do?uuid=" + encodeURI(device.uuid), fn_egov_onFileUploadSuccess, fn_egov_fail, options);
+    });
+}
+</code>
+
+
+== 파일 업로드 Success Callback Function ==
+<code>
+function fn_egov_onFileUploadSuccess(r) {
+    console.log('DeviceAPIGuide fn_egov_onFileUploadSuccess request Completed');
+    if(r. responseCode == 200 && r.response == "%22ok%22"){
+        navigator.notification.alert("파일 업로드 완료. 서버 목록을 확인해 주세요.", null, 'Info');
+    }else{
+        navigator.notification.alert("파일 업로드 실패", null, 'Info');
+    }
+    $.mobile.hidePageLoadingMsg();
+}
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|파일 업로드|/frw/xml/fileUpload.do|fileUpload|fileReaderWriterAndroidAPIDAO.insertFileInfo \\ fileReaderWriterAndroidAPIDAO.insertFileDetailInfo|
+
+{{:egovframework:hyb:guide:add:FileReadWrite파일쓰기.png?320|}}
+{{:egovframework:hyb:guide:add:FileReadWrite파일전송.png?320|}}
+
+upload : 서버로 파일 전송 \\
+닫기 : 팝업 창 닫기 \\
+
+
+==== 전송된 파일을 기기로 복구하기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+  * 외부 시스템으로의 파일 전송은 FileTransfer API를 사용한다.
+
+=== 관련 코드 ===
+
+== 서버에서 조회된 파일 리스트를 리스트 형태로 출력 ==
+
+<code>
+function fn_egov_make_FileInfoList(data){
+    console.log('DeviceAPIGuide fn_egov_make_FileInfoList Success');
+    var list_html = "";
+    var nLoop = 0;
+    $(xmldata).find("fileInfoList").each(function(){
+        var fileSn = $(this).find("fileSn").text();
+        var fileNm = $(this).find("fileNm").text();
+        var fileSize = $(this).find("fileSize").text();
+        var linkVal = "javascript:fn_egov_open_down_dialogue('" + fileSn + "','" + fileNm + "');";
+        nLoop++;
+        list_html += '<li><a href="' + linkVal + '">';
+        list_html += '<h3>' + fileNm + '</h3>';
+        list_html += '<p><strong>Size : ' + fileSize + '</strong></p></a></li>';
+    });
+
+    var theList = $('#fileList');
+    theList.html(list_html);
+
+    $.mobile.changePage("#serverFileList", "slide", false, false);
+    theList.listview("refresh");    
+}
+
+
+</code>
+
+==선택된 파일에 대한 작업 선택 다이얼로그 생성(삭제 or 다운로드)  ==
+
+<code>
+function fn_egov_open_down_dialogue(fileNum) {
+    var btmItem = [{id : 'button1', value: "download"},
+                   {id : 'button2', value: "delete"}];
+    jActionSheet('', 'File Info', 'c', btmItem , function(r) {
+                 if(r == "download"){
+                    fn_egov_downloadFile(fileNum);
+                 }else if(r == "delete"){
+                    fn_egov_delete_fileInfo(fileNum); 
+                 }                 
+                 });
+}
+</code>
+
+
+== 선택된 파일을 서버에서 다운로드 ==
+<code>
+function fn_egov_downloadFile(fileNum){
+    //3G 사용시 과금이 발생 할 수 있다는 경고 메시지 표시
+    if(!fn_egov_network_check(true)) {
+        return;
+    }
+    
+    $.mobile.showPageLoadingMsg();
+    
+    fileSystem.root.getFile(fileNm, {create: true, exclusive: false}, function(fileEntry) {
+        var localPath = fileEntry.fullPath;
+        localpath = localPath.substring(7);
+    	
+        window.plugins.EgovInterface.geturl(function(serverURL) {
+                var fileTransfer = new FileTransfer();
+                fileTransfer.download(
+                        serverURL + "/frw/xml/fileDownload.do?uuid=" + encodeURI(device.uuid) + "&fileSn=" + fileSn,
+                        localpath,
+                        function(entry) {
+                            console.log('DeviceAPIGuide fn_egov_downloadFile request Completed');
+                            navigator.notification.alert("다운로드가 완료 되었습니다. 파일 읽기를 통해 확인 할 수 있습니다.", null, 'Info');
+                            $.mobile.hidePageLoadingMsg();                          
+                        },
+                        function(error) {
+                            console.log('DeviceAPIGuide fn_egov_downloadFile Fail');
+                            $.mobile.hidePageLoadingMsg();
+                        }
+                );
+        });
+    }, fn_egov_fail);
+}
+
+
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|서버 파일리스트 조회|/frw/xml/fileInfoList.do|selectFileInfoListXml|fileReaderWriterAndroidAPIDAO.selectFileInfoList|
+|파일 다운로드|/frw/xml/fileDownload.do|fileDownload|fileReaderWriterAndroidAPIDAO.selectFileInfo|
+|서버 파일삭제|/frw/xml/deleteFile.do|deleteFile|fileReaderWriterAndroidAPIDAO.deleteFileInfo \\ fileReaderWriterAndroidAPIDAO.deleteFileDetailInfo|
+
+{{:egovframework:hyb:guide:add:FileReadWrite서버목록.png?320|}}
+{{:egovframework:hyb:guide:add:FileReadWrite다운로드.png?320|}}
+
+download : 선택된 파일을 디바이스로 다운로드 \\
+delete : 선택된 파일을 서버 목록에서 삭제 \\
+닫기 : 팝업 창 닫기 \\
+
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+=== FileReadWriteAPI Device Applicaton 컴파일 방법 === 
+  * 디바이스 API 가이드(Android) 프로젝트를 마우스 오른쪽 버튼으로 클릭 후 "Run As"탭의 "Android Application"을 클릭하면 가이드 프로그램이 빌드되어 안드로이드 디바이스에 설치 된다.
+
+{{:egovframework:hyb:guide:Gettingstart_AVDRunAs.png|}} \\
+
+  * "Android Device Chooser" 창이 나타나면 해당 디바이스를 선택 후 "OK" 버튼을 선택한다.
+
+{{:egovframework:hyb:guide:Gettingstart_DeviceChooser.png|}} \\
+
+  * 에뮬레이터를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:FileReadWriteEmuleIntro.png?320|}} {{:egovframework:hyb:guide:add:FileReadWriteEmuleMain.png?320|}}
+
+  * 디바이스를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:FileReadWriteIntro.png?320|}} {{:egovframework:hyb:guide:add:FileReadWriteMain.png?320|}}
+
+=== FileReadWriteAPI Server Applicaton 컴파일 방법 ===  
+
+  * FileReadWriteAPI 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+{{:egovframework:hyb:guide:add:서버실행결과_콘솔.png?840|}}
+
+
+==== 디버깅 ====
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스에서 확인 할 수 있다.
+ 
+
+ console.log의 작성 방법은 다음과 같다.
+<code>
+function fn_egov_listDir(entries){
+    console.log('DeviceAPIGuide fn_egov_listDir Success');
+    $('#listView').text("");
+    var linkVal = "javascript:fn_egov_chdir('/');";
+    ...
+}
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+{{:egovframework:hyb:guide:add:FileReadWriteconsolelog.png?700|}}
+
+FileReadWriteAPI 디바이스 API 가이드 프로그램 에서는 디버깅을 위하여 다음과 같이 콘솔 정보를 출력한다.
+
+^디버그 코드^디버깅 내용^
+|DeviceAPIGuide fn_egov_localStorageInfo Success | 디바이스 파일 시스템 정보 조회 성공 시|
+|DeviceAPIGuide fn_egov_localStorageInfo Fail | 디바이스 파일 시스템 정보 조회 실패 시|
+|DeviceAPIGuide fn_egov_readDirectory Success | 디렉토리 조회 성공 시|
+|DeviceAPIGuide fn_egov_listDir Success | 디렉토리 정보 조회 성공 시|
+|DeviceAPIGuide fn_egov_fileError Fail | 디렉토리 정보 조회 실패 시|
+|DeviceAPIGuide fn_egov_uploadFile Success | 서버로 전송 할 파일 정보 조회 성공 시|
+|DeviceAPIGuide fn_egov_onFileUploadSuccess request Completed | 파일 서버 전송 성공 시|
+|DeviceAPIGuide fn_egov_removeFileEntry Success | 삭제 할 파일 정보 조회 성공 시|
+|DeviceAPIGuide fn_egov_fileRemoved Success | 디바이스의 파일 삭제 성공 시|
+|DeviceAPIGuide fn_egov_fail Fail | 함수 실행 실패 시(공통)|
+|DeviceAPIGuide fn_egov_captureSuccess Success | 동영상 촬영 성공 시|
+|DeviceAPIGuide fn_egov_captureError Fail | 동영상 촬영 실패 시|
+|DeviceAPIGuide fn_egov_onResolveFileSuccess Success | 촬영된 동영상 파일 정보 조회 성공 시|
+|DeviceAPIGuide fn_egov_onFileCopySuccess Success | 동영상 파일을 Root 폴더로 복사 성공 시|
+|DeviceAPIGuide fn_egov_make_FileInfoList Success | 서버의 파일 정보 목록 조회 성공 시|
+|DeviceAPIGuide fn_egov_delete_fileInfo request Completed | 서버의 파일 정보 삭제 성공 시|
+|DeviceAPIGuide fn_egov_downloadFile request Completed | 서버의 파일 다운로드 성공 시|
+|DeviceAPIGuide fn_egov_downloadFile Fail | 서버의 파일 다운로드 실패 시|
+|DeviceAPIGuide EgovInterface.get request Fail | HTTP GET Method 요청 실패 시|
+|DeviceAPIGuide EgovInterface.post request Fail | HTTP POST Method 요청 실패 시|
+|DeviceAPIGuide EgovInterface.geturl Fail | geturl 함수 요청 실패 시|
+
+==== 배포 ====
+FileReadWrite 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=524&menu=3&submenu=9|Click]] \\
+
+===== 참고자료 ===== 
+  * UX/UI 라이브러리 : jQuery Mobile[[http://jquerymobile.com/demos/1.4.5/|Click]] \\
+  * Phonegap 4.3.0 : [[http://docs.phonegap.com/en/4.0.0/|Click]]

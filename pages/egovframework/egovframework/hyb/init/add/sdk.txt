@@ -1,0 +1,20 @@
+===== Android SDK =====
+
+==== SDK Manager 설치 ====
+
+  * Android SDK 설치 : [[http://developer.android.com/sdk/index.html|Android SDK Download]]
+  * SDK Manager 실행
+
+==== ADT 설치 후 SDK Manager 선택화면 ====
+{{:egovframework:hyb:init:add:sdk_1.png?700}} \\ \\
+
+==== SDK Manager를 이용한 SDK 설치 ====
+  - **SDK Manager 실행 > 설치할 항목 선택** \\ - Tools 항목은 최신버전으로 신규 설치 혹은 업데이트\\ - Codorva 라이브러리를 컴파일 하기위해서는 Android 4.4 Kikat(API 19) 이상 필요 \\ {{:egovframework:hyb:init:add:sdk_2.png?700}} \\
+  - **라이센스 동의 > Install** \\ {{:egovframework:hyb:init:add:sdk_3.png?700}} \\
+  - **Install 완료 > Close** \\ {{:egovframework:hyb:init:add:sdk_4.png?700}} \\
+
+==== 설치 확인 및 설정 ====
+
+  - **Window > Preferences** \\ {{:egovframework:hyb:init:add:sdk_5.png?700}} \\
+  - **설치 확인** \\ {{:egovframework:hyb:init:add:sdk_6.png?700}} \\
+  * **SDK Location** : 공백이 있으면 설정 불가.

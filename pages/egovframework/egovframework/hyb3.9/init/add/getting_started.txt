@@ -1,0 +1,169 @@
+====== 전자정부 모바일 디바이스 API 개발을 위한 Gatting Started ( 지원 Platform : Android ) ======
+
+===== 개요 =====
+본 가이드는 전자정부 표준 프레임워크에서 제공하는 모바일 디바이스 API 실행환경, 개발환경, 가이드프로그램의 적용 및 실습을 위한 기본 환경 구축 내용이다. \\
+
+빠른 시간 내에 전자정부 디바이스 API 활용 하이브리드 앱 개발을 위한 기본 기능을 활용하기 위해 3단계 따라하기 방식으로 진행된다.
+
+  - 개발환경 설치 : 실습을 위한 개발환경을 구축한다.
+  - 프로젝트 실행 : 제공한 샘플 프로젝트를 이용하여 앱 어플리케이션을 생성하고 웹 어플리케이션을 통해 실행해 본다.
+  - 자세히 들여보기 : 생성/실행한 프로젝트의 내부 소스코드를 학습하여 전자정부 표준 프레임워크 기반의 웹 어플리케이션과 전자정부 디바이스API 프레임워크 기반의 앱 어플리케이션 구현 원리를 이해한다.
+
+전자정부 표준 프레임워크 기반의 웹 어플리케이션과 전자정부 디바이스API 프레임워크 기반의 앱 어플리케이션 개발 및 실행을 위한 구현도구의 환경정보는 다음과 같다
+
+^항목^설명^비고^
+|OS|Windows 10| |
+|JDK|Java SE SDK 7.0| |
+|SDK-API|Android 4.4 이상 |API 19(Kitkat)이상|
+|IDE|Eclipse 4.8 (Photon)| 구현도구에 포함 |
+|Cordova|v8.1.2|Cordova Device v7.1.4|
+|Eclipse Plug-In|Android ADT| |
+
+===== Eclipse 기반 안드로이드 개발환경 사용시 제약사항 =====
+Android SDK Build-tools 지원 버전의 제약이 있으며 지원하는 JDK의 버전도 제약이 따른다.\\
+DeviceAPI v3.9 이후 버전부터는 Android Studio IDE 사용을 권장한다.
+^항목^설명^비고^
+|JDK|Java SE SDK 7.0|JDK 8.0 미지원|
+|SDK-Build-Tools|v25.0.3 이하 호환가능 |v25.0.3 초과하는 버전은 빌드 불가|
+|aar 라이브러리 지원|미지원 |jar 라이브러리만 지원|
+|macOS Catalina 호환|SDK-Build-Tools v24.0.0 이상 필요 |v23.0.1 및 v23.0.3 사용시 aapt 오류 발생|
+
+===== Step 1. 설치 =====
+
+==== 다운로드 ====
+
+  - IDE : [[http://www.eclipse.org/downloads/|Eclipse Classic Download]]
+  - Android SDK Manager : [[http://developer.android.com/sdk/index.html|Android SDK Manager Download]]
+  - ADT Plugin : [[http://developer.android.com/tools/sdk/eclipse-adt.html#installing|ADT Plugin Download ]]
+  - Cordova : [[https://cordova.apache.org/#getstarted/|Cordova Download]]
+
+==== 개발환경 설치 ====
+  - 인터넷 웹브라우저를 통해 eGovFrame 홈페이지(https://www.egovframe.go.kr/)에 접속하여 사이트 상위메뉴를 통해 “다운로드>개발환경"으로 이동 후 개발환경을 다운로드 받는다. \\ \\  {{:egovframework:hyb3.9:guide:screenshot_2016-11-04_pm_1.33.47_2_.png?700|}} \\ \\
+
+==== SDK 설치 ====
+Android SDK는 SDK Manager를 설치 후, SDK를 설치하게 된다. \\
+자세한 사항은 아래의 설치방법을 참고하도록 한다.
+
+=== 설치방법 ===
+  * [[http://developer.android.com/sdk/installing/index.html|SDK Guide]]
+  * [[egovframework:hyb3.5:init:add:sdk|빠른설치 가이드]]
+
+=== 유의사항 ===
+  * SDK 경로는 **한글이나 공백**이 들어가서는 안된다.
+  * API는 필요한 버전을 설치하도록 하며, 전자정부 디바이스API 개발에서는 Android 2.2 이상을 지원하고 있다.
+
+==== ADT 설치 ====
+**A**ndroid **D**evelopment **T**oolkit(이하 ADT)는 Eclipse IDE에서 Android 개발을 도와주기 위한 플러그인 이다.
+자세한 사항은 아래의 설치방법을 참고하도록 한다.
+
+=== 설치방법 ===
+  * [[http://developer.android.com/tools/sdk/eclipse-adt.html|ADT Plugin]]
+  * [[egovframework:hyb3.5:init:add:adt|빠른설치 가이드]]
+
+==== Android Configurator for M2E 플러그인 설치 ====
+
+  * ADT와 M2Eclipse Maven 플러그인 연결을 위한 플러그인이다.
+  * ** Maven 업데이트를 완료한 후에 플러그인 설치를 하여야한다.**
+  * [[egovframework:hyb3.5:hdev:m2e_android_connector|Android Configurator for M2E 설치]]
+
+==== Cordova 설치 ====
+전자정부 디바이스API에서 참조하고 있는 Cordova를 설치한다.
+자세한 사항은 아래의 설치방법을 참고하도록 한다.
+
+=== 설치방법 ===
+  * [[https://cordova.apache.org/docs/en/8.x/index.html|Cordova Getting Started]]
+  * [[egovframework:hyb3.5:init:add:cordova|빠른설치 가이드]]
+
+
+
+
+==== 전자정부 디바이스API 실행환경 설치 ====
+
+=== DeviceAPIGuide_Android_V3.5.zip import ===
+
+  - **압축파일을 새로운폴더에 해제한다.** \\
+  - **Import > Android > Existing Android Application Project** \\ {{:egovframework:hyb3.5:init:add:실행환경_1_1.png?450}} \\
+  - **압축해제한 디렉토리를 지정한후 Copy projets into workspace 체크후 Finish한다. ** \\ {{:egovframework:hyb3.5:init:add:실행환경_2_1.png?450}} \\
+  - **프로젝트 내, 전자정부 디바이스API 실행환경 구성** \\ {{:egovframework:hyb3.5:init:add:실행환경_3_1.png?350}} \\
+
+=== 기존 프로젝트에 실행환경 구성 ===
+
+  - **전자 정부 표준프레임워크 센터에서 받은 DeviceAPIGuide_Android_V3.5.zip 파일을 해당 위치에 복사한다.** ([[egovframework:hyb3.5:guide:디바이스_api_가이드_프로그램_시작하기_getting_started#전자정부_표준프레임워크_포털_이용하기|전자정부 표준 프레임워크 센터 이용하기]]) \\
+  - **다운받은 DeviceAPIGuide_Android_V3.5.zip 압축을 푼다.**
+  - **assets / www 폴더 내에 실행환경의 css를 구성한다.**
+  - **assets / www 폴더 내에 실행환경의 images를 구성한다.**
+  - **assets / www 폴더 내에 실행환경의 js를 구성한다.**
+  - **cordovalib_4.3_v3.7.1.jar, spring-android-core-1.0.0.RELEASE.jar, spring-android-rest-template-1.0.0.RELEASE.jar 를 libs 폴더에 구성한다.**
+  - **AndroidManifest.xml 및 project.properties를 수정한다.** [[egovframework:hyb3.5:init:add:cordova#AndroidManifest.xml|Cordova (Phonegap) 설정]]
+
+===== Step 2. 프로젝트 실행 =====
+
+==== Device Application ====
+
+  - **실행환경 예제를 설치한다.**[[http://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb3.5:hrte:%EC%8B%A4%ED%96%89%ED%99%98%EA%B2%BD_%EC%98%88%EC%A0%9C|실행환경 예제 설치하러 가기]]
+  - **프로젝트 선택 후, 오른쪽 클릭 > Run As > Android Application** \\ {{:egovframework:hyb:init:add:실행_1.png}} \\
+  - **ADT에서 제공하는 Android Virtual Device Manager로 실행** \\ {{:egovframework:hyb:init:add:실행환경_12.png}} {{:egovframework:hyb:init:add:실행환경_13.png}} \\
+  - **디바이스의 USB 디버깅 모드로 실행** \\ {{:egovframework:hyb:init:add:실행환경_14.png}} {{:egovframework:hyb:init:add:실행환경_15.png}} \\
+  - **LogCat을 통해 앱 어플리케이션에 대한 디버그를 확인** \\ {{:egovframework:hyb:init:add:실행_4.png}} \\
+
+==== Web Application ====
+
+  * Web Application은 전자정부 표준 프레임워크 3.9을 기반으로 만들어진 어플리케이션이므로, 아래를 참고한다.
+  * [[egovframework:dev:gettingstarted|전자정부 표준 프레임워크 3.9 보러가기]]
+
+===== Step 3. 자세히 들여다보기 =====
+
+==== 주요 Page ====
+
+=== 구조 ===
+
+^디렉토리^파일^비고^
+|assets/www/css/egovframework/mbl/cmm/|EgoMobile-1.4.5.css|모바일 실행환경 공통 css 파일|
+|assets/www/css/egovframework/mbl/cmm/|jquery.mobile-1.4.5.css|query mobile 의 css 파일 |
+|assets/www/css/egovframework/mbl/cmm/|theme-1.1.1.css|테마 파일 |
+|assets/www/css/egovframework/mbl/cmm/swipebutton/|jquery-mobile-custom.css |swipebutton 관련 css 파일 |
+|assets/www/js/egovframework/mbl/cmm/|cordova.js |cordova의 js 파일 |
+|assets/www/js/egovframework/mbl/cmm/|EgovHybrid.js |디바이스API 공통 js 파일 |
+|assets/www/js/egovframework/mbl/cmm/|EgovMobile-1.4.6.js|모바일 실행환경의 공통 js 파일 |
+|assets/www/js/egovframework/mbl/cmm/|jquery-2.1.14.min.js|jQuery 의 js 파일 |
+|assets/www/js/egovframework/mbl/cmm/|jquery.mobile-1.4.5.min.js|jQuery Mobile 의 js 파일|
+|assets/www/js/egovframework/mbl/cmm/|jquery.validate.min.js|Validation 관련 js 파일|
+|assets/www/js/egovframework/mbl/cmm/|json2.js|json 관련 js 파일|
+|assets/www/js/egovframework/mbl/cmm/|modernizr-3.6.0.js|Device API 확인을 위한 공통 js 파일 |
+|assets/www/js/egovframework/mbl/cmm/swipebutton/|jquery-mobile-custom.js|swipebutton 관련 js 파일 |
+|libs/|cordova.jar|Cordova (Phonegap) 구성을 위한 각종 클래스와 랩퍼클래스|
+|res/xml/|config.xml|Cordova Plugin 구성을 위한 설정 XML 파일|
+| |AndroidManiFest.xml|안드로이드 어플리케이션 설정 XML 파일|
+
+=== 구성 ===
+
+^유형^배포형태^다운로드URL^관련페이지^
+|다운로드|zip |[[https://www.egovframe.go.kr/EgovHybGuideRelease_390.jsp?menu=3&submenu=7&leftsub=1|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide|실행환경 가이드 바로가기]] |
+|Accelerator|zip|[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1657&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:accelerator|Accelerator 가이드 바로가기]] |
+|Camera|zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1659&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:camera|Camera 가이드 바로가기]] |
+|Compass |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1661&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:compass|Compass 가이드 바로가기]] |
+|Contacts |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1663&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:contact|Contacts 가이드 바로가기]] |
+|Device|zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1665&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:device|Device 가이드 바로가기]] |
+|FileReadWriter |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1667&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:file_read_write|FileReadWriter 가이드 바로가기]] |
+|GPS |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1669&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:gps|GPS 가이드 바로가기]] |
+|Interface|zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1671&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:interface|Interface 가이드 바로가기]] |
+|Media |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1673&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:media|Media 가이드 바로가기]] |
+|Network |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1675&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:network|Network 가이드 바로가기]] |
+|Vibrator|zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1677&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:vibrator|Vibrator 가이드 바로가기]] |
+| PushNotifications |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1679&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:pushnotifications| PushNotifications 가이드 바로가기]] |
+| FileOpener |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1681&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:fileopener| FileOpener 가이드 바로가기]] |
+| StreamingMedia |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1683&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:streamingmedia| StreamingMedia 가이드 바로가기]] |
+| Barcodescanner |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1685&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:barcodescanner| Barcodescanner 가이드 바로가기]] |
+| WebResourceUpdate |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1687&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:webresourceupdate| WebResourceUpdate 가이드 바로가기]] |
+| DeviceFileMgmt |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1689&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:devicefilemgmt| DeviceFileMgmt 가이드 바로가기]] |
+| JailbreakDetection |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1691&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:jailbreakdetection| JailbreakDetection 가이드 바로가기]] |
+| SocketIO |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1693&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:socketio| SocketIO 가이드 바로가기]] |
+| SQLite |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1695&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:sqlite| SQLite 가이드 바로가기]] |
+| Unzip |zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1697&menu=3&submenu=7|다운로드 바로가기 ]] |[[egovframework:hyb3.9:guide:add:unzip| Unzip 가이드 바로가기]] |
+
+===== 관련 환경 =====
+
+  * [[egovframework:hyb3.9:hdev:imp:overview|디바이스API 구현도구]]
+  * [[egovframework:hyb3.9:hrte:전자정부_디바이스api_실행환경_소개|디바이스API 실행환경]]
+  * [[egovframework:mrte:ux_ui:ux_ui_controller_component|전자정부 모바일 표준 프레임워크 실행환경]]
+  * [[egovframework:hyb3.5:hrte:Android_Studio|Android_Studio(Intelli J) DeViceAPI Import 방법]]

@@ -1,0 +1,375 @@
+===== 개요 =====
+전자정부 표준프레임워크 디바이스 API 실행환경은 추가 기능이 필요한 경우 써드파티 플러그인을 추가하거나 커스톰 플러그인을 추가로 개발하여 확장할수 있도록 되어 있다. Device API 웹소스는 아이폰,안드로이드에서 하나의 소스를 공유할수 있도록 구성할수 있어 중복개발공수를 줄일수 있다.
+
+===== 안드로이드 Device API =====
+
+==== 샘플 프로젝트 구조 ====
+{{:egovframework:hyb3.5:hrte:android_project_structure.png?950|}}
+
+==== 관련소스 ====
+
+^구분^유형^대상소스명^비고^
+|네이티브소스|JAVA|kr/go/egovframework/hyb/example/CustomPlugin.java |폰갭 코도바 안드로이드 Plugin 네이티브 소스파일|
+|웹소스|JS |assets/www/custom.js |폰갭 코도바 Custom JavaScript|
+|설정파일|XML|res/xml/config.xml|폰갭 코도바 설정파일|
+
+==== 네이티브 ====
+
+
+=== CustomPlugin.java ===
+
+== execute method  ==
+
+  * execute 메소드는 javascript와 interface되어 호출된다.
+  * javascript에서 cordova.exec(callbackSuccess, callbackFail, "CustomMyPlugin", "getMessage", [message]); 형태로 호출된다.
+
+<code>
+    @Override
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        if (action.equals(ACTION_ECHO)) {
+            String message = args.getString(0);
+            this.echo(message, callbackContext);
+            return true;
+        } else if (action.equals(ACTION_GET_MESSAGE)){
+            this.getMessage(callbackContext);
+        } else if (action.equals(ACTION_RUN_JAVASCRIPT_FUNCTION)){
+            String functionName;
+            if (args.length() == 0)
+            	functionName = "args없음";
+            else
+            	functionName = args.getString(0);
+            this.runJavaScriptFunction(functionName, callbackContext);
+        }
+        return false;
+    }
+</code>
+
+== webview의 javascript에서 호출 예제  ==
+  * webview에서 호출되어 단방향 처리
+
+<code>
+    private void echo(String message, CallbackContext callbackContext) {
+        if (message != null && message.length() > 0) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.cordova.getActivity());
+            builder.setMessage(message).setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, message));
+            callbackContext.success(message);
+        } else {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Expected one non-empty string argument."));
+            callbackContext.error("Expected one non-empty string argument.");
+        }
+    }
+</code>
+
+== webview의 javascript에서 호출에대한 결과전달 예제  ==
+  * webview에서 호출되어 결과를 전달하는 양방향 처리
+
+<code>
+    private void getMessage(CallbackContext callbackContext) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "Android native에서 생성된 메세지");
+
+        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, jsonObject));
+    }
+</code>
+
+== 네이티브에서 webview의 javascript 호출 예제 ==
+  * 네이티브에서 webview의 javascript function을 호출하는 기능이며 webview에서 호출하여 동작하도록 되어 있다.
+
+<code>
+    private void runJavaScriptFunction(String functionName, final CallbackContext callbackContext) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "Android native에서 JavaScript 함수 호출, args="+functionName);
+
+        final String javascriptString = "print_message(" + jsonObject.toString() + ")";
+
+        Log.d(this.getClass().getSimpleName(), "=>>> print_message : " + javascriptString);
+        
+        this.webView.sendJavascript(javascriptString);
+
+        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+
+    }
+</code>
+
+==== 웹소스 ====
+
+=== custom.js ===
+
+== echo method  ==
+  * CustomMyPlugin.java의 execute 메소드를 호출한다.
+  * parameter value는 json형태 구조로 [message]로 전달한다.
+  * webview => 안드로이드 native java코드 호출 기능을 한다.
+
+<code>
+function CustomMyPlugin(){}
+
+CustomMyPlugin.prototype.echo = function(message){
+    cordova.exec(null, null, "CustomMyPlugin", "echo", [message]);
+}
+</code>
+
+== getMessage method  ==
+  * CustomMyPlugin.java의 getMessage 메소드를 호출한다.
+  * parameter value는 json형태 구조로 [message]로 전달한다.
+  * 성공 콜백은 callbackSuccess function객체에서 처리한다.
+  * 실패 콜백은 callbackFail function객체에서 처리한다.
+  * webview => 안드로이드 native java코드 => webview로 결과전달 기능을 한다.
+
+<code>
+CustomMyPlugin.prototype.getMessage = function(){
+    var callbackSuccess = function(result){
+        alert(result.name);
+    };
+    
+    var callbackFail = function(error){
+        alert(error);
+    };
+    
+    cordova.exec(callbackSuccess, callbackFail, "CustomMyPlugin", "getMessage", []);
+    
+}
+</code>
+
+== runJavaScript method  ==
+  * 초기호출은 javascript에서 네이티브의 CustomMyPlugin.java를 실행되면서 핵심기능이 수행된다.
+  * 핵심기능은 CustomMyPlugin.java에서 print_message javascript function을 호출하는 예제이다.
+  * 안드로이드 native java코드 => webview function 호출하는 기능을 한다.
+
+<code>
+CustomMyPlugin.prototype.runJavaScript = function(){
+
+	var callbackFail = function(error){
+    	console.log(error);
+        alert(error);
+    };
+    
+    cordova.exec(null, callbackFail, "CustomMyPlugin", "runJavaScriptFunction", []);
+    
+}
+
+function print_message(result){
+	console.log("result : "+result);
+    alert(result.name);
+}
+</code>
+
+==== 설정 ====
+
+== config.xml  ==
+  * feature엘리멘트의 name속성에 정의한 명칭으로 javascript에 객체로 바인딩 된다.
+  * param엘리멘트의 name속성은 지원기기의 종류이다.
+  * param엘리멘트의 value속성은 바인딩될 네이티브 클래스이다.
+
+<code>
+    <!-- eGovframe DeviceAPI Plug-In-->
+    <feature name="EgovInterfacePlugin">
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+    </feature>
+    <feature name="StorageInfoPlugin">
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.EgovStorageInfo" />
+    </feature>
+    <feature name="DeviceNumberPlugin">
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.EgovDeviceNumber" />
+    </feature>
+    
+    <feature name="CustomMyPlugin">
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.CustomPlugin" />
+    </feature>
+
+</code>
+
+
+
+===== 아이폰 Device API =====
+
+==== 샘플 프로젝트 구조 ====
+{{:egovframework:hyb3.5:hrte:ios_project_structure.png?950|}}
+
+==== 관련소스 ====
+
+^구분^유형^대상소스명^비고^
+|네이티브소스|Objective-C|eGovPlugins/CDVCustom.h |폰갭 코도바 아이폰 Plugin 네이티브 헤더파일|
+|네이티브소스|Objective-C|eGovPlugins/CDVCustom.m |폰갭 코도바 아이폰 Plugin 네이티브 소스파일|
+|웹소스|JS |Assets/www/custom.js |폰갭 코도바 Custom JavaScript|
+|설정파일|XML|Assets/config.xml|폰갭 코도바 설정파일|
+
+==== 네이티브 ====
+
+
+=== CDVCustom Class ===
+
+== header file  ==
+
+  * Objective-C는 C/C++로 부터 파생된 언어이므로 일종의 정의파일인 헤더에 사용할 method를 정의한다. 
+  * 폰갭 코도바의 CDVPlugin을 상속하여 구현한다.
+
+<code>
+#import <Foundation/Foundation.h>
+#import <Cordova/CDVPlugin.h>
+
+@interface CDVCustom : CDVPlugin
+
+- (void)echo:(CDVInvokedUrlCommand*)command;
+- (void)getMessage:(CDVInvokedUrlCommand *)command;
+- (void)runJavasScriptFuncion:(CDVInvokedUrlCommand *)command;
+
+@end
+
+</code>
+
+== webview의 javascript에서 호출 예제  ==
+  * webview에서 호출되어 단방향 처리
+  * javascript에서 cordova.exec(null, null, "CustomMyPlugin", "echo", [message]); 형태로 직접 호출된다.
+
+<code>
+- (void)echo:(CDVInvokedUrlCommand*)command
+{
+    NSString *message = [command.arguments objectAtIndex:0];
+    [[[UIAlertView alloc] initWithTitle:@"iOS eGovframe" message:message delegate:nil cancelButtonTitle:@"취소" otherButtonTitles:@"확인", nil] show];
+}
+</code>
+
+== webview의 javascript에서 호출에대한 결과전달 예제  ==
+  * webview에서 호출되어 결과를 전달하는 양방향 처리
+  * javascript에서 cordova.exec(callbackSuccess, callbackFail, "CustomMyPlugin", "getMessage", []); 형태로 직접 호출된다.
+
+<code>
+- (void)runJavasScriptFuncion:(CDVInvokedUrlCommand *)command
+{
+    NSDictionary *jsonInfo = @{@"name": @"iOS native에서 자바스크립트 함수 호출"};
+    
+    NSError *error;
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:jsonInfo options:NSJSONWritingPrettyPrinted error:&error];
+    CDVPluginResult *pluginResult = nil;
+    
+    if (!error) {
+        NSString *jsonString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+        NSString *javaScriptString = [NSString stringWithFormat:@"print_message(%@)", jsonString];
+        
+        [self.webView stringByEvaluatingJavaScriptFromString:javaScriptString];
+        
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    } else {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+    }
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    
+}
+</code>
+
+== 네이티브에서 webview의 javascript 호출 예제 ==
+  * 네이티브에서 webview의 javascript function을 호출하는 기능이며 webview에서 호출하여 동작하도록 되어 있다.
+  * javascript에서 cordova.exec(null, callbackFail, "CustomMyPlugin", "runJavasScriptFuncion", []); 형태로 호출하면 구동되도록 되어 있다. 
+
+<code>
+    private void runJavaScriptFunction(String functionName, final CallbackContext callbackContext) throws JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", "Android native에서 JavaScript 함수 호출, args="+functionName);
+
+        final String javascriptString = "print_message(" + jsonObject.toString() + ")";
+
+        Log.d(this.getClass().getSimpleName(), "=>>> print_message : " + javascriptString);
+        
+        this.webView.sendJavascript(javascriptString);
+
+        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+
+    }
+</code>
+
+==== 웹소스 ====
+
+=== custom.js ===
+  * 안드로이드와 아이폰에서 동일한 js 파일을 공유해서 사용할수 있다. 그외 html및 css파일등 웹소스를 동일한 파일로 공유가 가능하다.
+
+
+== echo method  ==
+  * CDVCustom.m의 execute 메소드를 호출한다.
+  * parameter value는 json형태 구조로 [message]로 전달한다.
+  * webview => 아이폰 native java코드 호출 기능을 한다.
+
+<code>
+function CustomMyPlugin(){}
+
+CustomMyPlugin.prototype.echo = function(message){
+    cordova.exec(null, null, "CustomMyPlugin", "echo", [message]);
+}
+</code>
+
+== getMessage method  ==
+  * CDVCustom.m의 getMessage 메소드를 호출한다.
+  * parameter value는 json형태 구조로 [message]로 전달한다.
+  * 성공 콜백은 callbackSuccess function객체에서 처리한다.
+  * 실패 콜백은 callbackFail function객체에서 처리한다.
+  * webview => 아이폰 native java코드 => webview로 결과전달 기능을 한다.
+
+<code>
+CustomMyPlugin.prototype.getMessage = function(){
+    var callbackSuccess = function(result){
+        alert(result.name);
+    };
+    
+    var callbackFail = function(error){
+        alert(error);
+    };
+    
+    cordova.exec(callbackSuccess, callbackFail, "CustomMyPlugin", "getMessage", []);
+    
+}
+</code>
+
+== runJavaScript method  ==
+  * 초기호출은 javascript에서 네이티브의 CDVCustom.m을 실행되면서 핵심기능이 수행된다.
+  * 핵심기능은 CDVCustom.m에서 print_message javascript function을 호출하는 예제이다.
+  * 아이폰 native java코드 => webview function 호출하는 기능을 한다.
+
+<code>
+CustomMyPlugin.prototype.runJavaScript = function(){
+
+	var callbackFail = function(error){
+    	console.log(error);
+        alert(error);
+    };
+    
+    cordova.exec(null, callbackFail, "CustomMyPlugin", "runJavaScriptFunction", []);
+    
+}
+
+function print_message(result){
+	console.log("result : "+result);
+    alert(result.name);
+}
+</code>
+
+==== 설정 ====
+
+== config.xml  ==
+  * feature엘리멘트의 name속성에 정의한 명칭으로 javascript에 객체로 바인딩 된다.
+  * param엘리멘트의 name속성은 지원기기의 종류이다.
+  * param엘리멘트의 value속성은 바인딩될 네이티브 클래스이다.
+
+<code>
+    <!-- eGovframe DeviceAPI Plug-In-->
+    <feature name="StorageInfoAPI">
+        <param name="ios-package" value="EgovStorageInfo"/>
+    </feature>
+    <feature name="InterfaceAPI">
+        <param name="ios-package" value="EgovInterface"/>
+    </feature>
+    
+    <feature name="CustomMyPlugin">
+        <param name="ios-package" value="CDVCustom" />
+    </feature>
+</code>

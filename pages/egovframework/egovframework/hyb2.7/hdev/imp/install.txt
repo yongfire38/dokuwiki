@@ -1,0 +1,44 @@
+====== Install ======
+
+===== 모바일 디바이스API 개발환경 준비하기 (2.5 이상) =====
+
+  * 전자정부 표준프레임워크 개발환경 2.5 이상
+
+==== SDK 설치하기 ====
+
+  * [[egovframework:hyb:init:add:sdk|SDK 설치하기]]
+
+==== ADT 설치하기 ====
+
+  * [[egovframework:hyb:init:add:adt|ADT 설치하기]]
+
+==== Android Configurator for M2E 플러그인 설치 ====
+
+  * ADT와 M2Eclipse Maven 플러그인 연결을 위한 플러그인이다.
+  * ** Maven 업데이트를 완료한 후에 플러그인 설치를 하여야한다.**
+  * [[egovframework:hyb:hdev:m2e_android_connector|Android Configurator for M2E 설치]]
+
+===== 모바일 디바이스API 개발환경 준비하기 (2.0 이하) =====
+
+  * 전자정부 표준프레임워크 개발환경 2.0 이하
+
+==== SDK 설치하기 ====
+
+  * [[egovframework:hyb:init:add:sdk|SDK 설치하기]]
+
+==== ADT 설치하기 ====
+
+  * [[egovframework:hyb:init:add:adt|ADT 설치하기]]
+
+==== Maven 업데이트 ====
+
+  * 전자정부 표준 프레임워크 개발환경 2.0 이하에서 적용한다.
+  * 이클립스 환경에서 Maven을 이용할 수 있도록하는 플러그인이다.
+  * ** Maven3 플러그인을 포함하는 m2e 플러그인을 사용 시에는 진행하지 않아도 된다.**
+  * [[egovframework:hyb:hdev:m2e_maven3|Maven 업데이트]]
+
+==== Android Configurator for M2E 플러그인 설치 ====
+
+  * ADT와 M2Eclipse Maven 플러그인 연결을 위한 플러그인이다.
+  * ** Maven 업데이트를 완료한 후에 플러그인 설치를 하여야한다.**
+  * [[egovframework:hyb:hdev:m2e_android_connector|Android Configurator for M2E 설치]]

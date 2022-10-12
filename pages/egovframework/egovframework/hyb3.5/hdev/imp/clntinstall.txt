@@ -1,0 +1,63 @@
+====== 개발자 개발환경 설치가이드 ======
+===== 개요 =====
+본 가이드는 전자정부 표준프레임워크에서 제공하는 개발자 개발환경의 사용 방법을 제공한다.
+
+===== Step 1. 개발환경 설치 =====
+
+
+==== 개발자 개발환경 다운로드 ====
+  - 인터넷 웹브라우저를 통해 eGovFrame 홈페이지(https://www.egovframe.go.kr/)에 접속하여 사이트 상위메뉴를 통해 “다운로드>개발환경"으로 이동한다. \\ \\
+{{:egovframework:hyb3.6:guide:스크린샷_2016-11-04_오후_1.33.47_2_.png|}} \\ \\
+
+
+==== 개발자 개발환경 실행 ====
+  - eclipse를 실행한다. \\ {{:egovframework:dev2:execute1.png|}} \\ ✔ Fail to create Java Virtual Machine 오류가 발생할 경우 eclipse가 설치된 디렉토리의 eclipse.ini파일에 JVM 경로를 지정해 주도록 한다. \\ 개발자 개발환경을 사용하기 위해서는 자바 1.6 이상의 버전이 설치되어야 한다. \\ {{:egovframework:hyb3.5:hdev:imp:install_vm2.png|}} \\ \\
+
+==== 퍼스펙티브(Perspective) 전환 ====
+  - eclipse가 정상적으로 실행되면 우측 상단의 Perspective가 eGovFrame으로 되어있는지 확인한다. \\ {{:egovframework:dev2:install_perspective.jpg|}}
+✔ 만약 Perspective가 eGovFrame이 아닐 경우 다음의 절차를 따른다.
+  * Perspective 좌측에 있는 아이콘을 클릭하여 "__O__ther... > Open Perspective > eGovFrame"을 선택한다. \\ {{:egovframework:dev2:install_other.jpg?250|}} \\ {{:egovframework:dev2:install_select.jpg|}} \\ \\
+
+===== Step 2. 프로젝트 생성 및 실행 =====
+
+==== 프로젝트 생성 ====
+  - 메뉴 표시줄에서 **File** > **New** > **eGovFrame DeviceAPI Project**를 선택한다. \\ 또는, **Ctrl+N** 단축키를 이용하여 새로작성 마법사를 실행한 후 **eGovFrame** > **eGovFrame DeviceAPI Project**을 선택하고 **Next**를 클릭한다. \\  {{:egovframework:hyb:hdev:imp:new_project_wizard_use_1.png?500}} {{:egovframework:hyb:hdev:imp:wizard_started.png?500}} \\ * ** eGovFrame > Start > New DeviceAPI Template Project ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_2.png?500}} \\ \\
+  - ** Project Name 및 Maven 설정 입력 ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_3.png}} \\
+  - ** Generate Guide Program 선택 해당 가이드프로그램 선택 Web Project 선택** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_6.png}} \\
+  - ** Project Name 및 Maven 항목 입력 후, Finish ** \\ {{:egovframework:hyb:hdev:imp:new_project_wizard_use_7.png}} \\
+
+==== 서버 설치 ====
+  * Tomcat 서버를 설치해 보도록 한다.
+  - eclipse 하단의 Servers 탭을 클릭하고, 마우스 우클릭하여 "Ne__w__ > Server"를 선택한다. \\ {{:egovframework:dev2:install_new_server.jpg|}} \\ \\
+  - Apache > Tomcat v6.0 Server를 선택 후 Next를 클릭하고 Download and Install 버튼을 클릭하여 서버 설치를 완료한다. \\ {{:egovframework:dev2:install-newsvr.jpg|}}{{:egovframework:dev2:install_tomcatsvr.jpg|}} \\ \\
+
+==== 프로젝트 실행 ====
+
+=== Server 프로젝트 ===
+
+  - 실행할 프로젝트를 마우스 우클릭하고 "__R__un As > Run on Server"를 선택한다. \\ {{:egovframework:hyb:hdev:imp:디바이스api_web.png|}} \\ \\
+  - Choose an existing server를 선택하고  [[egovframework:dev2:clntinstall#서버 설치|서버 설치]]에서 설치한 서버를 선택 후 Next 버튼을 클릭하고 실행할 프로젝트를 Add한다. \\ {{:egovframework:hyb:hdev:imp:디바이스api_web_2.png|}} {{:egovframework:hyb:hdev:imp:디바이스api_web_1.png|}} \\
+
+✔ 프로젝트 생성 후 "Could not open JDBC Connection for transaction" 메시지가 나타날 경우 [[egovframework:dev2:imp:dbio_editor:hsqldb_guide|HSQLDB 설정 가이드]]를 참고하여 HSQLDB를 연결한다. \\ \\
+
+=== App. 프로젝트 ===
+
+  - 실행할 프로젝트를 마우스 우클릭하고 "__R__un As > Android Application"을 선택한다. \\ {{:egovframework:hyb:hdev:imp:deviceapi_started.png|}}
+  - 프로젝트가 실행 된 것을 확인한다. \\ {{:egovframework:hyb:hdev:imp:실행환경_14.png|}}
+
+===== 기타 설정 =====
+==== DB 정보 변경 ====
+  * 전자정부에서는 MySql, Oracle, Altibase, Tibero를 지원한다. 본 가이드에서는 MySql로 DB 정보를 변경하는 예제를 실습해 보도록 한다. \\
+  - DB 정보를 변경할 프로젝트의 sql-map-config.xml 파일을 다음과 같이 수정한다. \\ {{:egovframework:dev2:sqlmapconf.jpg|}} \\
+  - context-datasource.xml 파일을 다음과 같이 수정하고 사용할 DB 정보를 입력한다. \\ {{:egovframework:dev2:contextds.jpg|}} \\
+  - pom.xml 파일에 다음과 같은 dependency를 추가한다. \\ {{:egovframework:dev2:dependency.jpg|}} \\
+  - 프로젝트 마우스 우클릭 후 "__R__un As > Maven install"을 선택한다. \\ {{:egovframework:dev2:maveninstall.jpg|}} \\
+
+==== Data Source Explorer 연결  ====
+[[egovframework:dev2:imp:editor:dbio_editor:data_source_explorer#Data Source Explorer|Data Source Explorer연결 가이드]]를 참고한다. \\
+
+==== 다국어 지원 방안 ====
+✔ 개발자 개발환경의 영문 버전을 사용할 경우 eclipse 설치 디렉토리에 있는 eclipse.ini 파일을 다음과 같이 수정한다. \\ **-Duser.language=en** \\ **-Duser.country=US** \\
+{{:egovframework:dev2:install_en.jpg|}}
+
+✔ 개발자 개발환경의 국문 버전을 사용할 경우 eclipse 설치 디렉토리에 있는 eclipse.ini 파일을 동일한 방법으로 수정한다. \\ **-Duser.language=ko** \\ **-Duser.country=KR**

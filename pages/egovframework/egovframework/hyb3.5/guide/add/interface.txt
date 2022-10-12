@@ -1,0 +1,393 @@
+====== Interface 디바이스 API 가이드 프로그램 ======
+===== 개요 =====
+모바일 Interface 디바이스 API 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발하시는 분들이 구현 시 전자정부 표준프레임워크 기반으로 구축된 웹서버와의 데이터 송수신을 쉽고 편하게 RESTful방식으로 구현할 수 있도록 참고 및 활용될 수 있는 가이드 앱 이다.
+
+==== 특징 ====
+본 가이드 프로그램에서는 Interface 기능을 가이드 할 수 있도록 **정보데이터 서버로 송신하기**, **정보데이터 기기로 수신하기**, **서버의 데이터 삭제 요청하기** 를 제공하고 있다. \\
+
+==== 기능 흐름도 ====
+{{:egovframework:hyb:guide:add:Interface기능흐름도.png?740|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:add:Interface시퀀스다이어그램.png|}}
+
+==== 전제 조건 ====
+
+^구분^내용^
+|Local 디바이스 개발 환경|전자정부표준프레임워크 개발환경3.5, Android SDK API 22(version 5.0 Lollipop)|
+|서버 사이드 개발 환경|전자정부표준프레임워크 개발환경3.5|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스 |Galaxy S2|
+|테스트 플랫폼 |Android 2.3|
+|추가 라이브러리 적용|N/A|
+
+==== 제약 사항 ====
+N/A
+
+
+===== 설명 =====
+
+==== 관련 클래스다이어그램 ====
+{{:egovframework:hyb:guide:add:Interface클래스다이어그램.png?1024|}}
+
+==== Device Application ====
+=== 관련 소스 ===
+^유형^대상소스^비고^
+|Activity|kr.go.egovframework.hyb.interface.InterfaceAPIGuide_AndroidActivity|InterfaceAPI 가이드 프로그램 Activity Class|
+|CSS|assets/www/css/egovframwork/mbl/hyb/InterfaceAPI.css |InterfaceAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |assets/www/images/egovframwork/mbl/hyb/ |InterfaceAPI 가이드 프로그램 주요 Image 폴더|
+|JS |assets/www/js/egovframwork/mbl/hyb/InterfaceAPI.js |InterfaceAPI 가이드 프로그램 주요 JavaScript|
+|JS |assets/www/js/egovframwork/mbl/hyb/messages_ko.js |Validate 메세지 처리 JavaScript|
+|RES |assets/www/res/ |InterfaceAPI 가이드 프로그램 주요 Resource 폴더|
+|XML |AndroidManiFest.xml |안드로이드 어플리케이션 설정 XML|
+|HTML|assets/www/InterfaceAPI.html|InterfaceAPI 메인 페이지|
+|HTML|assets/www/Intro.html|InterfaceAPI Intro 페이지|
+|HTML|assets/www/license.html|InterfaceAPI 라이센스 페이지|
+|HTML|assets/www/overview.html|InterfaceAPI 기능설명 페이지|
+
+=== 활용 API ===
+== window.plugins.EgovInterface.get ==
+  * 전자정부 웹 서버 어플리케이션에 HTTP GET Method를 요청한다.
+
+<code>
+window.plugins.EgovInterface.get(URI, acceptType, params, successCallback);
+</code>
+
+<code>
+var param = {pid:'egovmobile'};
+window.plugins.EgovInterface.get("/mylist.do", "xml", params, function(xmldata){
+    alert(xmldata);
+});
+</code>
+
+^Option^설명^비고^
+|URI|요청 할 URI|서버 URL 설정은 **환경설정** 참조|
+|acceptType|HTTP Header 의 Accept-Type 설정|json,xml|
+|params|입력 파라미터|Json Object 타입으로 입력|
+|successCallback|GET Method에 대한 성공시 리턴되는 함수|acceptType에 따라 Json 또는 xml 데이터 처리|
+
+== window.plugins.EgovInterface.post ==
+  * 전자정부 웹 서버 어플리케이션에 HTTP POST Method를 요청한다.
+
+<code>
+window.plugins.EgovInterface.post(URI, acceptType, params, successCallback);
+</code>
+
+<code>
+var param = {pid:'egovmobile'};
+window.plugins.EgovInterface.post("/mylist.do", "xml", params, function(xmldata){
+    alert(xmldata);
+});
+</code>
+
+^Option^설명^비고^
+|URI|요청 할 URI|서버 URL 설정은 **환경설정** 참조|
+|acceptType|HTTP Header 의 Accept-Type 설정|json,xml|
+|params|입력 파라미터|Json Object 타입으로 입력|
+|successCallback|GET Method에 대한 성공시 리턴되는 함수|acceptType에 따라 Json 또는 xml 데이터 처리|
+
+== window.plugins.EgovInterface.geturl ==
+  * 환경설정에서 설정한 SERVER_URL을 얻어온다.
+
+<code>
+window.plugins.EgovInterface.geturl(successCallback);
+</code>
+
+<code>
+window.plugins.EgovInterface.geturl(function(url){
+    alert(url);
+});
+</code>
+
+^Option^설명^비고^
+|successCallback|성공시 리턴되는 함수|String 타입|
+
+
+==== Server Application ====
+=== 관련 소스 ===
+^유형^대상소스^비고^
+|Controller|egovframework.hyb.add.itf.web.EgovInterfaceAndroidAPIController.java|회원 정보 관리를 위한 클래스|
+|Service|egovframework.hyb.add.itf.service.EgovInterfaceAndroidAPIService.java|회원 정보 관리를 위한  서비스 인터페이스|
+|VO|egovframework.hyb.add.itf.service.InterfaceAndroidAPIDefaultVO.java|회원 관리를 위한 VO 클래스|
+|VO|egovframework.hyb.add.itf.service.InterfaceAndroidAPIVO.java|회원 관리를 위한 VO 클래스|
+|DAO|egovframework.hyb.add.itf.service.impl.InterfaceAndroidAPIDAO.java|회원 관리를 위한 데이터처리 클래스|
+|DAO|egovframework.hyb.add.itf.service.impl.EgovInterfaceAndroidAPIServiceImpl.java|요청 서비스 처리를 위한 클래스|
+|Query XML|resources/egovframework/sqlmap/hyb/add/itf/EgovInterfaceAndroidAPIGuide_SQL_mysql.xml|회원 정보 관리를 위한 Query 파일|
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|Interface(eGov)|INTERFACE_EGOV|Interface(eGov) 정보 관리|
+
+=== 테이블 명세서 ===
+   * Interface(eGov)
+
+^No.^컬럼^컬럼명^타입^길이^Null^KEY^
+|1|SN|일련번호|NUMERIC|6|NotNull|pk|
+|2|UUID|UUID|VARCHAR|50|NotNull|pk|
+|3|EMAILS|이메일|VARCHAR|50|Null| |
+|4|USER_ID|사용자ID|VARCHAR|20|Null| |
+|5|USER_PW|사용자PW|VARCHAR|2000|Null| |
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+
+===== 환경설정 =====
+Interface 디바이스 API 가이드 프로그램에서 제공하는 모바일 디바이스의 Interface 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== res/xml/config.xml ===
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API를 사용하기 위한 Phonegap Plugin 클래스-->
+    <plugin name="EgovInterfacePlugin" value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+</code>
+
+=== res/values/serverinfo.xml ===
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+	<string name="SERVER_URL">http://192.168.100.222:8080/DeviceAPIGuideTotal_Web_V1.7</string>
+    </resources>
+</code>
+
+=== AndroidManifest.xml ===
+
+<code xml>
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+</code>
+
+==== Server Aplication ====
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/add/dvc/EgovInterfaceAndroidAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+
+===== 관련 기능 =====
+Interface 디바이스API 가이드 프로그램은 크게  **정보데이터 서버로 송신하기**, **정보데이터 기기로 수신하기**, **서버의 데이터 삭제 요청하기** 기능으로 구성되어 있다.
+
+==== 정보데이터 서버로 송신하기 ====
+
+=== 비즈니스 규칙 ===
+
+회원 가입 정보를 서버에 전송하여 응답 결과를 확인 할 수 있다. \\
+
+=== 관련코드  ===
+
+<code>
+var url = "/itf/xml/addInterfaceInfo.do";
+var acceptType = "xml";
+var userid = $("#signUpId").val();
+var userpw = $("#signUpPasswd").val();
+var emails = $("#signUpEmail").val();	
+var params = {uuid :  device.uuid,			 
+			userId: userid,
+			userPw: userpw,
+			emails: emails};
+$.mobile.showPageLoadingMsg('a');
+alert('전송방식:RESTful\n전송타입:POST('+ acceptType + ')\nparam:' + JSON.stringify(params));
+	
+// get the data from server
+window.plugins.EgovInterface.post(url, acceptType, params, function(xmldata) {
+	console.log('DeviceAPIGuide fn_egov_subscribe_member request Complete');
+	alert('응답방식:RESTful\n응답타입:POST('+ acceptType + ')\nparam:' + xmldata);		
+	$.mobile.hidePageLoadingMsg('a');
+	if($(xmldata).find("resultState").text() == "OK"){			
+		window.history.back();
+	}else{
+		jAlert($(xmldata).find("resultMessage").text(), '오류', 'c');
+	}		
+});
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|정보데이터 서버로 송신하기|/itf/xml/addInterfaceInfo.do|EgovInterfaceAndroidAPIController|addInterfaceInfoXml|InterfaceAPI.html#signUp|
+
+
+입력 데이터는 ID, PASSWD, E-Mail을 사용한다.
+
+{{:egovframework:hyb:guide:add:Interface회원가입.png?320|}}
+
+정보데이터를 서버로 송신하기 위해서는 회원가입 버튼을 클릭하면 된다. \\
+단, 모든 입력데이터에 대해서 기본적인 validation을 확인하고, 조건이 불충분 할 경우 오류 메시지가 출력된다.
+
+회원가입 : 정보데이터를 서버로 송신하기 위해서는 ID, PASSWD, E-Mail을 입력 후 회원가입 버튼을 클릭한다. \\
+Back 버튼 : **Interface 디바이스 API 가이드 프로그램 메뉴** 화면으로 이동한다. \\
+
+----
+
+==== 정보데이터 기기로 수신하기 ====
+
+=== 비즈니스 규칙 ===
+
+로그인 정보를 서버에 전송하여 로그인 성공 여부를 조회 할 수 있다.
+
+=== 관련코드  ===
+
+<code>
+var url = "/itf/xml/logIn.do";
+var acceptType = "xml";
+var userid = $("#loginId").val();
+var userpw = $("#loginPasswd").val();	
+$.mobile.showPageLoadingMsg('a');	
+var params = {uuid :  device.uuid,
+			userId: userid,
+			userPw: userpw};	
+alert('전송방식:RESTful\n전송타입:GET('+ acceptType + ')\nparam:' + JSON.stringify(params));
+	
+// get the data from server
+window.plugins.EgovInterface.get(url,acceptType, params, function(xmldata) {		
+	console.log('DeviceAPIGuide fn_egov_login_member request Complete');
+	alert('응답방식:RESTful\n응답타입:GET('+ acceptType + ')\nparam:' + xmldata);		
+	$.mobile.hidePageLoadingMsg('a');
+	if($(xmldata).find("resultState").text() == "OK"){
+		window.history.back();
+	}else{
+		jAlert($(xmldata).find("resultMessage").text(), '오류', 'c');
+	}
+		
+});
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|정보데이터 기기로 수신하기|/itf/xml/logIn.do|EgovInterfaceAndroidAPIController|logInXml|InterfaceAPI.html#login|
+
+{{:egovframework:hyb:guide:add:Interface로그인.png?320|}}
+
+정보데이터를 기기로 수신하기 위해서는 로그인 버튼을 클릭하면 된다. \\
+단, 모든 입력데이터에 대해서 기본적인 validation을 확인하고, 조건이 불충분 할 경우 오류 메시지가 출력된다.
+
+로그인 : 정보데이터를 기기로 수신하기 위해서는 ID, PASSWD를 입력 후 로그인 버튼을 클릭한다. \\
+Back 버튼 : **Interface 디바이스 API 가이드 프로그램 메뉴** 화면으로 이동한다. \\
+
+----
+
+==== 서버의 데이터 삭제 요청하기 ====
+
+=== 비즈니스 규칙 ===
+
+ID, PASSWD 정보를 서버에 전송하여 회원탈퇴 성공 여부를 조회 할 수 있다.
+
+=== 관련코드  ===
+
+<code>
+var url = "/itf/xml/withdrawal.do";
+var acceptType = "xml";
+var userid = $("#secessionMemberId").val();
+var userpw = $("#secessionMemberPasswd").val();
+$.mobile.showPageLoadingMsg('a');	
+var params = {uuid :  device.uuid,
+              userId: userid,
+              userPw: userpw};
+alert('전송방식:RESTful\n전송타입:POST('+ acceptType + ')\nparam:' + JSON.stringify(params));
+	
+// get the data from server
+window.plugins.EgovInterface.post(url, acceptType, params, function(xmldata) {
+    console.log('DeviceAPIGuide fn_egov_secession_member request Complete');
+    alert('응답방식:RESTful\n응답타입:POST('+ acceptType + ')\nparam:' + xmldata);
+    $.mobile.hidePageLoadingMsg('a');
+    if($(xmldata).find("resultState").text() == "OK"){
+        jAlert($(xmldata).find("resultMessage").text(), '성공', 'c', function(r){
+            if(r == true){					
+                window.history.back();					
+            }			
+        });		
+    }else{
+        jAlert($(xmldata).find("resultMessage").text(), '오류', 'c');
+    }
+});	
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|서버의 데이터 삭제 요청하기|/itf/xml/logIn.do|EgovInterfaceAndroidAPIController|withdrawalXml|InterfaceAPI.html#secessionMember|
+
+{{:egovframework:hyb:guide:add:Interface회원탈퇴.png?320|}}
+
+서버의 데이터를 삭제 요청하기 위해서는 회원탈퇴 버튼을 클릭하면 된다. \\
+단, 모든 입력데이터에 대해서 기본적인 validation을 확인하고, 조건이 불충분 할 경우 오류 메시지가 출력된다.
+
+회원탈퇴 : 서버의 데이터를 삭제 요청하기 위해서는 ID, PASSWD를 입력 후 회원탈퇴 버튼을 클릭한다. \\
+Back 버튼 : **Interface 디바이스 API 가이드 프로그램 메뉴** 화면으로 이동한다. \\
+
+
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+
+=== InterfaceAPI Device Applicaton 컴파일 방법 === 
+  * 디바이스 API 가이드(Android) 프로젝트를 마우스 오른쪽 버튼으로 클릭 후 "Run As"탭의 "Android Application"을 클릭하면 가이드 프로그램이 빌드되어 안드로이드 디바이스에 설치 된다.
+
+{{:egovframework:hyb:guide:Gettingstart_AVDRunAs.png|}} \\
+
+  * "Android Device Chooser" 창이 나타나면 해당 디바이스를 선택 후 "OK" 버튼을 선택한다.
+
+{{:egovframework:hyb:guide:Gettingstart_DeviceChooser.png|}} \\
+
+  * 에뮬레이터를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:InterfaceEmuleIntro.png?320|}} {{:egovframework:hyb:guide:add:InterfaceEmuleMain.png?320|}}
+
+  * 디바이스를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:InterfaceIntro.png?320|}} {{:egovframework:hyb:guide:add:InterfaceMain.png?320|}}
+
+=== InterfaceAPI Server Applicaton 컴파일 방법 ===  
+
+  * InterfaceAPI 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+{{:egovframework:hyb:guide:add:서버실행결과_콘솔.png?840|}}
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스에서 확인 할 수 있다.
+ 
+
+ console.log의 작성 방법은 다음과 같다.
+<code>
+function fn_egov_subscribe_member() {
+    var url = "/itf/xml/addInterfaceInfo.do";
+    var acceptType = "xml";
+    ...
+    window.plugins.EgovInterface.post(url, acceptType, params, function(xmldata) {
+        console.log("DeviceAPIGuide fn_egov_subscribe_member request Complete");
+	...
+    }
+    ...
+}
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+{{:egovframework:hyb:guide:add:FileReadWriteconsolelog.png?700|}}
+
+Interface 디바이스 API 가이드 프로그램 에서는 디버깅을 위하여 다음과 같이 콘솔 정보를 출력한다.\\
+
+^디버그 코드^디버깅 내용^
+|DeviceAPIGuide fn_egov_login_member request Complete | 정보데이터 기기로 수신하기가 성공적으로 처리 된 경우|
+|DeviceAPIGuide fn_egov_subscribe_member request Complete | 정보데이터 서버로 송신하기가 성공적으로 처리 된 경우|
+|DeviceAPIGuide fn_egov_secession_member request Complete | 서버의 데이터 삭제 요청하기가 성공적으로 처리 된 경우|
+|DeviceAPIGuide EgovInterface.get request Fail | HTTP GET Method 요청이 실패 처리 된 경우|
+|DeviceAPIGuide EgovInterface.post request Fail | HTTP POST Method 요청이 실패 처리 된 경우|
+|DeviceAPIGuide EgovInterface.geturl Fail | geturl 함수 요청이 실패 처리 된 경우|
+
+==== 배포 ====
+Interface 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=528&menu=3&submenu=9|Click]] \\
+
+===== 참고 자료 =====
+  * UX/UI 라이브러리 : jQuery Mobile[[http://jquerymobile.com/demos/1.4.5/|Click]] \\
+  * Phonegap 4.3.0 : [[http://docs.phonegap.com/en/4.0.0/|Click]]
+  * Spring for Android : http://www.springsource.org/spring-android

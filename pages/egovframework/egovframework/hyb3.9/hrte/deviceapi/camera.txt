@@ -1,0 +1,213 @@
+===== Camera  =====
+
+==== 설명 ====
+  * 디바이스의 기본 카메라 어플리케이션에 접속하는 기능을 제공한다.
+
+==== 제약사항 ====
+  * Camera API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android === 
+
+== cameraOptions ==
+  * allowEdit 는 적용되지 않는다.
+  * Camera.PictureSourceType.PHOTOLIBRARY와 Camera.PictureSourceType.SAVEDPHOTOALBUM 은 모두 사진 앨범을 보여준다.
+
+=== iOS ===
+
+== camera.getPicture ==
+  * JavaScript의 alert()를 가지는 callback 함수는 문제를 야기한다. (alert가 표시되기 전에 이미지를 보여주거나, popover 효과를 나타내는 문제.)
+  * setTimeout("alert('message');", 0);로 문제를 해결한다.
+
+
+== cameraOptions ==
+  * Quality를 50 이하로 설정해야 특정 단말기에서 나타나는 메모리 오류를 피할 수 있다.
+  * destinationType.FILE_URI 을 사용할 경우, 사진이 어플리케이션의 임시폴더에 저장된다. 
+  * 어플리케이션이 종료될 때, 어플리케이션 임시폴더 내의 사진들은 삭제된다. 
+  * 사진들의 용량이 대체로 크기 때문에 navigator.fileMgr 를 통해 단말기의 용량을 조절하여야 한다.
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/config.xml
+<code xml>
+<key>Plugins</key>
+    <feature name="Camera">
+        <param name="ios-package" value="CDVCamera"/>
+    </feature>
+</code>
+
+==== 관련 함수 ====
+
+=== camera.getPicture === 
+  * 카메라로 사진을 찍고 찍은 사진을 가져오거나, 단말기의 앨범에서 사진을 선택해서 가져온다.
+  * base64로 인코딩된 이미지를 가져오거나 사진 파일의 경로을 통해 사진을 가져온다.
+<code>
+navigator.camera.getPicture( cameraSuccess, cameraError, [ cameraOptions ] );
+</code>
+
+  * Quick Example [Base64-encoded Image]
+<code>
+navigator.camera.getPicture(onSuccess, onFail, { quality: 50,
+    destinationType: Camera.DestinationType.DATA_URL
+ }); 
+
+function onSuccess(imageData) {
+    var image = document.getElementById('myImage');
+    image.src = "data:image/jpeg;base64," + imageData;
+}
+
+function onFail(message) {
+    alert('Failed because: ' + message);
+}
+</code>
+
+  * Quick Example [이미지 경로]
+<code>
+navigator.camera.getPicture(onSuccess, onFail, { quality: 50, 
+    destinationType: Camera.DestinationType.FILE_URI }); 
+
+function onSuccess(imageURI) {
+    var image = document.getElementById('myImage');
+    image.src = imageURI;
+}
+
+function onFail(message) {
+    alert('Failed because: ' + message);
+}
+</code>
+
+=== camera.cleanup ===
+  * 임시 저장공간에 저장된 이미지 파일을 삭제한다.
+  * **iOS**에서 유일하게 지원한다.
+
+<code>
+navigator.camera.cleanup( cameraSuccess, cameraError );
+</code>
+
+==== 파라미터 ====
+
+=== cameraSuccess ===
+  * 사진을 찍거나 선택하는데 성공했을때 실행하는 callback 함수.
+  * imageData : Base64로 인코딩된 이미지 데이터나 File URI를 가지는 이미지 데이터이다.
+
+<code>
+function(imageData) {
+    // Do something with the image
+}
+</code>
+
+=== cameraError ===
+  * 사진을 찍거나 선택하는데 실패 했을 때 메시지를 매개변수로 하는 callback 함수.
+  * message : 디바이스에서 제공하는 문자열형태의 native 코드.
+
+<code>
+function(message) {
+    // Show a helpful message
+}
+</code>
+
+=== cameraOptions ===
+  * 카메라의 설정을 조정하는 선택적 옵션들이다.
+
+<code>
+{ quality : 75, 
+  destinationType : Camera.DestinationType.DATA_URL, 
+  sourceType : Camera.PictureSourceType.CAMERA, 
+  allowEdit : true,
+  encodingType: Camera.EncodingType.JPEG,
+  targetWidth: 100,
+  targetHeight: 100,
+  popoverOptions: CameraPopoverOptions,
+  saveToPhotoAlbum: false };
+</code>
+
+^유형^설명^타입^비고^
+|quality|이미지의 품질(해상도)를 백분율로 정의한다.|Number|값 : 0 ~ 100|
+|destinationType|이미지의 포맷을 정의한다.|Number|0 : DATA_URL, 1 : FILE_URI|
+|sourceType|포토 라이브러리, 카메라에서 찍은 사진 등 선택할 소스를 설정한다.|Number|PHOTOLIBRARY : 0, CAMERA : 1,SAVEDPHOTOALBUM : 2|
+|allowEdit|이미지 선택 전, 이미지 편집 여부.|Boolean| |
+|encodingType|이미지 파일의 인코딩 종류를 정의한다.|Number|JPEG : 0, PNG : 1|
+|targetWidth|이미지의 너비(pixel)를 설정한다.|Number|비율은 고정.|
+|targetHeight|이미지의 높이(pixel)를 설정한다.|Number|비율은 고정.|
+|mediaType|pictureSourceType이 PHOTOLIBRARY 또는 SAVEDPHOTOALBUM일 때, 미디어의 타입을 설정한다.|Number| |
+|correctOrientation|이미지를 담는동안 이미지 회전 여부.|boolean| |
+|saveToPhotoAlbum|이미지를 담은 후, 단말기 저장 여부.|boolean| |
+|popoverOptions|iPad에서의 popover 옵션|CameraPopoverOptions| |
+
+
+  * destinationType
+<code>
+ Camera.DestinationType = {
+        DATA_URL : 0,                // Return image as base64 encoded string
+        FILE_URI : 1                 // Return image file URI
+    };
+</code>
+
+  * sourceType
+<code>
+Camera.PictureSourceType = {
+    PHOTOLIBRARY : 0,
+    CAMERA : 1,
+    SAVEDPHOTOALBUM : 2
+};
+</code>
+
+  * encodingType
+<code>
+ Camera.EncodingType = {
+        JPEG : 0,               // Return JPEG encoded image
+        PNG : 1                 // Return PNG encoded image
+    };
+</code>
+
+  * mediaType
+<code>
+Camera.MediaType = { 
+    PICTURE: 0,             // allow selection of still pictures only. DEFAULT. Will return format specified via DestinationType
+    VIDEO: 1,               // allow selection of video only, WILL ALWAYS RETURN FILE_URI
+    ALLMEDIA : 2            // allow selection from all media types
+};
+</code>
+
+=== cameraOptions ===
+  * Library나 앨범의 이미지를 선택할 때, iPad에서 popover의 방향이나 위치를 설정하는 파라미터다.
+<code>
+{ x : 0, 
+  y :  32,
+  width : 320,
+  height : 480,
+  arrowDir : Camera.PopoverArrowDirection.ARROW_ANY
+};
+</code>
+
+^유형^설명^타입^비고^
+|x|화면에서 popover되는 위치의 pixel 단위 x축.|Number| |
+|y|화면에서 popover되는 위치의 pixel 단위 y축.|Number| |
+|width|화면에서 popover되는 요소에 대한 pixel 단위의 너비 값.|Number| |
+|height|화면에서 popover되는 요소에 대한 pixel 단위의 높이 값.|Number| |
+|arrowDir|popover 되는 방향.|Camera.PopoverArrowDirection| |
+
+  * Camera.PopoverArrowDirection
+<code>
+Camera.PopoverArrowDirection = {
+        ARROW_UP : 1,        // matches iOS UIPopoverArrowDirection constants
+        ARROW_DOWN : 2,
+        ARROW_LEFT : 4,
+        ARROW_RIGHT : 8,
+        ARROW_ANY : 15
+    };
+</code>
+
+==== 참고 자료 ====
+  * Cordova : https://cordova.apache.org/docs/en/8.x/reference/cordova-plugin-camera/index.html

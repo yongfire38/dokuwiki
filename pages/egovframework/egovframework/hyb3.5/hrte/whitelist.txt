@@ -1,0 +1,99 @@
+====== Device API whitelist Plug-In 설명 ======
+
+===== 개요 =====
+Cordova에서 지원하는 보안설정을 위한 플러그인입니다.
+이 플러그인은 Cordova App에서 화이트리스트 정책을 구현할 수 있게 합니다.   
+허용된 도메인만 사이트를 엑세스 할 수 있도록 블랙리스트 보안과 상반되는 보안 방식입니다.
+===== 설정 방법 =====
+   * 해당 링크만 허용
+<code xml>
+    <allow-intent href="http://www.egovframe.go.kr/*" />
+</code>
+   * 하위 도메인 허용
+<code xml>
+    <allow-intent href="https://*.egovframe.go.kr/*" />
+</code>
+   * 하위 도메인 허용
+<code xml>
+    <allow-intent href="https://*.egovframe.go.kr/*" />
+</code>
+   * 모든 http, https 허용
+<code xml>
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+</code>
+   * 모든 URL 허용
+<code xml>
+    <allow-intent href="*" />
+</code>
+   * SMS 링크로 메시징 앱 허용
+<code xml>
+    <allow-intent href="sms:*" />
+</code>
+   * 전화번호 유형의 링크가 전화 허용
+<code xml>
+    <allow-intent href="tel:*" />
+</code>
+  
+===== 적용 방법 =====
+   * config.xml추가
+<code xml>
+    <feature name="Whitelist">
+        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+</code>
+
+
+<code xml>
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <allow-intent href="itms:*" />
+    <allow-intent href="itms-apps:*" />
+</code>
+
+===== Whitelist 예제 =====
+   * 예제 파일(기준:DeviceinfoAPI_3.5.1_Android)
+<code>
+    순서 : 포탈 - 다운로드 - 모바일 디바잇 API - 가이드프로그램 - 모바일 디바이스 API 가이드프로그램 3.5.1 - DeviceInfo API 가이드 다운로드(Android)
+</code>
+
+   * config.xml 코딩 추가
+<code xml>
+    //whitelist plugin 추가
+    <feature name="Whitelist">
+        <param name="android-package" value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param name="onload" value="true" />
+    </feature>
+
+    //시작 페이지 설정
+    <content src="whitelist.html" />
+
+    //whitelist 사용 http://www.egovframe.go.kr/* 링크만 허용
+    <allow-intent href="http://www.egovframe.go.kr/*" />
+</code>
+
+   * whitelist.html 파일 추가
+<code html>
+        <div>
+            <div>
+                <p>Device API whitelist 예제</p>
+            </div>
+            <ul data-role="listview">
+                <li><a href="http://www.egovframe.go.kr/" data-ajax="false" target="blank">표준프레임워크홈페이지</a></li>
+                <li><a href="http://open.egovframe.go.kr/" data-ajax="false" target="blank">오픈커뮤니티</a></li>
+            </ul>
+        </div>	
+</code>
+
+===== Whitelist 예제 실행 화면 =====
+   * Android Virtual Devices 화면
+{{:egovframework:hyb3.5:hrte:m0513_4.jpg|}}
+
+   * config.xml 설정에서 "<allow-intent href="<nowiki>http://www.egovframe.go.kr</nowiki>/*" />" 만 허용하여
+     그 외 오픈커뮤니티(http://open.egovframe.go.kr/)사이트는 특별한 알림이나 로그가 나타나지 않으므로 작업시 주의가 필요함.
+

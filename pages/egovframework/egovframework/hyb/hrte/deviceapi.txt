@@ -1,0 +1,32 @@
+===== 개요 =====
+Device API 구현은 모바일 앱 어플리케이션에서 웹 뷰 영역의 자바스크립트 엔진과 네이티브 엔진간의 통신을 기반으로 하는 Phonegap 플러그인 아키텍처 패턴을 이용하여 \\
+Android, iOS 플랫폼을 동식에 지원할 수 있는 Device API를 구현한다.\\
+
+이를 위해 아래와 같이 Device API에 관련하여 [[http://docs.phonegap.com/en/2.9.0/index.html|Phonegap 2.9.0]]를 참조하여 나타내었다.
+
+===== Device API Docs =====
+
+==== Device API ====
+
+  * [[egovframework:hyb:hrte:deviceapi:accelerometer|Accelerometer]] [ [[egovframework:hyb:hrte:deviceapi:accelerometer#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:camera|Camera]] [ [[egovframework:hyb:hrte:deviceapi:camera#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:capture|Capture]] [ [[egovframework:hyb:hrte:deviceapi:capture#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:compass|Compass]] [ [[egovframework:hyb:hrte:deviceapi:compass#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:connection|Connection]] [ [[egovframework:hyb:hrte:deviceapi:connection#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:contacts|Contacts]] [ [[egovframework:hyb:hrte:deviceapi:contacts#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:device|Device]] [ [[egovframework:hyb:hrte:deviceapi:device#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:events|Events]] [ [[egovframework:hyb:hrte:deviceapi:events#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:file|File]] [ [[egovframework:hyb:hrte:deviceapi:file#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:geolocation|Geolocation]] [ [[egovframework:hyb:hrte:deviceapi:geolocation#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:media|Media]] [ [[egovframework:hyb:hrte:deviceapi:media#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:notification|Notification]] [ [[egovframework:hyb:hrte:deviceapi:notification#제약사항]] ]
+  * [[egovframework:hyb:hrte:deviceapi:storage|Storage]] [ [[egovframework:hyb:hrte:deviceapi:storage#제약사항]] ]
+
+==== 전자정부 특화 Device API ====
+
+  * [[egovframework:hyb:hrte:deviceapi:interface:add|Interface Android]]
+  * [[egovframework:hyb:hrte:deviceapi:interface:ios|Interface iOS]]
+
+  * [[egovframework:hyb:hrte:deviceapi:PKIMagicXSign|PKIMagicXSign]]
+  * [[egovframework:hyb:hrte:deviceapi:PKIWizSign|PKIWizSign]]
+  * [[egovframework:hyb:hrte:deviceapi:PKIXecureSmart|PKIXecureSmart]]

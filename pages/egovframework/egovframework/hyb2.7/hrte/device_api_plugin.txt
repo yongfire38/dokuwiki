@@ -1,0 +1,195 @@
+===== 개요 =====
+Device API Plugin이란 폰갭 프레임워크에서 제공하는 기본 API 이외에 사용자가 네이티브 고유 기능을 하이브리드 앱에서 사용할 수 있도록 지원하는 폰갭 프레임워크의 확장 기능이다. 폰갭 프레임워크는 자바스크립트 엔진, 네이티브 엔진 그리고 커스텀 플러그인으로 이루어져 있으며, 이커스텀 플러그인 부분이 Device API Plugin이다.  폰갭에서 지원하고 있는 다양한 API들 또한 폰갭 플러그인 기반으로 개발 되어있으며 사용자가 추가적으로 원하는 기능을 확장할 수 있다.
+
+{{:egovframework:hyb:hrte:폰갭_아키텍처2.png?480|}}
+
+ 
+
+
+
+
+
+
+
+
+===== Android =====
+
+
+==== 설명 ====
+안드로이드 플랫폼 기반의 플러그인 작성법을 설명한다. 안드로이드 플래폼의 플러그인은 네이티브 기능을 구현한 자바 클래스와 자바 클래스 호출을 위한
+자바스크립트 함수로 구성된다. 플러그인 자바 클래스를 작성하기 위해서는 폰갭 프레임워크의 Plguin 클래스를 상속받아 PluginResult 클래스를 return 하는 
+excute 메소드를 작성하면된다. 자세한 작성 방법은 다음과 같다.
+
+
+
+
+==== Plugin 예제 ====
+
+=== 플러그인 매핑 ===
+안드로이드 네이티브 Function을 호출하기 위해 cordova.exe 자바스크립트 함수를 이용하며, 그 함수는 다음과 같다.
+
+<code>
+	exec(<successFunction>, <failFunction>, <service>, <action>, [<args>]);
+</code>
+
+위 함수는 웹뷰의 요청을 안드로이드의 네이티브 사이드의 함수를 호출하는 역할을 수행하며 각 아규먼트의 역할은 다음과 같다.
+
+  * successFunction : 안드로이드 네이티브 함수가 정상 호출 되었으때 호출되는 자바스크립트 콜백 함수
+  * failFunction : 안드로이드 네이티브 함수의 호출 결과 에러가 발생했을때 호출 되는 자바스크립트 콜백 함수
+  * service : 플러그인 설정파일인 plugin.xml에서 설정된 플러그인의 Name
+  * action : 서비스 구분을 위해 안드로이드 네이티브 함수로 전달되는 파라미터
+  * args : 안드로이드 네이티브 함수 호출에 필요한 파라미터 배열
+
+새로운 플러그인 사용을 위해서는 res/xml 폴더의 plugin.xml에 해당 플러그인을 등록해야 하며 설정 방법은 다음과 같다.
+
+<code xml>
+	<plugin name="<service_name>" value="<full_name_including_namespace>"/>
+</code>
+
+  * name : cordova.exe 함수에 전달되는 플러그인 서비스 Name
+  * value : cordova.exe 함수에 의해 호출되는  안드로이드 네이티브 클래스
+
+
+===  안드로이드 자바 플러그인 작성 ===
+
+플러그인 작성을 위해서는 폰갭 프레임워크에서 제공하는 Plugin 클래스를 상속받아야 한다. 자세한 작성 방법은 아래와 같다.
+cordova.exe에 의해 호출되는 메서드인 excute 메서드를 작성해야 하며 PlguinResult클래스를 반환한다.
+
+<code java>
+import org.apache.cordova.api.CordovaPlugin;
+import org.apache.cordova.api.PluginResult;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+/**
+ * This class echoes a string called from JavaScript.
+ */
+public class Echo extends CordovaPlugin {
+    @Override
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
+        if (action.equals("echo")) {
+            String message = args.getString(0);
+            this.echo(message, callbackContext);
+            return true;
+        }
+        return false;
+    }
+
+    private void echo(String message, CallbackContext callbackContext) {
+        if (message != null && message.length() > 0) {
+            callbackContext.success(message);
+        } else {
+            callbackContext.error("Expected one non-empty string argument.");
+        }
+    }
+}
+</code>
+ execute 메서드에서 사용되는 파라미터의 역할은 다음과 같다.
+
+  * action : 플러그인 서비스 구분을 위해 사용되는 Action명
+  * args : 플러그인 호출 자바스크립트에서 넘겨주는 파라미터들
+  * callbackContext: 플러그인 실행 완료후 결과를 넘겨주는 Context Object
+
+===== iOS =====
+
+
+==== 설명 ====
+iOS 플랫폼 기반의 플러그인 작성법을 설명한다. iOS 플래폼의 플러그인은 네이티브 기능을 구현한 Objective-C 클래스와 이 클래스의 메서드 호출을 위한
+자바스크립트 함수로 구성된다. 플러그인 클래스를 작성하기 위해서는 폰갭 프레임워크의 CDVPlugin 클래스를 상속받아 해당 기능을 구현할 메서드를 작성하면 되며
+안드로이드 플랫폼과 달리 정해지 메서드명은 없다. 자세한 작성 방법은 다음과 같다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+==== Plugin 예제 ====
+
+=== 플러그인 매핑 ===
+iOS 네이티브 Function을 호출하기 위해 cordova.exe 자바스크립트 함수를 이용하며, 그 함수는 다음과 같다.
+
+<code>
+	exec(<successFunction>, <failFunction>, <service>, <action>, [<args>]);
+</code>
+
+위 함수는 웹뷰의 요청을 iOS 네이티브 사이드의 함수를 호출하는 역할을 수행하며 각 아규먼트의 역할은 다음과 같다.
+
+  * successFunction : iOS 네이티브 함수가 정상 호출 되었으때 호출되는 자바스크립트 콜백 함수
+  * failFunction : iOS 네이티브 함수의 호출 결과 에러가 발생했을때 호출 되는 자바스크립트 콜백 함수
+  * service : 폰갭 설정파일인 Cordova.plist에 설정된 플러그인의 Name
+  * action : 자바스크립트에서 호출하고자 하는 iOS 네이티브 플러그인 클래스의 메서드 명
+  * args : iOS 네이티브 함수 호출에 필요한 파라미터 배열
+
+새로운 플러그인 사용을 위해서는 Cordova.plist 파일에 해당 플러그인을 등록해야 하며 설정 방법은 다음과 같다.
+
+<code xml>
+	<key>service_name</key>
+	<string>PluginClassName</string>
+</code>
+
+  * service_name: cordova.exe 함수에 전달되는 플러그인 서비스 Name
+  * PluginClassName: cordova.exe 함수에 의해 호출되는  iOS 네이티브 클래스
+
+
+===  iOS 자바 플러그인 작성 ===
+
+플러그인 작성을 위해서는 폰갭 프레임워크에서 제공하는 CDVPlugin 클래스를 상속받아야 한다. 자세한 작성 방법은 아래와 같다.
+
+
+<code c>
+#import <Cordova/CDVPlugin.h>
+
+@interface Echo : CDVPlugin
+
+- (void) echo:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options;
+
+@end
+
+/********* Echo.m Cordova Plugin Implementation *******/
+
+#import "Echo.h"
+#import <Cordova/CDVPluginResult.h>
+
+@implementation Echo
+
+- (void) echo:(NSMutableArray*)arguments withDict:(NSMutableDictionary*)options
+{
+    NSString* callbackId = [arguments objectAtIndex:0];
+
+    CDVPluginResult* pluginResult = nil;
+    NSString* javaScript = nil;
+
+    @try {
+        NSString* echo = [arguments objectAtIndex:1];
+
+        if (echo != nil && [echo length] > 0) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:echo];
+            javaScript = [pluginResult toSuccessCallbackString:callbackId];
+        } else {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            javaScript = [pluginResult toErrorCallbackString:callbackId];
+        }
+    } @catch (NSException* exception) {
+        pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION messageAsString:[exception reason]];
+        javaScript = [pluginResult toErrorCallbackString:callbackId];
+    }
+
+    [self writeJavascript:javaScript];
+}
+
+@end
+</code>
+ 플러그인 클래스 구현 메서드에서 사용되는 파라미터의 역할은 다음과 같다.
+
+  * arguments : 플러그인 호출 자바스크립트에서 넘겨주는 파라미터들로 0번째 값은 자바스크립트 콜백 함수명을 갖고 있다.
+  * options : 플러그인 호출 자바스크립트에서 넘겨주는 파라미터 중 마지막 배열 값으로 deprecated된 파라미터로 사용하지 않을 것을 권고한다.

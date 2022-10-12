@@ -1,0 +1,1087 @@
+===== 개요 =====
+전자정부 표준프레임워크 디바이스 API 실행환경 예제는 사용자가 개발도구를 이용하여 프로젝트를 생성 시 선택적으로 설치 할 수 있는 샘플 어플리케이션으로 폰갭의 디바이스API
+기능을 실행 시켜 볼 수 있는 예제로 구성되어 있다.
+
+==== 기능 흐름도 ====
+{{:egovframework:hyb:hrte:sampletemplate_기능흐름도.png?500|}}
+
+==== 기능 시퀀스 ====
+
+{{:egovframework:hyb:hrte:sampletemplate_시퀀스.png.jpg|}}
+
+==== 전제 조건 ====
+
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경|전자정부표준프레임워크 개발환경2.6, Android SDK Revision 18(적용빌드번호 : GINGERBREAD EL21) \\ Xcode 4.4.1, PhoneGap 2.9.0|
+|서버 사이드 개발 환경|N/A|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스 |갤럭시S2, iPhone4|
+|테스트 플랫폼 |Android 2.2, iOS 5.1|
+|추가 라이브러리 적용|N/A|
+
+==== 제약사항 ====
+
+    * N/A
+
+===== 설명 =====
+전자정부 표준프레임워크 디바이스 API 실행환경 예제는 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 하시는 분들이 구현시에 참고 및 활용 도리 수 있도록 핵심 디바이스 API
+10개에 대한 샘플 예제들로 구성되어 있다.
+
+
+
+==== 관련 소스 ====
+
+^유형^대상소스명^비고^
+|CSS|www/css/egovframwork/mbl/hyb/SampleTemplate.css |실행환경 예제 주요 Cascading Style Sheets|
+|IMAGE |www/images/egovframwork/mbl/hyb/ |실행환경 예제 주요 Image 폴더|
+|JS |www/js/egovframwork/mbl/hyb/SampleTemplate.js |실행환경 예제 주요 JavaScript|
+|HTML|www/SampleTemplate.html|SampleTemplate 메인 페이지|
+|HTML|www/license.html|SampleTemplate 라이센스 페이지|
+|HTML|www/overview.html|SampleTemplate 기능설명 페이지|
+
+==== 활용 API ====
+
+=== Accelerator API ===
+
+== accelerometer.getCurrentAcceleration ==
+  * 폰갭의 가속도 정보 조회API
+
+<code>
+navigator.accelerometer.getCurrentAcceleration(accelerometerSuccess, accelerometerError);
+</code>
+
+<code>
+function onSuccess(acceleration) {
+    alert('Acceleration X: ' + acceleration.x + '\n' +
+          'Acceleration Y: ' + acceleration.y + '\n' +
+          'Acceleration Z: ' + acceleration.z + '\n' +
+          'Timestamp: '      + acceleration.timestamp + '\n');
+};
+</code>
+
+== acceleratorOption == 
+
+^Option^설명^비고^
+| frequency |가속도 정보를 조회하는 빈도를 의미한다.| |
+
+
+=== GPS API ===
+
+== navigator.geolocation.getCurrentPosition ==
+  * PhoneGap의 위치정보 수신 API
+
+<code>
+navigator.geolocation.getCurrentPosition
+</code>
+
+<code>
+navigator.geolocation.getCurrentPosition(successCallback, failCallback);
+</code>
+
+^Option^설명^비고^
+|successCallback|성공시 리턴되는 함수| |
+|failCallback|실패시 리턴되는 함수| |
+
+=== Vibrator API ===
+
+
+== notification.beep ==
+  * 단말기의 비프(beep)음을 재생한다. \\
+  * times: 반복되는 비프(beep)음 재생 횟수 \\
+
+<code>
+navigator.notification.beep(times);
+</code>
+
+== notification.vibrate ==
+  * 지정한 시간 동안 단말기의 진동을 울리게 한다. \\
+  * Milliseconds 단위의 진동이 울리는 시간. \\
+
+<code>
+navigator.notification.vibrate(milliseconds);
+</code>
+
+=== Camera API ===
+
+== camera.getPicture ==
+  * 카메라로 사진을 찍고 찍은 사진을 가져오거나, 단말기의 앨범에서 사진을 선택해서 가져온다. \\
+  * base64로 인코딩된 이미지를 가져오거나 사진 파일의 경로을 통해 사진을 가져온다. \\
+
+<code>
+navigator.camera.getPicture( cameraSuccess, cameraError, [ cameraOptions ] );
+</code>
+
+== cameraOption == 
+
+<code>
+var cameraOption = {};
+  cameraOption  = {
+      quality: 50,
+      destinationType : Camera.DestinationType.FILE_URI,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      targetWidth: 200,
+      targetHeight: 200
+  };
+</code>
+
+^Option^설명^비고^
+|quality|이미지의 품질(해상도)를 백분율로 정의한다.| |
+|destinationType|결과 값의 포맷을 정의한다.|navigator.camera.DestinationType|
+|sourceType|포토 라이브러리, 카메라에서 찍은 사진 등 선택할 소스를 설정한다.|nagivator.camera.PictureSourceType|
+|allowEdit|이미지 선택 전, 이미지 편집 여부.| |
+|encodingType|이미지 파일의 인코딩 종류를 정의한다.|navigator.camera.EncodingType|
+|targetWidth|이미지의 너비(pixel)를 설정한다. 비율은 고정.| |
+|targetHeight|이미지의 높이(pixel)를 설정한다. 비율은 고정.| |
+|mediaType|pictureSourceType이 PHOTOLIBRARY 또는 SAVEDPHOTOALBUM일 때, 미디어의 타입을 설정한다. |nagivator.camera.MediaType|
+|correctOrientation |이미지를 담는동안 이미지 회전 여부.| |
+|saveToPhotoAlbum |이미지를 담은 후, 단말기 저장 여부.| |
+
+
+
+
+=== Media API ===
+
+== Media ==
+  * 디바이스 내의 오디오 파일 재생 또는 녹음 기능을 제공하는 역할을 하는 객체이다. \\
+
+<code>
+var media = new Media(src, mediaSuccess, [mediaError], [mediaStatus]);
+</code>
+
+== media.getCurrentPosition ==
+  * 미디어 파일의 현재 재생 위치 값을 구한다. \\
+
+<code>
+media.getCurrentPosition(mediaSuccess, [mediaError]);
+</code>
+
+== media.getDuration ==
+  * 미디어 파일의 재생 지연 시간을 구한다. \\
+
+<code>
+media.getDuration();
+</code>
+
+== media.pause ==
+  * 오디오 파일의 재생을 멈춘다. \\
+
+<code>
+media.pause();
+</code>
+
+== media.play ==
+  * 미디어 파일을 재생을 한다. \\
+
+<code>
+media.play();
+</code>
+
+== media.release==
+  * 운영체제(OS) 혹은 메모리 내의 Media 객체에 등록된 오디오 파일을 해제한다. \\
+
+<code>
+media.release();
+</code>
+
+== mediaError ==
+  * Media API 에 대한 에러 코드
+
+^에러코드^설명^비고^
+| MEDIA_ERR_ABORTED|사용자에 의해 중단된 비디오 재생| |
+| MEDIA_ERR_NETWORK|네트워크 에러| |
+| MEDIA_ERR_DECODE|디코딩 에러(코덱문제)| |
+| MEDIA_ERR_SRC_NOT_SUPPORTED|지원하지 않는 형식의 오디오| |
+
+
+
+
+=== Contacts API ===
+
+== contacts.create ==
+  * 연락처 객체를 생성한다.
+<code>
+var myContact = navigator.contacts.create({"displayName": "Test User"});
+</code>
+
+== contacts.find ==
+  * 연락처를 검색 한다.\\
+<code>
+navigator.contacts.find(contactFields, contactSuccess, contactError, contactFindOptions);
+</code>
+<code>
+var options = new ContactFindOptions();
+options.filter="Bob"; 
+var fields = ["displayName", "name"];
+navigator.contacts.find(fields, onSuccess, onError, options);
+</code>
+  * 연락처를 저장 한다.
+<code>
+// create a new contact object
+var contact = navigator.contacts.create();
+contact.displayName = "Plumber";    // not support iOS
+contact.nickname = "Plumber";       //specify both to support all devices
+
+// populate some fields
+var name = new ContactName();
+name.givenName = "Jane";
+name.familyName = "Doe";
+contact.name = name;
+
+// save to device
+contact.save(onSuccess,onError);
+</code>
+  * 연락처를 복사 한다.
+<code>
+var clone = contact.clone();
+clone.name.givenName = "John";
+console.log("Original contact name = " + contact.name.givenName);
+console.log("Cloned contact name = " + clone.name.givenName);
+</code>
+  * 연락처를 제거 한다.
+<code>
+function onSuccess() {
+    alert("Removal Success");
+};
+
+function onError(contactError) {
+    alert("Error = " + contactError.code);
+};
+
+// remove the contact from the device
+contact.remove(onSuccess,onError);
+</code>
+-     **contactFields**\\
+^Properties^객체구조^비고^
+|ID|string|글로벌 고유 식별자. (DOMString)|
+|displayName|(DOMString)|최종 사용자에게 표시하기에 적합이 연락처의 이름.|
+|name|**(ContactName)**|명 이름의 모든 구성 요소를 포함하는 개체입니다.|
+|nickname|(DOMString)|연락을하여 해결할 수있는 캐주얼 이름. |
+|phoneNumbers|**(ContactField [])**|모든 연락처의 전화 번호의 배열입니다.|
+|email|**(ContactField [])**|모든 연락처의 이메일 주소의 배열입니다.|
+|addresses|**(ContactAddress [])**|연락처의 주소를 모든 배열입니다.|
+|ims|**(ContactField [])**|모든 연락처의 IM 주소의 배열입니다.|
+|organizations|**(ContactOrganization [])**|연락처의 조직 전체의 배열입니다. |
+|birthday|**Date**|연락처의 생일. (일)|
+|note|(DOMString)|연락처에 대한 참고 사항.|
+|photo|**(ContactField [])**|연락처의 사진의 배열입니다. |
+|categories|**(ContactField [])**|사용자 정의 범주의 모든 연락처의 배열입니다.|
+|urls|**(ContactField [])**|연락처에 관련된 웹 페이지의 배열입니다.|
+-     **ContactName**\\
+^Properties^객체구조^비고^
+|formatted|(DOMString)|연락처의 전체 이름|
+|familyName|(DOMString)| |
+|givenName|(DOMString)| |
+|middleName|(DOMString)| |
+|honorificPrefix|(DOMString)|연락처 접두사|
+|honorificSuffix|(DOMString)|연락처 접미사|
+-     **ContactField**\\
+^Properties^객체구조^비고^
+|type|(DOMString)|필드의 종류를 구분할수 있는 문자열|
+|value|(DOMString)|필드의 값| 
+|pref|(Boolean)|선호 가치 표시|
+-     **ContactAddress**\\
+^Properties^객체구조^비고^
+|pref|(boolean)|ContactAddress 객체의 대표 값 여부|
+|type|(DOMString)|필드 유형을 정의한다|
+|formatted|(DOMString)|출력을 위한 전체 주소|
+|streetAddress|(DOMString)|동 / 읍 / 면 / 가 와 같은 전체 주소|
+|locality|(DOMString)|’시’ / ‘도’ 표기|
+|region|(DOMString)|’주’ / ‘지방’ 표기|
+|postalCode|(DOMString)|우편번호|
+|country|(DOMString)|국번|
+-     **ContactOrganization**\\
+^Properties^객체구조^비고^
+|pref|(Boolean)|ContactOrganization 객체의 대표 값 여부|
+|type|(DOMString)|필드 유형을 정의한다(예: ‘work’ 은 직장.)|
+|name|(DOMString)|소속의 이름을 정의한다|
+|department|(DOMString)|소속 부서를 정의한다|
+|title|(DOMString)|소속 내의 직함을 정의한다|
+-     **ContactFindOption**\\
+^Properties^객체구조^비고^
+|filter|(DOMString)|검색어 또는 검색조건을 정의한다. (Default: "")|
+|multiple|(Boolean)|검색 결과으로 다수의 연락처를 가져올 것인지의 여부|
+-     **ContactError**\\
+^Properties^객체구조^비고^
+|ContactError.UNKNOWN_ERROR|(DOMString)|알수 없는 에러|
+|ContactError.INVALID_ARGUMENT_ERROR|(DOMString)|잘못된 인자값|
+|ContactError.TIMEOUT_ERROR|(DOMString)|응답시간 지연|
+|ContactError.PENDING_OPERATION_ERROR|(DOMString)|잘못된 명령|
+|ContactError.IO_ERROR|(DOMString)|입출력 에러|
+|ContactError.NOT_SUPPORTED_ERROR|(DOMString)|지원하지 않음|
+|ContactError.PERMISSION_DENIED_ERROR|(DOMString)|권한 에러|
+
+
+
+=== Compass API ===
+
+== compass.watchHeading ==
+  *디바이스의 현재 방향각 정보를 가져온다. \\
+
+<code>
+navigator.compass.getCurrentHeading(compassSuccess, compassError, compassOptions);
+</code>
+
+<code>
+function onSuccess(heading) {
+    alert('Heading: ' + heading.magneticHeading);
+};
+
+function onError(error) {
+    alert('CompassError: ' + error.code);
+};
+
+navigator.compass.getCurrentHeading(onSuccess, onError);
+</code>
+
+== compassOption == 
+
+^Option^설명^비고^
+| frequency |나침반 정보를 조회하는 빈도를 의미한다.| |
+| frequency |나침반 성공 콜백함수를 초기화 하는데 필요한 변화의 정도를 의미한다.| |
+
+
+=== FileReaderWriter API ===
+== LocalFileSystem ==
+  * 모바일 디바이스의 파일 시스템 정보를 최초 로드한다.
+
+
+<code>
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onSuccess, onError);
+</code>
+
+
+^파라미터^설명^비고^
+|LocalFileSystem.PERSISTENT|사용자 또는 어플리케이션에 의해 제거 될 수 없는 스토리지를 조회 할 때 사용된다.| |
+|onSuccess, |파일 시스템 조회에 성공했을때 호출되는 콜백 함수| |
+|onError|파일 시스템 조회에 실패 했을때 호출되는 콜백 함수| |
+
+
+=== NetworkInfo API ===
+
+== navigator.connection.type ==
+  * 현재 디바이스의 네트워크 상태 정보
+<code>
+var states = {};
+states[Connection.UNKNOWN]  = 'Unknown connection';
+states[Connection.ETHERNET] = 'Ethernet connection';
+states[Connection.WIFI]     = 'WiFi connection';
+states[Connection.CELL_2G]  = 'Cell 3G connection';
+states[Connection.CELL_3G]  = 'Cell 3G connection';
+states[Connection.CELL_4G]  = 'Cell 4G connection';
+states[Connection.NONE]     = 'No network connection';
+
+var NowNetwork = states[navigator.connection.type];
+</code>
+^Return State(code)^NetworkInfo(string)^
+|Connection.UNKNOWN|Unknown connection|
+|Connection.ETHERNET|Ethernet connection|
+|Connection.WIFI|WiFi connection|
+|Connection.CELL_2G|Cell 2G connection|
+|Connection.CELL_3G|Cell 3G connection|
+|Connection.CELL_4G|Cell 4G connection|
+|Connection.NONE|No network connection|
+
+
+
+=== DeviceInfo API ===
+
+== device ==
+  * 모바일 디바이스의 하드웨어 및 소프트웨어 관련 메타 정보를 조회한다.
+
+
+<code>
+	var name = device.name;
+	var cordova= device.cordova;
+	var platform = device.platform;
+	var uuid = device.uuid;
+	var version = device.version;
+</code>
+
+
+^변수^설명^비고^
+|name|디바이스에 셋팅된 명칭을 반환한다.| |
+|cordova|어플리케이션에서 사용된 폰갭 버전을 반환한다.| |
+|platform|모바일 디바이스의 플랫폼 정보를 반환한다.| |
+|uuid|디바이스 고유의 UUID를 반환한다.| |
+|version|디바이스의 플랫폼 버전을 반환한다.| |
+
+
+
+
+===== 환경설정 ===== 
+
+실행환경 예제 프로그램에서 제공하는 디바이스 API 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== Android ===
+  * app/res/xml/plugins.xml
+<code xml>
+<plugins>
+    <plugin name="App" value="org.apache.cordova.App"/>
+    <plugin name="Geolocation" value="org.apache.cordova.GeoBroker"/>
+    <plugin name="Device" value="org.apache.cordova.Device"/>
+    <plugin name="Accelerometer" value="org.apache.cordova.AccelListener"/>
+    <plugin name="Compass" value="org.apache.cordova.CompassListener"/>
+    <plugin name="Media" value="org.apache.cordova.AudioHandler"/>
+    <plugin name="Camera" value="org.apache.cordova.CameraLauncher"/>
+    <plugin name="Contacts" value="org.apache.cordova.ContactManager"/>
+    <plugin name="File" value="org.apache.cordova.FileUtils"/>
+    <plugin name="NetworkStatus" value="org.apache.cordova.NetworkManager"/>
+    <plugin name="Notification" value="org.apache.cordova.Notification"/>
+    <plugin name="Storage" value="org.apache.cordova.Storage"/>
+    <plugin name="Temperature" value="org.apache.cordova.TempListener"/>
+    <plugin name="FileTransfer" value="org.apache.cordova.FileTransfer"/>
+    <plugin name="Capture" value="org.apache.cordova.Capture"/>
+    <plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
+    <plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
+</plugins>
+
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<supports-screens 
+    android:largeScreens="true" 
+    android:normalScreens="true" 
+    android:smallScreens="true" 
+    android:resizeable="true" 
+    android:anyDensity="true" />
+<uses-permission android:name="android.permission.VIBRATE" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.RECEIVE_SMS" />
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+<uses-permission android:name="android.permission.READ_CONTACTS" />
+<uses-permission android:name="android.permission.WRITE_CONTACTS" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> 
+<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+<uses-permission android:name="android.permission.BROADCAST_STICKY" />
+
+</code>
+
+=== iOS === 
+
+  * App/Supporting Files/Cordova.plist
+<code xml>
+
+<dict>
+	<key>Logger</key>
+	<string>CDVLogger</string>
+	<key>Compass</key>
+	<string>CDVLocation</string>
+	<key>Accelerometer</key>
+	<string>CDVAccelerometer</string>
+	<key>Camera</key>
+	<string>CDVCamera</string>
+	<key>NetworkStatus</key>
+	<string>CDVConnection</string>
+	<key>Contacts</key>
+	<string>CDVContacts</string>
+	<key>Debug Console</key>
+	<string>CDVDebugConsole</string>
+	<key>File</key>
+	<string>CDVFile</string>
+	<key>FileTransfer</key>
+	<string>CDVFileTransfer</string>
+	<key>Geolocation</key>
+	<string>CDVLocation</string>
+	<key>Notification</key>
+	<string>CDVNotification</string>
+	<key>Media</key>
+	<string>CDVSound</string>
+	<key>Capture</key>
+	<string>CDVCapture</string>
+	<key>SplashScreen</key>
+	<string>CDVSplashScreen</string>
+	<key>Battery</key>
+	<string>CDVBattery</string>
+	<key>InterfaceAPI</key>
+	<string>EgovInterface</string>
+	<key>StorageInfoAPI</key>
+	<string>EgovStorageInfo</string>
+</dict>
+
+</code>
+
+
+
+
+
+===== 관련기능 ===== 
+실행환경 예제 프로그램은 디바이스 API 기능을 직관적으로 알 수 있도록 간단한 예제의 집합으로 구성되어 있다.
+
+==== 가속도 정보 조회 ====
+
+=== 비즈니스 규칙 ===
+  * iOS 플랫폼 예제의 경우 가속도 정보는 주기적으로 조회 되며 중지 시키기 위해서는 Accelerator 탭을 터치 한다.
+
+
+=== 관련 코드 ===
+
+== 주기적 Accelerator 정보 조회 ==
+<code>
+function fn_egov_update_Acceleration(accelInfo) 
+{
+    var html = "<span>X : " + accelInfo.x + "<BR />" + "Y : " +  accelInfo.y + "<BR />" + "Z : "  + accelInfo.z+"</span>";
+	$("#infoDetail").html(html);
+    
+    if(accelInsertCheck)
+    {
+        if(accelInfo.x === 0 && accelInfo.y === 0 && accelInfo.z === 0)
+        {
+            
+        }
+        else
+        {
+            fn_egov_insert_table("ACCELERATOR",accelInfo);
+            fn_egov_display_deviceAPIInfoMain("ACCELERATOR",html);
+            
+            accelInsertCheck = false;
+        }
+    }
+}
+
+</code>
+
+
+
+== Accelerator 장치 가동 및 업데이트 타이머 설정 ==
+<code>
+function fn_egov_get_acceleration() 
+{
+    if (accelerationWatch === null) 
+    {
+        //navigator.notification.alert("acceleration start");
+        toast("acceleration start");
+
+        var options = {};
+        options.frequency = 1000;
+        accelInsertCheck = true;
+        accelerationWatch = navigator.accelerometer.watchAcceleration(fn_egov_update_Acceleration, 
+                                                                      function(ex) 
+                                                                      {
+                                                                          console.log("DeviceAPIGuide fn_egov_get_acceleration fail (" + ex.name + ": " + ex.message + ")");
+                                                                      },
+                                                                      options);
+    }
+    else 
+    {
+        //navigator.notification.alert("acceleration stop");
+        toast("acceleration stop");
+        navigator.accelerometer.clearWatch(accelerationWatch);
+        accelerationWatch = null;
+    }
+};
+
+
+</code>
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:accelerator_start.png?200|}}{{:egovframework:hyb:hrte:accelerator_stop.png?200|}}
+{{:egovframework:hyb:hrte:accelerator.jpg?200|}}
+
+  - 가속도 정보 조회
+
+
+
+==== GPS 정보 조회 ====
+
+
+
+=== 관련 코드 ===
+
+== GPS 정보 수신 ==
+<code>
+function fn_egov_get_location() 
+{
+    var suc = function(p) 
+    {
+        var html = "<span>위도 : " + p.coords.latitude + "<BR />" + "경도 : " + p.coords.longitude + "<BR />" + fn_egov_get_nowTime()+"</span>";
+        fn_egov_display_deviceAPIInfoMain("GPS",html);
+        fn_egov_insert_table("GPS",p);
+    };
+    var locFail = function()
+    {
+        jAlert("위치 정보를 얻을 수 없습니다.", "알림", "b");
+    };
+    
+    navigator.geolocation.getCurrentPosition(suc, locFail);
+};
+
+</code>
+
+
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:gps.png?200|}}
+{{:egovframework:hyb:hrte:gps.jpg?200|}}
+
+  - 디바이스의 위도, 경도 정보 조회
+
+
+==== 진동 알림  ====
+
+
+
+=== 관련 코드 ===
+
+== 디바이스 진동 알림 ==
+<code>
+function fn_egov_get_vibrate() 
+{
+    var html = "<span><img src='images/egovframework/mbl/hyb/ico_vibration.png' ></span><BR />" + fn_egov_get_nowTime();
+    fn_egov_display_deviceAPIInfoMain("VIBRATE",html);
+    fn_egov_insert_table("VIBRATOR","");
+    //document.getElementById('showResult').value = str;
+    navigator.notification.vibrate(2000);
+};
+
+</code>
+
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:vibrator.png?200|}}
+{{:egovframework:hyb:hrte:vibrator.jpg?200|}}
+
+  - 디바이스 진동 기능 호출
+
+====  카메라 촬영   ====
+
+
+
+=== 관련 코드 ===
+
+== 디바이스 카메라 호출  ==
+<code>
+function fn_egov_capture_photo()
+{
+    navigator.camera.getPicture(fn_egov_upload_photo,null,{sourceType:1,quality:60});
+};
+
+</code>
+
+
+
+== 사진 촬영 성공 콜백 함수 ==
+<code>
+function fn_egov_upload_photo(data)
+{
+    console.log("DeviceAPIGuide fn_egov_upload_photo success");
+    var html = '<span class="camera"><img src="' + data + '" style="max-width:100%;height:60px;"> </img></span>';
+    fn_egov_display_deviceAPIInfoMain("CAMERA",html);
+    fn_egov_insert_table("CAMERA",data);
+    
+    toast("uploadPhoto success!");
+};
+
+
+</code>
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:camera.png?200|}}
+{{:egovframework:hyb:hrte:camera.jpg?200|}}
+
+
+  - 디바이스의 카메라 호출 사진 촬영 
+
+====  미디어 재생  ====
+
+=== 비즈니스 규칙 ===
+  * 미디어 버튼 클릭을 통해 미미어를 재생/정지 시킨다.
+
+
+=== 관련 코드 ===
+
+== 미디어 재생  ==
+<code>
+function fn_egov_play_audio() 
+{
+    if(audioCheck)
+    {
+        fn_egov_stop_audio();
+        audioCheck = false;
+        return;
+    }
+    
+    // Create Media object from src
+    mediaHandle = new Media("SleepAway.mp3", fn_egov_on_audioSuccess, fn_egov_on_audioError);
+    // Play audio
+    mediaHandle.play();
+    // Update mediaHandle position every second
+    if (mediaTimer === null) 
+    {
+        audioCheck = true;
+        fn_egov_insert_table("MEDIA","");
+        var html = "<span><img src=\'images/egovframework/mbl/hyb/ico_movie.png\'></span><BR />" + fn_egov_get_nowTime();
+        fn_egov_display_deviceAPIInfoMain("MEDIA",html);
+        
+        mediaTimer = setInterval(function() 
+                                 {
+                                     // get mediaHandle position
+                                     mediaHandle.getCurrentPosition(
+                                                                 // success callback
+                                                                 function(position) 
+                                                                 {
+                                                                     if (position > -1) {
+                                                                         fn_egov_set_audioPosition((position) + " %");
+                                                                     }
+                                                                 },
+                                                                 // error callback
+                                                                 function(e) 
+                                                                 {
+                                                                     console.log("DeviceAPIGuide fn_egov_play_audio Error "+e.code);
+                                                                     fn_egov_set_audioPosition("Error: " + e);
+                                                                 });
+                                 }, 
+                                 1000);
+    }
+}
+
+</code>
+
+
+
+== 미디어 일시중지 ==
+<code>
+
+function fn_egov_pause_audio() 
+{
+    if (mediaHandle) 
+    {
+        mediaHandle.pause();
+    }
+}
+
+
+</code>
+
+
+== 미디어 종료 ==
+<code>
+function fn_egov_stop_audio() 
+{
+    if (mediaHandle) 
+    {
+        mediaHandle.stop();
+    }
+    clearInterval(mediaTimer);
+    mediaTimer = null;
+}
+
+</code>
+
+
+
+== 현재 재생 위치 표시 ==
+<code>
+function fn_egov_set_audioPosition(position) 
+{
+    var html = "<span><img src=\'images/egovframework/mbl/hyb/ico_movie.png\'></span><BR />Play position : "+position+"<BR />" + fn_egov_get_nowTime();
+    $("#infoDetail").html(html);
+}
+
+
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:media.png?200|}}
+{{:egovframework:hyb:hrte:media.jpg?200|}}
+
+
+  - 미디어 재생하기
+  - 미디어 재생 중지 하기
+
+==== 연락처 정보 조회  ====
+
+
+=== 관련 코드 ===
+
+== 연락처 조회 요청 ==
+<code>
+function fn_egov_get_contacts() 
+{
+    var obj = new ContactFindOptions();
+    obj.filter = "";
+    obj.multiple = true;
+    navigator.contacts.find(
+                            [ "displayName", "name" ], 
+                            fn_egov_get_contactsRead,
+                            fn_egov_get_contactsFail, 
+                            obj);
+}
+
+</code>
+
+
+
+== 연락처 조회 성공 콜백 함수 ==
+<code>
+function fn_egov_get_contactsRead(contacts) 
+{
+    console.log("DeviceAPIGuide fn_egov_get_contactsRead Success");
+    var html = "<span>검색 된 연락처 총 " + contacts.length + " 개" + "<BR />" + fn_egov_get_nowTime() + "</span>";
+    fn_egov_display_deviceAPIInfoMain("CONTACTS",html);
+
+    fn_egov_insert_table("CONTACTS","total contacts : "+contacts.length);
+}
+
+
+</code>
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:contacts.png?200|}}
+{{:egovframework:hyb:hrte:contacts.jpg?200|}}
+
+  - 디바이스에 저장된 총 연락처 개수 조회
+
+==== 나침반 정보 조회 ====
+
+=== 비즈니스 규칙 ===
+  * iOS 플랫폼 예제의 경우 나침반 정보는 주기적으로 조회 되며 중지 시키기 위해서는 Compass 탭을 터치 한다.
+
+
+
+=== 관련 코드 ===
+
+== 나침반 정보 조회 ==
+<code>
+function fn_egov_get_compass() 
+{
+    if (CompasswatchID === null) 
+    {
+        fn_egov_display_deviceAPIInfoMain("COMPASS","");
+        
+        toast("Compass start");
+        CompassInsertCheck = true;
+        var options = { frequency: 1000 };
+        CompasswatchID = navigator.compass.watchHeading(fn_egov_update_heading, 
+                                                        function(e) 
+                                                        {
+                                                            console.log("DeviceAPIGuide fn_egov_get_compass Error "+e.code);
+                                                        }, 
+                                                        options);
+    }
+    else 
+    {        
+        navigator.compass.clearWatch(CompasswatchID);
+        CompasswatchID = null;
+        fn_egov_update_heading({ magneticHeading : "Off"});
+        toast("Compass stop");
+    }
+}
+
+</code>
+
+
+
+== 나침반 정보 조회 성공 콜백 함수 ==
+<code>
+function fn_egov_update_heading(h) 
+{
+    var html = "방위각 : " + h.magneticHeading + "<BR />" + fn_egov_get_nowTime();
+    $("#infoDetail").html(html);
+    if(CompassInsertCheck) 
+    {
+        fn_egov_insert_table("COMPASS",h);
+        CompassInsertCheck = false;
+    }
+}
+
+
+</code>
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:compass_start.png?200|}} {{:egovframework:hyb:hrte:compass_stop.png?200|}}
+{{:egovframework:hyb:hrte:compass.jpg?200|}}
+
+  - 디바이스의 방위각 정보 조회
+
+==== 디바이스 파일 조회  ====
+
+
+=== 관련 코드 ===
+
+== 장치의 File System 정보 조회 ==
+<code>
+function fn_egov_get_localStorageInfo() 
+{
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0,
+                             // success get file system
+                             function(fs)
+                             { 
+                                 console.log("DeviceAPIGuide fn_egov_get_localStorageInfo Success");
+                                 fileSystem = fs;
+                                 dirEntry = fs.root;
+                             
+                             }, 
+                             // error get file system
+                             function(evt)
+                             {   
+                                 console.log("DeviceAPIGuide fn_egov_get_localStorageInfo Error "+evt.target.error.code);
+                             });
+}
+
+</code>
+
+
+
+== 디렉토리 위치 정보 획득 ==
+<code>
+
+function fn_egov_go_directory(directoryEntry) 
+{
+    console.log("DeviceAPIGuide fn_egov_go_directory Success");
+	dirEntry = directoryEntry;
+	fn_egov_read_directory();
+}
+
+</code>
+
+== 현재 파일 시스템 내, 위치 정보 획득 ==
+<code>
+
+function fn_egov_next_chdir(dir) 
+{
+	if (dir == "../") 
+    {
+		dirEntry.getParent(fn_egov_go_directory, fn_egov_get_fileError);
+	} 
+    else if (dir == "root") 
+    {
+		dirEntry = fileSystem.root;
+		fn_egov_read_directory();
+	} 
+    else 
+    {
+		dirEntry.getDirectory(dir, {}, fn_egov_go_directory, fn_egov_get_fileError);
+	}
+}
+
+</code>
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:file.png?200|}}
+{{:egovframework:hyb:hrte:file.jpg?200|}}
+
+  - 디바이스의 파일 시스템 조회
+
+
+==== 네트워크 정보 조회 ====
+
+
+
+
+=== 관련 코드 ===
+
+== 네트워크 상태 체크 ==
+<code>
+function fn_egov_check_network() 
+{
+    var networkState = navigator.network.connection.type;
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 3G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'No network connection';
+    
+    var html = "<span>Network Info : " + states[networkState] + "<BR />" + fn_egov_get_nowTime()+"</span>";
+    fn_egov_display_deviceAPIInfoMain("NETWORK",html);
+    fn_egov_insert_table("NETWORK", states[networkState]);
+}
+
+</code>
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:network.png?200|}}
+{{:egovframework:hyb:hrte:network.jpg?200|}}
+
+  - 디바이스의 네트워크 정보 조회
+
+==== 디바이스 메타 정보 조회 ====
+
+
+
+=== 관련 코드 ===
+
+== 디바이스 정보 조회 ==
+
+<code>
+function fn_egov_get_deviceInfo() 
+{
+    var html = "NAME : " + device.name + "<BR/>cordovaVersion : " + device.cordova 
+               + "<BR/>platform : " + device.platform + "<BR/>uuid : " + device.uuid
+               + "<BR/>version : " + device.version + "<BR />" + fn_egov_get_nowTime();
+
+    fn_egov_display_deviceAPIInfoMain("DEVICE",html);
+    fn_egov_insert_table("DEVICE",device);
+}
+
+</code>
+
+
+
+
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+{{:egovframework:hyb:hrte:device.png?200|}}
+{{:egovframework:hyb:hrte:device.jpg?200|}}
+
+  - 디바이스의 메타 정보 조회
+
+
+
+===== 사용법 =====
+
+==== 설치 방법 ====
+
+전자정부 표준프레임워크 디바이스 API 실행환경 예제는 개발환경 도구를 통해서 설치가 가능하며 자세한 설치 방법은 다음을 참조 한다.
+     * [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_api_%EA%B0%80%EC%9D%B4%EB%93%9C_%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8_%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0_getting_started|실행환경 예제 설치하러 가기]]
+
+==== 오류 발생 시 대처 순서 ====
+
+     * 디바이스 어플리케이션 오류 : 디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+
+
+ console.log의 작성 방법은 다음과 같다.
+<code>
+ console.log("[DeviceAPI Guide] fn_egov_delete_fileInfo : Completed");
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+{{:egovframework:hyb:hrte:console_log.png|}}

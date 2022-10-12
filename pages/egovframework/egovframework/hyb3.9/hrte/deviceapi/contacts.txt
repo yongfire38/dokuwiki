@@ -1,0 +1,363 @@
+===== Contacts =====
+
+==== 설명 ====
+  * 디바이스의 연락처 데이터베이스에 접속하는 기능을 제공한다.
+
+==== 제약사항 ====
+  * Contacts API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+
+== Contacts ==
+  * categories : 지원하지 않음. 항상 null 값을 리턴한다. (**Android 2.x **)
+
+== ContactAddress == 
+  * pref : 지원하지 않음. 항상 false 값을 리턴한다. (**Android 2.x **)
+
+== ContactField ==
+  * pref : 지원하지 않음. 항상 false 값을 리턴한다.
+
+== ContactName ==
+  * formatted: 부분적으로 지원함. 
+  * honorificPrefix, givenName, middleName, familyName and honorificSuffix 순으로 리턴 하지만, 저장되지 않는다.
+
+== ContactOrganization ==
+  * pref: 지원하지 않음. 항상 false 값을 리턴한다. (**Android 2.x**)
+
+=== iOS ===
+
+== Contacts ==
+  * displayName : 지원하지 않음. 항상 null 값을 리턴한다. ContactName 객체가 있을 경우에는 name 이나 nickname, “” 을 갖는다.
+  * birthday : 자바스크립트의 Date 객체를 사용해야 한다..
+  * photos : 호출한 사진은 단말기의 임시폴더에 저장되며, File URL을 리턴한다. 임시 폴더는 앱이 종료될 때 삭제된다.
+  * categories : 지원하지 않음. 항상 null 값을 리턴한다.
+
+== ContactAddress == 
+  * pref : 지원하지 않음. 항상 false 값을 리턴한다.
+  * formatted : 현재 지원하지 않음.
+
+== ContactField ==
+  * pref : 지원하지 않음. 항상 false 값을 리턴한다.
+
+== ContactName ==
+  * formatted: 부분적으로 지원함. Composite Name을 리턴 하지만, 저장되지 않는다.
+
+== ContactOrganization ==
+  * pref: 지원하지 않음. 항상 false 값을 리턴한다.
+  * type: 지원하지 않음. 항상 null 값을 리턴한다.
+  * name: 부분적으로 지원함. Organization에 대입한 배열중, 첫 번째 ContactOrganization만 유효하다.
+  * department: 부분적으로 지원함. Organization에 대입한 배열중, 첫 번째 ContactOrganization만 유효하다.
+  * title: 부분적으로 지원함. Organization에 대입한 배열중, 첫 번째 ContactOrganization만 유효하다.
+
+
+=== DEPRECATED ===
+  * 개인정보에 대한 민감성 및 안정성 문제로 더이상 업데이트 하지 않음 ( https://cordova.apache.org/news/2017/11/27/Deprecation-of-cordova-contacts-plugin.html )
+  * W3C 연락처 API 표준안 ( https://www.w3.org/TR/contacts-api/ )
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Contacts" value="org.apache.cordova.ContactManager" />
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+<uses-permission android:name="android.permission.READ_CONTACTS" />
+<uses-permission android:name="android.permission.WRITE_CONTACTS" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/config.xml
+<code xml>
+    <feature name="Contacts">
+        <param name="ios-package" value="CDVContacts"/>
+    </feature>
+</code>
+
+==== 관련 함수 ====
+
+=== contacts.create === 
+  * 새로운 Contact 객체를 생성한다.
+  * 생성과 동시에 디바이스에 저장되지 않는다. (Contact.save 를 통해 저장할 수 있다.)
+
+<code>
+var contact = navigator.contacts.create(properties);
+</code>
+
+  * Quick Example
+<code>
+var myContact = navigator.contacts.create({"displayName": "Test User"});
+</code>
+
+=== contacts.find === 
+  * 디바이스 내, 연락처 데이터베이스를 검색하여, 각각의 연락처 정보를 갖는 하나 이상의 Contact 객체를 받는다.
+<code>
+navigator.contacts.find(contactFields, contactSuccess, contactError, contactFindOptions);
+</code>
+
+^유형^설명^타입^비고^
+|contactFields|검색하고자 하는 연락처 정보를 정의한다.|DOMString[]|[필수]|
+|contactSuccess|연락처 데이터베이스 검색이 성공하였을 때 실행하는 함수| |[필수]|
+|contactError|검색에 실패하였을 때 실행하는 함수| |[선택]|
+|contactFindOptions|검색 조건을 정의한다.| |[선택]|
+
+==== 파라미터 ====
+
+=== contactFields ===
+  * contacts.find 함수 파라미터로 사용된다. 
+  * Contact 객체의 필드로 검색 결과로 나타나는 내용들을 정의하는데 사용된다.
+<code>
+["name", "phoneNumbers", "emails"]
+</code>
+
+=== contactSuccess ===
+  * contacts.find 함수 실행 성공 후에 수행되며 Contact 배열을 결과 값으로 가진다.
+  * 검색 조건으로 조회된 Contact 객체 배열
+<code>
+function(contacts) {
+    // Do something
+}
+</code>
+
+=== contactError ===
+  * contact 관련 함수 실행에 실패하였을 때 수행된다.
+<code>
+function(code) {
+    // Do something
+}
+</code>
+
+^유형^설명^
+|ContactError.UNKNOWN_ERROR|알 수 없는 오류|
+|ContactError.INVALID_ARGUMENT_ERROR|잘못된 파라미터 오류|
+|ContactError.TIMEOUT_ERROR|시간 초과 오류|
+|ContactError.PENDING_OPERATION_ERROR|명령 지연 오류|
+|ContactError.IO_ERROR|읽기나 쓰기 중 오류|
+|ContactError.NOT_SUPPORTED_ERROR|지원하지 않음|
+|ContactError.PERMISSION_DENIED_ERROR|권한 부여에 대한 오류|
+
+=== contactFindOptions ===
+  * contacts.find 함수의 선택적 옵션이다.  
+  * 연락처 데이터베이스 검색 후에 나타나는 결과들의 내용을 정의한다.
+<code>
+{ 
+    filter: "",
+    multiple: true,
+};
+</code>
+
+^유형^설명^타입^비고^
+|filter|연락처 검색에 사용될 문자열(검색어)|DOMString|기본값 : ""|
+|mutiple|다중 연락처에 대한 검색 허용 여부|Boolean|기본값 : false|
+
+==== Objects ====
+
+=== Contact ===
+  * 사용자의 개인 혹은 사무 용도의 연락처 정보를 가지는 객체이다.
+
+<code>
+function onSuccess(contact) {
+    alert("Save Success");
+};
+
+function onError(contactError) {
+    alert("Error = " + contactError.code);
+};
+
+// create a new contact object
+var contact = navigator.contacts.create();
+contact.displayName = "Plumber";
+contact.nickname = "Plumber";       //specify both to support all devices
+
+// populate some fields
+var name = new ContactName();
+name.givenName = "Jane";
+name.familyName = "Doe";
+contact.name = name;
+
+// save to device
+contact.save(onSuccess,onError);
+</code>
+
+== 속성 == 
+
+^유형^설명^타입^
+|id |연락처에 대한 고유한 Id이다. |DOMString |
+|displayName |사용자의 화면에 출력하는 연락처 이름이다. |DOMString |
+|name|연락처에 저장된 이름 정보를 모두 포함하고 있다.|ContactName|
+|nickname |연락처에 저장된 별명이다. |DOMString |
+|phoneNumbers |전화번호를 배열 형태로 저장하고 있다. |ContactField[] |
+|emails |관련 연락처에 대한 이메일 정보의 배열이다.  |ContactField[] |
+|addresses |관련 연락처의 주소에 대한 배열이다. |ContactAddresses[] |
+|ims |관련 연락처에 대한 메신저 주소 정보의 배열이다. |ContactField[] |
+|organizations |소속 단체 정보에 대한 배열이다. |ContactOrganization[] |
+|birthday |관련 연락처에 대한 생일이다. |Date |
+|note |관련 연락처에 대한 메모이다. |DOMString |
+|photos |관련 연락처에 대한 사진이다. |ContactField[] |
+|categories |연락처에 대한 분류 카테고리의 배열이다. |ContactField[] |
+|urls |연락처에 대한 홈페이지 주소의 배열이다. |ContactField[] |
+
+== 함수 ==
+
+^함수^설명^비고^
+|clone |호출한 Contact 객체를 복제하여 새로운 Contact 객체를 생성하고, 새로운 Contact 객체는 null이기 때문에 새로운 Contact 객체로 저장할 수 있도록 지원한다. | |
+|remove |연락처 데이터베이스에서 호출한 Contact 객체를 삭제하고 성공 했을 경우에는 Contact 객체를, 실패했을 경우에는 ContactError 객체를 전달받는다. | |
+|save |신규 Contact 객체 경우에는 디바이스 내, 연락처 데이터베이스에 등록하고, 존재하는 경우 연락처를 수정한다. | |
+
+=== ContactName ===
+ * Contact 객체의 name 속성에 해당하는 관련 속성들의 객체.
+
+== 속성 ==
+
+^속성^설명^타입^
+|formatted |해당 연락처의 전체이름. |DOMString |
+|familyName |전체 이름에서 ‘성’을 의미한다. |DOMString |
+|givenName |전체 이름에서 ‘이름’을 의미한다. |DOMString |
+|middleName |전체 이름에서 성과 이름 사이의 ‘중간 이름’. |DOMString |
+|honorificPrefix |’Mr.’ 나 ‘Dr.’ 같은 접두 호칭을 의미한다. |DOMString |
+|honorificSuffix |’Esq.’와 같은 접미 호칭을 의미한다. |DOMString |
+
+
+=== ContactField ===
+  * Contact 객체의 phone numbers, email address, urls 속성에서 사용하는 필드 객체.
+
+== 속성 ==
+
+^속성^설명^타입^
+|type|필드 유형을 정의한다.(예: ‘home’ 은 집전화, ‘mobile’ 은 휴대전화.)|DOMString|
+|value|phone number 등과 같은 필드에 대한 값을 정의한다.|DOMString|
+|pref|’true’ 일 경우 필드 내, 다수의 값들의 대표 값을 지정한다.|boolean|
+
+=== ContactAddress ===
+  * Contact 객체의 주소 속성에 대한 객체.
+
+<code>
+function onSuccess(contacts) {
+    for (var i=0; i<contacts.length; i++) {
+        for (var j=0; j<contacts[i].addresses.length; j++) {
+            alert("Pref: " + contacts[i].addresses[j].pref + "\n" +
+                    "Type: " + contacts[i].addresses[j].type + "\n" +
+                    "Formatted: " + contacts[i].addresses[j].formatted + "\n" + 
+                    "Street Address: "  + contacts[i].addresses[j].streetAddress + "\n" + 
+                    "Locality: "  + contacts[i].addresses[j].locality + "\n" + 
+                    "Region: "  + contacts[i].addresses[j].region + "\n" + 
+                    "Postal Code: "  + contacts[i].addresses[j].postalCode + "\n" + 
+                    "Country: "  + contacts[i].addresses[j].country);
+        }
+    }
+};
+
+function onError(contactError) {
+    alert('onError!');
+};
+
+// find all contacts
+var options = new ContactFindOptions();
+options.filter=""; 
+var filter = ["displayName","addresses"];
+navigator.contacts.find(filter, onSuccess, onError, options);
+</code>
+
+== 속성 ==
+
+^속성^설명^타입^
+|pref |ContactAddress 객체의 대표 값 여부. |boolean |
+|type |필드 유형을 정의한다. |DOMString |
+|formatted |출력을 위한 전체 주소. |DOMString |
+|streetAddress |동 / 읍 / 면 / 가 와 같은 전체 주소. |DOMString |
+|locality |’시’ / ‘도’ 표기. |DOMString |
+|region |’주’ / ‘지방’ 표기. |DOMString |
+|postalCode |우편번호 표기. |DOMString |
+|country |도시이름 표기. |DOMString  |
+
+=== ContactOrganization ===
+  * Contact 객체의 organization 속성에 관련된 객체.
+<code>
+function onSuccess(contacts) {
+    for (var i=0; i<contacts.length; i++) {
+        for (var j=0; j<contacts[i].organizations.length; j++) {
+            alert("Pref: " + contacts[i].organizations[j].pref + "\n" +
+                    "Type: " + contacts[i].organizations[j].type + "\n" +
+                    "Name: " + contacts[i].organizations[j].name + "\n" + 
+                    "Department: "  + contacts[i].organizations[j].department + "\n" + 
+                    "Title: "  + contacts[i].organizations[j].title);
+        }
+    }
+};
+
+function onError(contactError) {
+    alert('onError!');
+};
+
+var options = new ContactFindOptions();
+options.filter="";
+filter = ["displayName","organizations"];
+navigator.contacts.find(filter, onSuccess, onError, options);
+</code>
+
+== 속성 ==
+
+^속성^설명^타입^
+|pref|ContactOrganization 객체의 대표 값 여부.|boolean|
+|type|필드 유형을 정의한다.(예: ‘work’ 은 직장.)|DOMString|
+|name|소속의 이름을 정의한다.|DOMString|
+|department |소속 부서를 정의한다. |DOMString |
+|title |소속 내의 직함을 정의한다. |DOMString |
+
+=== ContactFindOptions ===
+  * contacts.find 함수에서 사용되는 검색 조건을 정의하는 객체.
+<code>
+// success callback
+function onSuccess(contacts) {
+    for (var i=0; i<contacts.length; i++) {
+        alert(contacts[i].displayName);
+    }
+};
+
+// error callback
+function onError(contactError) {
+    alert('onError!');
+};
+
+// specify contact search criteria
+var options = new ContactFindOptions();
+options.filter="";          // empty search string returns all contacts
+options.multiple=true;      // return multiple results
+filter = ["displayName"];   // return contact.displayName field
+
+// find contacts
+navigator.contacts.find(filter, onSuccess, onError, options);
+</code>
+
+
+== 속성 ==
+
+^속성^설명^타입^
+|filter|검색어 또는 검색조건을 정의한다.|DOMString|
+|multiple|검색 결과으로 다수의 연락처를 가져올 것인지의 여부.|Boolean|
+
+=== ContactError ===
+  * 에러가 발생했을 경우, contactError 함수 호출 시, 전달받는 객체. 
+
+== 속성 ==
+
+^속성^설명^
+|code|에러코드를 나타낸다.|
+
+== Error Code ==
+
+^유형^설명^
+|ContactError.UNKNOWN_ERROR|알 수 없는 오류|
+|ContactError.INVALID_ARGUMENT_ERROR|잘못된 파라미터 오류|
+|ContactError.TIMEOUT_ERROR|시간 초과 오류|
+|ContactError.PENDING_OPERATION_ERROR|명령 지연 오류|
+|ContactError.IO_ERROR|읽기나 쓰기 중 오류|
+|ContactError.NOT_SUPPORTED_ERROR|지원하지 않음|
+|ContactError.PERMISSION_DENIED_ERROR|권한 부여에 대한 오류|
+
+
+==== 참고 자료 ====
+  * Cordova : https://cordova.apache.org/docs/en/7.x/reference/cordova-plugin-contacts/index.html

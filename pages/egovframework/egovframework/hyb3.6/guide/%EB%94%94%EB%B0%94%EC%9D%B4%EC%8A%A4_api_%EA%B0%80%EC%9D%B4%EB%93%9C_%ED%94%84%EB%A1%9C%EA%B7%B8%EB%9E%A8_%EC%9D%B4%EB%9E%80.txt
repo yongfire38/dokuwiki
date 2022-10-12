@@ -1,0 +1,607 @@
+===== 배경 =====
+
+전자정부 서비스 제공 시 모바일 디바이스의 고유 기능의 호출을 위한 모바일 하이브리드 어플리케이션 개발을 지원하기 표준프레임워크 모바일 디바이스 API 실행환경을 개발 및 배포하였으며,
+그에 따라 모바일 하이브리드 앱 표준프레임워크 구축환경을 효과적으로 확산, 보급하기 위해 개발자가 손쉽게 접근할 수 있는 모바일 디바이스 API의 활용예제인 모바일 디바이스 API 가이드프로그램을 제공하게 되었다.
+
+===== 목적 =====
+
+모바일 하이브리드 앱 형태로 만들어진 표준프레임워크 모바일 디바이스 API의 설치 및 활용을 효과적으로 전달하기 위해 사용자의 수준 및 사용환경에 적합한 내용의 모바일 디바이스 API 예제를 구성하여, 개발 생산성 및 응용프로그램 품질 제고, 표준화 촉진등의 효과를 가져 올 수 있다.
+
+  * 각 모바일 디바이스 API별 특성에 따른 기능을 쉽게 이해하여 활용할 수 있도록 각 모바일 디바이스 API의 특징을 잘 들어 낼 수 있는 활용 예제를 개발
+  * 각 모바일 디바이스 API별 특성에 따라 서버 모듈 연계 기능을 쉽게 이해하여 활용할 수 있도록 각 모바일 디바이스 API에 대해 전자정부 표준프레임워크 서버 연계 활용 예제 제공
+  * 각 모바일 디바이스 API 기능의 서버 연계 기능에 대한 일반적인 특성이 잘 들어 날 수 있도록 일반적인 형태의 로직을 갖는 서버 연계 활용 예제를 구성
+  * 전자정부 서비스 구현 시에 사용자가 활용 할 수 있는 NPKI API 템플릿 예제 프로그램과 전자정부 표준프레임워크와 연계 할 때 사용될 수 있는 Interface API 템플릿 예제 프로그램을 쉽게 이용 할 수 있는 구조로 개발하여 제공
+
+===== 준수 지침 =====
+
+==== 전자정부 웹 호환성 준수지침 ====
+
+**1) 근거 기준: 행정안전부 고시 “제 2010-40호  **
+
+**2) 개정 이유: 모바일 전자정부 서비스 제공시 접근성 제고등을 위하여 공공기관이 준수해야 할 사항을 규정 **
+
+**3) 주요 개정 내용: **
+
+  * 국민들이 다양한 모바일 기기를 사용할 수 있도록 모바일 ‘앱’방식보다 모바일’웹’방식을 권고
+  * 모바일 웹 방식 개발을 위한 기술 표준 지침
+     - 최소3종 이상 웹 브라우저에서 동등한 서비스 제공
+     - 국제 표준화 기구에서 제공하는 표준 사용 의무화 
+**4) 전자정부 모바일 서비스 제공 원칙 **
+  * 다양한 스마트폰 사용자들이 모두 혜택을 받을 수 있도록 모바일 웹 방식의 개발을 권장 
+
+**5) 모바일 ‘웹’ 과 ‘앱’ 서비스의 구현 방법 차이 **
+
+{{:egovframework:mcom:웹과앱의차이.png|}}
+
+==== 모바일 애플리케이션 접근성 지침 ====
+
+**1) 근거 기준: 행정안전부 고시 “제 2011-38호  **
+
+**2) 개정 이유: 모바일 전자정부 서비스 제공시 접근성 제고등을 위하여 공공기관이 준수해야 할 사항을 규정 **
+
+**3) 주요 내용: **
+
+  * 모바일 애플리케이션 접근성 향상을 위한 모바일 애플리케이션 접근성 지침에 기반한 사용자인터페이스를 구축하고 사용자인터페이스의 접근성을 반복 평가하여 모바일 애플리케이션 접근성을  제공
+
+**4) 모바일 애플리케이션 접근성 준수를 위한 개발절차 **
+
+{{:egovframework:hyb:guide:웹접근성테스트.png?700|}}
+
+===== 구성 내용 =====
+
+iOS, Android 플랫폼 두 종의 디바이스 API 가이드 프로그램을 각 샘플 템플릿 프로그램 및 디바이스 API 별로 가이드 프로그램을 구현하여 제공한다..
+
+* 디바이스 API 가이드프로그램의 종류
+
+^   디바이스 API    ^    구현개요     ^
+|	SampleTemplate	|	폰갭에서 제공하는 디바이스API 10가지를 하이브리드 앱으로 구현하여 샘플을 제공한다.	|
+|	Contact	|	현재 저장된 전화번호부를 리스트 형태로 보여주며 찾기 기능을 통해 전화번호부를 검색 및 서버에 연락처를 백업한다.	|
+|	GPS	|	지도서비스와 연계 하여 지도화면 위에 현재좌표와 위치를 표시한다.	|
+|	Accelerator	|	디바이스의 가속도 정보를 조회하여 이미지의 움직임으로 화면에 표시한다.	|
+|	Camera	|	카메라 기능을 통해 사진을 촬영하며 촬영된 사진을 서버에 업로드 및 섬네일 형태로 조회한다.	|
+|	Vibrator	|	알람 방식 선택 기능을 제공하며 타임설정을 통해 사용자 알람을 동작한다.	|
+|	Compass	|	디바이스가 가리키는 방향 정보를 이용하여 지도화면의 방향 정보를 실시간으로 변경한다.	|
+|	Media	|	서버에 위치한 미디어 파일 목록을 확인하고 선택한 미디어 파일을 재생, 정지, 앞으로 탐색, 뒤로 탐색 버튼을 통해 컨트롤 할 수 있는 기능을 제공한다. 	|
+|	File	|	동영상 캡쳐 기능을 통해 촬영된 파일을 디바이스에 저장, 조회하며 파일을 서버에 업로드/다운로드 한다.	|
+|	Device	|	디바이스 메타데이터를 조회하여 그리드 형태로 사용자에게 제공한다.	|
+|	Network	|	디바이스 네트워크 정보를 조회하여 사용자 화면에 표시한다.	|
+|	NPKI	|	모바일용 GPKI인증서를 이용한 인증을 수행하며 로그인 로그정보를 서버에 저장한다.	|
+|	Interface	|	사용자 정보를 서버에 저장하는 회원가입 기능을 제공하며 가입된 정보로 로그인 할 수 있는 기능을 제공한다.	|
+|	PushNotifications	|	디바이스의 메타 데이터 정보를 조회하고 조회된 정보를 서버에 전송 후 메시지 작성, 발송, 송·수신 할 수 있는 기능을 제공한다.	|
+|	FileOpener	|	다운받은 문서를 볼수 있도록 내장 앱으로 연동하는 기능을 제공한다.	|
+|	StreamingMedia 	|	멀티미디어(동영상)을 실시간으로 볼수 있도록 내장 미디어 플레이어로 연동하는 기능을 제공한다.	|
+|	Barcodescanner 	|	바코드, QR코드등 정보를 확인 할 수 있는 기능을 제공한다.	|
+|	WebResourceUpdate 	|	웹 리소스의 최신버전 조회 및 버전 업데이트를 진행할 수 있는 기능을 제공한다.	|
+|	DeviceFileMgmt 	|	디바이스 저장소 내의 폴더(디렉토리) 및 파일 관리(이동,삭제,복사) 기능을 제공한다.	|
+|	JailbreakDetection 	|	디바이스의 탈옥 및 루팅을 현황을 조회하는 기능을 제공한다.	|
+|	SocketIO 	|	간단한 쳇팅 기능을 앱으로 연동하는 기능을 제공한다.	|
+|	SQLite 	|	디바이스 내 독립적인 DB를 사용 할 수 있는 기능을 제공한다.	|
+|	Unzip 	|	파일의 압축과 해제 기능을 앱으로 연동하는 기능을 제공한다.	|
+
+	
+===== 모바일 디바이스 API 가이드 프로그램 아키텍처 =====
+
+  * 모바일 디바이스 API 별로 제공되는 객체 또는 메소드 등을 충분히 활용하여 각 디바이스 API 기능의 특징이 잘 드러나도록 개발한다.
+  * 모바일 디바이스 API 가이드 프로그램을 활용하여 하이브리드 어플리케이션 구현에 활용될 수 있도록 모듈화 된 구조로 구현한다.. 
+  * 모바일 디바이스 API 공공서비스의 경우 각 기관에서 보유하고 있는 특정 정보 제공이나 민원처리의 성격이 많으므로 서버와의 연계를 포함하여 구현한다.
+  * 기존 레거시 시스템과의 연계를 통해 자료구조(JSON, 미디어 파일, XML 파일 등)가 전송 가능한 추가 인터페이스 API를 통한 연계를 구현한다. 
+  * 모바일 디바이스 API 가이드프로그램 구성도
+{{:egovframework:hyb:guide:가이드프로그램구성도.png?900|}}
+
+=== iOS 하이브리드 어플리케이션 프로젝트 구조 ===
+
+  * 아키텍처 패턴
+
+^	이름	^	설명	^
+|	CordovaLib.xcodeproj |폰갭을 사용하기 위한 폰갭 Sub 프로젝트 |
+|	Framework   |SystemConfiguration.framework 시스템 영역 접근 framework,\\ CFNetwork.framework 네트워크 영역 접근 framework, MobileCoreService.framework 디바이스 Core 영역 접근 framework|
+|	www	|index.html, *.css, *.js 파일., App의 첫 페이지 index.html와 디자인 관련된 css, PhoneGap 및 JavaScript js 구성.|
+|	Design	|디바이스 배경에 쓰이는 icons 파일의 폴더, App 실행 시 보여줄 splash 파일의 폴더|
+|	Plugins	|추가 Plug-in 폴더, config.XML에 추가된 Plug-in 정보 기록, CDVPlugin 클래스를 상속|
+
+  * 오픈소스 소프트웨어
+
+^	이름	^	설명	^
+|	Reachability	|애플에서 무료 제공하기 때문에 라이선스 없음,\\ 현재 디바이스의 3G 또는 wi-fi 아니면 네트워크 미연결 mode 체크,\\ 3G 또는 wi-fi 아니면 네트워크 미연결 변경 시 알림 제공|
+|	ASIHTTPRequest	|BSD License, GET/POST/PUT/DELETE 방식 지원,\\ HTTP, HTTPS 통신 지원,\\ 파일 업로드/다운로드 지원 및 진행 % 상태 알림 제공,\\ 동기 및 비동기 통신 지원, 통신 시작, 실패, 성공 상태 알림 제공|
+|	PhoneGap	|모바일 웹 페이지에서 디바이스에 직접 접근 가능	|
+
+  * 아키텍처 구현 전략
+
+^	이름	^	설명	^
+|	CordovaLib.xcodeproj |폰갭 Command Line Interface를 사용하여 프로젝트를 생성해야한다.|
+|	Framework  |프로젝트 설정 화면에서 SystemConfiguration framework, CFNetwork framework, MobileCoreService framework 를 추가한다.|
+|	www  |UIWebView에서 보여줄 첫 페이지 index.html 파일,\\ 디자인에 관련된 css 파일, PhoneGap 및 JavaScript의 js 파일이 위치한다.|
+|	Design  |icons 폴더에는 디바이스 바탕화면에 보일 Icon.png, Icon@2x.png, Icon-72.png 파일이 위치한다,\\ splash 폴더에는 앱 실행이 보여줄 splash화면 이미지 Default.png, Default@2x.png가 위치한다.|
+|	Plugins  |Plug-in을 추가 생성하고자 할 경우  CDVPlugin 클래스를 상속받아서 여기에 추가한다,\\ 추가된 Plug-in은 config.xml 파일의 <feature> 엘리먼트 추가 |
+
+=== Android 하이브리드 어플리케이션 프로젝트 구조 ===
+
+^	리소스	^	위치	^	설명	^
+|AndroidManifest.xml|/AndroidManifest.xml|안드로이드 어플리케이션 디스크립터 파일로 액티비티, 컨텐츠프로바이더, 서비스, 어플리케이션에서 사용되는 수신자들을 정의한다. 권한 설정도 가능하다.|
+|Activity.java|src/패키지명/*Activity.java|안드로이드 어플리케이션을 구성하는 가장 기본이 되는 빌딩 블록으로 보통의 경우 한 화면을 차지하면서 뷰로 구성된 유저 인터페이스를 화면에 표시하고 사용자의 입력을 처리하는 역할을 한다	|
+|R.java|gen/패키지명/R.java|안드로이드에서 사용되는 리소스를 관리하는 자바 파일로 리소스에 대한 참조 값이 정의 된다. 자동으로 SDK에 의해 생성 되며 사용자가 수정하지 못하도록 되어있다.|
+|HTML/JS/CSS/Image|assets/www/|하이브리드 어플리케이션의 주요 구성요소로 화면 요소 및 비즈니스 로직을 포함한다.|
+|Phonegap-x.x.jar|lib/|디바이스 API인 폰갭 프레임워크의 안드로이드 플랫폼의 네이티브와 통신하기 위한 라이브러리이다.|
+|Android.jar|Android-sdk/platforms/android-version/|안드로이드 플랫폼에서 API와 관련되 라이브러리 파일이다.안드로이드 버전에 따라 파일이 달라진다.|
+|Icon.png|res/drawable-dpi/|어플리케이션이 설치 되었을 때 사용자가 볼 수 있는 아이콘	|
+|Main.xml|res/layout/main.xml|안드로이드 플랫폼에서 사용되는 화면 UI를 xml로 정의해 놓은 파일|
+|Strings.xml|res/values/strings.xml|안드로이드 플랫폼에서 사용되는 문자열을 관리하는 xml 파일로 다국어를 지원하는 용도로 사용 할 수 있다.|
+|config.xml|res/xml/plugins.xml|폰갭 프레임워크에 등록된 플러그인이 정의되는 파일로 폰갭의 디바이스 API들이 플러그인 형태로 등록 되어 있다.|
+
+  * 메인 클래스 (Activity)
+
+Phonegap 프로젝트인 경우 일반적인 APP 구현 방식과는 다르게 Phonegap 에서 제공하는 Class(DroidGap) 을 상속하여 메인 클래스를 구현하며.
+Phonegap 에서 하이브리드 앱 구현을 위해 미리 Webkit 을 상속받아 구현해 놓은 onCreate 및 loadUrl을 호출하여 웹 리소스(HTML, CSS, JavaScript)들을 Webview 로 주입하여 렌더링 한다.
+기본적으로 폰갭은 디폴트로 Rich 클라이언트 방식을 제공하며, 프로젝트 내에있는 Index.html을 최초 호출하도록 되어 있다.
+
+<code>
+package kr.go.egovframework.hyb.example;
+
+import org.apache.cordova.*;
+
+import android.os.Bundle;
+
+/**  
+ * @Class Name : example_AndroidActivity.java
+ * @Description : example_AndroidActivity Class
+ * @Modification Information  
+ * @
+ * @  수정일       수정자                 수정내용
+ * @ ---------   ---------   -------------------------------
+ * @ 
+ * 
+ *  Copyright (C) by MOPAS All right reserved.
+ */
+public class Example_AndroidActivity extends DroidGap
+{
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);        
+        // Clear cache if you want
+        super.clearCache();
+        //super.appView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        super.loadUrl("file:///android_asset/www/index.html");
+    }
+}
+
+</code>
+
+
+
+  * index.html
+
+폰갭 API 및 자바스크립트를 이용한 어플리케이션 주요 로직을 구현한다.
+
+<code>
+
+
+<!DOCTYPE html>
+<html LANG="ko"> 
+<!-- 
+  /**
+  * @Class Name : index.html
+  * @Description : 가이드 프로그램 표준코드 index 화면
+  * @Modification Information
+  * 
+  *   수정일         수정자                   수정내용
+  *  -------    --------    ---------------------------
+  *  
+  *
+  *  
+  * Copyright (C) 2009 by MOPAS  All right reserved.
+  */
+ -->
+<head> 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>example API Guide</title>
+    
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.3.2.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.3.2.css" />
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-1.9.1.min.js"></script>
+    <script>
+            $(document).on("pageinit", function(){
+                             $.mobile.defaultPageTransition = 'none';
+                             });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.3.2.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-2.0.4.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.3.2.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>
+
+	<!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script>
+
+    <script type="text/javascript" charset="utf-8">
+
+	</script>      
+   
+</head>
+	
+<body>
+
+	<div id="intro" data-role="page">
+		Device API Guide Android
+	</div>
+
+</body>
+</html>
+
+
+
+</code>
+
+
+  * Manifest.xml
+
+Manifest.xml은 모바일 어플리케이션 설정 파일로서 어플리케이션의 설정 및 필요한 기능, 권한등을 정의한다.
+
+<code>
+
+<?xml version='1.0' encoding='utf-8'?>
+<manifest android:hardwareAccelerated="true" android:versionCode="1" android:versionName="0.0.1" package="kr.go.egovframework.hyb.example" xmlns:android="http://schemas.android.com/apk/res/android">
+    <supports-screens android:anyDensity="true" android:largeScreens="true" android:normalScreens="true" android:resizeable="true" android:smallScreens="true" android:xlargeScreens="true" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    
+    <uses-sdk android:minSdkVersion="14" android:targetSdkVersion="23" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.RECORD_VIDEO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="kr.go.egovframework.hyb.example.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="kr.go.egovframework.hyb.example.permission.C2D_MESSAGE" />
+    
+    <application android:hardwareAccelerated="true" android:icon="@drawable/icon" android:label="@string/app_name" android:supportsRtl="true">
+    <activity android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale" android:label="@string/activity_name" android:launchMode="singleTop" android:name="MainActivity" android:theme="@android:style/Theme.Black.NoTitleBar" android:windowSoftInputMode="adjustResize">
+        <intent-filter android:label="@string/launcher_name">
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+    <activity android:exported="true" android:name="com.plugin.gcm.PushHandlerActivity" />
+    <receiver android:name="com.plugin.gcm.CordovaGCMBroadcastReceiver" android:permission="com.google.android.c2dm.permission.SEND">
+        <intent-filter>
+            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+            <category android:name="kr.go.egovframework.hyb.example" />
+        </intent-filter>
+    </receiver>
+    <service android:name="com.plugin.gcm.GCMIntentService" />
+    <activity android:configChanges="orientation|screenSize" android:label="Simple Audio Stream" android:name="com.hutchind.cordova.plugins.streamingmedia.SimpleAudioStream" />
+    <activity android:configChanges="orientation|screenSize" android:label="Simple Video Stream" android:name="com.hutchind.cordova.plugins.streamingmedia.SimpleVideoStream" />
+            <activity android:clearTaskOnLaunch="true" android:configChanges="orientation|keyboardHidden" android:exported="false" android:name="com.google.zxing.client.android.CaptureActivity" android:screenOrientation="landscape" android:theme="@android:style/Theme.NoTitleBar.Fullscreen" android:windowSoftInputMode="stateAlwaysHidden">
+            <intent-filter>
+                <action android:name="com.phonegap.plugins.barcodescanner.SCAN" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:label="@string/share_name" android:name="com.google.zxing.client.android.encode.EncodeActivity">
+            <intent-filter>
+                <action android:name="com.phonegap.plugins.barcodescanner.ENCODE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:label="@string/share_name" android:name="com.google.zxing.client.android.HelpActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+	</application>
+
+</manifest>
+
+
+</code>
+
+
+  * config.xml
+
+<plugin> 태그에는 전자정부 디바이스 API 실행환경의 디바이스 API들이 정의되어 있으며 사용자 플러그인 또한 <plugin> 태그를 이용하여 등록하여야 한다.
+
+<code>
+
+<?xml version='1.0' encoding='utf-8'?>
+<widget xmlns:cdv="http://cordova.apache.org/ns/1.0"
+    id="kr.go.egovframe.hyb"
+    version="0.0.1"
+    xmlns="http://www.w3.org/ns/widgets" >
+
+    <preference name="loglevel" value="DEBUG" />
+
+    <name>DEVICEAPI</name>
+
+    <description>
+        A sample Apache Cordova application that responds to the deviceready event.
+    </description>
+
+    <author email="dev@cordova.apache.org" href="http://cordova.io" >
+        Apache Cordova Team
+    </author>
+    
+    <content src="../wwwSocketIO/intro.html" />
+    
+    <access origin="*" />
+
+    <feature name="Device" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.device.Device" />
+    </feature>
+    <feature name="NetworkStatus" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.networkinformation.NetworkManager" />
+    </feature>
+    <feature name="Battery" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.batterystatus.BatteryListener" />
+    </feature>
+    <feature name="Accelerometer" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.devicemotion.AccelListener" />
+    </feature>
+    <feature name="Compass" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.deviceorientation.CompassListener" />
+    </feature>
+    <feature name="Camera" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.camera.CameraLauncher" />
+    </feature>
+    <feature name="File" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.file.FileUtils" />
+        <param
+            name="onload"
+            value="true" />
+    </feature>
+    <feature name="Capture" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.mediacapture.Capture" />
+    </feature>
+    <feature name="Media" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.media.AudioHandler" />
+    </feature>
+    <feature name="FileTransfer" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.filetransfer.FileTransfer" />
+    </feature>
+    <feature name="Notification" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.dialogs.Notification" />
+    </feature>
+    <feature name="Vibration" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.vibration.Vibration" />
+    </feature>
+    <feature name="Contacts" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.contacts.ContactManager" />
+    </feature>
+    <feature name="Globalization" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.globalization.Globalization" />
+    </feature>
+    <feature name="SplashScreen" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.splashscreen.SplashScreen" />
+        <param
+            name="onload"
+            value="false" />
+    </feature>
+    <feature name="InAppBrowser" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.inappbrowser.InAppBrowser" />
+    </feature>
+    <feature name="Geolocation" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.geolocation.Geolocation" />
+    </feature>
+    <feature name="Whitelist" >
+        <param
+            name="android-package"
+            value="org.apache.cordova.whitelist.WhitelistPlugin" />
+        <param
+            name="onload"
+            value="true" />
+    </feature>
+
+    <!-- eGovframe DeviceAPI Plug-In -->
+    <feature name="EgovInterfacePlugin" >
+        <param
+            name="android-package"
+            value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+    </feature>
+    <feature name="StorageInfoPlugin" >
+        <param
+            name="android-package"
+            value="kr.go.egovframework.hyb.plugin.EgovStorageInfo" />
+    </feature>
+    <feature name="DeviceNumberPlugin" >
+        <param
+            name="android-package"
+            value="kr.go.egovframework.hyb.plugin.EgovDeviceNumber" />
+    </feature>
+    <feature name="CustomMyPlugin" >
+        <param
+            name="android-package"
+            value="kr.go.egovframework.hyb.plugin.CustomPlugin" />
+    </feature>
+    
+    <feature name="BarcodeScanner">
+        <param name="android-package" value="com.phonegap.plugins.barcodescanner.BarcodeScanner" />
+    </feature>
+
+    <!-- eGovframe DeviceAPI New Plug-In -->
+    <feature name="EgovResourceUpdate" >
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.EgovResourceUpdate" />
+    </feature>
+    
+    <!-- eGovframe DeviceAPI New Plug-In-->
+    <feature name="EgovResourceUpdate">
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.EgovResourceUpdate" />
+    </feature>
+    <feature name="EgovFileOpener">
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.EgovFileOpener" />
+    </feature>
+
+    <feature name="EgovZip">
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.EgovZip" />
+    </feature>
+    
+    <!-- Cordova New Plug-In -->
+    <feature name="PushPlugin" >
+        <param
+            name="android-package"
+            value="com.plugin.gcm.PushPlugin" />
+    </feature>
+    
+    <feature name="RootDetection">
+        <param name="android-package" value="ru.trykov.root.RootDetection" />
+        <param name="onload" value="true" />
+    </feature>
+
+    <feature name="FileOpener2">
+        <param name="android-package" value="io.github.pwlin.cordova.plugins.fileopener2.FileOpener2" />
+    </feature>
+    
+    <feature name="StreamingMedia">
+        <param name="android-package" value="com.hutchind.cordova.plugins.streamingmedia.StreamingMedia" />
+    </feature>
+    
+    <feature name="BluetoothLePlugin">
+        <param name="android-package" value="com.randdusing.bluetoothle.BluetoothLePlugin" />
+    </feature>
+    
+    
+    <feature name="SQLitePlugin">
+         <param name="android-package" value="io.sqlc.SQLitePlugin"/>
+    </feature>
+            
+    <!-- Allow links to example.com -->
+    <allow-navigation href="http://example.com/*" />
+
+    <!--
+         Wildcards are allowed for the protocol, as a prefix
+	     to the host, or as a suffix to the path
+    -->
+    <allow-navigation href="*://*.example.com/*" />
+
+    <!--
+         A wildcard can be used to whitelist the entire network,
+	     over HTTP and HTTPS.
+	     *NOT RECOMMENDED*
+    -->
+    <allow-navigation href="*" />
+
+    <!-- The above is equivalent to these three declarations -->
+    <allow-navigation href="http://*/*" />
+    <allow-navigation href="https://*/*" />
+    <allow-navigation href="data:*" />
+
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <allow-intent href="itms:*" />
+    <allow-intent href="itms-apps:*" />
+
+    <preference
+        name="SplashScreen"
+        value="myimageid" />
+    <preference
+        name="SplashScreenDelay"
+        value="10000" />
+    <preference
+        name="AllowInlineMediaPlayback"
+        value="false" />
+    <preference
+        name="BackupWebStorage"
+        value="cloud" />
+    <preference
+        name="DisallowOverscroll"
+        value="false" />
+    <preference
+        name="EnableViewportScale"
+        value="false" />
+    <preference
+        name="KeyboardDisplayRequiresUserAction"
+        value="true" />
+    <preference
+        name="MediaPlaybackRequiresUserAction"
+        value="false" />
+    <preference
+        name="SuppressesIncrementalRendering"
+        value="false" />
+    <preference
+        name="SuppressesLongPressGesture"
+        value="false" />
+    <preference
+        name="Suppresses3DTouchGesture"
+        value="false" />
+    <preference
+        name="GapBetweenPages"
+        value="0" />
+    <preference
+        name="PageLength"
+        value="0" />
+    <preference
+        name="PaginationBreakingMode"
+        value="page" />
+    <preference
+        name="PaginationMode"
+        value="unpaginated" />
+    <preference
+        name="CameraUsesGeolocation"
+        value="false" />
+    <preference
+        name="AndroidPersistentFileLocation"
+        value="Compatibility" />
+
+</widget>
+
+</code>

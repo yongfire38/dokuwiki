@@ -1,0 +1,99 @@
+===== Interface (Android) =====
+
+==== 설명 ====
+  * Device Application과 Web Application의 연결 기능을 제공한다.
+
+==== 제약사항 ====
+
+N/A
+
+==== 환경 설정 ====
+
+  * app/res/value/serverinfo.xml - 서버_URL 예제 : http://123.456.789.123/eGov
+<code xml>
+<string name="SERVER_URL">서버_URL</string>
+</code>
+
+  * app/res/xml/plugins.xml
+<code xml>
+<plugin name="EgovInterfacePlugin" value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+</code>
+
+==== 관련 함수 ====
+
+=== get === 
+  * HTTP GET Method를 수행한다.
+  * HTTP Response의 Body 값, Accept-Type 에 따라 Json/xml String을 받는다.
+<code>
+window.plugins.EgovInterface.get(uri, acceptType, param, successCallback);
+</code>
+
+  * 표준코드
+<code>
+window.plugins.EgovInterface.get(url,accept_type, null, function(jsondata) {
+	var data = JSON.parse(jsondata);	
+	var list_html = "";
+	var totcnt = data.networkInfoList.length;
+	for (var i = 0; i < totcnt; i++) {
+		result = data.networkInfoList[i];
+
+		list_html += "<li><h3>UUID : " + result.uuid + "</h3>";
+		list_html += "<p><strong>Network Connection Type : " + result.networktype + "</strong></p>";
+		list_html += "<p>Availibility : " + result.useYn + "</p></li>";
+			
+	}
+		
+	var theList = $('#theList');
+	theList.html(list_html);
+		
+	$.mobile.changePage("#networkInfoList", "slide", false, false);
+	theList.listview("refresh"); 
+	setTimeout(loadiScroll, 200);		
+});
+
+</code>
+
+== 파라미터 ==
+
+^유형^설명^
+|uri|호출하고자 하는uri|
+|acceptType|HTTP Header의 Accept-Type을 설정.|
+|param|입력 파라미터, Json Object 타입으로 입력.|
+|successCallback|GET Method에 대한 응답값을 성공적으로 구햐였을 때, 수행하는 함수.|
+
+=== post === 
+  * HTTP POST Method를 수행한다.
+  * HTTP Response의 Body 값, Accept-Type 에 따라 Json/xml String을 받는다.
+<code>
+window.plugins.EgovInterface.post(uri, acceptType, param, successCallback);
+</code>
+
+  * 표준코드
+<code>
+var uri = "/nwk/deleteNetworkInfo.do";
+//Accept_Type setting
+var accept_type = "json";
+// http post method call
+egovHyb.post(url, accept_type, null, function(jsondata) {
+	var data = JSON.parse(jsondata);
+	if(data.resultState == "OK"){
+		$.mobile.changePage("#networkInfo", { transition: "slide", reverse: true });
+	}else{
+		$("#alert_dialog").click( function() {
+			jAlert('데이터 삭제 중 오류가 발생 했습니다.', '삭제 오류', 'c');
+		});
+	}
+		
+});
+</code>
+
+== 파라미터 ==
+
+^유형^설명^
+|uri|호출하고자 하는uri|
+|acceptType|HTTP Header의 Accept-Type을 설정.|
+|param|입력 파라미터, Json Object 타입으로 입력.|
+|successCallback|POST Method에 대한 응답값을 성공적으로 구햐였을 때, 수행하는 함수.|
+
+==== 참고자료 ====
+N/A

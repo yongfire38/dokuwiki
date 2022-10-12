@@ -1,0 +1,435 @@
+====== GPS 디바이스 API 가이드 프로그램 ======
+===== 개요 =====
+모바일 GPS 디바이스 API 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발자가 구현 시 
+GPS API를 통해 위치 정보를 알아내고, 위치를 맵에 표시할 수 있도록 참고 및 활용될 수 있는 가이드 앱 이다.
+
+==== 특징 ====
+본 가이드 프로그램에서는 GPS 기능을 가이드 할 수 있도록 **GPS API 정보 호출**, **GPS API 정보 DB 목록**를 제공하고 있다. \\
+
+==== 기능 흐름도 ====
+
+{{:egovframework:hyb:guide:ios:gps기능흐름도2.png?740|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:add:GPS시퀀스다이어그램.png|}}
+
+==== 전제 조건 ====
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경|Xcode 4.5.2, PhoneGap 2.9.0|
+|서버 사이드 개발 환경|전자정부표준프레임워크 개발환경2.7|
+|Mash up Open API 연계|GPS API 가이드 프로그램의 예제로 제공하는 지도를 사용하기 위해서는 별도로 해당 지도 API 인증키를 신청하여야 한다. \\ - Daum 지도 : [[https://apis.daum.net/register/myapi.daum|https://apis.daum.net/register/myapi.daum]]) \\ \\ 예제로 사용하는 Daum 지도 사용에 관한 모든 권한은 해당 기관에 있으며, \\ Daum 지도 사용시 **'Daum 지도 Open API 서비스 이용약관'**을 확인 후 사용한다. \\ (Daum 지도 Open API 서비스 이용약관 : [[http://dna.daum.net/apis/mapagreement|http://dna.daum.net/apis/mapagreement]]) \\ \\ 예제로 사용하는 지도 외에도 기타 지도 API 약관 및 규격에 맞추에 서비스를 연계하여 구축 가능하다.|
+|테스트 디바이스 |iPhone4 |
+|테스트 플랫폼 |iOS 5.1|
+|추가 라이브러리| N/A|
+
+
+==== 제약 사항 ====
+=== 지원 디바이스 및 플랫폼 ===
+== iPhone 의 경우 장치의 연산속도에 따른 문제가 발생할 수 있다. ==
+    * 문제 : 폰갭 오류시.
+    * 해결방안 : setTimeout() 함수로 phonegap 로딩 순서를 지연시킨다.\\
+<code>
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+</code>
+    * 문제 : iScroll4 컨텐츠 내용 높이 계산 오류.
+    * 해결방안 : setTimeout() 함수로 컨텐츠에 css 적용이 완료되고 iscroll 생성이 되도록 한다.
+<code>
+setTimeout(function()
+           {
+               myScroll = new iScroll(thisPage, 
+                                      { 
+                                          checkDOMChanges: true,
+                                          onBeforeScrollStart:function(e)
+                                          {
+                                          }
+                                      });
+           },
+           500);
+</code>
+== CallBack 함수에서 alert() 를 포함하면 문제가 발생할수 있다 (phoneGap) ==
+    * 문제 : 폰갭에 지정한 콜백 함수에서 alert() 메시지 호출시 동작 오류.
+    * 해결 방안 : 비동기 함수를 사용하거나 alert()처럼 스레드를 잡는 함수는 사용하지 않는다.
+ 
+== Xcode 4.5에서 실행 시 주의 사항 ==
+Xcode 4.5부터 iOS 6, iPhone 5를 지원하는데, 해당 디바이스와 OS를 지원을 할 경우 PhoneGap 1.9.0의 라이브러리는 Xcode 4.X에서 컴파일되어 배포되는 라이브러리라 프로젝트 옵션을 조정할 필요가 있다.\\
+
+1. 옵션 설정\\
+{{:egovframework:hyb:guide:ios:xcode4.5_제약사항1.png|}}
+
+2. armv7s 삭제\\
+{{:egovframework:hyb:guide:ios:xcode4.5_제약사항2.png|}}
+
+=== 크로스 도메인 사용 ===
+폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Resource/Cordova.plist에서 <key>ExternalHosts</key> 항목에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.
+
+===== 설명 =====
+
+==== 관련 클래스다이어그램 ====
+
+{{:egovframework:hyb:guide:ios:gps_class.png?1024}}
+
+==== Device Application ====
+=== 관련 소스 ===
+^유형^대상소스^비고^
+|CSS|www/css/egovframwork/mbl/hyb/GPSAPI.css |GPS 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |www/images/egovframwork/mbl/hyb/ |GPSAPI 가이드 프로그램 주요 Image 폴더|
+|JS |www/js/egovframwork/mbl/hyb/GPSAPI.js |GPSAPI 가이드 프로그램 주요 JavaScript|
+|HTML|www/GPSAPI.html|GPSAPI 메인 페이지|
+|HTML|www/license.html|GPSAPI 라이센스 페이지|
+|HTML|www/overview.html|GPSAPI 기능설명 페이지|
+
+=== 활용 API ===
+== navigator.geolocation.getCurrentPosition ==
+  * PhoneGap의 위치정보 수신 API
+
+<code>
+navigator.geolocation.getCurrentPosition
+</code>
+
+<code>
+navigator.geolocation.getCurrentPosition(successCallback, failCallback);
+</code>
+
+^Option^설명^비고^
+|successCallback|성공시 리턴되는 함수| |
+|failCallback|실패시 리턴되는 함수| |
+
+
+
+==== Server Application ====
+=== 관련 소스 ===
+^유형^대상소스^비고^
+|Controller|egovframework.hyb.ios.gps.web.EgovGPSiOSAPIController.java|GPS 정보 관리를 위한 클래스|
+|Service|egovframework.hyb.ios.gps.service.EgovGPSiOSAPIService.java|GPS 정보 관리를 위한  서비스 인터페이스|
+|VO|egovframework.hyb.ios.gps.service.GPSiOSAPIDefaultVO.java|GPS 관리를 위한 VO 클래스|
+|VO|egovframework.hyb.ios.gps.service.GPSiOSAPIVO.java|GPS 관리를 위한 VO 클래스|
+|DAO|egovframework.hyb.ios.gps.service.impl.GPSiOSAPIDAO.java|GPS 관리를 위한 데이터처리 클래스|
+|DAO|egovframework.hyb.ios.gps.service.impl.EgovGPSiOSAPIServiceImpl.java|요청 서비스 처리를 위한 클래스|
+|Query XML|resources/egovframework/sqlmap/hyb/ios/gps/EgovGPSiOSAPIGuide_SQL_mysql.xml|GPS 정보 관리를 위한 Query 파일|
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|gps(eGov)|GPS_EGOV|gps(eGov) 정보 관리|
+
+=== 테이블 정의서 ===
+
+   * GPS
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|LA|Latitude 값|VARCHAR|40|Null|
+|4|LO|longitude 값|VARCHAR|40|Null|
+|5|ACCRCY|기울임 값|VARCHAR|10|Null|
+|6|USEYN|사용여부|CHAR|1|Null|
+
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+
+===== 환경설정 =====
+GPS 디바이스 API 가이드 프로그램에서 제공하는 모바일 디바이스의 GPS 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+=== config.xml ===
+
+<code xml>
+    <feature name="Geolocation">
+        <param name="ios-package" value="CDVLocation"/>
+    </feature>
+</code>
+
+=== eGovModule/EGovComModule.h ===
+
+<code>
+<!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+#define kSERVER_URL     @"http://192.168.100.222:8080/DeviceAPIGuideTotal_Web_V1.7.1"
+</code>
+
+==== Server Application ====
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/ios/gps/EgovGPSiOSAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+
+===== 관련 기능 =====
+GPS 디바이스API 가이드 프로그램은 크게  **GPS API 정보 호출**, **GPS API 정보 DB 목록** 기능으로 구성되어 있다.
+
+==== GPS API 정보 호출 ====
+
+=== 비즈니스 규칙 ===
+
+GPS API 정보 호출을 하여, 맵에서 현재 위치를 조회하고, 현재 위치를 서버에 전송하여 저장한다. \\
+
+=== 관련코드  ===
+
+<code>
+// GPS API 정보 호출
+navigator.geolocation.getCurrentPosition(onSuccess, onError);
+
+// GPS 정보를 맵에 표시
+function onSuccess(position) {
+    console.log("GPSAPIGuide navigator.geolocation.getCurrentPosition Success");
+    console.log('Latitude: ' + position.coords.latitude + '\nLongitude: ' + position.coords.longitude);
+    lat = position.coords.latitude;
+    lon = position.coords.longitude;
+    var html = "";
+    html = '위도 : ' + position.coords.latitude + '<br/>';
+    html += '경도 : ' + position.coords.longitude + '';
+	
+    $('#latlngInfo').html(html);
+
+    // 현재 위치 좌표*
+    var latlng =  new daum.maps.LatLng(position.coords.latitude, position.coords.longitude);
+	
+    // 지도 설정*
+    var myOptions = {
+        level: 4,
+        center: latlng,
+        mapTypeId: daum.maps.MapTypeId.ROADMAP
+    };
+	
+    // 지도 생성*
+    var map = new daum.maps.Map(document.getElementById("map"), myOptions);
+    map.addControl(new daum.maps.ZoomControl());
+    
+    // 현재 위치 마커 표시*
+    var curMarker = new daum.maps.Marker({
+                                         position: latlng
+                                         });
+    curMarker.setMap(map);
+	
+    var infowindow = new daum.maps.InfoWindow({
+                                              content: '<font size=2>위도:'+position.coords.latitude + '<br/>' + '경도:'+position.coords.longitude+'</font>'
+                                              });
+    infowindow.open(map, curMarker);
+    
+    $.mobile.hidePageLoadingMsg('a');
+}
+
+// 현재 위치 정보를 서버에 전송
+function fn_egov_go_addGpsInfo()
+{
+    var params = {uuid : device.uuid,
+                    lat: lat,
+                    lon: lon,
+                    useYn: 'Y'};
+    
+    $.mobile.showPageLoadingMsg('a');
+    alert('Http Method:POST\nAcceptType:JSON\n전송데이터:' + JSON.stringify(params));
+	
+    EgovInterface.submitAsynchronous(
+                                     [params, "/gps/addGPSInfo.do"],
+                                     function(result) {
+                                         console.log("GPSAPIGuide fn_egov_go_addGpsInfo request Completed");
+                                         var str = '{';
+                                         for (myKey in result){
+                                             str += myKey + ':' + result[myKey] + '\n';
+                                         }
+                                         str += '}';
+                                         alert('응답방식:RESTful\n응답Type:json, post\nParam:\n' + str);
+                                         //window.history.back();
+                                         $.mobile.hidePageLoadingMsg('a');
+                                         location.href = "index.html";
+                                     },
+                                     function(error) {
+                                         console.log("GPSAPIGuide fn_egov_go_addGpsInfo request Failed");
+                                         var str = '{';
+                                         for (myKey in error){
+                                             str += myKey + ' : ' + error[myKey] + '\n';
+                                         }
+                                         str += '}';
+                                         alert('응답방식:RESTful\n전송Type:json, post\nParam:\n' + str);
+                                         $.mobile.hidePageLoadingMsg('a');
+                                     }
+                                     );
+    
+}
+
+
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|GPS 정보 서버로 송신하기|/gps/xml/addGPSInfo.do|EgovGPSiOSAPIController|addGPSInfo|GPSAPI.html#signUp|
+
+입력 데이터는 GPS API 정보를 사용한다.
+
+{{:egovframework:hyb:guide:ios:gps_ios_map.png?320|}}
+
+정보데이터를 서버로 송신하기 위해서는 DB저장 버튼을 클릭하면 된다. \\
+
+DB저장 : GPS 데이터를 서버로 송신한다. \\
+Back 버튼 : **GPS 디바이스 API 가이드 프로그램 메뉴** 화면으로 이동한다. \\
+
+
+==== GPS API 정보 DB 목록 ====
+
+=== 비즈니스 규칙 ===
+
+서버에 저장되어 있는 위치 정보 목록을 수신하고, 확인 후 삭제한다.
+
+=== 관련코드  ===
+
+<code>
+// 목록 읽기
+function fn_egov_go_gpsInfoList()
+{
+    console.log('fn_egov_go_gpsInfoList()');
+    
+    $.mobile.changePage("#gpsInfoList", "slide", false, false);
+    $.mobile.showPageLoadingMsg('a');
+    
+    EgovInterface.submitAsynchronous(
+                                     ["/gps/gpsInfoList.do"],
+                                     function(result) {
+                                         console.log("GPSAPIGuide fn_egov_go_gpsInfoList request Completed");
+                                         var list_html = "";
+                                         var totcnt = result.gpsInfoList.length;
+                                         
+                                         for (var i = 0; i < totcnt; i++) {
+                                             var data = result.gpsInfoList[i];
+                                             list_html += "<li><h3>UUID : " + data.uuid + "</h3>";
+                                             list_html += "<p>위도 : " + data.la + "</p>";
+                                             list_html += "<p>경도 : " + data.lo + "</p></li>";
+                                         }
+                                         var theList = $('#theLogList');
+                                         theList.html(list_html);
+                                         theList.listview("refresh");
+                                         $.mobile.hidePageLoadingMsg('a');
+                                         setTimeout(loadiScrollList, 1000);
+                                     },
+                                     function(error) {
+                                         console.log("GPSAPIGuide fn_egov_go_gpsInfoList request Failed");
+                                         var str = '{';
+                                         for (var myKey in error){
+                                             str += myKey + ' : ' + error[myKey] + '\n';
+                                         }
+                                         str += '}';
+                                         alert('응답방식:RESTful\n전송Type:json, post\nParam:\n' + str);
+                                         $.mobile.hidePageLoadingMsg('a');
+                                     }
+                                     );
+    
+}
+
+// 위치 정보 목록을 삭제한다.
+function fn_egov_go_deleteGpsInfo()
+{
+    console.log('fn_egov_go_deleteGpsInfo()');
+    
+    jConfirm('전송방식:RESTful\n전송Type:json, post\nParam:\n' + 'url:/gps/deleteGPSInfo.do', '알림', 'c', function(r){
+             if(r == true){
+                 $.mobile.showPageLoadingMsg('a');
+                EgovInterface.submitAsynchronous(
+                                                 ["/gps/deleteGPSInfo.do"],
+                                                 function(result) {
+                                                     console.log("GPSAPIGuide fn_egov_go_deleteGpsInfo request Completed");
+                                                     console.log("GPS Log List Request Completed");
+                                                     var str = '{';
+                                                     for (myKey in result){
+                                                         str += myKey + ':' + result[myKey] + '\n';
+                                                     }
+                                                     str += '}';
+                                                     alert('응답방식:RESTful\n응답Type:json, post\nParam:\n' + str);
+                                                     //window.history.back();
+                                                     $.mobile.hidePageLoadingMsg('a');
+                                                     location.href = "index.html";
+                                                 },
+                                                 function(error) {
+                                                     console.log("GPSAPIGuide fn_egov_go_deleteGpsInfo request Failed");
+                                                     var str = '{';
+                                                     for (var myKey in error){
+                                                         str += myKey + ' : ' + error[myKey] + '\n';
+                                                     }
+                                                     str += '}';
+                                                     alert('응답방식:RESTful\n전송Type:json, post\nParam:\n' + str);
+                                                     $.mobile.hidePageLoadingMsg('a');
+                                                 }
+                                                 );
+             }else{
+                 return;
+             }
+             });
+}
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|GPS 위치 목록 수신하기|/gps/gpsInfoList.do|EgovGPSiOSAPIController|gpsInfoList|GPSAPI.html#gpsInfoList|
+
+{{:egovframework:hyb:guide:ios:gps_log.png?320|}}
+
+위치 정보 목록을 삭제하기 위해서는 DB삭제 버튼을 클릭하면 된다. \\
+
+DB삭제 : 위치 정보 목록을 삭제한다. \\
+Back 버튼 : **GPS 디바이스 API 가이드 프로그램 메뉴** 화면으로 이동한다. \\
+
+
+
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+=== GPS Device Applicaton 컴파일 방법 ===
+1. 디바이스 또는 시뮬레이터에서 실행하고자 할 경우 빨간 테두리 영역을 클릭한다.\\
+{{:egovframework:hyb:guide:ios:xcode실행영역선택1.png|}}\\
+2. 디바이스 또는 시뮬레이터를 선택한다.\\
+{{:egovframework:hyb:guide:ios:xcode실행영역선택2.png|}}\\
+3. 실행 버튼을 클릭한다.\\
+{{:egovframework:hyb:guide:ios:xcode실행버튼.png|}}\\
+4. 인트로 화면과 메인 화면을 확인한다.\\
+{{:egovframework:hyb:guide:ios:gps_intro.png?320|}}{{:egovframework:hyb:guide:ios:gps_main.png?320|}}
+
+
+=== GPS Server Applicaton 컴파일 방법 ===
+
+  * GPSAPI 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:웹서버실행성공.png?700|}} 
+
+
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+    * 실제 콘솔 로그 예
+<code>
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    ...
+}
+</code>
+    * Xcode 콘솔 창
+{{:egovframework:hyb:guide:ios:cameradebugxcode.png?700|}}\\
+    * Organizer 로그 창
+{{:egovframework:hyb:guide:ios:cameradebugorganizer.png?700|}}\\
+
+
+GPS 디바이스 API 가이드 프로그램 에서는 디버깅을 위하여 다음과 같이 콘솔 정보를 출력한다.
+
+^디버그 코드^디버깅 내용^
+|GPSAPIGuide navigator.geolocation.getCurrentPosition Success|GPS 정보 읽기 성공 시|
+|GPSAPIGuide navigator.geolocation.getCurrentPosition Failed|GPS 정보 읽기 실패 시|
+|GPSAPIGuide fn_egov_go_gpsInfoList request Completed|서버에서 GPS 정보 목록 읽기 성공 시|
+|GPSAPIGuide fn_egov_go_gpsInfoList request Failed|서버에서 GPS 정보 목록 읽기 실패 시|
+|GPSAPIGuide fn_egov_go_addGpsInfo request Completed|서버에 GPS 정보 저장 성공 시|
+|GPSAPIGuide fn_egov_go_addGpsInfo request Failed|서버에 GPS 정보 저장 실패 시|
+|GPSAPIGuide fn_egov_go_deleteGpsInfo request Completed|서버의 GPS 목록 삭제 성공 시|
+|GPSAPIGuide fn_egov_go_deleteGpsInfo request Failed|서버의 GPS 목록 삭제 실패 시|
+
+==== 배포 ====
+GPS 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=687&menu=3&submenu=7|Click]]
+
+===== 참고 자료 =====
+  * Daum Map : [[http://dna.daum.net/apis/maps]]
+

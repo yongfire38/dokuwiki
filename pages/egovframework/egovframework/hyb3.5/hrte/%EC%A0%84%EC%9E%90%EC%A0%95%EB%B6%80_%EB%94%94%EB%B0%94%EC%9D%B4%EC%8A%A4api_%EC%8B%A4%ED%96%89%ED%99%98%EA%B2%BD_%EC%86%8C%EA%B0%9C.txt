@@ -1,0 +1,205 @@
+====== 전자정부 디바이스 API 실행환경 소개 ======
+
+===== 개요 =====
+전자정부 디바이스 API 실행환경은 웹 리소스를 활용한 디바이스 어플리케이션인 하이브리드 어플리케이션의 구성 기반이 되며, 하이브리드 어플리케이션 구현 및 실행 시 필요한 기본기능을 제공한다.\\
+즉 모바일 서비스 구현 시 디바이스 어플리케이션이 웹 리소스 기반으로 구현 및 실행될 수 있도록 지원하는 디바이스API, 자바스크립트 프레임워크, 하이브리드 프레임워크, SW구조의 집합을 의미한다.\\
+
+전자정부 디바이스 API 실행환경 구성은 배포시 개발 및 커스터마이징의 자율성을 위하여 오픈소스 기반으로 구성 되었으며, \\
+기존의 전자정부 표준프레임워크와의 호환을 위하여 전자정부 모바일 웹 실행환경을 활용하여 UX/UI 구성을 지원하며, 전자정부 표준프레임워크 서버 어플리케이션과의 연계 (Interface API)를 고려하여 개발 되었다.
+
+{{:egovframework:hyb:hrte:실행환경_구현_개요.png|}}
+
+===== 목표 =====
+전자정부 디바이스 API 실행환경은 모바일 하이브리드 어플리케이션 구현을 위하여 필요한 모바일 디바이스 API 개발 방법을 제공하여 모바일 환경에서도 기존 정보시스템과 동일하게 다음의 효과를 창출하는 것을 목적으로 한다. 
+  * 모바일 디바이스 기능을 사용하는 공공서비스를 구현 할 수 있도록 Device API 가이드 프로그램 제공 
+  * 전자정부 디바이스 API 실행환경에서 개발 배포 된 하이브리드 앱이 표준프레임워크와 연계 할 수 있는 인터페이스 디바이스 API 제공
+  * 모바일 디바이스 환경에서 활용할 수 있는 공개용 PKI 디바이스 API 제공
+  * 모바일 디바이스 API 개발을 위한 2종 플랫폼(안드로이드, iOS)에 최적화된 표준패턴 및 표준코드와 가이드 개발
+  
+
+===== 배경 =====
+현재 전자정부는 서비스의 다양화를 위하여 모바일 기반의 서비스를 제공 및 구축하고 있으며, 전자정부 표준프레임워크에서는 모바일 서비스 지원을 위한 모바일 웹 실행환경을 전자정부 표준프레임워크 실행환경에 포함시켜 제공을 하고 있다.\\
+현재 제공되고 있는 모바일 웹 방식은 디바이스 내의 브라우저를 통해 서버 어플리케이션에 있는 웹 리소스를 URL 방식으로 가져와 서비스를 제공하는 방식으로, 그러한 경우 디바이스 내의 고유 기능 (카메라, 전화번호 부) 등을 직접적으로 사용할 수 없는 한계를 가지고 있다.\\
+그에 따라 실제 디바이스 내의 고유기능을 웹 리소스를 통하여 호출하여 사용할 수 있는 디바이스 하이브리드 어플리케이션이 대두 되었고, \\
+전자정부 표준프레임워크 에서는 표준 프레임워크와 호환되는 모바일 하이브리드 어플리케이션 개발을 위한 디바이스 API 활용 방법을 제공하여 체계적이고 효율적인 스마트 전자정부 기반 시스템의 구축•운영을 통해 전자정부의 서비스 품질을 확보하고 정보화 투자 효율성 향상의 기반을 확보하고자 디바이스 API 실행환경을 개발하게 되었다.
+
+===== 특징 =====
+
+전자정부 디바이스 API 실행환경은 전자정부 프레임워크에 대한 요구사항에 기반하고 하이브리드 어플리케이션 구현을 위한 기존 하이브리드 프레임워크를 비교 분석하여 전자정부 디바이스 API를 구성하는 오픈소스 및 서비스를 정의하였다.\\
+디바이스 하이브리드 어플리케이션 구현의 기반이 되는 하이브리드 프레임워크를 구성하기 위하여 다양한 오픈소스에 대한 검증 및 심사 과정을 거쳐 선정 된 PhoneGap 프레임워크를 기반으로 하며, 웹 리소스 구현 및 연계 기능을 위하여 전자정부 모바일웹 실행환경을 추가하여 구성 하였으며.\\
+디바이스 내의 고유기능 사용을 위하여 Phonegap 기반의 디바이스 API를 전자정부 서비스 환경에 최적화 하여 제공하고 있으며, 전자정부 모바일 서비스 제공 시 활용 가능한 전자정부 특화 디바이스 API를 포함한다. \\
+또한 기존의 전자정부 표준프레임워크를 활용한 응용 SW와의 연계를 지원하는 구조 및 개발 시 응용 및 이해를 위한 디바이스 API 가이드 프로그램을 구현한다. \\
+  * 디바이스 하이브리드 어플리케이션 구현을 위한 하이브리드 프레임워크, javaScript 프레임워크 디바이스 API 및 어플리케이션 구현 시 적용 및 참고가 가능한 디바이스 API 가이드 프로그램을 제공한다. 
+  * 전자정부 프로젝트에 최적화된 오픈 소스 소프트웨어 선정 – 전자정부 디바이스 API 실행환경은 최적화 및 표준화 된 디바이스 하이브리드 어플리케이션 구현을 지원하기 위하여 오픈 소스 소프트웨어 심사 과정을 거쳐 최적의 오픈 소스 소프트웨어를 선정하였다
+  * 디바이스 내의 고유기능의 사용을 위한 Accelorator, Compass, Camera, Media, File Read/Write, Device, Vibrator, Network, GPS, Contact 등의 디바이스 API를 제공하며, 전자정부 서비스에 최적화 된 지원을 위한 전자정부 특화 디바이스 API 인 NPKI API, Interface API 를 제공한다.
+  * 기존의 전자정부 표준프레임워크를 통해 구현 된 응용 SW와의 연계를 지원하기 위하여 Spring 기반의 서비스와 Rest통신이 가능하도록 표준화 된 구조를 지원한다.
+
+===== 주요 오픈소스 =====
+
+^   NO    ^    서비스 그룹     ^    서비스     ^    오픈소스  ^  확장 및 개발    ^  
+| 1 | UX 처리 | UI/UX 라이브러리  |  jQuery Mobile  |  |    
+| 2 | 디바이스 API 실행환경 | Mobile Hybrid Framework |  PhoneGap Cordova  |  |  
+
+
+===== 디바이스 API 실행환경 아키텍처 구성 =====
+전자정부 Device API 실행환경은 각 플랫폼 별 구현환경 위에서 HTML, CSS, JavaScript 로 구성된웹 리소스를 통한 디바이스 하이브리드 어플리케이션 구현을 지원하며 플랫폼 별 SDK를 활용하여 구현된 웹 리소스 내의 JavaScript 형태의 Device API와 각 플랫폼 별 Native Code 가 하이브리드 프레임워크 및 웹 뷰 인터페이스를 통해 연동되어 실제 디바이스의 고유 기능을 호출할 수 있도록 지원 한다.
+
+{{:egovframework:hyb:hrte:디바이스api실행환경아키텍처구성.png?570|}}
+
+==== SDK ====
+전자정부 디바이스 API 실행환경에서 제공하는 모바일 플랫폼은 iOS, Android 두 종류 이며\\
+그 중 Android SDK의 구조는 다음과 같이 구성 되어있다.
+  * Linux kernel : 하드웨어 드라이버, 프로세스와 메모리 관리, 보안, 네트워크, 전력 관리 등의 핵심 서비스 담당. 
+  * Libraries : Android libc와 SSL 같은 다양한 C/C++ 코어 라이브러리로서 핸드폰에 사용되는 하드웨어를 지원하기 위해 컴파일 되어 핸드폰 공급업체에 의해 핸드폰에 미리 설치 됨 
+  * Android Runtime : Core Libraries, Dalvik Virtual Machine으로 구성., 커널위에 존재하며 Dalvik, VM, 코어 라이브러리 등이 포함된다. 
+  * Application Framework : Android Application을 만드는데 필요한 기능을 지원, App들을 관리하는 역할을 한다. 
+  * Application : 안드로이드 아키텍처 다이어그램의 최상위 계층, 안드로이드의 특징 중 하나로 모든 어플리케이션이 동일한 수준으로 실행됨 
+
+전자정부 디바이스 API 실행환경에서 지원하는 모바일 디바이스 OS 중 iOS의 구조는 다음과 같이 이루어져 있다
+  * iOS의 커널 : Mac OS X와 같은 Mach에 기초한다. 
+  * Core OS와 Core Services 계층 : 매우 기본 적인 iOS의 인터페이스를 가지고 있다. 데이터 타입들, 봉주르 서비스, 네트워크 소켓 등이 있다. 
+  * Media 계층 : 2D/3D 그리고, 오디오, 비디오 등의 기반 기술을 가지고 있다. OpenGL ES, Quartz Core Audio와 Core Animation이 있다. 
+  * Cocoa Touch 계층 : 모든 기술이 Objective-C를 기본으로 하며, 각종 프레임워크로 응용프로그램을 만들 때 가장 기본적인 인프라를 제공한다.
+
+==== 하이브리드 프레임워크 ====
+전자정부 디바이스 API 실행환경에서는 웹 리소스와 Native 모듈과의 연계를 위한 오픈소스 기반의 하이브리드 프레임워크를 포함한다. \\
+오픈소스 하이브리드 프레임워크인 PhoneGap은 네이티브 플랫폼 종속적인 디바이스 API와 플랫폼 비종속적인 영역인 어플리케이션 부분으로 나누어 지며 웹 뷰 클라이언트를 이용해 어플리케이션을 구동시킨다.
+  * 하이브리드 어플리케이션 영역은 플랫폼에 비종속적인 언어인 HTML5, 자바스크립트, CSS로 구현 되며 앱 빌드시 컴파일 되지 않는다.
+  * 어플리케이션이 동작하면 디바이스 API의 웹뷰에 의해 인터프리팅 방식으로 랜더링 된다. 
+
+==== 웹뷰 인터페이스 ====
+웹 리소스와 각 SDK 사이에서 인터페이스 역할을 수행한다.\\
+웹 뷰 인터페이스는 각 디바이스 플랫폼에 내장 되어있는 Web Kit 기능을 통하여 수행된다.
+  * 각 플랫폼 별 SDK 내에 내장되어 있는 브라우저 기능을 포함 한 웹 Tool Kit 으로서 하이브리드 어플리케이션의 디바이스 API 호출을 위한 브릿지 역할을 해준다. 
+  * SDK 로 부터 상속받은 웹뷰를 생성해서 그웹뷰에 내 소스를 로드한 후 네이티브API를 사용할수있도록 연계한다.
+
+==== Device API ====
+모바일 하이브리드 어플리케이션 구현 시 전자정부 디바이스 API 실행환경 에서는 Javascript 객체를 이용하여, Device에 접근이 가능도록 다양한 API를 제공한다. 따라서 Web App을 구성하여, Device 자원에 직접 접근이 가능하다.
+  * 하이브리드 어플리케이션 동작 하기 위한 기반 구성요소로 네이티브 플랫폼에 종속적인 언어로 구성된다.
+  * HTML5와 자바스크립트 표준 코드 이외의 디바이스 종속 기능을 사용하기 위한 기능을 구현하며 사용자의 커스텀 라이브러리가 포함된다.
+
+^구분^기능^ 
+|	Contacts	|	디바이스의 연락처 데이터 베이스에 접근(연락처 만들기, 검색등등)	|
+|	GPS	|	디바이스 GPS센서에 접근 (현재 위치등등)	|
+|	Accelerometer	|	디바이스 모션 센서 접근(현재 가속도 정보등등)	|
+|	Compass	|	디바이스 포인팅 방향 정보 처리	|
+|	Camera	|	디바이스의 기본 카메라 어플리케이션에 접근	|
+|	Vibrator	|	영상 음성, 진동등을 통한 알림 제공. (alert, confirm, beep, vibrate등등을 발생 시키는 . .)	|
+|	Media	|	디바이스의 오디오 파일을 저장하고 기록할 수 있는 기능을 제공	|
+|	File Read Write	|	파일 시스템 계층의 읽기, 쓰기, 탐색등의? 기능 제공	|
+|	Device	|	디바이스 H/W S/W 정보에 접근 (디바이스명, 플랫폼버전등등)	|
+|	Network	|	디바이스의 네트워크 정보에 접근	|
+|	PKI	|	NPKI 모듈과의 연계기능을 제공	|
+|	Interface	|	전자정부 표준프레임워크 웹 서버 어플리케이션 연계 기능 제공	|
+
+
+==== 웹 리소스 ====
+폰갭 프로젝트는 일반적인 웹 리소스 (HTML5, CSS3, JavaScript) 등을 활용하여 모바일 하이브리드 APP을 구현하며 해당 웹 리소스는 디바이스의 종류에 상관없이 재활용이 가능하다.
+  * HTML, CSS, Image, js 등의 파일을 추가할 수 있으며 디바이스의 종류에 관계없이 재활용이 가능하다.
+  * 결국 각 환경에 맞는 컨테이너만 (아이폰, 안드로이드, 등) 따로 만들고 내부 웹 리소스는 HTML, JavaScript, CSS 등을 이용하여 개발이 가능하다
+  * 전자정부 디바이스 API 실행환경 에서는 HTML5, CSS3을 적용한 웹 리소스 구현을 지원한다.
+
+==== JavaScript Framework ====
+전자정부 디바이스 API 실행환경을 활용한 프로젝트에서는 디바이스 SDK 에서 .JS 등의 JavaScript Framework를 추가하여 활용하는 방식의 개발이 가능하다. \\
+전자정부 디바이스 API 실행환경에서 제공하는 추가 JavaScript Framework는 다음과 같다
+  * 전자정부 모바일 웹 실행환경
+  * JQuery
+  * iScroll
+
+===== 전자정부 하이브리드 앱 구성 =====
+전자정부 디바이스 API 실행환경을 활용하여 구현 된 전자정부 하이브리드 앱은 기존의 전자정부 표준프레임워크와의 연계를 고려하여 \\
+Spring 기반의 전자정부 표준프레임워크와 Rest 방식의 연계가 가능한 구조 및 연계 API(Interface API) 를 제공하여 구성된다. \\
+디바이스 API 가이드 프로그램을 포함한 전자정부 디바이스 API 하이브리드 어플리케이션의 목표 구성은 다음과 같다.
+
+{{:egovframework:hyb:hrte:전자정부_하이브리드_앱.png?770|}}
+
+===== 디바이스 API 실행환경 구조 =====
+각 플랫폼 별로 제공되는 전자정부 디바이스 API 실행환경의 구조는 다음과 같으며, 해당 디렉토리를 통해 실행환경 라이브러리가 구성되어 전자정부 디바이스 API 실행환경을 활용한 디바이스 하이브리드 어플리케이션 개발을 지원한다.
+
+=== 디바이스 API 실행환경 Import 구문 ===
+<code>
+    <!-- Phonegap.js import -->
+    <script type="text/javascript" charset="utf-8" src="js/egovframework/mbl/cmm/cordova.js"></script>
+    
+    <!-- eGovFrame Common import -->        
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/jquery.mobile-1.4.5.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/theme-1.1.1.css" />
+    <link rel="stylesheet" href="css/egovframework/mbl/cmm/EgovMobile-1.4.5.css" />
+    
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery-1.11.2.min.js"></script>
+    <script>
+            $(document).on("pageinit", function(){
+                             $.mobile.defaultPageTransition = 'none';
+                             });
+    </script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/modernizr-2.0.4.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovMobile-1.4.5.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/EgovHybrid.js"></script>
+
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="js/egovframework/mbl/cmm/json2.js"></script>
+
+    <!-- iScroll.js import -->
+    <script type="text/javascript" src="js/iscroll/iscroll.js"></script></code>
+
+=== 디바이스 API 실행환경 Android 디렉토리 구조 ===
+
+^디렉토리 ^^^^파일^비고^
+|assets/www||||		|		|
+|		|	css 	|		|		|		|		|
+|		|		|	egovframework	|		|		|		|
+|		|		|	mbl 	|		|		|		|
+|		|		|		|	cmm	|		|		|
+|		|		|		|		|	EgovMobile-1.4.5css	|	모바일 실행환경 공통 css 파일	|
+|		|		|		|		|	jquery.mobile-1.4.5.css	|	jquery mobile 의 css 파일	|
+|		|		|		|		|	theme.css	|	f, g 테마 파일	|
+|		|		|		|	hyb	|	DeviceAPI.css	|	DeviceAPI 가이드 별 css 파일	|
+|		|	js 	|		|		|		|		|
+|		|		|	egovframework	|		|		|		|
+|		|		|	mbl 	|		|		|		|
+|		|		|		|	cmm	|	EgovMobile-1.4.5.js	|	모바일 실행환경의 공통 js 파일	|
+|		|		|		|		|	jquery.mobile-1.4.5.min.js	|	jquery mobile 의 js 파일	|
+|		|		|		|		|	jquery-1.11.2.min.js	|	jquery 의 js 파일	|
+|		|		|		|		|	modernizr-2.0.4.js	|	Device API 확인을 위한 공통 js 파일	|
+|		|		|		|		|	cordova.js	|	cordova의 js 파일	|
+|		|		|		|	hyb	|	DeviceAPI.js	|	DeviceAPI 가이드 별 js 파일	|
+|		|		|		|		|	index.html	|		|
+|	libs	|		|		|		|	cordova.jar	|	폰갭 프로그램 구성을 위한 랩퍼 클래스들 	|
+|	res	|		|		|		|		|	다양한 리소스를 관리하는 폴더 	|
+|		|		|		|		|	AndroidManiFest.xml	|	안드로이드 어플리케이션 디스크립터 파일로	|
+
+
+=== 디바이스 API 실행환경 iOS 디렉토리 구조 ===
+
+
+^디렉토리 ^^^^파일^비고^
+|      www      |		|		|		|		|		|
+|		|	css	|		|		|		|		|
+|		|		|	egovframework	|		|		|		|
+|		|		|	mbl 	|		|		|		|
+|		|		|		|	cmm	|		|		|
+|		|		|		|		|	EgovMobile-1.4.5.css	|	모바일 실행환경 공통 css 파일	|
+|		|		|		|		|	jquery.mobile-1.4.5.min.css	|	jquery mobile 의 css 파일	|
+|		|		|		|		|	theme.css	|	f, g 테마 파일	|
+|		|		|		|	hyb	|	DeviceAPI.css	|	DeviceAPI 가이드 별 css 파일	|
+|		|	js	|		|		|		|		|
+|		|		|	egovframework	|		|		|		|
+|		|		|	mbl 	|		|		|		|
+|		|		|		|	cmm 	|	EgovMobile-1.4.5.js	|	모바일 실행환경의 공통 js 파일	|
+|		|		|		|		|	jquery.mobile-1.4.5.min.js	|	jquery mobile 의 js 파일	|
+|		|		|		|		|	jquery-1.11.2.min.js	|	jquery 의 js 파일	|
+|		|		|		|		|	modernizr-2.0.4.js	|	Device API 확인을 위한 공통 js 파일	|
+|		|		|		|		|	cordova.js	|	cordova의 js 파일	|
+|		|		|		|	hyb	|	DeviceAPI.js	|	DeviceAPI 가이드 별 js 파일	|
+|		|		|		|		|	index.html	|		|
+|	{Project_Name} 	|		|		|		|		|	 	|
+|		|	Resources	|		|		|		|		|
+|		|		|	icons	|		|	Icon.png	|	디바이스 배경에 나올 Icon 파일. iPhone 3G/3GS 기기. 	|
+|		|		|		|		|	Icon@2x.png	|	디바이스 배경에 나올 Icon 파일. iPhone 4 이상 기기. 	|
+|		|		|		|		|	Icon-72.png	|	App Store 검색 시 나올 Icon.	|
+|		|		|	splash	|		|	Default.png	|	앱 실행시 나올 splash 파일. iPhone 3G/3GS 기기	|
+|		|		|		|		|	Default@2x.png	|	앱 실행시 나올 splash 파일. iPhone 4 이상 기기. 	|
+|		|	Plugins	|		|		|		|	새로 추가되는 Plug-in 파일이 추가되는 폴더	|
+|		|	Supporting Files	|		|		|	config.xml 	|	앱과 모바일웹이 통신하기 위한 환경설정 파일	|
+| CordovaLib.xcodeproj |	|		|		|		|	Sub 프로젝트로 폰갭 프레임워크가 위치	|

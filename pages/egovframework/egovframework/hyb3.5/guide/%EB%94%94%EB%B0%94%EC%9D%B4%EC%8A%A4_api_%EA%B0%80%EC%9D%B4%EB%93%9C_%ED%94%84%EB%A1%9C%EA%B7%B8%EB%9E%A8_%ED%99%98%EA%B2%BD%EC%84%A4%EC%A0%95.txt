@@ -1,0 +1,339 @@
+===== 디바이스 API 가이드 프로그램 환경설정 =====
+
+==== 하이브리드 어플리케이션 설정(Android) ====
+
+=== 설정 ===
+
+== res/xml/config.xml ==
+  * 폰갭 어플리케이션의 설정 정보들을 등록해주는 파일이다.
+  * 폰갭에서는 각 Device API 들을 Plug-in 형태로 제공하며 해당 Device API Plug-in 들을 plugins 타입 아래에 명시 해 주어야 한다.
+  * 전자정부용 웹 서버 어플리케이션과 인터페이스를 하기위해서는 EgovInterfacePlugin 을 추가 해 주어야 한다.
+<code xml>
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+        id        = "io.cordova.helloCordova"
+        version   = "2.0.0">
+    <name>Hello Cordova</name>
+
+    <description>
+        A sample Apache Cordova application that responds to the deviceready event.
+    </description>
+
+    <author href="http://cordova.io" email="dev@cordova.apache.org">
+        Apache Cordova Team
+    </author>
+
+    <access origin="*"/>
+
+    <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
+    <content src="index.html" />
+
+    <preference name="loglevel" value="DEBUG" />
+    <!--
+      <preference name="splashscreen" value="resourceName" />
+      <preference name="backgroundColor" value="0xFFF" />
+      <preference name="loadUrlTimeoutValue" value="20000" />
+      <preference name="InAppBrowserStorageEnabled" value="true" />
+      <preference name="disallowOverscroll" value="true" />
+    -->
+
+    <feature name="App">
+      <param name="android-package" value="org.apache.cordova.App"/>
+    </feature>
+    <feature name="Geolocation">
+      <param name="android-package" value="org.apache.cordova.GeoBroker"/>
+    </feature>
+    <feature name="Device">
+      <param name="android-package" value="org.apache.cordova.Device"/>
+    </feature>
+    <feature name="Accelerometer">
+      <param name="android-package" value="org.apache.cordova.AccelListener"/>
+    </feature>
+    <feature name="Compass">
+      <param name="android-package" value="org.apache.cordova.CompassListener"/>
+    </feature>
+    <feature name="Media">
+      <param name="android-package" value="org.apache.cordova.AudioHandler"/>
+    </feature>
+    <feature name="Camera">
+      <param name="android-package" value="org.apache.cordova.CameraLauncher"/>
+    </feature>
+    <feature name="Contacts">
+      <param name="android-package" value="org.apache.cordova.ContactManager"/>
+    </feature>
+    <feature name="File">
+      <param name="android-package" value="org.apache.cordova.FileUtils"/>
+    </feature>
+    <feature name="NetworkStatus">
+      <param name="android-package" value="org.apache.cordova.NetworkManager"/>
+    </feature>
+    <feature name="Notification">
+      <param name="android-package" value="org.apache.cordova.Notification"/>
+    </feature>
+    <feature name="Storage">
+      <param name="android-package" value="org.apache.cordova.Storage"/>
+    </feature>
+    <feature name="FileTransfer">
+      <param name="android-package" value="org.apache.cordova.FileTransfer"/>
+    </feature>
+    <feature name="Capture">
+      <param name="android-package" value="org.apache.cordova.Capture"/>
+    </feature>
+    <feature name="Battery">
+      <param name="android-package" value="org.apache.cordova.BatteryListener"/>
+    </feature>
+    <feature name="SplashScreen">
+      <param name="android-package" value="org.apache.cordova.SplashScreen"/>
+    </feature>
+    <feature name="Echo">
+      <param name="android-package" value="org.apache.cordova.Echo"/>
+    </feature>
+    <feature name="Globalization">
+      <param name="android-package" value="org.apache.cordova.Globalization"/>
+    </feature>
+    <feature name="InAppBrowser">
+      <param name="android-package" value="org.apache.cordova.InAppBrowser"/>
+    </feature>
+    <!-- Deprecated plugins element. Remove in 3.0 -->
+    <plugins>
+    	<plugin name="App" value="org.apache.cordova.App"/>
+    	<plugin name="Geolocation" value="org.apache.cordova.GeoBroker"/>
+    	<plugin name="Device" value="org.apache.cordova.Device"/>
+    	<plugin name="Accelerometer" value="org.apache.cordova.AccelListener"/>
+    	<plugin name="Compass" value="org.apache.cordova.CompassListener"/>
+    	<plugin name="Media" value="org.apache.cordova.AudioHandler"/>
+    	<plugin name="Camera" value="org.apache.cordova.CameraLauncher"/>
+    	<plugin name="Contacts" value="org.apache.cordova.ContactManager"/>
+    	<plugin name="File" value="org.apache.cordova.FileUtils"/>
+    	<plugin name="NetworkStatus" value="org.apache.cordova.NetworkManager"/>
+    	<plugin name="Notification" value="org.apache.cordova.Notification"/>
+    	<plugin name="Storage" value="org.apache.cordova.Storage"/>
+    	<plugin name="Temperature" value="org.apache.cordova.TempListener"/>
+    	<plugin name="FileTransfer" value="org.apache.cordova.FileTransfer"/>
+    	<plugin name="Capture" value="org.apache.cordova.Capture"/>
+    	<plugin name="Battery" value="org.apache.cordova.BatteryListener"/>
+    	<plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
+    	<plugin name="EgovInterfacePlugin" value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+		<plugin name="StorageInfoPlugin" value="kr.go.egovframework.hyb.plugin.EgovStorageInfo" />
+		<plugin name="DeviceNumberPlugin" value="kr.go.egovframework.hyb.plugin.EgovDeviceNumber" />        
+    </plugins>
+</widget>
+</code>
+== res/values/serverinfo.xml ==
+  * 전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로를 설정 할 수 있다.
+<code xml>
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="SERVER_URL">http://192.168.100.222:8080/DeviceAPIGuideTotal_Web_V1.7</string>
+</resources>
+</code>
+
+== AndroidManifest.xml ==
+  * 모바일 디바이스 API 가이드 프로그램에서 디바이스 API를 사용 할 때의 모바일기기로의 접근 권한을 지정 한다.
+<code xml>
+<uses-permission android:name="android.permission.CAMERA" />
+<uses-permission android:name="android.permission.VIBRATE" />
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.RECEIVE_SMS" />
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+<uses-permission android:name="android.permission.READ_CONTACTS" />
+<uses-permission android:name="android.permission.WRITE_CONTACTS" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> 
+<uses-permission android:name="android.permission.GET_ACCOUNTS" />
+<uses-permission android:name="android.permission.BROADCAST_STICKY" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+</code>
+
+==== 하이브리드 어플리케이션 설정(iOS) ====
+
+=== 설정 ===
+
+== {Project_Name}/Supporting Files/config.xml ==
+  * 폰갭 어플리케이션의 설정 정보들을 등록해주는 파일이다.
+  * 폰갭에서는 각 Device API 들을 Plug-in 형태로 제공하며 해당 Device API Plug-in 들을 <feature> 엘리먼트에 명시해 주어야 한다.
+  * 전자정부용 웹 서버 어플리케이션과 인터페이스를 하기 위해서는 EgovInterfacePlugin을 추가해 주어야 한다.
+  * 폰갭에서 사용되는 HTML 리소스가 외부 서버에 위치 했을 때  외부 리소스가 위치하는 호스트 정보를 <access> 엘리먼트에 등록해야 정상적으로 폰갭 어플리케이션이 동작한다.
+<code xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+ http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<widget xmlns     = "http://www.w3.org/ns/widgets"
+    id        = "kr.go.egovframe.hyb.DeviceAPIGuide.iOS"
+    version   = "2.7.0">
+    <name>DeviceInfoAPIGuide</name>
+    
+    <description>
+        DeviceAPIGuide_iOS_V2.7
+    </description>
+    
+    <author href="http://www.egovframe.go.kr" email="egovframesupport@gmail.com">
+        eGovFramework
+    </author>
+
+    <access origin="*"/>
+
+    <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
+    <content src="index.html" />
+
+    <!-- Preferences for iOS -->
+    <preference name="AllowInlineMediaPlayback" value="false" />
+    <preference name="AutoHideSplashScreen" value="true" />
+    <preference name="BackupWebStorage" value="cloud" />
+    <preference name="DisallowOverscroll" value="false" />
+    <preference name="EnableLocation" value="false" /><!-- DEPRECATED -->
+    <preference name="EnableViewportScale" value="false" />
+    <preference name="FadeSplashScreen" value="true" />
+    <preference name="FadeSplashScreenDuration" value=".25" />
+    <preference name="HideKeyboardFormAccessoryBar" value="false" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="true" />
+    <preference name="KeyboardShrinksView" value="false" />
+    <preference name="MediaPlaybackRequiresUserAction" value="false" />
+    <preference name="ShowSplashScreenSpinner" value="true" />
+    <preference name="SuppressesIncrementalRendering" value="false" />
+    <preference name="TopActivityIndicator" value="gray" />
+
+
+    <feature name="Geolocation">
+      <param name="ios-package" value="CDVLocation"/>
+    </feature>
+    <feature name="Device">
+      <param name="ios-package" value="CDVDevice"/>
+    </feature>
+    <feature name="Accelerometer">
+      <param name="ios-package" value="CDVAccelerometer"/>
+    </feature>
+    <feature name="Compass">
+      <param name="ios-package" value="CDVLocation"/>
+    </feature>
+    <feature name="Media">
+      <param name="ios-package" value="CDVSound"/>
+    </feature>
+    <feature name="Camera">
+      <param name="ios-package" value="CDVCamera"/>
+    </feature>
+    <feature name="Contacts">
+      <param name="ios-package" value="CDVContacts"/>
+    </feature>
+    <feature name="File">
+      <param name="ios-package"  value="CDVFile"/>
+    </feature>
+    <feature name="NetworkStatus">
+      <param name="ios-package" value="CDVConnection"/>
+    </feature>
+    <feature name="Notification">
+      <param name="ios-package" value="CDVNotification"/>
+    </feature>
+    <feature name="FileTransfer">
+      <param name="ios-package" value="CDVFileTransfer"/>
+    </feature>
+    <feature name="Capture">
+      <param name="ios-package" value="CDVCapture"/>
+    </feature>
+    <feature name="Battery">
+      <param name="ios-package" value="CDVBattery"/>
+    </feature>
+    <feature name="SplashScreen">
+      <param name="ios-package" value="CDVSplashScreen"/>
+    </feature>
+    <feature name="Echo">
+      <param name="ios-package" value="CDVEcho"/>
+    </feature>
+    <feature name="Globalization">
+      <param name="ios-package" value="CDVGlobalization"/>
+    </feature>
+    <feature name="InAppBrowser">
+      <param name="ios-package" value="CDVInAppBrowser"/>
+    </feature>
+    <feature name="Logger">
+      <param name="ios-package" value="CDVLogger"/>
+    </feature>
+    <feature name="LocalStorage">
+        <param name="ios-package" value="CDVLocalStorage"/>
+    </feature>
+
+    <!-- eGovframe DeviceAPI Plug-In-->
+    <feature name="StorageInfoAPI">
+        <param name="ios-package" value="EgovStorageInfo"/>
+    </feature>
+    <feature name="InterfaceAPI">
+        <param name="ios-package" value="EgovInterface"/>
+    </feature>
+    <!-- Deprecated plugins element. REmove in 3.0 -->
+    <plugins>
+    </plugins>
+</widget>
+</code>
+
+== {Project_Name}/eGovModule/eGovComModule.h ==
+  * 전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로를 설정 할 수 있다.
+<code>
+    //전자정부 모바일 디바이스 API 연동 웹 어플리케이션 접속 URL
+    #define kSERVER_URL     @"http://000.000.000.000:0080/SERVER_URL"
+</code>
+
+== 자원요소 - 프로젝트명-info.plist ==
+  * 어플리케이션의 Bundle Identifier 이름을 지정한다. 이 Identifier 이름은 어플리케이션의 고유한 식별자로써 해당 어플리케이션을 다른 어플리케이션과 구분해주는 역할을 한다.
+  * 어플리케이션의 Localization native development region을 설정한다. 어플리케이션의 지역 정보를 설정하여 해당 어플리케이션에서 사용되는 언어 정보를 등록 할 수 있다.
+  * 어플리케이션의 Bundle display name 이름을 지정한다. 설치된 어플리케이션의 디스플레이 되는 이름을 설정하는데 사용된다.
+  * 어플리케이션의 icon파일 이름을 지정한다. 설치된 어플리케이션의 디스플레이 되는 이미지 파일을 설정하며 픽셀 크기별로 여러 파일의 등록이 가능하다. 
+  * 어플리케이션의 Bundle version을 지정한다. 해당 어플리케이션의 버전을 명시하며 어플리케이션이 업데이트 대상인지 구분하는데 사용된다.
+  * 어플리케이션의 Main nib file base name을 지정한다. 어플리케이션의 화면 UI 구성 파일인 xib 파일을 설정하는데 사용된다. iPhone용과 iPad용을 별도로 등록한다.
+  * 어플리케이션의 supported interface orientations를 지정한다. 어플리케이션에서 지원할 수 있는 방향 전환을 설정하는데 사용되며  iPhone용과 iPad용을 별도로 등록한다. 
+
+== 화면 UI 구성 파일 ==
+  * 보통 iOS 어플리케이션에서는 xib 파일들은 화면 UI를 구성하는 파일들이다.
+  * 일반적인 iOS 어플리케이션의 메인 UI는 MainWindow.xib 파일로 설정하며 변경이 가능하다.
+  * 폰갭 어플리케이션의 기본 설정은 HTML을 랜더링하는 웹뷰를 전체화면에서 구성하도록 되어 있으며, 별도의 xib파일을 상요하지 않는다.
+
+== AppDelegat ==
+  * 최초 어플리케이션이 로딩될 때 main함수에서 호출되는 클래스로 어플리케이션의 시작점이 된다. \\ 하이브리드 어플리케이션에서는 PhoneGapeDelegate를 상속받아 www폴더의 리소스를 웹뷰에 연결 시켜주는 역할을 수행한다.
+  
+
+==== 웹 서버 어플리케이션 설정 =====
+
+=== web.xml 및 context-egovuserdetailshelper.xml의 설정 ===
+참조 [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:com:v2:init_configration]]
+=== Data Source 설정 ====
+참조 [[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:rte:psl:data_source]]
+=== 표준 보안 API ===
+== pom.xml ==
+
+<code xml>
+<dependency>
+	<groupId>egovframework.com.cmm.uat</groupId>
+	<artifactId>libgpkiapi_jni</artifactId>
+	<version>1.4.0.0</version>
+</dependency>
+</code>
+
+^구분^설정방법^
+|Class 경로 설정|방법 1. java 옵션 이용 : java -classpath jar_directory\libgpkiapi_jni.jar \\ 방법 2. 환경 변수 등록 : "내컴퓨터->속성->고급->환경변수" 에서 새로 만들기를 클릭하여 classpath 변수를 등록|
+|라이브러리 경로 설정|1. JNI를 비롯한 C/C++용 표준보안API와 LDAP 라이브러리가 위치해 있는 경로를 환경 변수에 등록한다. \\ 2. "내컴퓨터->속성->고급->환경변수" 에서 기존 "path" 변수에 "라이브러리가 설치된 디렉토리"를 추가한다.|
+{{:egovframework:hyb:hrte:NPKIClassPath.jpg}} | {{:egovframework:hyb:hrte:NPKIPath.jpg}}
+
+
+===== 참고자료 =====
+PhoneGap 2.9.0 Download : [[http://phonegap.com/download]]\\
+Apple Developer Library : [[https://developer.apple.com/library/ios/navigation/]]\\
+표준보안API : [[http://www.gpki.go.kr]]\\

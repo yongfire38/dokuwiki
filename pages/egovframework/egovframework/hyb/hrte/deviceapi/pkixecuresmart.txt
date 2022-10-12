@@ -1,0 +1,94 @@
+===== PKIXecureSmart =====
+
+==== 설명 ====
+  * PhoneGap Interface를 이용하여 모바일에서 NPKI 서비스를 할 수 있는 기능을 제공한다.
+
+==== 제약사항 ====
+N/A
+
+==== 환경 설정 ====
+
+=== Android ===
+
+  * app/res/xml/plugins.xml
+<code xml>
+</code>
+
+=== iOS ===
+ 
+  * App/Supporting Files/Cordova.plist
+<code>
+<key></key>
+</code>
+
+==== 관련 함수 ====
+
+=== XecureSmartPlugin.getCertTree ===
+  * 디바이스의 인증서 목록을 가져온다.
+  * seracgType과 searchValue를 함께 사용하여 검색이 가능하며, searchSerial를 이용해 일련 번호로 검색도 가능하다.
+<code javascript>
+void XecureSmartPlugin.getCertTree ( successCB , failCB , certType ,searchType , contentLevel , searchValue , searchSerial );
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|successCB |성공 시, 수행되는 함수| |
+|failCB |실패 시, 수행되는 함수| |
+|certType | | 0 : 루트 인증서, 1 : CA 인증서, 2 : 사용자인증서, 3 : 전체 인증서|
+|searchType |검색조건 | |
+|contentLevel | 결과 값의 레벨| 0 : 자세한 정보, 5 : 간략한 정보|
+|searchValue |검색 값| |
+|searchSerial |검색할 일련 번호| |
+
+  * searchType
+
+^조건^설명^
+|0|검색하지 않음.|
+|10|sujectDN의 CN과 일치.|
+|11|sujectDN의 OU과 일치.|
+|12|sujectDN의 O과 일치.|
+|13|sujectDN의 C와 일치.|
+|14|sujectDN과 일치.|
+|20|issuerDN의 CN과 일치.|
+|21|issuerDN의 OU과 일치.|
+|22|issuerDN의 O과 일치.|
+|23|issuerDN의 C와 일치.|
+|24|issuerDN과 일치.|
+
+  * Sample Code
+<code javascript>
+XecureSmartPlugin.prototype.getCertTree = function (successCB, failCB, certType, mediaType, contentLevel, searchValue, searchSerial) {	var args = Array.prototype.slice.call (arguments);	
+	args = args.slice (2);	
+	return Cordova.exec (successCB, failCB, this.pluginName, "getCertTree", args);
+}
+</code>
+
+=== XecureSmartPlugin.signDataCMS ===
+  * 평문 텍스트를 전자서명한다.
+<code javascript>
+void XecureSmartPlugin.signDataCMS ( successCB , failCB , issuerDN , serial, password , plainText );
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|successCB |성공 시, 수행되는 함수| |
+|failCB |실패 시, 수행되는 함수| |
+|issuerDN |인증서의 발급자| |
+|serial |인증서의 일련 번호| |
+|password |인증서의 암호| |
+|plainText |평문 | |
+
+  * Sample Code
+<code javascript>
+XecureSmartPlugin.prototype.signDataCMS = function (successCB, failCB, issuerDN, certSerial, password, plainText) {	
+	var args = Array.prototype.slice.call (arguments);	
+	args = args.slice (2);	
+	args = [this.xgateAddress].concat (args);	
+	return Cordova.exec (successCB, failCB, this.pluginName, "signDataCMS", args);
+}
+</code>
+
+==== 참고 자료 ====
+N/A

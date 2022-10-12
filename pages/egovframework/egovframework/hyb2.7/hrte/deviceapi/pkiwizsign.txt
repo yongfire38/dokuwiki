@@ -1,0 +1,212 @@
+===== PKIWizSign =====
+
+==== 설명 ====
+  * 공개키 기반 응용 프로그램에서 사용하는 PKI 기반 기능들을 제공한다.
+
+
+==== 제약사항 ====
+  * **iOS**에서만 올레 인증서 관련 함수를 이용할 수 있다.
+
+==== 환경 설정 ====
+
+=== Android ===
+
+  * app/res/xml/plugins.xml
+<code xml>
+<plugin name="WizSignPG" value="com.ksign.wizsign.sdk.WizSignPG" />
+</code>
+
+=== iOS ===
+ 
+  * App/Supporting Files/Cordova.plist
+<code>
+<key>Plugins</key>
+<dict>
+    <key>WizSignPG</key>
+    <string>WizSignPG</string>
+</dict>
+</code>
+
+==== 관련 함수 ====
+
+=== WizSignPG.doSignature ===
+  * 전자 서명 기능을 제공한다.
+<code javascript>
+WizSignPG.doSignature(info, success, fail);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|info|인증서의 정보 요청| |
+|success|성공 시, 수행되는 함수| |
+|fail|실패 시, 수행되는 함수| |
+
+  * Sample Code
+<code javascript>
+var args = new Array();
+args[0] = selectCertNum.toString() ;
+args[1] = '1';
+args[2] = stringToSign;
+
+WizSignPG.doSignature(args, function(result) {
+	var signedData = result['signedData'];	// 서명데이터
+}, function(error) {
+	alert(error['errMsg']);	// 에러메시지
+});
+</code>
+
+=== getCertificates ===
+  * 저장된 인증서목록을 가져와 반환한다.
+<code javascript>
+WizSignPG.getCertificates("", success, fail)
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|success|성공 시, 수행되는 함수| |
+|fail|실패 시, 수행되는 함수| |
+
+  * 인증서 정보
+* jsonString
+
+^속성^내용^속성^내용^
+|NUM|인증서 번호|버전|인증서 버전|
+|일련번호|인증서 시리얼번호|서명알고리즘|인증서 서명알고리즘|
+|발급자|인증서의 발급자 정보|효력발생일|인증서의 효력 발생일|
+|만료일|인증서 만료일|주체자|인증서 주체자 정보|
+|공개키 알고리즘|인증서 공개키 알고리즘|공개키|공개 키값|
+|기관키식별자|기관키식별자|주체자식별자|주체자식별자|
+|정책|정책|주체대체이름|주체대체이름|
+|CRL분배지점|CRL분배지점|기관정보액세스|기관정보액세스(OCSP)|
+|키사용|키사용용도|서명|인증서 서명값|
+
+  * Sample Code
+<code javascript>
+WizSignPG.getCertificates("", function(result) {
+	var certList = result['Certificates'];
+
+	for(var i=0 ; i<certList.length ; i++) {
+		certList[i]['NUM'];
+		certList[i]['주체자'];
+		certList[i]['발급자'];
+		certList[i]['만료일'];
+	}
+}, function(error) {
+	alert("error['errMsg']);
+});
+</code>
+
+=== verifyCertPassword ===
+  * 선택한 인증서의 비밀번호를 검증한다.
+<code javascript>
+WizSignPG.verifyCertPassword(array, success, fail);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|array | 패스워드, 인증서 인덱스| 
+|success |성공 시, 수행되는 함수| |
+|fail |실패 시, 수행되는 함수| |
+
+  * Sample Code
+<code javascript>
+var args = new Array();
+args[0] = certNum.toString();
+args[1] = certPass;
+
+WizSignPG.verifyCertPassword(args, function(result) {
+	var runResult = result['result'];
+
+	if(runResult == 'OK') {
+		alert('인증서 비밀번호가 일치합니다.');	
+	}					
+}, function(error) {
+	alert(error['errMsg']);
+});
+</code>
+
+==== 올레 인증서 관련함수 ====
+  * **iOS**에서만 관련 함수를 이용할 수 있다.
+
+=== WizSignPG.runShowApp ===
+  * KISA Show앱에서 인증서를 가져오기 위해 ShowApp앱을 실행한다.
+<code javascript>
+WizSignPG.runShowApp(args, success, fail);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|success |성공 시, 수행되는 함수 | |
+|fail |실패 시, 수행되는 함수 | |
+
+  * Sample Code
+<code javascript>
+var args = new Array();
+args[0] = 'PhoneGapTest';
+args[1] = '01';
+			
+WizSignPG.runShowApp(args, function(result) {
+	var runResult = result['result'];	
+	// runResult == 'OK' -> 실행성공
+}, function(error) {
+	alert(error['errMsg']);
+});
+
+</code>
+
+=== WizSignPG.importPKCS12 ===
+  * PKCS#12데이터를 인증서로 변환하여 저장한다.
+  * PKCS#12 데이터(base64 encoded), 인증서 비밀번호, 새로운 인증서 비밀번호를 입력받는다.
+<code javascript>
+WizSignPG.importPKCS12(args, success, fail);
+</code>
+
+  * 파라미터
+
+^유형^설명^비고^
+|success |성공 시, 수행되는 함수 | |
+|fail |실패 시, 수행되는 함수 | |
+
+  * Sample Code
+<code javascript>
+var args = new Array();
+args[0] = strP12;
+args[1] = certPass;
+args[2] = newPass;
+				
+WizSignPG.importPKCS12(args, function(result) {
+
+	var runResult = result['result'];
+	var certInfo = result['Certificate'];
+	
+	if(runResult == 'OK') {
+		alert('[' + certInfo['주체자'] + '] 인증서가 생성되었습니다.1')	
+	}
+			
+}, function(error) {
+	alert(error['errMsg']);
+});
+</code>
+
+=== callback_kisaShowApp ===
+  * KISA showApp으로부터 받은 데이터를 처리하여 PKCS#12데이터를 반환한다.
+<code javascript>
+callback_kisaShowApp(server);
+</code>
+
+  * Sample Code
+<code javascript>
+// PhoneGap 페이지에 기본으로 제공되어지는 Server CallBak Function
+function handleOpen(server)
+{		
+	 g_p12cert = callback_kisaShowApp(server);
+}
+
+</code>
+
+==== 참고 자료 ====
+N/A

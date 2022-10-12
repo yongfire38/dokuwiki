@@ -1,0 +1,154 @@
+====== Cordova(Phonegap) 업그레이드 방법 소개 ======
+
+===== 개요 =====
+전자정부 디바이스 API 실행환경은 Cordova(Phonegap)을 기반으로 한다.\\
+Cordova는 Apache재단에서 오픈소스로서 지속적이고 안정적인 업그레이드를 진행하고 있으며 
+전자정부 디바이스 API 실행환경 사용은 사용자의 안전성과 자유로운 확장성을 위해 오픈소스를 기반으로 하고 있다.
+Cordova의 경우도 새로운 버전이 나왔을경우에 새로운 버전으로 적용할수 있으며 아래 세부 내용을 참고 한다.
+
+===== 제약조건 =====
+전자정부 디바이스 API 실행환경 v3.5 기준
+
+===== 선행조건 =====
+
+다음을 참고하여 CLI도구를 설치하여야 한다.\\
+맥OSX에서는 iOS(아이폰)및 안드로이드를 모두 설치하실수 있고\\
+Winodws에서는 안드로이드만 설치가 가능하다.\\
+\\
+[[egovframework:hyb3.5:hdev| Cordova CLI도구 npm 설치 (node.js의 도구와 동일)]]\\
+\\
+다음 링크를 참조하여 CLI 도구에서\\
+1) 프로젝트를 추가하고\\
+2) 플랫폼 추가\\
+3) 플러그인 추가를 차례대로 진행한다.\\
+\\
+[[egovframework:hyb3.5:hdev:imp:useclitools| CLI도구로 Cordova프로젝트 생성, 플랫폼생성(iOS,안드로이드) 및 플러그인 추가 방법]]\\
+\\
+
+===== Cordova 업그레이드 절차 (안드로이드) =====
+생성된 최신의 안드로이드 코도바 프로젝트에서\\
+다음파일을 복사해서 모바일 전자정부 디바이스API 앱 프로젝트에 부어 넣으면 됩니다.\\
+\\
+==== Eclipse에서 다음 목록을 교체 ====
+** Eclipse에서 작업을 진행하며 교체해야 할 목록은 다음과 같습니다.**\\
+\\
+
+===1. 코도바 Plugin ===
+ Plugins그룹안에 있는 모든 파일이 교체 대상이다.\\
+ src 하위에 org.apache.cordova 패키지 전부 교체한다.\\
+{{:egovframework:hyb3.5:hrte:upgrade:upgrade_codorva_e03.jpg|}}\\
+\\
+===2. 코도바 코어 라이브러리 프로젝트 ===
+
+ 코도바 코어LIB cordovalib.jar 파일 교체한다.\\
+{{:egovframework:hyb3.5:hrte:upgrade:upgrade_codorva_e02.jpg|}}\\
+\\
+
+===3.코도바 웹소스===
+모바일 전자정부 표준프레임워크 DeviceAPI에서는 assets디렉토리내에 존재하며 다음 목록을 확인한다.
+ /www/js/egovframework/mbl/cmm/plugins/ 디렉토리내 모든파일이 교체대상이다.\\
+ /www/js/egovframework/mbl/cmm/cordova.js\\
+ /www/js/egovframework/mbl/cmm/cordova_plugins.js\\
+{{:egovframework:hyb3.5:hrte:upgrade:upgrade_codorva_e01.jpg|}}\\
+
+
+==== Eclipse 프로젝트 설정 수정 ====
+새로운 코도바 버전에서 필요로하는 안드로이드 SDK 버전 존재하므로 수정이 필요하다.\\
+안드로이드 6.0 API Level23이상이 필요하다.
+
+===1. 프로젝트명에 우클릭한후 Properties를 선택한다. ===
+{{:egovframework:hyb3.5:hrte:upgrade:upgrade_codorva_prop_1.png|}}\\
+\\
+===2. 좌측 Android항목 선택후 Android 6.0 API Level23을 체크한후 OK를 선택해 마무리 한다. (Android 6.0이 없는경우 SDK를 다운로드 받아서 추가한후 재시도 한다) ===
+{{:egovframework:hyb3.5:hrte:upgrade:upgrade_codorva_prop_2.png|}}\\
+\\
+
+==== config.xml에 추가항목 설정 ====
+코도바 최신 버전에 추가된 항목을 추가로 입력하여 설정한다.\\
+
+<code xml>
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <allow-intent href="itms:*" />
+    <allow-intent href="itms-apps:*" />
+    <preference name="AllowInlineMediaPlayback" value="false" />
+    <preference name="BackupWebStorage" value="cloud" />
+    <preference name="DisallowOverscroll" value="false" />
+    <preference name="EnableViewportScale" value="false" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="true" />
+    <preference name="MediaPlaybackRequiresUserAction" value="false" />
+    <preference name="SuppressesIncrementalRendering" value="false" />
+    <preference name="SuppressesLongPressGesture" value="false" />
+    <preference name="Suppresses3DTouchGesture" value="false" />
+    <preference name="GapBetweenPages" value="0" />
+    <preference name="PageLength" value="0" />
+    <preference name="PaginationBreakingMode" value="page" />
+    <preference name="PaginationMode" value="unpaginated" />
+    <preference name="CameraUsesGeolocation" value="false" />
+</code>
+
+==== 오류 코드 수정 ====
+오류가 발생하는 원인은 코도바 라이브러리가 버전 업그레이드 되면서 Method가 제거된 항목이 있기 때문이다.
+=== 1. MainActivity.java ===
+<code java>
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        super.init();
+                
+        super.appView.getSettings().setAppCacheEnabled(false); 
+        super.appView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        //super.appView.setVerticalScrollbarOverlay(true);
+        super.appView.clearCache(true);
+        super.appView.getSettings().setJavaScriptEnabled(true);
+        super.appView.getSettings().setDomStorageEnabled(true);
+
+        //super.appView.getSettings().setSaveFormData(false);
+        //super.appView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        //super.appView.getSettings().setBuiltInZoomControls(true);
+        //super.appView.getSettings().setSupportZoom(true);
+        //super.appView.getSettings().setSavePassword(false);
+
+        
+        // Set by <content src="index.html" /> in config.xml
+        loadUrl(launchUrl);
+    }
+</code>
+
+다음과 같이 remove method에 주석처리를 한다.
+<code java>
+    @Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        super.init();
+                
+        //super.appView.getSettings().setAppCacheEnabled(false); 
+        //super.appView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+        //super.appView.setVerticalScrollbarOverlay(true);
+        //super.appView.clearCache(true);
+        //super.appView.getSettings().setJavaScriptEnabled(true);
+        //super.appView.getSettings().setDomStorageEnabled(true);
+
+        //super.appView.getSettings().setSaveFormData(false);
+        //super.appView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
+        //super.appView.getSettings().setBuiltInZoomControls(true);
+        //super.appView.getSettings().setSupportZoom(true);
+        //super.appView.getSettings().setSavePassword(false);
+
+        
+        // Set by <content src="index.html" /> in config.xml
+        loadUrl(launchUrl);
+    }
+</code>
+
+==== 정상적용 여부 확인 ====
+모바일 표준프레임워크 DeviceAPI 하이브리드 프로젝트중 DeviceInfo샘플로 확인한다.\\
+코도바 ver 6.x로 하는경우 Android 플러그인 버전은 5.x로 표시되는것을 볼수 있다.\\
+{{:egovframework:hyb3.5:hrte:upgrade:upgrade_codorva_ok_1.png|}}\\
+\\

@@ -1,0 +1,435 @@
+====== Compass 디바이스API 가이드 프로그램 ======
+
+===== 개요 =====
+Compass 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현 된 전자정부 디바이스 API에 대한 가이드앱 으로써,
+모바일 스마트 디바이스의 Compass 관련 기능을 JavaScript 기반으로 구성 된 Compass DeviceAPI 를 통하여 조회할 수 있도록 지원한다. \\
+
+또한, 전자정부 표준프레임워크 기반의 웹 서버 어플리케이션과 연계하여 디바이스 내 Compass 정보를 서버로 전송 및 조회 할 수 있는 기능으로 구성되어 있다. \\
+
+==== 특징 ====
+본 가이드 프로그램 에서는 Compass 기능을 가이드 할 수 있도록 ** 나침반 정보 조회 **, ** 나침반 정보 저장 **, ** 나침반 정보 목록 **, ** 리스트 삭제 ** 기능을 제공하고 있으며. \\
+
+효율적인 나침반 정보 변화의 조회를 위해 상단의 알림 창 이외에 나침반 형태의 도형의 움직임을 통해 정보를 조회할 수 있으며, 디바이스의 나침반 정보의 변화에 따라 해당 방향으로 회전한다.
+
+==== 기능흐름도 ==== 
+{{:egovframework:hyb:guide:add:compass기능흐름도.png?700|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:ios:compass.jpg|}}
+
+
+==== 전제 조건 ====
+
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경  |Xcode 6.3.2, PhoneGap 4.3.0|
+|서버 사이드 개발 환경  |전자정부표준프레임워크 개발환경 3.5|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스  |iPhone4, iPhone6 |
+|테스트 플랫폼  |iOS 7.1.2, iOS 8.3 |
+|추가 라이브러리 적용|N/A|
+
+
+==== 제약사항 ====
+
+^           구분            ^             내용             ^
+|지원 디바이스 및 플랫폼|나침반 정보 조회의 시각적 효과를 위해 나침반 형태의 이미지 회전을 제공하고 있어,\\ 가로 모드로 보기 시 화면이 잘려 보이는 경우가 발생할 수 있어 디바이스 API 가이드 프로그램 실행 시 가로보기 모드는 자동변환 되지 않도록 설정하고 테스트 하는것이 좋다.|
+|크로스 도메인 사용|폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ [Project_Name]/Supproting Files/config.xml에서 <access origin="ExternalHosts"/> 항목에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.|
+|라이선스|N/A|
+
+===== 설명 ===== 
+Compass 디바이스API 가이드 프로그램은 크게 디바이스의 Compass 정보를 조회하고 조회 한 정보를 웹 서버 어플리케이션으로 전송 및 조회하는 기능으로 구성되어 있다.(관련기능 부분참조)
+
+=== 클래스 다이어그램 ===
+{{:egovframework:hyb:guide:ios:compass_class.jpg?1024|}}
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|  CSS  |www/css/egovframwork/mbl/hyb/CompassAPI.css |CompassAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|  IMAGE  |www/images/egovframwork/mbl/hyb/ |CompassAPI 가이드 프로그램 주요 Image 폴더|
+|  JS  |www/js/egovframwork/mbl/hyb/CompassAPI.js |CompassAPI 가이드 프로그램 주요 JavaScript|
+|  RES  |[Project_Name]/Resources/ |CompassAPI 가이드 프로그램 주요 Resource 폴더|
+|  HTML  |www/CompassAPI.html|CompassAPI 메인 페이지|
+|  HTML  |www/license.html|CompassAPI 라이센스 페이지|
+|  HTML  |www/overview.html|CompassAPI 기능설명 페이지|
+|  PLIST  |[Project_Name]/Supporting Files/[Project_Name]-Info.plist |iOS 어플리케이션 설정 파일|
+
+=== 활용 API ===
+
+== compass.watchHeading ==
+  *디바이스의 현재 방향각 정보를 가져온다. \\
+
+<code>
+navigator.compass.getCurrentHeading(compassSuccess, compassError, compassOptions);
+</code>
+
+<code>
+function onSuccess(heading) {
+    alert('Heading: ' + heading.magneticHeading);
+};
+
+function onError(error) {
+    alert('CompassError: ' + error.code);
+};
+
+navigator.compass.getCurrentHeading(onSuccess, onError);
+</code>
+
+== compassOption == 
+
+^Option^설명^비고^
+| frequency |나침반 정보를 조회하는 빈도를 의미한다.| |
+| frequency |나침반 성공 콜백함수를 초기화 하는데 필요한 변화의 정도를 의미한다.| |
+
+==== Server Application ====
+
+=== 관련 소스 ===
+^유형^대상소스명^비고^
+|Controller|egovframework.hyb.ios.cps.web.EgovCompassAndroidAPIController.java|CompassAPI 가이드 프로그램 Controller Class|
+|Service|egovframework.hyb.ios.cps.service.EgovCompassAndroidAPIService.java|CompassAPI 가이드 프로그램  Service Class|
+|ServiceImpl|egovframework.hyb.ios.cps.service.impl.EgovCompassAndroidAPIServiceImpl.java|CompassAPI 가이드 프로그램  ServiceImpl Class|
+|VO|egovframework.hyb.ios.cps.service.CompassAndroidAPIDefaultVO.java|CompassAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.ios.cps.service.CompassAndroidAPIFileVO.java|CompassAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.ios.cps.service.CompassAndroidAPIVO.java|CompassAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.ios.cps.service.CompassAndroidAPIXmlVO.java|CompassAPI 가이드 프로그램 XML 관련 VO Class|
+|DAO|egovframework.hyb.ios.cps.service.impl.CompassAndroidAPIDAO.java|CompassAPI 가이드 프로그램 Dao Class|
+|Util|egovframework.hyb.ios.cps.service.impl.EgovCompassAndroidFileMngUtil.java|CompassAPI 가이드 프로그램 Util Class|
+|QUERY XML|resources/egovframework/sqlmap/hyb/ios/cps/EgovCompassAndroidAPIGuide_XXX_mysql.xml|CompassAPI 가이드 프로그램 QUERY XML|
+|Idgen XML|resources/egovframework/spring/com/context-idgen.xml|CompassAPI 가이드 프로그램 Id생성 Idgen XML|
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|compass|COMPASS|나침반 정보 관리|
+
+=== 테이블 정의서 ===
+
+   * COMPASS
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|DRC|방향|VARCHAR|40|Null|
+|4|ACCRCY|정확도|VARCHAR|10|Null|
+|5|USEYN|활성화여부|CHAR|1|Null|
+|6|TIMESTAMP|timestamp|VARCHAR|20|Null|
+
+
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+===== 환경설정 ===== 
+
+Compass 디바이스API 가이드 프로그램에서 제공하는 모바일 디바이스의 Compass 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== config.xml ===
+== Plugin ==
+<code xml>
+    <feature name="Geolocation">
+      <param name="ios-package" value="CDVLocation"/>
+    </feature>
+    <feature name="InterfaceAPI">
+        <param name="ios-package" value="EgovInterface"/>
+    </feature>
+</code>
+
+=== [Project_Name]/eGovModule/EGovComModule.h ===
+<code>
+#define kSERVER_URL     @"Server_URL"
+</code>
+
+==== Server Application ====
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/ios/dvc/EgovCompassiOSAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+===== 관련기능 ===== 
+Compass 디바이스 API 가이드 프로그램은 크게 디바이스의 나침반 정보를 조회 하는 **나침반 정보 조회** 기능 및 서버 연계를 통한 **나침반 정보 저장**, ** 나침반 정보 목록 조회**, **나침반 정보 삭제** 기능으로 구성되어있다.
+
+==== 나침반 정보 조회 ====
+
+=== 비즈니스 규칙 ===
+디바이스 API를 통해 현재 나침반 정보를 호출하여, 나침반 정보를 모니터링 창에 표시 및 나침반 형태의 도형을 통해 디바이스의 방향에 따라 도형을 회전한다.
+
+=== 관련코드  ===
+
+디바이스 API 내의 Compass 함수를 사용하는 JavaScript 코드를 통해 실시간 나침반 정보를 조회 한다.
+<code>
+
+function fn_egov_update_heading(h) 
+{
+	drc = h.magneticHeading;
+	accrcy = h.headingAccuracy;
+	timestamp=  h.timestamp;
+	
+	// 새로운 각도 값을 받아옴
+	newHeading = Math.round(drc);	
+
+	$("#compassMain").trigger("newHeading", newHeading);
+		
+    var html = "방위각 : " + drc + "<BR />";
+
+    $("#infoDetail").html(html);
+    if(CompassInsertCheck) 
+    {
+        CompassInsertCheck = false;
+    }
+    console.log("DeviceAPIGuide fn_egov_update_heading Success"); 
+}
+
+function fn_egov_get_compass() 
+{
+    if (CompasswatchID === null) 
+    {
+                
+        //alert("Compass start");
+        //toast("Compass start");
+        CompassInsertCheck = true;
+        var options = { frequency: 1 };
+        CompasswatchID = navigator.compass.watchHeading(fn_egov_update_heading, 
+                                                        function(e) 
+                                                        {
+                                                        console.log("DeviceAPIGuide fn_egov_get_compass fail");
+                                                        }, 
+                                                        options);
+    } 
+    else 
+    {    
+    	
+    	compassEvent();
+    	
+        navigator.compass.clearWatch(CompasswatchID);
+        CompasswatchID = null;
+        fn_egov_update_heading({ drc : "Off"});
+        //navigator.notification.alert("Compass stop");
+        //toast("Compass stop");
+    }
+}
+
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^나침반 정보 조회 화면^
+{{:egovframework:hyb:guide:ios:나침반정보조회.png?320|}}
+
+방향 정보 저장 시작 : 나침반 정보를 서버로 송신하기 위해서는 하단의 나침반 정보 저장 버튼을 클릭한다. \\
+방향 정보 목록 : **나침반 정보 목록** 화면으로 이동한다. \\ 
+
+
+==== 나침반 정보 저장 ====
+
+=== 비즈니스 규칙 ===
+
+조회 된 나침반 정보를 서버에 전송하여 리스트 형태로 저장한다. \\
+
+=== 관련코드  ===
+
+<code>
+
+function fn_registCompassInfo() {
+	
+	useYn = "Y";
+			
+	var url = "/cps/xml/addCompassInfo.do"; 
+	var accept_type = "json";
+	var params = {uuid :  device.uuid,
+			drc: drc + '', 
+			accrcy: accrcy + '', 
+			timestamp: timestamp + '', 
+			useYn:  useYn};	
+	
+	// send the data
+	egovHyb.post(url, accept_type, params, function(jsondata) {
+		var data = JSON.parse(jsondata);
+		
+		if(data.useYn == "OK"){
+			//fn_goCompassInfoListXml();
+		}else{
+			$("#alert_dialog").click( function() {
+				jAlert('데이터 전송 중 오류가 발생 했습니다.', '전송 오류', 'c');
+				});
+		}			
+		
+	});
+
+	console.log("DeviceAPIGuide fn_registCompassInfo request Completed");
+    
+}
+
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|나침반 정보 서버로 송신하기 /cps/addCompassInfo.do | EgovCompassAndroidAPIController| addCompassInfoXml |CompassAPI.html|
+
+{{:egovframework:hyb:guide:ios:나침반정보저장.png?320|}}
+
+정보데이터를 서버로 송신하기 위해서는 나침반 정보 저장 버튼을 클릭하면 된다. \\
+
+방향 정보 저장 시작 : 나침반 정보를 서버로 송신하기 위해서는 하단의 나침반 정보 저장 버튼을 클릭한다. \\
+방향 정보 목록 : **나침반 정보 목록** 화면으로 이동한다. \\ 
+
+==== 나침반 정보 목록 ====
+
+=== 비즈니스 규칙 ===
+
+서버에 저장 되어있는 나침반 정보 목록을 리스트 형태로 출력한다.
+
+=== 관련코드  ===
+
+<code>
+function fn_goCompassInfoListXml()
+{
+	if(!fn_egov_network_check(false)){
+		return;
+	}
+	var url = "/cps/xml/compassInfoList.do";
+	var accept_type = "xml";
+	// get the data from server
+	window.plugins.EgovInterface.get(url,accept_type, null, function(xmldata) {
+		var list_html = "";
+		
+		$(xmldata).find("compassInfoList").each(function(){
+            var uuid = $(this).find("uuid").text();
+            var x = $(this).find("drc").text();
+            var y = $(this).find("accrcy").text();
+            var t = $(this).find("timestamp").text();
+
+			list_html += "<li><h3>UUID : " + uuid + "</h3>";
+			list_html += "<p><strong>drc : " + x + "</strong></p>";
+			list_html += "<p><strong>accrcy : " + y + "</strong></p>";
+			list_html += "<p>timestamp : " + t + "</p></li>";
+        });
+		var theList = $('#theList');
+		theList.html(list_html);
+		$.mobile.changePage($("#compassInfoList"), {reverse: true});
+		theList.listview("refresh");
+		
+	});
+}
+
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|나침반 정보 목록 조회하기|/cps/compassInfoList.do | EgovCompassAndroidAPIController | selectCompassInfoXMLList | CompassAPI.html |
+
+{{:egovframework:hyb:guide:ios:나침반정보목록.png?320|}}
+
+서버에 저장 되어있는 나침반 정보 목록을 조회하기 위해서는 나침반 정보 목록 버튼을 클릭하면 된다. \\
+
+
+방향 정보 조회 : **나침반 정보 조회** 화면으로 이동한다. \\ 
+리스트 삭제 : 서버에 저장 되어있는 나침반 목록을 초기화 하기 위해서는 나침반 정보 삭제 버튼을 클릭한다.\\
+
+==== 나침반 정보 삭제 ====
+
+=== 비즈니스 규칙 ===
+
+서버에 저장 되어있는 나침반 정보 목록을 초기화 한다.
+
+=== 관련코드  ===
+
+<code>
+
+function fn_deleteCompassInfoList() {
+	var url = "/cps/xml/withdrawal.do";
+	var accept_type = "json";
+	// send the data
+	egovHyb.post(url, accept_type, null, function(jsondata) {
+		var data = JSON.parse(jsondata);
+		
+		if(data.useYn == "OK"){
+			$.mobile.changePage($("#compassMain"), {reverse: true});
+		}else{
+			$("#alert_dialog").click( function() {
+				jAlert('데이터 삭제 중 오류가 발생 했습니다.', '삭제 오류', 'c');
+				});
+		}
+		
+	});
+
+	console.log("DeviceAPIGuide fn_deleteCompassInfoList request Completed");
+	    
+}
+
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(HTML)^
+|나침반 정보 목록 초기화하기|/cps/withdrawal.do| EgovCompassAndroidAPIController | withdrawalXml| CompassAPI.html |
+
+{{:egovframework:hyb:guide:ios:나침반정보삭제.png?320|}}
+
+서버에 저장 되어있는 나침반 정보 목록을 초기화하기 위해서는 나침반 정보 목록 화면 하단의 나침반 정보 삭제 버튼을 클릭하면 된다. \\
+
+
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+
+
+=== Compass Device Applicaton 컴파일 방법 === 
+
+
+  * 왼쪽 상단의 삼각형 버튼을 클릭하면 가이드 프로그램이 빌드되어 아이폰 디바이스에 설치 된다.
+
+{{:egovframework:hyb:guide:ios:compile_device.jpg?740|}}
+
+ 
+
+  * 빌드가 성공하면 아래와 같은 어플리케이션 실행화면을 확인 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:나침반정보조회.png?320|}}
+
+
+=== Compass Server Applicaton 컴파일 방법 === 
+
+    - 프로젝트 우클릭>Run as>Maven install 을 클릭하여 빌드를 한다.\\ {{:egovframework:hyb:guide:ios:웹서버빌드.png?700|}} \\
+    - 빌드 성공 (콘솔 정보 확인)\\ {{:egovframework:hyb:guide:ios:웹서버빌드성공.png?700|}} \\
+    - 프로젝트 우클릭>Run as>Run on Server 를 클릭하여 실행시킨다.\\ {{:egovframework:hyb:guide:ios:웹서버실행.png?700|}} \\
+    - 프로젝트가 성공적으로 실행되었는지 확인한다. \\ {{:egovframework:hyb:guide:ios:웹서버실행성공.png?700|}} \\
+
+
+==== 디버깅 ====
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+    * 실제 콘솔 로그 예
+<code>
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    ...
+}
+</code>
+    * xCode 콘솔 창
+{{:egovframework:hyb:guide:ios:cameradebugxcode.png?700|}}\\
+    * Organizer 로그 창
+{{:egovframework:hyb:guide:ios:cameradebugorganizer.png?700|}}\\
+
+^디버그 코드^디버깅 내용^
+|[DeviceAPIGuide] fn_egov_get_compass : start|디바이스의 Compass 정보 조회 시작 |
+|[DeviceAPIGuide] fn_egov_get_compass : stop|디바이스의 Compass 정보 조회 정지  |
+|[DeviceAPIGuide] fn_egov_goCompassInfoList : completed|디바이스의 Compass 정보 조회 성공 시 |
+|[DeviceAPIGuide] fn_egov_registCompassInfo : completed|디바이스의 Compass 정보를 서버로 업데이트 성공 시|
+|[DeviceAPIGuide] fn_egov_deleteCompassInfoList : completed|서버내의 Compass 정보 초기화 성공 시 |
+
+
+==== 배포 ====
+Compass 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=679&menu=3&submenu=9|Click]]
+
+===== 참고자료 ===== 
+  * UX/UI 라이브러리 : jQuery Mobile[[http://jquerymobile.com/demos/1.4.5/|Click]] \\
+  * Phonegap 4.3.0 : [[http://docs.phonegap.com/en/4.0.0/|Click]] \\
+

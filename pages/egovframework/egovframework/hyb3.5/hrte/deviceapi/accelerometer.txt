@@ -1,0 +1,167 @@
+===== Accelerometer =====
+
+==== 설명 ====
+  * 디바이스의 움직임에 대하여 X, Y, Z축의 방향을 감지한다. 
+
+==== 제약사항 ====
+  * Accelerometer API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+N/A
+
+
+=== iOS ===
+
+== accelerometer.getCurrentAcceleration ==
+  * iPhone은 어떤 주어진 점에서 가속 센서가 감지한 좌표 값을 주지 않는다. 
+  * 특정 시간 간격으로 가속 센서를 감지해야 한다. 
+  * getCurrentAcceleration() 은 watchAcceletometer() 을 통해 마지막으로 감지된 좌표 값을 나타낸다.
+
+== accelerometer.watchAcceleration ==
+  * iPhone에서는 가속 센서 감지 간격이 40 milliseconds 에서 1000 milliseconds 에서만 유효하게 적용된다.
+  * 만약 3초 간격으로 watchAcceleration()을 요청하게 되면, phoneGap을 통해 1초 간격으로 가속 센서의 좌표 값을 받아오지만, phoneGap은 3초 단위로 callback 함수를 요청하도록 자체 보정한다.
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Accelerometer" value="org.apache.cordova.AccelListener" />
+</code>
+
+
+=== iOS === 
+  * App/Supporting Files/config.xml
+<code xml>
+    <feature name="Accelerometer">
+        <param name="ios-package" value="CDVAccelerometer"/>
+    </feature>
+</code>
+
+==== 관련 함수 ====
+
+=== accelerometer.getCurrentAcceleration === 
+  * 현재 가속 센서가 감지한 좌표 값 (x, y, z) 을 구한다.
+<code>
+navigator.accelerometer.getCurrentAcceleration(accelerometerSuccess, accelerometerError);
+</code>
+
+  * Quick Example
+<code>
+function onSuccess(acceleration) {
+    alert('Acceleration X: ' + acceleration.x + '\n' +
+          'Acceleration Y: ' + acceleration.y + '\n' +
+          'Acceleration Z: ' + acceleration.z + '\n' +
+          'Timestamp: '      + acceleration.timestamp + '\n');
+};
+
+function onError() {
+    alert('onError!');
+};
+
+navigator.accelerometer.getCurrentAcceleration(onSuccess, onError);
+</code>
+
+=== accelerometer.watchAcceleration === 
+  * 특정 시간 간격으로 가속 센서가 감지한 좌표 값 (x, y, z) 을 받아온다.
+  * acceleratorOptions Object 내의 frequency 파라미터로 정한 특정 시간 간격으로 accelerometerSuccess을 호출한다.
+  * 함수 실행을 통해 얻은 watch ID를 가지고 accelerometer.clearWatch 함수로 가속 센서 감지를 중단할 수 있다.
+
+<code>
+var watchID = navigator.accelerometer.watchAcceleration(accelerometerSuccess,
+                                                       accelerometerError,
+                                                       [accelerometerOptions]);
+</code>
+
+  * Quick Example
+<code>
+function onSuccess(acceleration) {
+    alert('Acceleration X: ' + acceleration.x + '\n' +
+          'Acceleration Y: ' + acceleration.y + '\n' +
+          'Acceleration Z: ' + acceleration.z + '\n' +
+          'Timestamp: '      + acceleration.timestamp + '\n');
+};
+
+function onError() {
+    alert('onError!');
+};
+
+var options = { frequency: 3000 };  // Update every 3 seconds
+
+var watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+</code>
+
+=== accelerometer.clearWatch === 
+  * accelerometer.watchAcceleration을 통해 작동 중인 가속 센서(watchID) 감지를 종료한다.
+
+<code>
+navigator.accelerometer.clearWatch(watchID);
+</code>
+
+  * Quick Example
+<code>
+var watchID = navigator.accelerometer.watchAcceleration(onSuccess, onError, options);
+
+...
+
+navigator.accelerometer.clearWatch(watchID);
+</code>
+
+==== 파라미터 ====
+
+=== accelerometerSuccess ===
+  * 가속 센서의 method 가 성공했을 때 실행하는 함수.
+  * 가속 센서의 정보를 가지는 Acceleration 객체를 매개변수로 가진다.
+
+<code>
+function onSuccess(acceleration) {
+    alert('Acceleration X: ' + acceleration.x + '\n' +
+          'Acceleration Y: ' + acceleration.y + '\n' +
+          'Acceleration Z: ' + acceleration.z + '\n' +
+          'Timestamp: '      + acceleration.timestamp + '\n');
+};
+</code>
+
+=== accelerometerError ===
+  * 가속 센서의 method 가 실패했을 때 실행하는 함수.
+
+<code>
+function() {
+    // Handle the error
+}
+</code>
+
+=== accelerometerOptions ===
+  * 감지할 가속 센서의 옵션을 설정한다.
+
+^유형^설명^타입^비고^
+|frequency|특정 시간 간격으로 가속 센서를 감지한다.|Number|기본값 : 10000|
+
+==== Objects ====
+
+=== Acceleration ===
+  * 가속 센서가 감지한 가속도 정보를 가지는 객체.
+
+<code>
+function onSuccess(acceleration) {
+    alert('Acceleration X: ' + acceleration.x + '\n' +
+          'Acceleration Y: ' + acceleration.y + '\n' +
+          'Acceleration Z: ' + acceleration.z + '\n' +
+          'Timestamp: '      + acceleration.timestamp + '\n');
+};
+
+function onError() {
+    alert('onError!');
+};
+
+navigator.accelerometer.getCurrentAcceleration(onSuccess, onError);
+</code>
+
+^유형^설명^타입^비고^
+|X|x 축 가속 값을 기록.|Number|값 : 0 ~ 1|
+|Y|y 축 가속 값을 기록.|Number|값 : 0 ~ 1|
+|Z|z 축 가속 값을 기록.|Number|값 : 0 ~ 1|
+|timestamp|측정한 milliseconds 단위의 시간.|DOMTimeStamp|milliseconds|
+
+==== 참고 자료 ====
+  * Phonegap : http://docs.phonegap.com/en/3.3.0/cordova_accelerometer_accelerometer.md.html#Accelerometer

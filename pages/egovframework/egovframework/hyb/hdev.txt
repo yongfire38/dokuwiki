@@ -1,0 +1,28 @@
+====== 표준프레임워크 모바일 디바이스 API 개발환경 2.5 ======
+
+===== 모바일 디바이스 API 개발환경 =====
+  * [[egovframework:hyb:hdev:imp:Overview|모바일 디바이스 API 개발환경 소개]] \\ 전자정부 표준프레임워크 개발환경 내, 모바일 디바이스 API 개발환경의 목표, 제공 서비스 정보 등을 안내한다. \\
+
+==== 개발자 개발환경 설치가이드 ====
+
+=== Android ===
+  * [[egovframework:hyb:hdev:imp:ClntInstall|개발자 개발환경 설치가이드]] \\ 개발자 개발환경을 다운로드 받아 설치 후 프로젝트를 생성해서 실행하기까지의 가이드를 제공한다.
+
+=== iOS ===
+  * [[egovframework:hyb:hdev:imp:ios:ClntInstall|Xcode 템플릿 설치가이드]] \\ iOS 개발을 위한 Xcode 개발환경 내, 템플릿 설치 가이드를 제공한다. \\
+
+==== 모바일 디바이스 API 개발환경 구현도구  ====
+
+=== Andoird ===
+모바일 디바이스 API 개발환경 Android 기반의 구현도구는 기존의 전자정부 표준프레임워크 개발환경을 이용한다.
+
+  * [[egovframework:hyb:hdev:imp:install|설치하기]]
+
+  * [[egovframework:hyb:hdev:imp:deviceapi_new_template_project_wizard|모바일 디바이스 API New Template Project Wizard]] \\ 개발자의 편의성을 위하여 eGovFrame기반의 모바일 디바이스 API 프로젝트 생성 마법사를 제공한다. \\
+
+  * [[egovframework:hyb:hdev:imp:deviceapi_add_template_wizard|모바일 디바이스 API Add Template Wizard]] \\ 개발자의 편의성을 위하여 ADT를 통해 생성한 프로젝트를 eGovFrame 기반의 모바일 디바이스 API 프로젝트로 변환하는 마법사를 제공한다.
+
+=== iOS ===
+iOS 기반의 표준프레임워크 모바일 디바이스 API 개발환경 구현도구는 개발 특수성 때문에 Xcode를 이용한다.
+
+  * [[egovframework:hyb:hdev:imp:ios:deviceapi_new_template_project_wizard|표준프레임워크 모바일 디바이스 API Template Project]] \\ \\

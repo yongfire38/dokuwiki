@@ -1,0 +1,394 @@
+====== 웹소스 버전관리 및 배포 (WebResourceUpdate) 디바이스API 가이드 프로그램 ======
+
+===== 개요 =====
+
+웹소스 버전관리 및 배포(WebResourceUpdate) 가이드 프로그램은 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현된 전자정부 디바이스 API에 대한 가이드 앱으로써, 모바일  디바이스의 WebResourceUpdate관련 기능을 JavaScript기반으로 구성 된 WebResourceUpdate DeviceAPI를 통하여 웹 리소스의 최신버전 조회 및 버전 업데이트를 진행할 수 있는 기능을 지원한다.
+
+==== 특징 ====
+본 가이드 프로그램에서는 웹 서버에서 웹소스 최신버전 조회 및 현재 버전 비교 기능과 업데이트를 통하여 최신버전 반영(다운로드 포함)을 할 수 있는 기능을 제공하고 있다. \\
+
+==== 기능흐름도 ====
+{{:egovframework:hyb3.6:guide:mbl:webresource:webresource_flow.png?700|}}
+
+==== 전제 조건 ====
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경| 전자정부표준프레임워크 개발환경3.6, Android SDK API 23(version 6.0 Marshmallow)|
+|서버 사이드 개발 환경| 전자정부표준프레임워크 개발환경3.6|
+|Mash up Open API 연계| N/A|
+|테스트 디바이스 | Galaxy S3, G5|
+|테스트 플랫폼 | Android 2.3, Android 6.0 |
+|추가 라이브러리 적용|N/A|
+
+==== 제약사항 ====
+
+^           구분            ^             내용             ^
+|지원 디바이스 및 플랫폼|N/A|
+|크로스 도메인 사용|폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Res/xml/config.xml에서 <access origin="" />에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.|
+|라이선스|N/A|
+
+===== 설명 ===== 
+웹소스 버전관리 및 배포(WebResourceUpdate) 디바이스API 가이드 프로그램는 **최신버전 정보 조회**, **버전 배포**, 그리고 **업데이트 확인**  기능으로 구성되어 있다.(관련기능 부분참조)
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Activity|kr.go.egovframework.hyb.webresourceupdateapp.MainActivity|웹소스버전관리 및 배포 API 가이드 프로그램 Activity Class|
+|CSS|assets/www/css/egovframwork/mbl/hyb/WebResourceUpdate.css |웹소스버전관리 및 배포 API 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |assets/www/images/egovframwork/mbl/hyb/ |웹소스버전관리 및 배포 API 가이드 프로그램 주요 Image 폴더|
+|JS |assets/www/js/egovframwork/mbl/hyb/WebResourceUpdate.js |웹소스버전관리 및 배포 API 가이드 프로그램 주요 JavaScript|
+|RES |assets/www/res/ |웹소스버전관리 및 배포 API 가이드 프로그램 주요 Resource 폴더|
+|XML |AndroidManiFest.xml |안드로이드 어플리케이션 설정 XML|
+|HTML|assets/www/WebResourceUpdate.html|웹소스버전관리 및 배포 API 메인 페이지|
+|HTML|assets/www/intro.html|웹소스버전관리 및 배포 API Intro 페이지|
+|HTML|assets/www/license.html|웹소스버전관리 및 배포 API 라이센스 페이지|
+|HTML|assets/www/overview.html|웹소스버전관리 및 배포 API 기능설명 페이지|
+
+=== 활용 API ===
+
+== EgovResourceUpdate.getResourceVersion ==
+  * 현재 웹소스의 버전 정보를 확인한다.
+
+<code>
+window.plugins.EgovResourceUpdate.getResourceVersion(onResult());
+</code>
+
+^파라미터^설명^비고^
+|onResult|결과 값이 리턴되는 함수 | json타입 데이터 처리 |
+
+== EgovInterface(request) ==
+  * 웹 서버에 최신 버전 정보를 조회하여 로드한다.
+
+<code>
+window.plugins.EgovInterface.request(url, params, onSuccess);
+</code>
+
+^파라미터^설명^비고^
+|url|웹서버로 요청 할 URI|서버 URL 설정은 **환경설정** 참조|
+|parames|입력 파라미터 | json Object 타입으로 입력|
+|onSuccess|POST Method에 대한 성공시 리턴되는 함수 | json타입 데이터 처리 |
+
+== EgovResourceUpdate.update == 
+  * 웹소스 최신버전을 다운로드 받아 적용한다.
+<code>
+window.plugins.EgovResourceUpdate.update(url, params, onSuccess(), onError());
+</code>
+
+^파라미터^설명^비고^
+|url|웹서버로 요청 할 URI|서버 URL 설정은 **환경설정** 참조|
+|parames|입력 파라미터 | json Object 타입으로 입력|
+|onSuccess|성공시 리턴되는 함수 | json타입 데이터 처리 |
+|onError|실패시 리턴되는 함수 |  |
+
+==== Server Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.hyb.mbl.upd.web.EgovResourceUpdateDeviceAPIController.java|웹소스 버전관리 및 배포 API 가이드 프로그램 Controller Class|
+|Service|egovframework.hyb.mbl.upd.service.EgovResourceUpdateDeviceAPIService.java|웹소스 버전관리 및 배포 API 가이드 프로그램  Service Class|
+|ServiceImpl|egovframework.hyb.mbl.upd.service.impl.EgovResourceDeviceAPIServiceImpl.java|웹소스 버전관리 및 배포 API 가이드 프로그램  ServiceImpl Class|
+|VO|egovframework.hyb.mbl.upd.service.ResourceUpdateDeviceAPIVO.java|웹소스 버전관리 및 배포 API 가이드 프로그램 VO Class|
+|DAO|egovframework.hyb.mbl.upd.service.impl.ResourceUpdateDeviceAPIDAO.java|웹소스 버전관리 및 배포 API 가이드 프로그램 Dao Class|
+|QUERY XML|resources/egovframework/sqlmap/hyb/mbl/upd/EgovResourceUpdateDeviceAPIGuide_SQL_xxx.xml|웹소스 버전관리 및 배포 API 가이드 프로그램 QUERY XML|
+
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|웹소스 버전 |resource_update|웹소스 버전관리 정보|
+|파일상세정보|file_detail_info|파일의 상세정보|
+
+
+=== 테이블 정의서 ===
+
+   * RESOURCE_UPDATE
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^KEY^
+|1|SN|일련번호|NUMERIC|6|NotNull|pk|
+|2|APP_ID|앱ID|VARCHAR|45|Null| |
+|3|OS_TYPE|운영환경|VARCHAR|10|Null| |
+|4|RES_VERSION|소스버전|VARCHAR|10|Null| |
+|5|USE_YN|사용유무|VARCHAR|10|Null| |
+|6|UPDATE_CONTENT|상세내용|VARCHAR|1000|Null| |
+|7|UPD_DT|업데이트날짜|NUMERIC|10|Null| |
+|8|FILE_SN|파일상세정보 테이블의 일련번호|NUMERIC|20|Null|fk|
+
+   * FILE_DETAIL_INFO
+
+^No.^컬럼^컬럼명^타입^길이^Null^KEY^
+|1|FILE_SN|파일연번|NUMERIC|20|NotNull|pk|
+|2|FILE_STRE_COURS|파일저장경로|VARCHAR|2000|Null| |
+|3|STRE_FILE_NM|저장파일명|VARCHAR|255|Null|pk|
+|4|ORIGNL_FILE_NM|원파일명|VARCHAR|255|Null| |
+|5|FILE_EXTSN|파일확장자|VARCHAR|20|Null| |
+|6|FILE_CN|파일내용|BLOB| |Null| |
+|7|FILE_SIZE|파일크기|NUMERIC|8|Null| |
+
+
+=== ERD ===
+{{:egovframework:hyb3.6:guide:mbl:newapi_erd.jpg?850|}}
+
+===== 환경설정 ===== 
+
+웹소스 버전관리 및 배포(WebResourceUpdate) 디바이스API 가이드 프로그램에서 제공하는 웹소스 버전 조회, 웹소스 버전 다운로드 및 배포, 웹소스 확인 등의 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== res/xml/config.xml ===
+
+<code xml>
+    <!--전자정부 문서뷰어 API를 사용하기 위한 Custom Plugin 클래스-->
+    <feature name="EgovResourceUpdate">
+        <param name="android-package" value="kr.go.egovframework.hyb.plugin.EgovResourceUpdate" />
+    </feature>
+</code>
+
+=== res/values/serverinfo.xml ===
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+	<string name="SERVER_URL">http://192.168.100.222:8080/DeviceAPIGuideTotal_Web</string>
+    </resources>
+</code>
+
+=== AndroidManifest.xml ===
+
+<code xml>    
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="kr.go.egovframework.hyb.example.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="kr.go.egovframework.hyb.example.permission.C2D_MESSAGE" />    
+</code>
+
+==== Server Application ====
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/mbl/upd/EgovResourceUpdateDeviceAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+===== 관련기능 ===== 
+웹소스 버전관리 및 배포(WebResourceUpdate) API 가이드 프로그램은 웹서버에서 최신 웹소스 버전을 조회하여 해당 버전에 대한 파일 다운로드 및 배포를 할 수 있는 기능으로 구성되어 있다.
+또한, 배포 후 웹소스의 확인을 위한 페이지 기능도 구성되어 있다.
+
+==== 웹 소스 버전 정보 및 최신 버전 조회하기 ====
+
+=== 비즈니스 규칙 ===
+  * 현재 웹소스 버전을 조회한다.
+  * 웹서버에서 최신 웹소스 버전을 조회한다.
+
+=== 관련 코드 ===
+
+== 현재 버전 조회 ==
+<code>
+window.plugins.EgovResourceUpdate.getResourceVersion(function(jsondata) {
+        jsonresult = jsondata;
+        console.log("jsondata.resVersion > "+jsondata.resVersion);
+        console.log("jsondata.resDistDt > "+jsondata.resDistDt);
+        console.log("jsondata.resInstallDt > "+jsondata.resInstallDt);
+        resVersion = jsondata.resVersion;
+        resDistDt = jsondata.resDistDt;
+        resInstallDt = jsondata.resInstallDt;       
+        
+	});
+</code>
+
+== 최신 버전 조회 및 화면 표시 ==
+<code>
+function fn_egov_update_lastestVersion() {
+    
+    //alert("REQ UPDATE INFO");
+    console.log(">>>appId : "+appId);
+    console.log(">>>device.platform : "+device.platform);
+    
+    var url = "/upd/ResourceUpdateVersionInfo.do";
+    
+    var params = {
+        appId : appId ,
+        osType : device.platform};
+    
+    window.plugins.EgovInterface.request(url, params, function(jsondata) {
+                                         //var data = JSON.parse(jsondata);
+                                         //alert("jsondata : "+jsondata);
+                                         console.log("jsondata > "+jsondata);
+                                         resultJson = jsondata;                                         
+                                         resLastestVersion = jsondata.result.resVersion;
+                                         orignlFileNm = jsondata.result.orignlFileNm;
+                                         streFileNm = jsondata.result.streFileNm;
+                                         resVersionUpdDt = jsondata.result.updDt;
+                                         resUpdateContent = jsondata.result.updateContent;
+                                         console.log("server resLastestVersion : "+jsondata.result.resVersion);
+                                         console.log("server orignlFileNm : "+jsondata.result.orignlFileNm);
+                                         console.log("server streFileNm : "+jsondata.result.streFileNm);
+                                         console.log("server resVersionUpdDt : "+jsondata.result.updDt);
+                                         console.log("server resUpdateContent : "+jsondata.result.updateContent);
+
+                                         if(jsondata.resultState == "OK"){
+                                        	 	$('.deviceInfo:eq(0)').html(resVersion);
+                                        		$('.deviceInfo:eq(1)').html(resDistDt);
+                                        		$('.deviceInfo:eq(2)').html(resInstallDt);    
+                                        		$('.deviceInfo:eq(3)').html(resLastestVersion);
+                                        		$('.deviceInfo:eq(4)').html(resVersionUpdDt);
+                                        	 
+                                        		console.log("페이지 전환 ");
+                                        	    $.mobile.changePage('#deviceInfo', 'slide', false, false);
+                                        	    infoScroll.refresh();;
+                                        	    
+                                        	    console.log("send push ok");
+                                         }else{
+                                         $("#alert_dialog").click( function() {
+                                             jAlert('데이터 전송 중 오류가 발생 했습니다.', '전송 오류', 'c');
+                                           });
+                                         }
+                                         
+                                         }, function(result){
+                                        	 alert("error > "+result);
+                                         });
+    
+}
+</code>
+
+=== 관련 화면 ===
+
+^메뉴 화면^ 소스 버전확인 화면^
+|{{:egovframework:hyb3.6:guide:mbl:webresource:webresource_flist.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:webresource:webresource_version.png?320|}}|
+
+==== 최신버전 적용 ====
+
+=== 비즈니스 규칙 ===
+  * 최신 버전이 존재하면 웹소스를 다운받아 디바이스에 적용한다.
+
+=== 관련 코드 ===
+
+== 최신 버전 반영 확인 및 버전 반영(다운로드 포함) ==
+<code>
+function fn_egov_update_go() {
+
+	jConfirm('최신버전을 적용하시겠습니까?', '알림', 'c', function(r) {
+        if (r == true) {
+        	fn_egov_update_action();
+        }
+    });
+	
+}
+
+function fn_egov_update_action() {
+	
+    var url = "/upd/ResourceUpdatefileDownload.do";
+    
+    /*console.log("member resLastestVersion : "+resLastestVersion);
+    console.log("member orignlFileNm : "+orignlFileNm);
+    console.log("member streFileNm : "+streFileNm);
+    console.log("member resLastestVersion : "+resLastestVersion);
+    console.log("member resVersionUpdDt : "+resVersionUpdDt);
+    */
+        
+    var params = {
+        orignlFileNm :  orignlFileNm ,
+        streFileNm : streFileNm,
+        resLastestVersion : resLastestVersion,
+        targetPath : null,
+        resVersionUpdDt : resVersionUpdDt};
+    
+    window.plugins.EgovResourceUpdate.update(url, params, function(jsondata) {
+        jsonresult = jsondata;
+        console.log("jsondata > "+jsondata);
+        
+        resVersion = jsondata.resVersion;        
+        resDistDt = jsondata.resDistDt;
+        resInstallDt = jsondata.resInstallDt;
+                    	 	    	 	
+    	$.mobile.changePage('#main', 'slide', false, false);
+    	infoScroll.refresh();    	    
+	      
+        }, function(result){
+           alert("error > "+result);
+        });
+
+}
+</code>
+
+^최신버전 적용 확인 화면 ^웹소스 다운로드 화면 ^
+|{{:egovframework:hyb3.6:guide:mbl:webresource:webresource_apply.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:webresource:webresource_download.png?320|}}|
+
+==== 웹소스 반영 화면 확인 ====
+
+=== 비즈니스 규칙 ===
+  * 최신버전이 적용 된 화면을 표시한다.
+
+=== 관련 코드 ===
+
+== 웹소스 확인 화면 ==
+<code>
+function fn_egov_update_goNewPage() {
+    //alert(cordova.file.dataDirectory);
+    console.log(">>> Web Resource Directory: "+cordova.file.dataDirectory);
+    //location.href=cordova.file.dataDirectory+"/www/update.html";
+    
+    $("#ifUpdatepages").attr("src", cordova.file.dataDirectory+"/www/update.html");
+    $.mobile.changePage('#updateInfo', 'slide', false, false);
+	infoScroll.refresh(); 
+}
+</code>
+
+^메뉴 화면 ^웹소스 확인 화면 ^
+|{{:egovframework:hyb3.6:guide:mbl:webresource:webresource_flist.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:webresource:webresource_result.png?320|}}|
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+
+=== Device Applicaton 컴파일 방법 === 
+
+  * 프로젝트 선택 > 오른쪽 클릭 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일1.png?740|}}
+
+  * 상단의 메뉴 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일2.png?740|}}
+
+ 
+  * 실행할 타겟 선택 > 에뮬레이터, 디바이스(디버깅모드)
+
+{{:egovframework:hyb:guide:add:디바이스컴파일.png?740|}}
+
+  * 디바이스를 이용한 실행 화면
+
+{{:egovframework:hyb3.6:guide:mbl:webresource:webresource_run.png?320|}}
+
+=== Server Applicaton 컴파일 방법 ===  
+
+  * 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+{{:egovframework:hyb:guide:add:서버실행결과_콘솔.png?840|}}
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+ 
+
+console.log의 작성 방법의 예시는 다음과 같다.
+<code>
+function onError(e)
+{
+    ...
+    console.log('Error status: ' + e.status + ' - Error message: ' + e.message);
+    ...
+}
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+ {{:egovframework:hyb:guide:add:FileReadWriteconsolelog.png|}}
+
+==== 배포 ====
+웹소스 버전관리 및 배포(WebResourceUpdater) 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1285&menu=3&submenu=9|Click]] \\
+

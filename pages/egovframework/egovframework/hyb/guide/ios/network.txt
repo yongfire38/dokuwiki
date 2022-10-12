@@ -1,0 +1,426 @@
+====== Network 디바이스 API 가이드 프로그램 ======
+===== 개요 =====
+Network 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현된 전자정부 디바이스 API에 대한 가이드 앱으로써, 모바일 스마트 디바이스의 Network 관련 기능을 JavaScript 기반으로 구성 된 Network DeviceAPI 를 통하여 조회 할 수 있도록 지원한다. 
+또한, 전자정부 표준프레임워크 기반의 웹 서버 어플리케이션과 연계하여 디바이스 내 Network 정보를 체크하여 미디어를 플레이하는 기능과 네트워크 정보를 서버에 전송하고 조회할 수 있는 기능으로 구성되어 있다.
+
+
+==== 특징 ====
+본 가이드 프로그램 에서는 Network 기능을 가이드 할 수 있도록 **네트워크 상태를 체크하여 미디어 플레이 하기**, **네트워크 정보를 서버에 전송하기**, \\
+ **네트워크 정보 목록을 서버로부터 수신하기** 를 제공하고 있다. \\
+
+==== 기능 흐름도 ====
+{{:egovframework:hyb:guide:ios:egovframework_hyb_guideadd_vibrator_네트워크기능흐름도.png?740|}}
+==== 기능 시퀀스 ====
+{{:egovframework:hyb:guide:ios:network기능시퀀스.jpg|}}
+==== 전제 조건 ====
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경|Xcode 4.5.2, PhoneGap 2.9.0|
+|서버 사이드 개발 환경|전자정부표준프레임워크 개발환경2.7|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스 |iPhone4 |
+|테스트 플랫폼 |iOS 5.1|
+|추가 라이브러리 적용|N/A|
+
+==== 제약 사항 ====
+=== 지원 디바이스 및 플랫폼 ===
+== iPhone 의 경우 장치의 연산속도에 따른 문제가 발생할 수 있다. ==
+    * 문제 : 폰갭 오류시.
+    * 해결방안 : setTimeout() 함수로 phonegap 로딩 순서를 지연시킨다.\\
+<code>
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+</code>
+    * 문제 : iScroll4 컨텐츠 내용 높이 계산 오류.
+    * 해결방안 : setTimeout() 함수로 컨텐츠에 css 적용이 완료되고 iscroll 생성이 되도록 한다.
+<code>
+setTimeout(function()
+           {
+               myScroll = new iScroll(thisPage, 
+                                      { 
+                                          checkDOMChanges: true,
+                                          onBeforeScrollStart:function(e)
+                                          {
+                                          }
+                                      });
+           },
+           500);
+</code>
+
+== Xcode 4.5에서 실행 시 주의 사항 ==
+Xcode 4.5부터 iOS 6, iPhone 5를 지원하는데, 해당 디바이스와 OS를 지원을 할 경우 PhoneGap 1.9.0의 라이브러리는 Xcode 4.4.1에서 컴파일되어 배포되는 라이브러리라 프로젝트 옵션을 조정할 필요가 있다.\\
+
+1. 옵션 설정\\
+{{:egovframework:hyb:guide:ios:xcode4.5_제약사항1.png|}}
+
+2. armv7s 삭제\\
+{{:egovframework:hyb:guide:ios:xcode4.5_제약사항2.png|}}
+
+=== 크로스 도메인 사용 ===
+폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Resource/Cordova.plist에서 <key>ExternalHosts</key> 항목에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.
+
+=== 라이선스 ===
+N/A
+
+===== 설명 =====
+Network 디바이스API 가이드 프로그램은 크게 **네트워크 상태를 체크하여 미디어 플레이하기**, **네트워크 정보를 서버에 전송하기**, \\
+ **네트워크 정보 목록을 서버로부터 수신하기** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+==== 관련 클래스다이어그램 ====
+{{:egovframework:hyb:guide:ios:diagramnetwork.jpg?1024|}}
+==== Device Application ====
+=== 관련소스 ===
+^유형^대상소스^비고^
+|CSS|www/css/egovframwork/mbl/hyb/NetworkAPI.css |NetworkAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |www/images/egovframwork/mbl/hyb/ |NetworkAPI 가이드 프로그램 주요 Image 폴더|
+|JS |www/js/egovframwork/mbl/hyb/NetworkAPI.js |NetworkAPI 가이드 프로그램 주요 JavaScript|
+|HTML|www/NetworkAPI.html|NetworkAPI 메인 페이지|
+|HTML|www/license.html|NetworkAPI 라이센스 페이지|
+|HTML|www/overview.html|NetworkAPI 기능설명 페이지|
+=== 활용 API ===
+== navigator.network.connection.type ==
+  * 현재 디바이스의 네트워크 상태 정보
+<code>
+var states = {};
+states[Connection.UNKNOWN]  = 'Unknown connection';
+states[Connection.ETHERNET] = 'Ethernet connection';
+states[Connection.WIFI]     = 'WiFi connection';
+states[Connection.CELL_2G]  = 'Cell 3G connection';
+states[Connection.CELL_3G]  = 'Cell 3G connection';
+states[Connection.CELL_4G]  = 'Cell 4G connection';
+states[Connection.NONE]     = 'No network connection';
+
+var NowNetwork = states[navigator.network.connection.type];
+</code>
+^Return State(code)^NetworkInfo(string)^
+|Connection.UNKNOWN|Unknown connection|
+|Connection.ETHERNET|Ethernet connection|
+|Connection.WIFI|WiFi connection|
+|Connection.CELL_2G|Cell 2G connection|
+|Connection.CELL_3G|Cell 3G connection|
+|Connection.CELL_4G|Cell 4G connection|
+|Connection.NONE|No network connection|
+
+== media.play ==
+  * 오디오 파일을 재생 시작 또는 다시 시작합니다.
+<code>
+function playAudio(file) {
+    var my_media = new Media(file,
+        function() {
+            console.log("playAudio():Audio Success");
+        },
+        function(err) {
+            console.log("playAudio():Audio Error: "+err);
+    });
+    my_media.play();
+}
+</code>
+== play Option ==
+^Option^설명^비고^
+|numberOfLoops|재생하려는 횟수를 지정| |
+|playAudioWhenScreenIsLocked|디바이스 화면이 잠긴 상태일때 재생여부 선택| |
+== mediaError ==
+^Error codes^Error Value^비고^
+| MEDIA_ERR_ABORTED|사용자에 의해 중단된 비디오 재생| |
+| MEDIA_ERR_NETWORK|네트워크 에러| |
+| MEDIA_ERR_DECODE|디코딩 에러(코덱문제)| |
+| MEDIA_ERR_SRC_NOT_SUPPORTED|지원하지 않는 형식의 오디오| |
+== my_media.stop ==
+  * 이 함수는 오디오 파일을 재생 중지 하는 기능입니다.
+<code>
+function playAudio(file) {
+    var my_media = new Media(file,
+        function() {
+            console.log("playAudio():Audio Success");
+        },
+        function(err) {
+            console.log("playAudio():Audio Error: "+err);
+    });
+    my_media.play();
+    setTimeout(function() {
+        my_media.stop();
+    }, 10000);        
+}
+</code>
+
+==== Server Application ====
+=== 관련소스 ===
+^유형^대상소스^비고^
+|Controller|egovframework.hyb.ios.nwk.web.EgovNetworkiOSAPIController.java|네트워크 정보 관리를 위한 클래스|
+|Service|egovframework.hyb.ios.nwk.service.EgovNetworkiOSAPIService.java|네트워크 정보 관리를 위한  서비스 인터페이스|
+|VO|egovframework.hyb.ios.nwk.service.NetworkiOSAPIDefaultVO.java|네트워크 정보 관리를 위한 VO 클래스|
+|VO|egovframework.hyb.ios.nwk.service.NetworkiOSAPIVO.java|네트워크 정보 관리를 위한 VO 클래스|
+|DAO|egovframework.hyb.ios.nwk.service.impl.NetworkiOSAPIDAO.java|네트워크 정보 관리를 위한 데이터처리 클래스|
+|DAO|egovframework.hyb.ios.nwk.service.impl.EgovNetworkiOSAPIServiceImpl.java|요청 서비스 처리를 위한 클래스|
+|Query XML|resources/egovframework/sqlmap/hyb/ios/nwk/EgovNetworkiOSAPOGuide_SQL_mysql.xml|네트워크 정보 관리를 Query 파일|
+
+==== 관련 테이블 ====
+=== 테이블명 ===
+^테이블명^테이블명(영문)^비고^
+|네트워크|Network|네트워크 정보 관리|
+=== 테이블 명세서 ===
+== 네트워크 ==
+^No.^컬럼^컬럼명^타입^길이^Null^KEY^
+|1|SN|일련번호|NUMERIC|6|NotNull|pk|
+|2|UUID|UUID|VARCHAR|50|NotNull|pk|
+|3|NTWRK_TYPE|네트워크type|VARCHAR|20|Null| |
+|4|USEYN|활성화여부|CHAR|1|Null|pk|
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+===== 환경 설정 =====
+Network 디바이스API 가이드 프로그램에서 제공하는 모바일 디바이스의 Network 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+=== config.xml ===
+== ExternalHosts ==
+<code xml>
+    <access origin="*"/>
+</code>
+
+== Plugins ==
+<code xml>
+    <feature name="NetworkStatus">
+        <param name="ios-package" value="CDVConnection"/>
+    </feature>
+</code>
+
+==== Server Aplication ====
+=== context-properties.xml ===
+<code xml>
+<entry key="serverContext" value="서버의 경로"/>
+</code>
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/ios/nwk/EgovNetworkiOSAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+===== 관련 기능 =====
+Network 디바이스API 가이드 프로그램은 크게 **네트워크 상태를 체크하여 미디어 플레이 하기**, **네트워크 정보를 서버에 전송하기**, \\
+ **네트워크 정보 목록을 서버로부터 수신하기** 기능으로 구성되어 있다.
+==== 네트워크 상태를 체크하여 미디어 플레이 하기 ====
+=== 비즈니스 규칙 ===
+== 1. 최초 앱 실행시 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다. ==
+== 2. 미디어 스트리밍시 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 항상 사용자 승인여부를 체크한다. ==
+=== 관련 코드 ===
+== 네트워크 상태를 체크한다 ==
+<code>
+var  isNetworkCheck = false;
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    
+    if (networkState == Connection.UNKNOWN || networkState == Connection.NONE)
+    {
+        jAlert("네트워크가 연결되어 있지 않습니다.", "알림", "b");
+        return false;
+    }
+    if(networkState != Connection.WIFI)
+    {
+        if(!doCheck) 
+        {
+            if(isNetworkCheck)
+            {
+                return true;
+            }
+        }
+		
+	if(confirm('Wi Fi 망이 아닐경우 추가적인 비용이 발생 할 수 있습니다. \n계속 하시겠습니까?')) 
+        {		
+	    isNetworkCheck = true;
+            return true;
+        } 
+        else 
+        {		
+            isNetworkCheck = false;
+            return false;
+        }		
+    }
+    else
+    {		
+        return true;
+    }
+}
+</code>
+
+== 미디어를 재생한다 ==
+<code>
+function fn_egov_click_mediaBtn()
+{
+    if(context === null)
+    {
+        fn_egov_init_context();
+        return;
+    }
+    
+    if(audioCheck)      // 이미 재생중이라면 음악만 정지
+    {
+        fn_egov_stop_audio();
+        audioCheck = false;
+    }
+    else
+    {
+        // 오디오, 동영상 스트리밍의 경우 매번 네트워크 체크를 하여 사용자 승인 물어보기
+        if(fn_egov_network_check(true))
+        {
+            $.mobile.showPageLoadingMsg('a');
+            // 디바이스의 성능에 따라 PrograssDialog Show 가 완전이 로딩이 된후 다음 코드를 수행하도록 setTimeout 을 사용하여 지연시킨다.
+            setTimeout(function()
+                       {
+                           fn_egov_play_audio();
+                       
+                           var params = {
+                               uuid :  device.uuid,
+                               networktype : states[navigator.network.connection.type],
+                               useYn : "Y"
+                           };
+                       
+                           fn_egov_sendto_server("/nwk/addNetworkiOSInfo.do",params);
+                       }, 
+                       500);
+        }
+    }
+}
+</code>
+== 네트워크 정보를 서버로 전송 ==
+<code>
+var params = {
+    uuid :  device.uuid,
+    networktype : states[navigator.network.connection.type],
+    useYn : "Y"
+};
+
+fn_egov_sendto_server("/nwk/addNetworkiOSInfo.do",params);
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+^기능^URL^Controller^method^화면(HTML)^
+|미디어 재생|/nwk/getMp3FileiOS.do|EgovNetworkiOSAPIController|getMp3File|NetworkAPI.html#vbrMain|
+|네트워크 정보 업로드|/nwk/addNetworkiOSInfo.do|EgovNetworkiOSAPIController|insertNetworkInfo|NetworkAPI.html#vbrMain|
+{{:egovframework:hyb:guide:iOS:네트워크재생.png?320|}}\\
+Media Play: 네트워크 상태를 체크하여 Wi-Fi 가 아닐 경우에는 사용자 승인에 따라 서버의 미디어를 재생하고 디바이스의 네트워크 정보를 업로드한다.
+==== 네트워크 정보 목록을 서버로부터 수신하기 ====
+=== 비즈니스 규칙 ===
+== 1. 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다. ==
+=== 관련 코드 ===
+== 네트워크 정보 목록 요청 ==
+<code>
+function fn_egov_open_networkList()
+{
+    if(context === null)    // 최초 앱 실행시 3G 사용자 승인 여부 판단
+    {
+        fn_egov_init_context();
+        return;
+    }
+    
+    if(fn_egov_network_check(false))     // 통신 이벤트 발생시 3G 사용자 승인여부 판단
+    {
+        var params = {};
+        
+        $.mobile.showPageLoadingMsg('a');
+        // 디바이스의 성능에 따라 PrograssDialog Show 가 완전이 로딩이 된후 다음 코드를 수행하도록 setTimeout 을 사용하여 지연시킨다.
+        setTimeout(function()
+                   {
+                       fn_egov_sendto_server("/nwk/networkiOSInfoList.do",params);
+                   }, 
+                   500);
+    }        
+}
+</code>
+
+== 네트워크 정보 상세 요청 ==
+<code>
+function fn_egov_open_networkDetailInfo(selectedId)
+{   
+    if(fn_egov_network_check(false))        // 통신 이벤트 발생시 3G 사용자 승인여부 판단
+    {
+        var params = { sn : selectedId };
+        
+        $.mobile.showPageLoadingMsg('a');
+        // 디바이스의 성능에 따라 PrograssDialog Show 가 완전이 로딩이 된후 다음 코드를 수행하도록 setTimeout 을 사용하여 지연시킨다.
+        setTimeout(function()
+                   {
+                       fn_egov_sendto_server("/nwk/networkiOSInfo.do",params);
+                   }, 
+                   500);
+    }
+}
+</code>
+== 네트워크 정보 삭제 요청 ==
+<code>
+function fn_egov_click_deleteBtn()
+{
+    if(fn_egov_network_check(false))        // 통신 이벤트 발생시 3G 사용자 승인여부 판단
+    {
+        var params = {
+            sn : pageNumber
+        };
+        
+        $.mobile.showPageLoadingMsg('a');
+        // 디바이스의 성능에 따라 PrograssDialog Show 가 완전이 로딩이 된후 다음 코드를 수행하도록 setTimeout 을 사용하여 지연시킨다.
+        setTimeout(function()
+                   {
+                       fn_egov_sendto_server("/nwk/deleteNetworkiOSInfo.do",params);
+                   }, 
+                   500);
+    }
+}
+</code>
+
+</code>
+=== 관련 화면 및 수행매뉴얼 ===
+^기능^URL^Controller^method^화면(HTML)^
+|네트워크 정보 목록 요청|/nwk/networkiOSInfoList.do|EgovNetworkiOSAPIController|selectNetworkInfoList|NetworkAPI.html#apiListView|
+|네트워크 정보 상세 요청|/nwk/networkiOSInfo.do|EgovNetworkiOSAPIController|selectNetworkInfo|NetworkAPI.html#networkInfoDetail|
+|네트워크 정보 삭제 요청|/nwk/deleteNetworkiOSInfo.do|EgovNetworkiOSAPIController|deleteNetworkInfo|NetworkAPI.html#networkInfoDetail|
+{{:egovframework:hyb:guide:iOS:네트워크목록.png?320|}} {{:egovframework:hyb:guide:iOS:네트워크상세.png?320|}}\\
+뒤로:메인 페이지를 호출한다. \\
+리스트:선택한 리스트의 네트워크 상세 정보를 표시한다. \\
+목록:네트워크 정보 목록 페이지를 호출한다. \\
+삭제:선택한 네트워크 정보를 삭제한다.
+
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+=== Device Application ===
+    - [[ |NetworkAPI 설치하러 가기]]\\
+    - NetworkAPI 프로젝트의 설치 상태를 확인하고 빌드를 클릭한다\\ {{:egovframework:hyb:guide:ios:network빌드.png?700|}} \\
+    * 빌드가 성공하고 나면 다음과 같은 화면이 실행된다.\\ {{:egovframework:hyb:guide:ios:network실행.png?320|}} \\
+=== Server Application ===
+    - [[ |Web Server 설치하러 가기]]\\
+    - 프로젝트 우클릭>Run as>Maven install 을 클릭하여 빌드를 한다.\\ {{:egovframework:hyb:guide:ios:웹서버빌드.png?700|}} \\
+    - 빌드 성공 (콘솔 정보 확인)\\ {{:egovframework:hyb:guide:ios:웹서버빌드성공.png?700|}} \\
+    - 프로젝트 우클릭>Run as>Run on Server 를 클릭하여 실행시킨다.\\ {{:egovframework:hyb:guide:ios:웹서버실행.png?700|}} \\
+    - 프로젝트가 성공적으로 실행되었는지 확인한다. \\ {{:egovframework:hyb:guide:ios:웹서버실행성공.png?700|}} \\
+
+==== 디버깅 ====
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인할 수 있다.
+    * 실제 콘솔 로그 예
+<code>
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    ...
+}
+</code>
+    * xCode 콘솔 창
+{{:egovframework:hyb:guide:ios:networkdebugxcode.png?700|}}\\
+    * Organizer 로그 창
+{{:egovframework:hyb:guide:ios:networkdebugorganizer.png?700|}}\\
+
+
+^로그 메시지^값^비고^
+|DeviceAPIGuide fn_egov_network_check|네트워크 상태 체크| |
+|DeviceAPIGuide fn_egov_sendto_server Response Completed|서버에 요청한 내용이 성공적으로 처리 된 경우| |
+|DeviceAPIGuide fn_egov_sendto_server Response Failed|서버 내부 처리 오류| |
+|DeviceAPIGuide fn_egov_sendto_server Request Failed|통신 오류| |
+|DeviceAPIGuide fn_egov_play_audio Success|미디어 재생 성공| |
+|DeviceAPIGuide fn_egov_play_audio Error|미디어 재생 실패| |
+
+==== 배포 ====
+Network 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=533&menu=3&submenu=9|Click]]
+
+===== 참고 자료 =====
+  * UX/UI 라이브러리 : jQuery Mobile[[http://jquerymobile.com/demos/1.3.2/|Click]]\\
+  * Phonegap 2.9.0 Connection: [[http://docs.phonegap.com/en/2.9.0/cordova_connection_connection.md.html#Connection|Click]]\\
+  * Phonegap 2.9.0 media: [[http://docs.phonegap.com/en/2.9.0/cordova_media_media.md.html#media|Click]]\\

@@ -1,0 +1,42 @@
+===== 개요 =====
+전자정부 표준프레임워크 디바이스 API 실행환경은 HTML5, 자바스크립트 기반의 툴 및 프레임워크와의 상호 호환이 가능하다. 전자정부 표준프레임워크 디바이스 API 실행환경의 
+코어 프레임워크인 폰갭 프레임워크는 다양한 UI/UX 자바스크립트 프레임워크 및 개발 도구를 활용한 개발을 지원하고 있으며, 다음 공식 사이트에서 지원하는 도구 및 프레임워크를 소개하고 있다.
+
+   * PhoneGap Developer Tool : http://phonegap.com/tool/page1
+
+
+
+===== 설명 =====
+전자정부 표준프레임워크 디바이스 API 가이드 프로그램은 다음의 프레임워크를 활용 개발 되었다.
+
+
+
+==== jQuery Mobile ==== 
+전자정부 모바일 웹 표준프레임워크의 코어 프레임워크로서 모바일 웹의 UX 개발시에 사용된다. 네이티브 어플리케이션의 화면 전환 효과 및 각종 버튼 리스트 등을 활용한 개발이 가능하며 
+HTML5를 지원하는 다양한 브라우저를 지원한다. 전자정부 표준프레임워크 디바이스 API 가이드 프로그램의 화면 개발에 사용 되었다.
+
+   * URL : http://jquerymobile.com/
+
+==== jQuery ====
+jQuery Mobile 프레임워크의 코어 프레임워크로 jQuery Mobile을 사용하기 위해서는 필수로 사용되어야 한다. Dom Controll, Ajax, Restful 서비스 연계 등 다양한 기능을 제공하며
+자바스크립트를 이용한 개발을 간편하고 쉽게 도와준다.
+
+   * URL : http://jquery.com/
+
+==== iScroll ==== 
+jQuery Mobile 프레임워크와 같이 HTML5 기반의 어플리케이션 개발 시에 네이티브 어플리케이션과 같은 UX 효과를 주기 위한 프레임워크로 어플리케이션의 헤더와 풋터를 고정 시킨 상태로
+컨텐츠 내용만 스크롤 해주는 기능을 제공한다. 전자정부 표준프레임워크 디바이스 API 가이드 프로그램 개발에서 jQuery Mobile에서 제공하지 못하는 UX 효과를 보조하기 위해 사용되었다.
+
+   * URL : http://cubiq.org/iscroll
+
+==== three.js ==== 
+Accelerator Device API 가이드 프로그램에 활용된 자바스크립트 프레임워크로 HTML5 및 자바스크립트를 이용해 웹 브라우저 상에 3D 그래픽 이미지를 만들고 움직이는 API를 제공한다.
+
+   * URL : https://github.com/mrdoob/three.js/
+
+==== Ripple Emulator Beta ==== 
+폰갭 프레임워크 개발 시의 디버깅을 도와줄 수 있는 에뮬레이터 도구로 크롬 브라우저 플러그인 기반의 어플리케이션이다. 네이티브 플랫폼에서 제공하는 에뮬레이터와 비슷한 역할을 하며
+폰갭 프레임워크의 API 호출이 정상적으로 처리 된다는 장점이 있다. 현재(2012.09.11) 정상 동작하는 API의 제한은 있으나 대부분의 API를 지원한다. 크롬 부라우저의 자바스크립트 디버거와
+연동이 가능하며 브레이크 포인트를 활용한 디버깅이 가능하다.
+
+   * URL : https://chrome.google.com/webstore/detail/geelfhphabnejjhdalkjhgipohgpdnoc?utm_source=chrome-ntp-icon

@@ -1,0 +1,338 @@
+===== Capture  =====
+
+==== 설명 ====
+  * 디바이스의 오디오, 이미지, 비디오 캡쳐를 위한 기능을 제공한다.
+<code>
+// The global capture object
+var capture = navigator.device.capture;
+</code>
+
+==== 제약사항 ====
+  * Capture API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+
+== MediaFile.getFormatData ==
+  * 미디어 파일의 포맷 정보를 수집하는 API에 대해 제한이 있어, 일부 MediaFileData 속성을 지원하지 않는다. 
+  * MediaFileData : codecs, bitrate 을 지원하지 않는다.
+
+== CaptureAudioOptions ==
+  * duration 파라미터를 지원하지 않는다. 
+  * 프로그램적으로 녹음 시간을 제한할 수 없다.
+  * mode 파라미터를 지원하지 않는다. 
+  * 오디오 녹음 포맷을 프로그램적으로 정의할 수 없다.
+  * 오디오 녹음의 포맷은 audio/amr 만을 사용할 수 있다. 
+
+== CaptureImageOptions ==
+  * mode 파라미터를 지원하지 않는다.
+  * 이미지의 크기와 포맷을 프로그램적으로 정의할 수 없다.
+  * 하지만 단말기 사용자가 이미지의 크기는 지정할 수 있다.
+  * 이미지는 JPEG (image/jpeg) 로 저장된다.
+
+== CaptureVideoOptions ==
+  * duration 파라미터를 지원하지 않는다.
+  * 비디오 촬영 크기를 프로그램적으로 제한할 수 없다.
+  * mode 파라미터를 지원하지 않는다.
+  * 비디오의 크기와 파라미터를 프로그램적으로 정의할 수 없다.
+  * 비디오는 3GPP (videp/3gpp) 로 기본적으로 촬영된다.
+
+=== iOS ===
+
+== capture.captureAudio ==
+  * iOS는 단순한 유저 인터페이스를 가지기 때문에 기본적으로 오디오 녹음을 지원하지 않는다.
+
+== MediaFile.getFormatData ==
+  * 미디어 파일의 포맷 정보를 수집하는 API에 대해 제한이 있어, 일부 MediaFileData 속성을 지원하지 않는다. 
+  * MediaFileData : codecs을 지원하지 않는다.
+  * MediaFileData : bitrate 는 iOS4 에서만 지원한다.
+
+== CaptureAudioOptions ==
+  * limit 파라미터를 지원하지 않는다. 
+  * 한 번에 하나의 녹음만 실행할 수 있다.
+  * 오디오 녹음 포맷을 프로그램적으로 정의할 수 없다.
+  * 오디오 녹음의 포맷은 audio/wav 만을 사용할 수 있다.
+
+== CaptureImageOptions ==
+  * limit 파라미터를 지원하지 않는다.
+  * 한 번에 하나의 이미지만을 캡처할 수 있다
+  * mode 파라미터를 지원하지 않는다.
+  * 이미지의 크기와 포맷을 프로그램적으로 정의할 수 없다.
+  * 이미지는 JPEG (image/jpeg) 로 저장된다.
+
+== CaptureVideoOptions ==
+  * limit 파라미터는 지원하지 않는다.
+  * 한 번에 하나의 비디오 촬영만 할 수 있다.
+  * duration 파라미터를 지원하지 않는다.
+  * 비디오 촬영 크기를 프로그램적으로 제한할 수 없다.
+  * mode 파라미터를 지원하지 않는다.
+  * 비디오의 크기와 파라미터를 프로그램적으로 정의할 수 없다.
+  * 비디오는 MOV (video/quicktime) 로 기본적으로 촬영된다.
+
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Capture" value="org.apache.cordova.Capture"/>
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.RECORD_AUDIO" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/Cordova.plist
+<code>
+<key>Plugins</key>
+<dict>
+    <key>Capture</key>
+    <string>CDVCapture</string>
+</dict>
+</code>
+
+==== 속성 ====
+
+=== supportedAudioModes === 
+  * 디바이스에서 제공하는 오디오 녹음 포맷.
+  * ConfigurationData[]
+
+=== supportedImageModes === 
+  * 디바이스에서 제공하는 이미지 사이즈와 포맷
+  * ConfigurationData[]
+
+=== supportedVideoModes === 
+  * 디바이스에서 제공하는 비디오 포맷
+  * ConfigurationData[]
+
+==== 관련 함수 ====
+
+=== capture.captureAudio === 
+  * 단말기의 녹음 프로그램을 호출하여 녹음을 하고, 녹음을 완료하면 녹음한 데이터(clip) 를 가져온다.
+<code>
+navigator.device.capture.captureAudio( 
+    CaptureCB captureSuccess, CaptureErrorCB captureError,  [CaptureAudioOptions options]
+);
+</code>
+
+  * Quick Example
+<code>
+// capture callback
+var captureSuccess = function(mediaFiles) {
+    var i, path, len;
+    for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+        path = mediaFiles[i].fullPath;
+        // do something interesting with the file
+    }
+};
+
+// capture error callback
+var captureError = function(error) {
+    navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+};
+
+// start audio capture
+navigator.device.capture.captureAudio(captureSuccess, captureError, {limit:2});
+</code>
+
+=== capture.captureImage === 
+  * 단말기의 카메라 프로그램을 호출하여 사진을 찍고 찍은 이미지를 가져온다.
+  * 캡쳐된 이미지 파일에 대한 정보를 가져온다.
+<code>
+navigator.device.capture.captureImage( 
+    CaptureCB captureSuccess, CaptureErrorCB captureError, [CaptureImageOptions options]
+);
+</code>
+
+  * Quick Example
+<code>
+// capture callback
+var captureSuccess = function(mediaFiles) {
+    var i, path, len;
+    for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+        path = mediaFiles[i].fullPath;
+        // do something interesting with the file
+    }
+};
+
+// capture error callback
+var captureError = function(error) {
+    navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+};
+
+// start image capture
+navigator.device.capture.captureImage(captureSuccess, captureError, {limit:2});
+</code>
+
+=== capture.captureVideo === 
+  * 단말기의 카메라 프로그램을 호출하여 동영상을 촬영하고 촬영한 비디오를 가져온다.
+<code>
+navigator.device.capture.captureVideo( 
+    CaptureCB captureSuccess, CaptureErrorCB captureError, [CaptureVideoOptions options]
+);
+</code>
+
+  * Quick Example
+<code>
+// capture callback
+var captureSuccess = function(mediaFiles) {
+    var i, path, len;
+    for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+        path = mediaFiles[i].fullPath;
+        // do something interesting with the file
+    }
+};
+
+// capture error callback
+var captureError = function(error) {
+    navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+};
+
+// start video capture
+navigator.device.capture.captureVideo(captureSuccess, captureError, {limit:2});
+</code>
+
+=== MediaFile.getFormatData === 
+  * 미디어 파일의 포맷 정보를 가져온다.
+<code>
+mediaFile.getFormatData( 
+    MediaFileDataSuccessCB successCallback, 
+    [MediaFileDataErrorCB errorCallback]
+);
+</code>
+
+==== Objects ====
+
+=== CaptureAudioOptions ===
+  * 녹음을 지원하는 captureAudio() 메소드에 대한 옵션 객체.
+
+<code>
+var options = { limit: 3, duration: 10 };
+
+navigator.device.capture.captureAudio(captureSuccess, captureError, options);
+</code>
+
+^유형^설명^
+|limit|한번에 녹음할 수 있는 횟수를 정의한다.|
+|duration|녹음할 경우, 최대 녹음시간을 정의한다.|
+|mode|capture.supportedAudioModes 에서 지원하는 오디오 모드중 하나를 지정한다.|
+
+=== CaptureImageOptions ===
+  * 이미지 촬영을 지원하는 captureImage() 메소드에 대한 옵션 객체.
+
+<code>
+navigator.device.capture.captureImage( 
+    CaptureCB captureSuccess, CaptureErrorCB captureError, [CaptureImageOptions options]
+);
+</code>
+
+^유형^설명^
+|limit|한번에 사진 촬영할 수 있는 횟수를 정의한다.|
+|mode|capture.supportedImageModes 에서 지원하는 이미지 모드중 하나를 지정한다.|
+
+=== CaptureVideoOptions ===
+  * 동영상 촬영을 지원하는 captureVideo() 메소드에 대한 옵션 객체.
+
+<code>
+var options = { limit: 3 };
+
+navigator.device.capture.captureVideo(captureSuccess, captureError, options);
+</code>
+
+^유형^설명^
+|limit|한번에 촬영할 수 있는 횟수를 정의한다.|
+|duration|촬영할 경우, 최대 촬영시간을 정의한다.|
+|mode|capture.supportedVideoModes 에서 지원하는 비디오 모드중 하나를 지정한다|
+
+=== CaptureError ===
+  * 미디어 촬영 중에 발생할 수 있는 오류코드를 기록하는 객체.
+
+^유형^설명^
+|CaptureError.CAPTURE_INTERNAL_ERR|카메라가 사진을 찍거나 마이크로폰이 녹음을 하는 데 실패했을 경우의 오류.|
+|CaptureError.CAPTURE_APPLICATION_BUSY|카메라 또는 녹음 프로그램을 다른 서비스로 인해 호출할 수 없는 경우의 오류.|
+|CaptureError.CAPTURE_INVALID_ARGUMENT|옵션의 설정이 올바르지 않을 경우 phoneGap API에서 발생하는 오류.|
+|CaptureError.CAPTURE_NO_MEDIA_FILES|사용자가 촬영을 중단하고 임의로 빠져나왔을 때 발생하는 오류.|
+|CaptureError.CAPTURE_NOT_SUPPORTED|요청한 미디어 촬영이 지원하지 않을 때 발생하는 오류.|
+
+=== CaptureCB ===
+  * 미디어 활영에 성공했을 때 실행하는 함수.
+
+<code>
+function captureSuccess( MediaFile[] mediaFiles ) { ... };
+</code>
+
+  * Quick Example
+<code>
+function captureSuccess(mediaFiles) {
+    var i, path, len;
+    for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+        path = mediaFiles[i].fullPath;
+        // do something interesting with the file
+    }
+};
+</code>
+
+=== CaptureErrorCB ===
+  * 미디어 촬영에 실패했을 때 실행하는 함수.
+
+<code>
+function captureError( CaptureError error ) { ... };
+</code>
+
+  * Quick Example
+<code>
+var captureError = function(error) {
+    navigator.notification.alert('Error code: ' + error.code, null, 'Capture Error');
+};
+</code>
+
+=== ConfigurationData ===
+  * 디바이스에서 지원하는 캡처 속성들을 기록할 수 있는 객체.
+  * video/3gpp, video/quicktime, image/jpeg, audio/amr, audio/wav
+
+  * Quick Example
+<code>
+var imageModes = navigator.device.capture.supportedImageModes;
+
+var width = 0;
+var selectedmode;
+for each (var mode in imageModes) {
+    if (mode.width > width) {
+        width = mode.width;
+        selectedmode = mode;
+    }
+}
+</code>
+
+^유형^설명^타입^
+|type|미디어 유형을 ASCII 코드로 인코딩한 소문자 문자열.|DOMString|
+|height|이미지나 비디오의 높이(pixel)를 정의하며, 오디오의 경우 0으로 처리한다.|Number|
+|width|이미지나 비디오의 너비(pixel)를 정의하며, 오디오의 경우 0으로 처리한다.|Number|
+
+=== MediaFile ===
+  * 캡처한 파일의 속성들을 기록할 수 있는 객체.
+  * MediaFile.getFormatData
+
+^유형^설명^타입^
+|name|경로를 제외한 파일명.|DOMString|
+|fullPath|파일명을 제외한 전체경로.|DOMString|
+|type|미디어 파일의 mime type.|DOMString|
+|lastModifiedDate|파일의 최종수정날짜.|Date|
+|size|byte 단위를 가지는 파일의 크기.|Number|
+
+=== MediaFileData ===
+  * 미디어 파일에 대한 포맷 정보를 나타내는 객체.
+
+  * 지원 속성
+
+^유형^Android^iOS^비고^
+|height|X|X|항상, null이다.|
+|bitrate|X|O|iOS4에서만 오디오를 유일하게 지원한다. 이미지나 비디오는 항상 0이다.|
+|height|O|O|이미지와 비디오 파일에서만 지원한다.|
+|width|O|O|이미지와 비디오 파일에서만 지원한다.|
+|duration|O|O|이미지와 비디오 파일에서만 지원한다.|
+
+==== 참고 자료 ====
+  * Phonegap : http://docs.phonegap.com/en/2.9.0/cordova_media_capture_capture.md.html#Capture

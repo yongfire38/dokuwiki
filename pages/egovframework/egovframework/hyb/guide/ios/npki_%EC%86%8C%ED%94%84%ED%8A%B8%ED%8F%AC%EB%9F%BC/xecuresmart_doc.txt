@@ -1,0 +1,368 @@
+====== XecureSmart NPKI API ======
+===== 개요 =====
+[XecureSmart] eGovFrame javascript Interface 는 폰갭 인터페이스를 이용하여 모바일에서 NPKI 서비스를 제공한다.
+
+==== API 리스트 ====
+ 
+  * 패키지 함수
+
+^함수명^설명^
+|void XecureSmartPlugin.blockDecEx ( successCB, failCB, cipherText ) | 암호문 텍스트를 복호화한다. |
+|void XecureSmartPlugin.blockDec ( successCB, failCB, path, plainText, method ) | 평문 텍스트를 암호화한다. |
+|void XecureSmartPlugin.changeCertPassword ( successCB, failCB, issuerDN, serial, oldPassword, newPassword ) | 인증서의 암호를 변경한다. |
+|void XecureSmartPlugin.deEnvelopeDataWithCert ( successCB, failCB, envelopeText, issuerDN, serial, password ) | 인증서로 전자봉투한 전자봉투 텍스트를 복호화한다. |
+|void XecureSmartPlugin.deEnvelopeDataWithPassword ( successCB, failCB, envelopeText, password ) | 패스워드로 전자봉투한 전자봉투 텍스트를 복호화한다. |
+|void XecureSmartPlugin.deleteCertificate ( successCB, failCB, issuerDN, serial ) | 인증서를 삭제한다. |
+|void XecureSmartPlugin.envelopeDataWithCert ( successCB, failCB, plainText, issuerDN, serial ) | 평문 텍스트를 인증서로 전자봉투한다. |
+|void XecureSmartPlugin.envelopeDataWithPassword ( successCB, failCB, plainText, password ) | 평문 텍스트를 암호로 전자봉투한다. |
+|void XecureSmartPlugin.envelopeDataWithPEM ( successCB, failCB, plainText, pem ) | 평문 텍스트를 PEM 인증서로 전자봉투한다. |
+|void XecureSmartPlugin.getCertTree ( successCB , failCB , certType , searchType , contentLevel , searchValue , searchSerial ) | 장치의 인증서 목록을 가져온다. |
+|void XecureSmartPlugin.getEnvelopeCertInfo ( successCB , failCB , envelopeText ) | 전자봉투 텍스트의 인증서 정보를 가져온다. |
+|void XecureSmartPlugin.getEnvelopeType ( successCB , failCB , envelopeText ) | 전자봉투 텍스트의 타입을 가져온다. |
+|void XecureSmartPlugin.getVIDInfo ( successCB , failCB ) | 식별번호 검증 시 전자서명 후에 VID를 가져온다. |
+|void XecureSmartPlugin.keySharpGetConfirmNumber ( successCB , failCB, ssn ) | 키샵에서 인증번호를 가져온다. |
+|void XecureSmartPlugin.keySharpSaveCert ( successCB , failCB ) | 키샾에서 받아온 인증서를 저장한다. |
+|void XecureSmartPlugin.renewCertificate ( successCB, failCB, caCode, issuerDN, serial, oldPassword, newPassword ) | CA로부터 인증서를 갱신받는다. |
+|void XecureSmartPlugin.requestCertificate ( successCB, failCB, caCode, refNum, authCode, password ) | CA로부터 인증서를 발급받는다. |
+|void XecureSmartPlugin.revokeCertificate ( successCB, failCB, caCode, issuerDN, serial, password, jobCode, reason ) | CA로부터 인증서를 폐기한다. |
+|void XecureSmartPlugin.setIDNum ( successCB, failCB, idn ) | 식별번호 검증 시 전자서명 전에 식별번호를 입력한다. |
+|void XecureSmartPlugin.signDataAdd ( successCB , failCB , issuerDN , serial , password , plainText ) | 전자서명문에 전자서명을 추가한다. |
+|void XecureSmartPlugin.signDataCMS ( successCB , failCB , issuerDN , serial , password , plainText ) | 평문 텍스트를 전자서명한다. |
+|void XecureSmartPlugin.verifyCertPassword ( successCB , failCB , issuerDN , serial , password  ) | 인증서의 암호를 검증한다. |
+
+  * 패키지 속성
+
+^변수명^설명^
+|var xgateAddress|xgate 서버 주소|
+|var keySharpIP|키샵에서 사용할 IP|
+|var keySharpPort|키샵에서 사용하는 port|
+
+==== 전제조건 ====
+
+^구분^내용^
+|테스트 디바이스 |iPhone 4|
+|테스트 플랫폼 |iOS 5.1|
+
+NPKI XecureSmart Library
+^파일명^설명^
+|Plugins/XSPlugin.h| XecureSmart 라이브러리 |
+|Plugins/XSPlugin.mm| XecureSmart 라이브러리 |
+|Plugins/XSCopyCertificateInterface.h| XecureSmart 라이브러리 |
+|Plugins/XSCopyCertificateInterface.mm| XecureSmart 라이브러리 |
+|lib/libKeySharpiPhone.a| XecureSmart 라이브러리 |
+|lib/XecureSmartPG.h| XecureSmart 라이브러리 |
+|lib/XWUIErrorCode.h| XecureSmart 라이브러리 |
+|www/js/egovframework/mbl/hyb/XSCore.js| XecureSmart PhoneGap Plugin JavaScript |
+|src/com.softforum.xecure.XApplication.java| XecureSmart 메인 Activity Class |
+|src/com.softforum.xecure.util.EnvironmentConfig.java| XecureSmart 설정 Class |
+
+Cordova.plist 설정
+<code xml>
+	<key>Plugins</key>
+	<dict>
+		<key>XSPGPlugin</key>
+		<string>XSPlugin</string>
+	</dict>
+</code>
+
+===== API Doc =====
+
+== XecureSmartPlugin.blockDecEx ==
+  * 암호문 텍스트를 복호화한다.
+
+<code>
+void XecureSmartPlugin.blockDecEx ( successCB, failCB, cipherText )
+</code>
+
+^Option^설명^비고^
+|successCB|성공시 콜백함수|(out)평문 텍스트|
+|failCB|실패시 콜백함수|(out)에러코드$에러메시지|
+|cipherText|암호문|(in)|
+
+== XecureSmartPlugin.blockDec ==
+  * 평문 텍스트를 암호화한다.
+
+<code>
+void XecureSmartPlugin.blockDec ( successCB, failCB, path, plainText, method )
+</code>
+
+^Option^설명^비고^
+|successCB|성공시 콜백함수|(out)암호문 텍스트|
+|failCB|실패시 콜백함수|(out)에러코드$에러메시지|
+|path|점속할 페이지 URI|(in)|
+|plainText|평문|(in)|
+|method|접속방식|(in)GET : 보안세션 갱신 \\ POST : 보안세션 갱신안함 \\ RESET : 보안세션 갱신(direct port로 재연결)|
+
+== XecureSmartPlugin.changeCertPassword ==
+  * 인증서의 암호를 변경한다.
+
+<code>
+void XecureSmartPlugin.changeCertPassword ( successCB, failCB, issuerDN, serial, oldPassword, newPassword )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)0 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+| oldPassword | 인증서의 이전암호 | (in) |
+| newPassword | 인증서의 새 암호 | (in) |
+
+== XecureSmartPlugin.deEnvelopeDataWithCert ==
+  * 인증서로 전자봉투한 전자봉투 텍스트를 복호화한다.
+
+<code>
+void XecureSmartPlugin.deEnvelopeDataWithCert ( successCB, failCB, envelopeText, issuerDN, serial, password )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)평문|
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| envelopeText | 전자봉투 텍스트 | (in) |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+| password | 인증서의 암호 | (in) |
+
+== XecureSmartPlugin.deEnvelopeDataWithPassword ==
+  * 패스워드로 전자봉투한 전자봉투 텍스트를 복호화한다.
+
+<code>
+void XecureSmartPlugin.deEnvelopeDataWithPassword ( successCB, failCB, envelopeText, password )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)평문 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| envelopeText | 전자봉투 텍스트 | (in) |
+| password | 암호 | (in) |
+
+== XecureSmartPlugin.deleteCertificate ==
+  * 인증서를 삭제한다.
+
+<code>
+void XecureSmartPlugin.deleteCertificate ( successCB, failCB, issuerDN, serial  )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)0 |
+| failCB | 실패시 콜백함수  | (out)에러코드$에러메시지 |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+
+== XecureSmartPlugin.envelopeDataWithCert ==
+  * 평문 텍스트를 인증서로 전자봉투한다.
+
+<code>
+void XecureSmartPlugin.envelopeDataWithCert ( successCB, failCB, plainText, issuerDN, serial  )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)전자봉투 텍스트 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| plainText | 평문 | (in) |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+
+== XecureSmartPlugin.envelopeDataWithPassword ==
+  * 평문 텍스트를 암호로 전자봉투한다.
+
+<code>
+void XecureSmartPlugin.envelopeDataWithPassword ( successCB, failCB, plainText, password )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)전자봉투 텍스트 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| plainText | 평문 | (in) |
+| password | 암호 | (in) |
+
+== XecureSmartPlugin.envelopeDataWithPEM ==
+  * 평문 텍스트를 PEM 인증서로 전자봉투한다.
+
+<code>
+void XecureSmartPlugin.envelopeDataWithPEM ( successCB, failCB, plainText, pem )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)전자봉투 텍스트 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| plainText | 평문 | (in) |
+| pem | PEM타입 인증서 | (in) |
+
+== XecureSmartPlugin.getCertTree ==
+  * 장치의 인증서 목록을 가져온다. searchType과 searchValue를 함께 사용하여 검색이 가능하며, searchSerial를 이용해 일련 번호로 검색도 가능하다. \\
+
+<code>
+void XecureSmartPlugin.getCertTree ( successCB , failCB , certType , searchType , contentLevel , searchValue , searchSerial )
+</code>
+
+^Option^설명^비고^
+|successCB|성공 시 콜백함수|(out)contentLevel : 0(자세한 정보), contentLevel : 5(간략한 정보)|
+|failCB|실패 시 콜백함수|(out)에러코드$에러메세지|
+|certType|타입|(in)0:루트인증서,1:CA인증서,2:사용자인증서,3:전체인증서|
+|searchType|검색조건|(in)0:검색하지않음 \\ 10:subjectDN의 CN과 일치 \\ 11:subjectDN의 OU와 일치 \\ 12:subjectDN의 O와 일치 \\ 13:subjectDN의 C와 일치 \\ 14:subjectDN과 일치 \\ 20:issuerDN의 CN과 일치 \\ 21:issuerDN의 OU과 일치 \\ 22:issuerDN의 O와 일치 \\ 23:issuerDN의 C와 일치 \\ 24:issuerDN과 일치|
+|contentLevel|결과값의 레벨|(in)0:자세한 정보,5:간략한 정보|
+|searchValue|검색값|(in)|
+|searchSerial|검색할 일련 번호|(in)|
+
+== XecureSmartPlugin.getEnvelopeCertInfo ==
+  * 전자봉투 텍스트의 인증서 정보를 가져온다.
+
+<code>
+void XecureSmartPlugin.getEnvelopeCertInfo ( successCB , failCB , envelopeText )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공 시 콜백함수 | (out)발급자$일련 번호 |
+| failCB | 실패 시 콜백함수 | (out)에러코드$에러메세지 |
+| envelopeText | 전자봉투 텍스트 | (in) |
+
+== XecureSmartPlugin.getEnvelopeType ==
+  * 전자봉투 텍스트의 타입을 가져온다.
+
+<code>
+void XecureSmartPlugin.getEnvelopeType ( successCB , failCB , envelopeText )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공 시 콜백함수 | (out)타입 |
+| failCB | 실패 시 콜백함수 | (out)에러코드$에러메세지 |
+| envelopeText | 전자봉투 텍스트 | (in) |
+
+== XecureSmartPlugin.getVIDInfo ==
+  * 식별번호 검증 시 전자서명 후에 VID를 가져온다.
+
+<code>
+void XecureSmartPlugin.getVIDInfo ( successCB , failCB )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공 시 콜백함수 | (out)VID |
+| failCB | 실패 시 콜백함수 | (out)에러코드$에러메세지 |
+
+== XecureSmartPlugin.keySharpGetConfirmNumber ==
+  * 키샵에서 인증번호를 가져온다.
+
+<code>
+void XecureSmartPlugin.keySharpGetConfirmNumber ( successCB , failCB, ssn )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공 시 콜백함수 | (out)0 |
+| failCB | 실패 시 콜백함수 | (out)에러코드$에러메세지 |
+| ssn | 가져올 인증서의 주민등록번호/사업자등록번호 | (in) |
+
+== XecureSmartPlugin.keySharpSaveCert ==
+  * 키샾에서 받아온 인증서를 저장한다.
+
+<code>
+void XecureSmartPlugin.keySharpSaveCert ( successCB , failCB )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공 시 콜백함수 | (out)0 |
+| failCB | 실패 시 콜백함수 | (out)에러코드$에러메세지 |
+
+== XecureSmartPlugin.renewCertificate ==
+  * CA로부터 인증서를 갱신받는다.
+
+<code>
+void XecureSmartPlugin.renewCertificate ( successCB, failCB, caCode, issuerDN, serial, oldPassword, newPassword )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)0 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| caCode | CA 코드 | (in)10 : Yessign test \\ 11 : XecureCA RSA \\ 12 : XecureCA KCDSA \\ 13 : Yessign test 2048 \\ 14 : XecureCA 2048 RSA \\ 15 : XecureCA 2048 KCDSA \\ 16 : SignKorea \\ 17 : SignKorea test |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+| oldPassword | 인증서의 이전암호 | (in) |
+| newPassword | 인증서의 새 암호 | (in) |
+
+== XecureSmartPlugin.requestCertificate ==
+  * CA로부터 인증서를 발급받는다.
+
+<code>
+void XecureSmartPlugin.requestCertificate ( successCB, failCB, caCode, refNum, authCode, password )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)0 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| caCode | CA 코드 | (in)10 : Yessign test \\ 11 : XecureCA RSA \\ 12 : XecureCA KCDSA \\ 13 : Yessign test 2048 \\ 14 : XecureCA 2048 RSA \\ 15 : XecureCA 2048 KCDSA \\ 16 : SignKorea \\ 17 : SignKorea test |
+| refNum | 참조번호 | (in) |
+| authCode | 인가코드 | (in) |
+| password | 인증서의 암호 | (in) |
+
+== XecureSmartPlugin.revokeCertificate ==
+  * CA로부터 인증서를 폐기한다.
+
+<code>
+void XecureSmartPlugin.revokeCertificate ( successCB, failCB, caCode, issuerDN, serial, password, jobCode, reason )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)0 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| caCode | CA 코드 | (in)10 : Yessign test \\ 11 : XecureCA RSA \\ 12 : XecureCA KCDSA \\ 13 : Yessign test 2048 \\ 14 : XecureCA 2048 RSA \\ 15 : XecureCA 2048 KCDSA \\ 16 : SignKorea \\ 17 : SignKorea test |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+| password | 인증서의 암호 | (in) |
+| jobCode | 작업코드 | (in) |
+| reason | 사유 | (in) |
+
+== XecureSmartPlugin.setIDNum ==
+  * 식별번호 검증 시 전자서명 전에 식별번호를 입력한다.
+
+<code>
+void XecureSmartPlugin.setIDNum ( successCB, failCB, idn )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공시 콜백함수 | (out)0 |
+| failCB | 실패시 콜백함수 | (out)에러코드$에러메시지 |
+| idn | 식별번호 | (in) |
+
+== XecureSmartPlugin.signDataAdd ==
+  * 전자서명문에 전자서명을 추가한다.
+
+<code>
+void XecureSmartPlugin.signDataAdd ( successCB , failCB , issuerDN , serial , password , plainText )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공 시 콜백함수 | (out)전자서명 텍스트 |
+| failCB | 실패 시 콜백함수 | (out)에러코드$에러메세지 |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+| password | 인증서의 암호 | (in) |
+| plainText | 평문 | (in) |
+
+== XecureSmartPlugin.signDataCMS ==
+  * 평문 텍스트를 전자서명한다.
+
+<code>
+void XecureSmartPlugin.signDataCMS ( successCB , failCB , issuerDN , serial , password , plainText )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공 시 콜백함수 | (out)전자서명 텍스트 |
+| failCB | 실패 시 콜백함수 | (out)에러코드$에러메세지 |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+| password | 인증서의 암호 | (in) |
+| plainText | 평문 | (in) |
+
+== XecureSmartPlugin.verifyCertPassword ==
+  * 인증서의 암호를 검증한다.
+
+<code>
+void XecureSmartPlugin.verifyCertPassword ( successCB , failCB , issuerDN , serial , password  )
+</code>
+
+^Option^설명^비고^
+| successCB | 성공 시 콜백함수 | (out)0 |
+| failCB | 실패 시 콜백함수 | (out)에러코드$에러메세지 |
+| issuerDN | 인증서의 발급자 | (in) |
+| serial | 인증서의 일련번호 | (in) |
+| password | 인증서의 암호 | (in) |

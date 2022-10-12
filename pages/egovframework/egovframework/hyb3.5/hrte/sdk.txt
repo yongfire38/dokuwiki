@@ -1,0 +1,219 @@
+====== SDK ======
+
+===== Android =====
+
+==== 개요 ====
+안드로이드는 운영체제와 미들웨어 그리고 핵심 애플리케이션을 포함하고 있는 모바일 디바이스를 위한 소프트웨어 스택이다. \\
+안드로이드 SDK는 Java 프로그래밍 언어를 사용하여 안드로이드 플랫폼 상의 애플리케이션을 개발하기 위해 필요한 도구들과 API를 제공한다. \\
+
+
+=== 주요개념 ===
+
+안드로이드의 구조는 아래 그림과 같이 구성 요소로 구성되며 이 구성 요소에는 Applications, Application Framework, Libraries, Android Runtime, Linux Kernel의 총 5개의 계층으로 분류되어 있다. \\
+
+{{:egovframework:hyb:hrte:androidarchitecture.jpg|}}
+
+^구성요소^설명^
+|Applications|이메일,SMS,달력,지도,브라우저,연락처 등의 핵심적인 어플리케이션을 포함|
+|Application Framework|안드로이드 운영체제에서 사용하는 자원을 원활히 이용할 수 있게 해주는 기능들|
+|Libraries|다른 어플리케이션들이 공통으로 사용 할 수 있는 기능들|
+|Android Runtime|운영체제를 위한 코어 라이브러리|
+|Linux Kernel|운영체제를 관리하는 커널|
+
+
+==== 설명 ==== 
+
+=== Applications ===
+안드로이드는 이메일 클라이언트, SMS 문자메시지 프로그램, 캘린더, 맵, Browser, Contacts 등과 같은 핵심 애플리케이션을 탑재하고 있다.
+모든 애플리케이션은 Java 프로그래밍 언어를 사용하여 작성되었다. \\
+
+=== Application Framework ===
+개발자는 안드로이드에 이미 탑재된 핵심 애플리케이션에 사용된 것과 동일한 프레임워크 API에 완벽하게 접근할 수 있다.
+애플리케이션의 아키텍처는 컴포넌트의 재사용을 쉽게 하도록 디자인되었다.
+애플리케이션은 자신의 기능을 외부 애플리케이션에게 제공할 수 있으며, 다른 애플리케이션이 제공하는 기능을 사용할 수도 있다(단, 프레임워크에 의해 관리되는 보안 제약에 기초함).
+이 같은 메커니즘은 사용자에 의한 컴포넌트의 치환을 가능하게 한다.
+모든 애플리케이션 하단에는 다음과 같은 서비스와 시스템의 집합이 존재한다.
+  * 애플리케이션을 만드는 데 사용될 수 있는 풍부하고 확장가능한 뷰 집합, 이것은 list, grid, text box, button 그리고 임베더블 한 웹 브라우저를 포함하고 있다. \\
+  * (Contacts과 같이) 애플리케이션이 다른 애플리케이션의 데이터에 접근하는 것을 가능하게 하거나, 또는 자신의 데이터를 공유하는 것을 가능하게 하는 Content Provider. \\
+  * 리소스 매니저; 로컬라이즈된 문자열, 그래픽, 그리고 레이아웃 파일 같은 non-code 리소스에 대한 접근을 제공하는 Resource Manager. \\
+  * 모든 애플리케이션이 상태 바에 커스텀 알림 메시지를 표시하는 것을 가능하게 하는 Notification Manager. \\
+  * 애플리케이션의 lifecycle을 관리하며, 사용자의 일반적인 애플리케이션 네비게이션 히스토리를 관리(단, back stack, 즉 뒤로 돌아가기 기능만 지원함)하는 Activity Manager. \\
+
+=== Libraries ===
+안드로이드는 다양한 안드로이드 시스템 컴포넌트에서 사용되는 C/C++ 라이브러리들을 포함하고 있다.
+이런 기능은 안드로이드 애플리케이션 프레임워크를 통해 개발자에게 제공된다. 아래에 몇몇 핵심 라이브러리가 나열되어 있다.
+  * System C library : 임베디드 리눅스 기반의 디바이스에 적합하도록 만들어진 표준 C 시스템 라이브러리로써 BSD libc로부터 파생되어 구현되었다. \\
+  * Media Libraries : PacketVideo의 OpenCORE 기반임; MPEG4, H.264, MP3, AAC, AMR, JPG, 그리고 PNG를 포함하는 정지 이미지 파일과 널리 사용되는 오디오와 비디오 포맷의 재생과 녹화를 지원한다. \\
+  * Surface Manager : 디스플레이 서브시스템에 대한 접근 관리 및 다양한 애플리케이션에 의해 사용되는 2D 및 3D 그래픽 레이어들을 단일하게 관리한다. \\
+  * LibWebCore : 안드로이드 브라우저와 임베딩 가능한 웹 뷰, 두 가지 모두를 제공하는 최신 웹 브라우저 엔진이다. \\
+  * SGL : 2D 그래픽스 엔진의 기초를 이루고 있다. \\
+  * 3D Libraries : OpenGL ES 1.0 API 기반으로 구현되었는데, 이 라이브러리는 하드웨어 3D 가속기를 사용하거나, 보유하고 있는 최적화된 3D software rasterizer를 사용한다.. \\
+  * FreeType - 비트 맵 및 벡터 폰트 렌더링 엔진이다. \\
+  * SQLite - 모든 애플리케이션에서 이용할 수 있는 강력하며 경량화된 관계형 데이터 베이스 엔진이다. \\
+
+=== Android Runtime ===
+안드로이드의 핵심 라이브러리는 Java 프로그래밍 언어의 핵심 라이브러리에서 사용가능한 대부분의 기능을 포함하고 있다.
+모든 안드로이드 애플리케이션은 Dalvik 가상 머신에 대한 자기 자신의 인스턴스를 가지고, 자신의 프로세스 내에서 실행된다.
+Dalvik은 하나의 디바이스에서 다양한 가상머신이 효율적으로 실행될 수 있도록 만들어졌다.
+Dalvik 가상머신은 최소 메모리를 사용하도록 최적화된 Dalvik Executable 포맷(.dex)의 파일을 실행한다.
+이 가상머신은 레지스터 기반이며, Java 언어 컴파일러에 의해 컴파일된 후, SDK에 포함되어 있는 “dx”라는 툴을 통해 .dex 포맷으로 변환된 클래스를 실행한다.
+Dalvik 가상머신은 쓰레딩과 저 수준 메모리 관리와 같이 그것의 기반이 되는 기능에 대해서는 리눅스 커널에 의존한다.
+
+=== Linux Kernel ===
+안드로이드는 보안, 메모리 관리, 프로세스 관리, 네트워크 스택, 그리고 드라이버 모델과 같은 핵심 시스템 서비스에 대해서는 Linux 버전 2.6(Android 4.0 Platform 부터는 Linux 버전 3.x)에 의존한다.
+또한 리눅스 커널은 하드웨어와 안드로이드 플랫폼 스택의 나머지 계층 간의 추상화된 계층 역할을 담당한다.
+
+==== 참고자료 ====
+Android platform : http://developer.android.com
+
+
+===== iOS =====
+
+==== 개요 ====
+
+=== 주요개념 ===
+
+{{:egovframework:hyb:hrte:ios계_1.png?600|}}\\
+
+^계층^설명^
+|iOS의 커널 |Mac OS X와 같은 Mach에 기초한다.|
+|Core OS와 Core Services 계층|매우 기본 적인 iOS의 인터페이스를 가지고 있다. 데이터 타입들, 봉주르 서비스, 네트워크 소켓 등이 있다.|
+|Media 계층|2D/3D 그리고, 오디오, 비디오 등의 기반 기술을 가지고 있다. OpenGL ES, Quartz Core Audio와 Core Animation이 있다.|
+|Cocoa Touch 계층|모든 기술이 Objective-C를 기본으로 하며, 각종 프레임워크로 응용프로그램을 만들 때 가장 기본적인 인프라를 제공한다.|
+
+
+==== 설명 ==== 
+
+=== Applications ===
+iOS는 이메일 클라이언트, SMS 문자메시지 프로그램, 캘린더, 맵, Browser, Contacts 등과 같은 핵심 애플리케이션을 탑재하고 있다.
+모든 애플리케이션은 Objective-C 2.0 프로그래밍 언어를 사용하여 작성되었다. \\
+
+=== Application Framework ===
+iOS architectur는 기본적인 Mac OS X의 architecture와 유사하다.
+iOS는 underlying hardware와 스크린에 나타나는 application 사이에 중재자 역할을 한다.
+application은 기본이 되는 hardware와 직접적인 통신은 하지 않는다.
+대신 application들은 하드웨어 변화로부터 application을 보호해줄 well-defined system interface를 통하여,
+hardware와 통신을 한다. 이러한 추상화(abstraction)는 다른 하드웨어에서도 일관성 있게 작동하는 application을 쉽게 작성할 수 있게 만들어준다.
+\\
+application 코드를 작성 시, 가능하다면 하위 계층 framework 기반의 상위 계층 framework들의 사용을 선호해야 한다.
+상위 계층의 framework들은 하위 계층 구조에서의 객체 지향 추상화(object-oriented abstraction)를 제공한다.
+이러한 추상화는 잠재적으로 복잡한 특징이 존재하는 socket과 thread를 작성 및 캡슐화 시, 상당한 양의 코드를 줄여 줌으로써,
+일반적인 코드작성을 더욱 쉽게 만들어 준다.
+비록 하위 계층의 기술들을 추출 하였지만, 상위 계층은 작성자부터 사용된 그들의(상위계층) 기술을 숨기지 않습니다.
+상위 계층에서 사용될 수 없는 하위 계층 framework의 특징을 사용하기 원하는 개발자를 위해 하위계층 framework를 또한 사용 가능 하다.
+이것을 통하여 각 계층의 기능을 사용하기 위해 전반적인 계층들의 framework들과 framework의 class 정보를 인지하여, iOS의 기능들을 활용할 수 있다.\\
+크게 **Cocoa Touch Layer**, **Media Layer**, **Core Services Layer**, **Core OS Layer**로 구분되어 진다.
+
+== Cocoa Touch Layer ==
+iOS의 그래픽, 이벤트 중심의 애플리케이션, 사용자 연락처 등에 접근할 때 이 항목의 프레임 워크를 사용한다.\\
+^프레임워크 명칭^설명^
+|AddressBookUI.framework|주소록 입력 수정 UI 관련 프레임워크|
+|EventKitUI.framework|캘린더 데이터를 확인 및 수정 관련 프레임워크|
+|GameKit.framework|게임센터 관련 프레임워크|
+|iAd.framework|광고 관련 프레임워크|
+|MapKit.framework|지도 관련 프레임워크|
+|MessageUI.framework|메시지 전송 UI 관련 프레임워크|
+|Twitter.framework|트위터 관련 프레임워크|
+|UIKit.framework|UI 관련 프레임워크|
+
+== Media Layer ==
+미디어 레이어에서는 프레임 워크와 모바일 장치에서 사용할 수 있는 멀티미디어 관련 프레임워크를 제공한다.\\
+^프레임워크 명칭^설명^
+|AssetsLibrary.framework|포터 앨범 관련 프레임워크|
+|AudioToolbox.framework|오디오를 녹음 또는 재생, 포맷을 변환 등 관련 프레임워크|
+|AudioUnit.framework|오디오 단위 프레임 워크와 오디오 장치 관련 프레임워크|
+|AVFoundation.framework|기록, 편집 및 재생 오디오 및 비디오, 오디오 세션 등 관련 프레임워크|
+|CoreAudio.framework|데이터 유형과 오디오 스트림, 복잡한 버퍼 및 시간 값을 나타내는 프레임워크|
+|CoreGraphics.framework|2D 렌더링, 그라디언트, 이미지, 색상 관리 및 PDF 문서 처리 관련 프레임워크|
+|CoreImage.framework|영상 처리 및 비디오 이미지 조작 관련 프레임워크|
+|CoreMIDI.framework|하드웨어 키보드 및 신디사이저 등의 MIDI 장치와 통신하는 프레임워크|
+|CoreText.framework|글꼴 관련 프레임워크|
+|CoreVideo.framework|영화 및 비디오 작업에 대한 낮은 수준의, 파이프 라인 기반의 API를 제공하는 프레임워크|
+|GLKit.framework|OpenGL ES 응용 프로그램을 만드는 데 필요한 시간을 단축. 수학 라이브러리, 렌더링 루프 등의 프레임워크|
+|ImageIO.framework|대부분의 이미지 파일 형식을 읽기 및 쓰기, 색상 관리 및 이미지 메타 데이터 관련 프레임워크|
+|MediaPlayer.framework|음악, 동영상 파일 재생 관련 프레임워크|
+|OpenAL.framework|높은 성능과 우수한 오디오 품질을 제공하는 프레임워크|
+|OpenGLES.framework|2D, 3D 관련 프레임워크|
+|QuartzCore.framework|고급 애니메이션 관련 프레임워크|
+
+== Core Services Layer ==
+기본 iOS 서비스에 접근, 파일 접근, 낮은 수준의 데이터 접근, 봉쥬르 서비스, 네트워크 소켓 등의 접근하고자 할 경우 사용한다. 그리고, 코코아 터치와 미디어 레이어에서 데이터 접근이 충분하지 않은 경우 이 레이어에 프레임 워크를 사용한다.\\
+^프레임워크 명칭^설명^
+|Accounts.framework|계정 관련된 정보와 접근 가능한 프레임워크|
+|AddressBook.framework|사용자 연락처에 접근 가능한 프레임워크 |
+|CFNetwork.framework|네트워크 서비스에 접근 및 네트워크 구성의 변경 사항을 처리하는 프레임워크|
+|CoreData.framework|코어 데이터 관련 프레임워크|
+|CoreFoundation.framework|기본적인 시스템 서비스에 대한  프레임워크|
+|CoreLocation.framework|나침반과 위치정보 관련 프레임워크|
+|CoreMedia.framework|영상 관련 프레임워크|
+|CoreMotion.framework|자이로스코프 관련 프레임워크|
+|CoreTelephony.framework|전화걸기 관련 프레임워크|
+|EventKit.framework|캘린더 데이터를 읽고 쓰는 프레임워크|
+|Foundation.framework|NSObject 및 가장 기본이 되는 프레임워크|
+|MobileCoreServices.framework|표준 유형 및 상수에 접근하는 프레임워크|
+|NewsstandKit.framework|뉴스가판대 관련 프레임워크|
+|QuickLook.framework|미리보기 관련 프레임워크|
+|StoreKit.framework|In-App 관련 프레임워크|
+|SystemConfiguration.framework|네트워크 가용성과 상태를 결정 프레임워크|
+|UIAutomation.framework| |
+
+== Core OS Layer ==
+가상 메모리 시스템, 스레드, 파일 시스템, 네트워크 통신을 관리한다. 커널 환경, 드라이버와 iOS의 기본 인터페이스를 포함한다.\\
+^프레임워크 명칭^설명^
+|Accelerate.framework|복잡한 수학 또는 이미지 계산하는 프레임워크|
+|CoreBluetooth.framework|블루투스 관련 프레임워크|
+|ExternalAccessory.framework|외부 장치와 iOS장치에 연결하는 프레임워크|
+|Security.framework| 데이터를 보호하는 보안 프레임워크|
+|System.framework|시스템 프레임워크|\\
+
+자세한 내용은 [[https://developer.apple.com/library/ios/navigation/#section=Frameworks]] 에서 확인할 수 있다.
+
+=== Libraries ===
+라이브러리란 특정한 코드(함수 혹은 클래스)를 포함하고 있는 컴파일된 파일이다. 이러한 라이브러리를 만드는 이유는 자주 사용되는 특정한 기능을 main 함수에서 분리시켜 놓음으로써, 프로그램을 유지, 디버깅을 쉽게하고 컴파일 시간을 좀더 빠르게 할수 있기 때문이다.
+만약 라이브러리를 만들지 않고 모든 함수를 main 에 집어 넣는다면, 수정할때 마다 main 코드를 수정해야 하고 다시 컴파일 해야 할것이다. 당연히 수정하기도 어렵고 컴파일에도 많은 시간이 걸린다.
+반면 라이브러리화 해두면 우리는 해당 라이브러리만 다시 컴파일 시켜서 main 함수와 링크 시켜주면 된다. 시간도 아낄뿐더러 수정하기도 매우 쉽다.
+iOS에서는 dynamic libraries를 제공하며, static libraries 사용을 지양한다.
+\\
+라이브러리에도 그 쓰임새에 따라서 여러가지 종류가 있다(크게 3가지). 가장 흔하게 쓰일수 있는 "정적라이브러리"와 "공유라이브러리", "동적라이브러리" 가 있다.
+이들 라이브러리가 서로 구분되어지는 특징은 적재 시간이 될것이다.\\
+
+^종류^설명^
+|정적라이브러리|정적라이브러리는 object file(.o로 끝나는) 의 단순한 모음이다. 정적라이브러린느 보통 .a 의 확장자를 가진다. 간단히 사용할수 있다. 컴파일시 적재되므로 유연성이 떨어진다. 최근에는 정적라이브러리는 지양되고 있는 추세이다. 컴파일시 적재되므로 아무래도 바이너리크기가 약간 커지는 문제가 있을것이다.|
+|공유라이브러리|공유라이브러리는 프로그램이 시작될때 적재된다. 만약 하나의 프로그램이 실행되어서 공유라이브러리를 사용했다면, 그뒤에 공유라이브러리를 사용하는 모든 프로그램은 자동적으로 만들어져 있는 공유라이브러리를 사용하게 된다. 그럼으로써 우리는 좀더 유연한 프로그램을 만들수 잇게 된다. 정적라이브러리와 달리 라이브러리가 컴파일시 적재되지 않으므로 프로그램의 사이즈 자체는 작아지지만 이론상으로 봤을때, 라이브러리를 적재하는 시간이 필요할것이므로 정적라이브러리를 사용한 프로그램보다는 1-5% 정도 느려질수 있다. 하지만 보통은 이러한 느림을 느낄수는 없을것이다.|
+|동적라이브러리|공유라이브러리가 프로그램이 시작될때 적재되는 반면 이것은 프로그램시작중 특정한때에 적재되는 라이브러리이다. 플러그인 모듈등을 구현할때 적합하다. 설정파일등에 읽어들인 라이브러리를 등록시키고 원하는 라이브러리를 실행시키게 하는등의 매우 유연하게 작동하는 프로그램을 만들고자 할때 유용하다.|
+
+=== iOS Runtime ===
+iOS의 실행 환경은 프로그램의 빠르고 안전한 실행을 위해 디자인 됐다. 다음 절들은 이 실행 환경의 주요 관점을 설명하고 어떻게 응용프로그램이 그 안에서 최적으로 운영될 수 있는지에 대한 안내를 제공한다.
+  * 사용자 인터페이스(The User Interface)
+  * 빠른 실행, 짧은 사용(Fast Launch, Short Use)
+  * 특화된 시스템 동작들(Specialized System Behaviors)
+  * 보안(Security)
+  * 효율적으로 메모리 사용(Use Memory Efficiently)
+  * 파일 시스템(The File System)
+  * 백업과 복구(Backup and Restore)
+  * 시뮬레이터(The Simulator)\\
+등등의 자세한 내용은 [[http://developer.apple.com/library/ios/#documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Introduction/Introduction.html|About iOS App Programming]] 에서 확인할 수 있다.
+
+=== Unix Kernel ===
+{{:egovframework:hyb:hrte:osxarchitecture.gif|}}\\
+iOS 운영체제 구성요소 중에서 그 기초에 해당하는 커널 이라는 것은 유닉스 커널로 부터 왔다.
+유닉스는 멀티 유저 환경에서 강력한 보안을 기초로 하여 설계되었는데, 
+"넥스트"에서 만든 컴퓨터에 처음 유닉스 커널 Mach(Multiple Asynchronously Communication Hosts)의 운영체제 커널 위에 GUI를 입힌 컴퓨터를 만들었다.
+그것이 오늘날의 OS X 로 발전하게 된다. iOS가 바로 그 OS X 커널을 사용한다.
+
+OS X 계열의 Kernel 은 모두 Mach Kernel 을 사용 한다. (Apple TV, iPhone, Mac OS X 전부 동일) 여기에는 Kernel Extension 이라는게 들어가게 된다.
+(참고로 iPhone에 사용된 두가지 종류의 kext는 USB 입력 과 VPN 이다.) 
+Mac OS X 의 맨 밑단에는 Kernel 이 있고 그 위에는 Mac OS X의 BSD 유닉스 환경이 놓여 있다. 
+커널 바깥쪽에서 돌아가는 프로세스는, 유닉스에서 유저랜드(userland)에서 돌아간다고 말한다. 
+맥에서 BSD 유닉스 유저랜드는 보통 데스크톱 사용자가 볼 수 없다. (콘솔을 띄워서만 볼 수 있다.)
+
+기본적으로 사용자가 작동시키는 응용프로그램과 하드웨어간의 조정자 역할을 맡는다. 
+동시에 수행되는 여러 응용프로그램들(엄밀히 말하자면 프로세스들과 쓰레드들이다.)을 위해 메모리관리를 해 주며 컴퓨터 자원을 배분하는 역할을 해 준다. 
+
+더 자세한 정보는 [[https://developer.apple.com/library/mac/#documentation/Darwin/Conceptual/KernelProgramming/Architecture/Architecture.html|Kernel Architecture Overview]] 확인할 수 있다.
+
+==== 참고자료 ====
+^명칭^링크^
+|Apple Developer Library|[[https://developer.apple.com/library/ios/navigation/]]|
+|Apple Developer Library - Framework|[[https://developer.apple.com/library/ios/navigation/#section=Frameworks]]|
+|iOS Programming Guide|[[http://developer.apple.com/library/ios/#documentation/iPhone/Conceptual/iPhoneOSProgrammingGuide/Introduction/Introduction.html|About iOS App Programming]]|

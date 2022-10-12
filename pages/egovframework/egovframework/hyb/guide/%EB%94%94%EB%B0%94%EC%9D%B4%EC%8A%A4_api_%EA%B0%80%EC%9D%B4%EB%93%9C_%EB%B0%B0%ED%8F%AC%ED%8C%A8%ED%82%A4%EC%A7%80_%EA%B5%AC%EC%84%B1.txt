@@ -1,0 +1,95 @@
+====== 디바이스 API 가이드 배포패키지 구성 ======
+
+=====실행환경=====
+^구현패키지명^설명^배포패키지명^
+|kr.go.egovframework.hyb.example |표준패턴(Android 디바이스)|DeviceAPIGuide_Android_V2.5.zip|
+|kr.go.egovframework.hyb.sampleTemplate|코드 샘플템플릿(Android 디바이스)|egovframework-hyb-add-basicsample-2.5-SNAPSHOT.zip|
+|N/A|표준패턴(iOS 디바이스)|DeviceAPIGuide_iOS_V2.5.zip|
+|N/A|코드 샘플템플릿(iOS 디바이스)|egovframework-hyb-ios-basicsample-2.5-SNAPSHOT.zip|
+
+=====디바이스 API 가이드 프로그램=====
+
+**Android 플랫폼**
+^구현패키지명^설명^배포패키지명^
+|kr.go.egovframework.hyb.acceleratorapi|Accelerator Android 디바이스 API|egovframework-hyb-add-acceleratorapiguide-2.5.zip|
+|kr.go.egovframework.hyb.cameraapi|Camera Android 디바이스 API|egovframework-hyb-add-cameraapiguide-2.5.zip|
+|kr.go.egovframework.hyb.compassapi|Compass Android 디바이스 API|egovframework-hyb-add-compassapiguide-2.5.zip|
+|kr.go.egovframework.hyb.contactsapi|Contacts Android 디바이스 API|egovframework-hyb-add-contactsapiguide-2.5.zip|
+|kr.go.egovframework.hyb.deviceapi|DeviceInfo Android 디바이스 API|egovframework-hyb-add-deviceapiguide-2.5.zip|
+|kr.go.egovframework.hyb.filereadwriteapi|FileReadWrite Android 디바이스 API|egovframework-hyb-add-filereadwriteapiguide-2.5.zip|
+|kr.go.egovframework.hyb.gpsapi|GPS Android 디바이스 API|egovframework-hyb-add-gpsapiguide-2.5.zip|
+|kr.go.egovframework.hyb.interfaceapi|Interface Android 디바이스 API|egovframework-hyb-add-interfaceapiguide-2.5.zip|
+|kr.go.egovframework.hyb.mediaapi|Media Android 디바이스 API|egovframework-hyb-add-mediaapiguide-2.5.zip|
+|kr.go.egovframework.hyb.networkapi|Network Android 디바이스 API|egovframework-hyb-add-networkapiguide-2.5.zip|
+|kr.go.egovframework.hyb.pkiapi.magicxsign|NPKI Android 디바이스 API|egovframework-hyb-add-pkimagicxsignapiguide-2.5.zip|
+|kr.go.egovframework.hyb.pkiapi.wizsign|NPKI Android 디바이스 API|egovframework-hyb-add-pkiwizsignapiguide-2.5.zip|
+|kr.go.egovframework.hyb.pkiapi.xecuresmart|NPKI Android 디바이스 API|egovframework-hyb-add-pkixecuresmartapiguide-2.5.zip|
+|kr.go.egovframework.hyb.vibratorapi|Vibrator Android 디바이스 API|egovframework-hyb-add-vibratorapiguide-2.5.zip|
+
+**iOS 플랫폼**
+^설명^배포패키지명^
+|Accelerator iOS 디바이스 API|egovframework-hyb-ios-acceleratorapiguide-2.5.zip|
+|Camera iOS 디바이스 API|egovframework-hyb-ios-cameraapiguide-2.5.zip|
+|Compass iOS 디바이스 API|egovframework-hyb-ios-compassapiguide-2.5.zip|
+|Contacts iOS 디바이스 API|egovframework-hyb-ios-contactsapiguide-2.5.zip|
+|DeviceInfo iOS 디바이스 API|egovframework-hyb-ios-deviceapiguide-2.5.zip|
+|FileReadWrite iOS 디바이스 API|egovframework-hyb-ios-filereadwriteapiguide-2.5.zip|
+|GPS iOS 디바이스 API|egovframework-hyb-ios-gpsapiguide-2.5.zip|
+|Interface iOS 디바이스 API|egovframework-hyb-ios-interfaceapiguide-2.5.zip|
+|Media iOS 디바이스 API|egovframework-hyb-ios-mediaapiguide-2.5.zip|
+|Network iOS 디바이스 API|egovframework-hyb-ios-networkapiguide-2.5.zip|
+|NPKI iOS 디바이스 API|egovframework-hyb-ios-pkimagicxsignapiguide-2.5.zip|
+|NPKI iOS 디바이스 API|egovframework-hyb-ios-pkiwizsignapiguide-2.5.zip|
+|NPKI iOS 디바이스 API|egovframework-hyb-ios-pkixecuresmartapiguide-2.5.zip|
+|Vibrator iOS 디바이스 API|egovframework-hyb-ios-vibratorapiguide-2.5.zip|
+
+=====웹 서버 어플리케이션=====
+^구현패키지명^설명^배포패키지명^
+|egovframework.hyb.add.acl|Accelerator Android 디바이스 API|egovframework-hyb-add-web-acceleratorapiguide-2.5.zip|
+|egovframework.hyb.add.cmr|Camera Android 디바이스 API|egovframework-hyb-add-web-cameraapiguide-2.5.zip|
+|egovframework.hyb.add.cps|Compass Android 디바이스 API|egovframework-hyb-add-web-compassapiguide-2.5.zip|
+|egovframework.hyb.add.ctt|Contacts Android 디바이스 API|egovframework-hyb-add-web-contactsapiguide-2.5.zip|
+|egovframework.hyb.add.dvc|DeviceInfo Android 디바이스 API|egovframework-hyb-add-web-deviceapiguide-2.5.zip|
+|egovframework.hyb.add.frw|FileReadWrite Android 디바이스 API|egovframework-hyb-add-web-filereadwriteapiguide-2.5.zip|
+|egovframework.hyb.add.gps|GPS Android 디바이스 API|egovframework-hyb-add-web-gpsapiguide-2.5.zip|
+|egovframework.hyb.add.itf|Interface Android 디바이스 API|egovframework-hyb-add-web-interfaceapiguide-2.5.zip|
+|egovframework.hyb.add.mda|Media Android 디바이스 API|egovframework-hyb-add-web-mediaapiguide-2.5.zip|
+|egovframework.hyb.add.nwk|Network Android 디바이스 API|egovframework-hyb-add-web-networkapiguide-2.5.zip|
+|egovframework.hyb.add.pki|NPKI Android 디바이스 API|egovframework-hyb-add-web-pkiapiguide-2.5.zip|
+|egovframework.hyb.add.vbr|Vibrator Android 디바이스 API|egovframework-hyb-add-web-vibratorapiguide-2.5.zip|
+|egovframework.hyb.ios.acl|Accelerator iOS 디바이스 API|egovframework-hyb-ios-web-acceleratorapiguide-2.5.zip|
+|egovframework.hyb.ios.cmr|Camera iOS 디바이스 API|egovframework-hyb-ios-web-cameraapiguide-2.5.zip|
+|egovframework.hyb.ios.cps|Compass iOS 디바이스 API|egovframework-hyb-ios-web-compassapiguide-2.5.zip|
+|egovframework.hyb.ios.ctt|Contacts iOS 디바이스 API|egovframework-hyb-ios-web-contactsapiguide-2.5.zip|
+|egovframework.hyb.ios.dvc|DeviceInfo iOS 디바이스 API|egovframework-hyb-ios-web-deviceapiguide-2.5.zip|
+|egovframework.hyb.ios.frw|FileReadWrite iOS 디바이스 API|egovframework-hyb-ios-web-filereadwriteapiguide-2.5.zip|
+|egovframework.hyb.ios.gps|GPS iOS 디바이스 API|egovframework-hyb-ios-web-gpsapiguide-2.5.zip|
+|egovframework.hyb.ios.itf|Interface iOS 디바이스 API|egovframework-hyb-ios-web-interfaceapiguide-2.5.zip|
+|egovframework.hyb.ios.mda|Media iOS 디바이스 API|egovframework-hyb-ios-web-mediaapiguide-2.5.zip|
+|egovframework.hyb.ios.nwk|Network iOS 디바이스 API|egovframework-hyb-ios-web-networkapiguide-2.5.zip|
+|egovframework.hyb.ios.pki|NPKI iOS 디바이스 API|egovframework-hyb-ios-web-pkiapiguide-2.5.zip|
+|egovframework.hyb.ios.vbr|Vibrator iOS 디바이스 API|egovframework-hyb-ios-web-vibratorapiguide-2.5.zip|
+
+===== 설정파일 =====
+
+**Android 플랫폼**
+^구분^경로 및 파일명^설명^
+|Android Manifest|AndroidManifest.xml|안드로이드 어플리케이션 디스크립터 파일|
+|서버 URL 설정|/res/values/serverinfo.xml|웹 어플리케이션 URL 설정|
+|PhoneGap 설정|/res/xml/config.xml|PhoneGap 플러그인 설정|
+
+**iOS 플랫폼**
+^구분^경로 및 파일명^설명^
+|PhoneGap 설정|/Supporting Files/cordova.plist|앱과 모바일웹이 통신하기 위한 환경설정|
+|환경 설정|/Supporting Files/[프로젝트명]-info.plist|프로젝트 환경설정|
+
+**웹 서버 어플리케이션**
+^구분^경로 및 파일명^설명^
+|maven config|/pom.xml|maven project config|
+|Web Application config|/WEB-INF/web.xml|Web Application 단위 config 설정|
+|servlet context config|/WEB-INF/config/egovframework/springmvc/dispatcher-servlet.xml|DispatcherServlet application context 설정|
+|context bean 정의|/resources/egovframework/spring/context-*.xml|bean 정의|
+|요소기술 환경설정|/resources/egovframework/spring/context-properties.xml|요소기술에 필요한 환경설정|
+|message properties 정의|/resources/egovframework/message/*.properties|message 정의|
+|sql config 파일|/resources/egovframework/sqlmap/hyb/*.xml|sql map config 정의|
+|log 설정|/resources/log4j.xml|log 관련 설정|

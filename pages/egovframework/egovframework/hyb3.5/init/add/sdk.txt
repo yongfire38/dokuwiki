@@ -1,0 +1,20 @@
+===== Android SDK =====
+
+==== SDK Manager 설치 ====
+
+  * Android SDK 설치 : [[http://developer.android.com/sdk/index.html|Android SDK Download]]
+  * SDK Manager 실행
+
+==== ADT 설치 후 SDK Manager 선택화면 ====
+{{:egovframework:hyb:init:add:sdk_1.png?700}} \\ \\
+
+==== SDK Manager를 이용한 SDK 설치 ====
+  - **SDK Manager 실행 > 설치할 항목 선택** \\ - Tools \\ - Android 4.4.2 (API 19) \\ {{:egovframework:hyb3.5:init:add:sdk_11.jpg?700}} \\
+  - **라이센스 동의 > Install** \\ {{:egovframework:hyb3.5:init:add:sdk_2.jpg?700}} \\
+  - **Install 완료 > Close** \\ {{:egovframework:hyb:init:add:sdk_4.png?700}} \\
+
+==== 설치 확인 및 설정 ====
+
+  - **Window > Preferences** \\ {{:egovframework:hyb3.5:init:add:winpre.gif|{{:egovframework:hyb:init:add:sdk_5.png?700}} \\
+  - **설치 확인**  \\ {{:egovframework:hyb3.5:init:add:preand.jpg?700}}   \\ 
+  * **SDK Location** : 개인 SDK 설치 경로 / 공백이 있으면 설정 불가.

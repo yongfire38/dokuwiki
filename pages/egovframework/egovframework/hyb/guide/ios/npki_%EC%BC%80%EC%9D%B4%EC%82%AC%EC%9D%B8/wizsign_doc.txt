@@ -1,0 +1,273 @@
+====== WizSign NPKI API =======
+===== 개요 =====
+WizSign은 모바일 환경에서 전자서명, 인증서 관리등의 PKI 응용프로그램 개발에 필요한 라이브러리를 제공하며, 공개키기반 응용 프로그램에서 사용하는 PKI 기반 기능들을 구현할 수 있다.
+
+아래에서는 HybridApp 환경에서 전자서명, 인증서 관련 기능들을 사용하기 위한 API 명세서와 WizSign 서비스에 대한 설명을 제공한다.
+   * 전자서명 API
+   * 인증서관련 API
+
+==== 전제조건 ====
+
+^구분^내용^
+|테스트 디바이스 |iPhone 4|
+|테스트 플랫폼 |iOS 5.1|
+
+NPKI WizSign Library
+^파일명^설명^
+|Plugin/WizSignPhoneGap.a, WizSignPhoneGap.h| WizSign 라이브러리 |
+|Plugin/cert.db|WizSign DB |
+|www/js/egovframework/mbl/hyb/wizsignpg.js| WizSign PhoneGap Plugin JavaScript|
+
+Cordova.plist 설정
+<code xml>
+	<key>Plugins</key>
+	<dict>
+    <!--전자정부 Interface 디바이스 API를 사용하기 위한 Phonegap Plugin 클래스-->
+		<key>WizSignPG</key>
+		<string>WizSignPG</string>
+	</dict>
+</code>
+
+===== API Doc =====
+==== 전자서명 API ====
+전자서명을 하기 위한 API 이다.
+
+== doSignature ==
+  * 선택한 인증서로 전자서명을 수행하여 서명값을 반환한다. \\
+
+- 파라메터 : 인증서 번호, 인증서 비밀번호, 서명대상 원문 \\
+- 반환값(해시 테이블) \\
+'signedData' : 서명데이터 \\
+'errMsg' : 에러 발생시 에러메시지 \\
+
+
+<code>
+var args = new Array();
+args[0] = selectCertNum.toString() ;
+args[1] = '1';
+args[2] = stringToSign;
+
+WizSignPG.doSignature(args, function(result) {
+        var signedData = result['signedData'];	// 서명데이터
+    }, function(error) {
+        alert(error['errMsg']);	// 에러메시지
+});
+</code>
+
+==== 인증서관련 API ====
+== getCertificates == 
+  * 저장된 인증서목록을 가져와 반환한다.
+  
+- 파라메터 : N/A \\
+- 반환값(해시 테이블) \\
+'Certificates' : 인증서 목록 \\
+'errMsg' : 에러 발생시 에러메시지 \\
+
+<code>
+WizSignPG.getCertificates("", function(result) {
+    var certList = result['Certificates'];
+
+    for(var i=0 ; i<certList.length ; i++) {
+        certList[i]['NUM'];
+        certList[i]['주체자'];
+        certList[i]['발급자'];
+        certList[i]['만료일'];
+    }
+
+    }, function(error) {
+        alert("error['errMsg']);
+});
+</code>
+
+인증서 정보 해시테이블
+^해시테이블^설명^
+|NUM|인증서 번호|
+|버전|인증서 버전|
+|일련번호|인증서 시리얼번호|
+|서명알고리즘|인증서 서명알고리즘|
+|발급자|인증서의 발급자 정보|
+|효력발생일|인증서의 효력 발생일|
+|만료일|인증서 만료일|
+|주체자|인증서 주체자 정보|
+|공개키알고리즘|인증서 공개키 알고리즘|
+|발급자시리얼번호|발급자시리얼번호|
+|공개키|공개키값|
+|기관키식별자|기관키식별자|
+|주체자식별자|주체자식별자|
+|정책|정책|
+|주체대체이름|주체대체이름|
+|CRL분배지점|CRL분배지점|
+|기관정보액세스|기관정보액세스(OCSP)|
+|키사용|키사용용도|
+|서명|인증서 서명값|
+
+== verifyCertPassword ==
+  * 선택한 인증서의 비밀번호를 검증한다.
+
+- 파라메터 : 인증서 번호, 인증서 비밀번호 \\
+- 반환값(해시 테이블) \\
+'result' : 인증서 비밀번호 검증결과(성공시 'OK') \\
+'errMsg' : 에러 발생시 에러메시지 \\
+
+
+<code>
+var args = new Array();
+args[0] = certNum.toString();
+args[1] = certPass;
+
+WizSignPG.verifyCertPassword(args, function(result) {
+    var runResult = result['result'];
+
+    if(runResult == 'OK') {
+        alert('인증서 비밀번호가 일치합니다.');	
+    }
+			
+    }, function(error) {
+    alert(error['errMsg']);
+});
+</code>
+
+
+== changeCertPassword ==
+  * 선택한 인증서의 비밀번호를 변경한다.
+
+- 파라메터 : 인증서 번호, 인증서 비밀번호, 새로운 인증서 비밀번호 \\
+- 반환값(해시 테이블) \\
+'result' : 인증서 비밀번호 변경 결과(성공시 'OK') \\
+'errMsg' : 에러 발생시 에러메시지 \\
+
+<code>
+var args = new Array();
+args[0] = certNum.toString();
+args[1] = beforePass;
+args[2] = afterPass;
+						
+WizSignPG.changeCertPassword(args, function(result) {
+    var runResult = result['result'];
+
+    if(runResult == 'OK') {
+        alert('인증서 비밀번호를 변경하였습니다.');	
+    }
+
+    }, function(error) {
+    alert(error['errMsg']);
+});
+</code>
+
+
+== removeCert ==
+  * 선택한 인증서를 삭제한다.
+
+- 파라메터  인증서 번호 \\
+- 반환값(해시 테이블) \\
+'result' : 인증서 삭제 결과(성공시 'OK') \\
+'Certificate' : 삭제된 인증서 정보 \\
+'errMsg' : 에러 발생시 에러메시지 \\
+
+<code>
+var args = new Array();
+args[0] = certNum.toString();
+	
+WizSignPG.removeCert(args, function(result) {
+    var runResult = result['result'];
+
+    if(runResult == 'OK') {
+        alert('인증서가 삭제되었습니다.')
+    }			
+	
+    }, function(error) {
+        alert(error['errMsg']);			
+});
+</code>
+
+
+== doValidateCert ==
+  * 선택한 인증서의 유효성 검증을 수행한다. (CRL 검증)
+
+- 파라메터  인증서 번호 \\
+- 반환값(해시 테이블) \\
+'result' : 인증서 CRL 검증결과(성공시 'OK') \\
+'status' : 인증서 상태 \\
+'errMsg' : 에러 발생시 에러메시지 \\
+
+
+<code>
+var args = new Array();
+args[0] = certNum.toString();
+		
+WizSignPG.doValidateCert(args, function(result) {
+    var runResult = result['result'];
+    var certStatus = result['status'];
+			
+    if(runResult == 'OK') {
+        alert(certStatus);	
+    }
+		
+    }, function(error) {
+	alert(error['errMsg']);
+});
+</code>
+
+== runShowApp ==
+  * KISA Show앱에서 인증서를 가져오기 위해 ShowApp앱을 실행한다.
+
+- 파라메터  CallBack 될 앱스키마, 옵션 \\
+- 반환값(해시 테이블) \\
+'result' : 실행겨로가(성공시 'OK') \\
+'errMsg' : 에러 발생시 에러메시지 \\
+
+<code>
+var args = new Array();
+args[0] = 'PhoneGapTest';
+args[1] = '01';
+			
+WizSignPG.runShowApp(args, function(result) {
+	var runResult = result['result'];	
+	// runResult == 'OK' -> 실행성공
+}, function(error) {
+	alert(error['errMsg']);
+});
+</code>
+
+== importPKCS12 ==
+  * PKCS#12데이터를 인증서로 변환하여 저장한다.
+
+- 파라메터  PKCS#12 데이터(base64 encoded), 인증서 비밀번호, 새로운 인증서 비밀번호\\
+- 반환값(해시 테이블) \\
+'result' : 실행겨로가(성공시 'OK') \\
+'Certificate' : import된 인증서 정보
+'errMsg' : 에러 발생시 에러메시지 \\
+
+<code>
+var args = new Array();
+args[0] = strP12;
+args[1] = certPass;
+args[2] = newPass;
+				
+WizSignPG.importPKCS12(args, function(result) {
+
+	var runResult = result['result'];
+	var certInfo = result['Certificate'];
+	
+	if(runResult == 'OK') {
+		alert('[' + certInfo['주체자'] + '] 인증서가 생성되었습니다.1')	
+	}
+			
+}, function(error) {
+	alert(error['errMsg']);
+});
+</code>
+
+== callback_kisaShowApp ==
+  * KISA showApp으로부터 받은 URL데이터를 처리하여 PKCS#12데이터를    반환한다.
+
+- 파라메터 URL\\
+- 반환값 PKCS#12 데이터 \\
+
+<code>
+// PhoneGap 페이지에 기본으로 제공되어지는 URL CallBak Function
+function handleOpenURL(url)
+{		
+	 g_p12cert = callback_kisaShowApp(url);
+}
+</code>

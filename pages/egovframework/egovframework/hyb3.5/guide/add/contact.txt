@@ -1,0 +1,652 @@
+====== Contacts 디바이스 API 가이드 프로그램 ======
+===== 개요 =====
+Contacts 디바이스 API 가이드 프로그램은 모바일 스마트 디바이스의 Contacts 관련 기능을 JavaScript 기반으로 제어 및 확인할 수 있도록 지원한다. \\
+또한, 연락처 조회 기능과 연락처 정보를 서버로 백업하기 기능, 백업된 연락처 정보로 복구하기 기능 구현 시 참고 및 활용될 수 있도록 한다. \\
+
+==== 특징 ====
+본 가이드 프로그램 에서는 Contacts 기능을 가이드 할 수 있도록 **연락처 조회 기능**, **연락처 정보 백업 기능**, \\
+ **백업된 연락처로 복구 기능** 를 제공하고 있다. \\
+==== 기능 흐름도 ====
+{{:egovframework:hyb:guide:ios:연락처기능흐름도.png?740|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:add:Contacts시퀀스다이어그램.png|}}
+
+==== 전제 조건 ====
+^구분^내용^
+|Local 디바이스 개발 환경|전자정부표준프레임워크 개발환경3.5, Android SDK API 22(version 5.0 Lollipop)|
+|서버 사이드 개발 환경|전자정부표준프레임워크 개발환경3.5|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스 |Galaxy S2|
+|테스트 플랫폼 |Android 2.3 |
+|추가 라이브러리 적용|N/A|
+
+==== 제약 사항 ====
+== 연락처 수정이나 생성시 새로운 ID가 부여된다 ==
+    * 문제 : 폰갭 라이브러리를 사용해서 연락처를 복원할때 복원된 ID는 새로 부여된다.
+    * 해결 방안 : 새로운 ID를 서버로 동기화 하여 해결.
+<code>
+function fn_egov_contactIdUpdate(param,isComplete) {
+    var url = "/ctt/xml/updateContacts.do";
+    var acceptType = "xml";
+    var params = {contactsList : {contactsList : param}};
+    
+    window.plugins.EgovInterface.post(url, acceptType, params, function(xmldata) {		
+        console.log('DeviceAPIGuide fn_egov_contactBackupCountSuccess request Completed');
+        $.mobile.hidePageLoadingMsg('a');
+        if($(xmldata).find("resultState").text() == "OK"){
+            if(isComplete) {
+                jAlert($(xmldata).find("resultMessage").text() +'개의 연락처가 동기화 되었습니다.', '정보', 'c');
+            } else {
+                jAlert('서버에 저장된 연락처 개수와 복원된 연락처 개수가 다릅니다.\n다시 복원 해주세요.', '정보', 'c');
+            }            
+        }else{
+            jAlert($(xmldata).find("resultMessage").text(), '오류', 'c');
+        }
+    });    
+}
+</code>
+
+=== 지원 디바이스 및 플랫폼 ===
+=== 크로스 도메인 사용 ===
+폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Res/xml/config.xml에서 <access origin="" />에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.
+
+===== 설명 =====
+Contacts 디바이스API 가이드 프로그램은 크게  Contacts **연락처 조회**, **연락처 정보 백업**, **백업된 연락처로 복구** 기능으로 구성되어 있다.
+
+==== 관련 클래스다이어그램 ====
+{{:egovframework:hyb:guide:add:Contacts클래스다이어그램.png?1024|}}
+
+==== Device Application ====
+=== 관련 소스 ===
+^유형^대상소스^비고^
+|Activity|kr.go.egovframework.hyb.contacts.ContactsAPIGuide_AndroidActivity|ContactsAPI 가이드 프로그램 Activity Class|
+|CSS|assets/www/css/egovframwork/mbl/hyb/ContactsAPI.css |ContactsAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |assets/www/images/egovframwork/mbl/hyb/ |ContactsAPI 가이드 프로그램 주요 Image 폴더|
+|JS |assets/www/js/egovframwork/mbl/hyb/ContactsAPI.js |ContactsAPI 가이드 프로그램 주요 JavaScript|
+|RES |assets/www/res/ |ContactsAPI 가이드 프로그램 주요 Resource 폴더|
+|XML |AndroidManiFest.xml |안드로이드 어플리케이션 설정 XML|
+|HTML|assets/www/ContactsAPI.html|ContactsAPI 메인 페이지|
+|HTML|assets/www/Intro.html|ContactsAPI Intro 페이지|
+|HTML|assets/www/license.html|ContactsAPI 라이센스 페이지|
+|HTML|assets/www/overview.html|ContactsAPI 기능설명 페이지|
+
+=== 활용 API ===
+== contacts.create ==
+  * 연락처 객체를 생성한다.
+<code>
+var myContact = navigator.contacts.create({"displayName": "Test User"});
+</code>
+
+== contacts.find ==
+  * 연락처를 검색 한다.\\
+<code>
+navigator.contacts.find(contactFields, contactSuccess, contactError, contactFindOptions);
+</code>
+<code>
+var options = new ContactFindOptions();
+options.filter="Bob"; 
+var fields = ["displayName", "name"];
+navigator.contacts.find(fields, onSuccess, onError, options);
+</code>
+  * 연락처를 저장 한다.
+<code>
+// create a new contact object
+var contact = navigator.contacts.create();
+contact.displayName = "Plumber";
+contact.nickname = "Plumber";       //specify both to support all devices
+
+// populate some fields
+var name = new ContactName();
+name.givenName = "Jane";
+name.familyName = "Doe";
+contact.name = name;
+
+// save to device
+contact.save(onSuccess,onError);
+</code>
+  * 연락처를 복사 한다.
+<code>
+var clone = contact.clone();
+clone.name.givenName = "John";
+console.log("Original contact name = " + contact.name.givenName);
+console.log("Cloned contact name = " + clone.name.givenName);
+</code>
+  * 연락처를 제거 한다.
+<code>
+function onSuccess() {
+    alert("Removal Success");
+};
+
+function onError(contactError) {
+    alert("Error = " + contactError.code);
+};
+
+// remove the contact from the device
+contact.remove(onSuccess,onError);
+</code>
+-     **contactFields**\\
+^Properties^객체구조^비고^
+|ID|string|글로벌 고유 식별자. (DOMString)|
+|displayName|(DOMString)|최종 사용자에게 표시하기에 적합이 연락처의 이름.|
+|name|**(ContactName)**|명 이름의 모든 구성 요소를 포함하는 개체입니다.|
+|nickname|(DOMString)|연락을하여 해결할 수있는 캐주얼 이름. |
+|phoneNumbers|**(ContactField [])**|모든 연락처의 전화 번호의 배열입니다.|
+|email|**(ContactField [])**|모든 연락처의 이메일 주소의 배열입니다.|
+|addresses|**(ContactAddress [])**|연락처의 주소를 모든 배열입니다.|
+|ims|**(ContactField [])**|모든 연락처의 IM 주소의 배열입니다.|
+|organizations|**(ContactOrganization [])**|연락처의 조직 전체의 배열입니다. |
+|birthday|**Date**|연락처의 생일. (일)|
+|note|(DOMString)|연락처에 대한 참고 사항.|
+|photo|**(ContactField [])**|연락처의 사진의 배열입니다. |
+|categories|**(ContactField [])**|사용자 정의 범주의 모든 연락처의 배열입니다.|
+|urls|**(ContactField [])**|연락처에 관련된 웹 페이지의 배열입니다.|
+-     **ContactName**\\
+^Properties^객체구조^비고^
+|formatted|(DOMString)|연락처의 전체 이름|
+|familyName|(DOMString)| |
+|givenName|(DOMString)| |
+|middleName|(DOMString)| |
+|honorificPrefix|(DOMString)|연락처 접두사|
+|honorificSuffix|(DOMString)|연락처 접미사|
+-     **ContactField**\\
+^Properties^객체구조^비고^
+|type|(DOMString)|필드의 종류를 구분할수 있는 문자열|
+|value|(DOMString)|필드의 값| 
+|pref|(Boolean)|선호 가치 표시|
+-     **ContactAddress**\\
+^Properties^객체구조^비고^
+|pref|(boolean)|ContactAddress 객체의 대표 값 여부|
+|type|(DOMString)|필드 유형을 정의한다|
+|formatted|(DOMString)|출력을 위한 전체 주소|
+|streetAddress|(DOMString)|동 / 읍 / 면 / 가 와 같은 전체 주소|
+|locality|(DOMString)|’시’ / ‘도’ 표기|
+|region|(DOMString)|’주’ / ‘지방’ 표기|
+|postalCode|(DOMString)|우편번호|
+|country|(DOMString)|국번|
+-     **ContactOrganization**\\
+^Properties^객체구조^비고^
+|pref|(Boolean)|ContactOrganization 객체의 대표 값 여부|
+|type|(DOMString)|필드 유형을 정의한다(예: ‘work’ 은 직장.)|
+|name|(DOMString)|소속의 이름을 정의한다|
+|department|(DOMString)|소속 부서를 정의한다|
+|title|(DOMString)|소속 내의 직함을 정의한다|
+-     **ContactFindOption**\\
+^Properties^객체구조^비고^
+|filter|(DOMString)|검색어 또는 검색조건을 정의한다.?(Default: "")|
+|multiple|(Boolean)|검색 결과으로 다수의 연락처를 가져올 것인지의 여부|
+-     **ContactError**\\
+^Properties^객체구조^비고^
+|ContactError.UNKNOWN_ERROR|(DOMString)|알수 없는 에러|
+|ContactError.INVALID_ARGUMENT_ERROR|(DOMString)|잘못된 인자값|
+|ContactError.TIMEOUT_ERROR|(DOMString)|응답시간 지연|
+|ContactError.PENDING_OPERATION_ERROR|(DOMString)|잘못된 명령|
+|ContactError.IO_ERROR|(DOMString)|입출력 에러|
+|ContactError.NOT_SUPPORTED_ERROR|(DOMString)|지원하지 않음|
+|ContactError.PERMISSION_DENIED_ERROR|(DOMString)|권한 에러|
+
+
+
+==== Server Application ====
+=== 관련 소스 ===
+^유형^대상소스^비고^
+|Controller|egovframework.hyb.add.ctt.web.EgovContactsAndroidAPIController.java|연락처 정보 관리를 위한 클래스|
+|Service|egovframework.hyb.add.ctt.service.EgovContactsAndroidAPIService.java|연락처 정보 관리를 위한  서비스 인터페이스|
+|VO|egovframework.hyb.add.ctt.service.ContactsAndroidAPIDefaultVO.java|연락처 관리를 위한 VO 클래스|
+|VO|egovframework.hyb.add.ctt.service.ContactsAndroidAPIVO.java|연락처 관리를 위한 VO 클래스|
+|DAO|egovframework.hyb.add.ctt.service.impl.ContactsAndroidAPIDAO.java|연락처 관리를 위한 데이터처리 클래스|
+|DAO|egovframework.hyb.add.ctt.service.impl.EgovContactsAndroidAPIServiceImpl.java|요청 서비스 처리를 위한 클래스|
+|Query XML|resources/egovframework/sqlmap/hyb/add/ctt/EgovContactsAndroidAPIGuide_SQL_mysql.xml|연락처 관리를 위한 Query 파일|
+
+=== 관련 테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|CONTACT|CONTACT_INFO|Contact 정보 관리|
+
+=== 테이블 정의서 ===
+   * CONTACT
+
+^No.^컬럼^컬럼명^타입^길이^Null^KEY^
+|1|ID|일련번호|VARCHAR|20|NotNull|pk|
+|2|UUID|UUID|VARCHAR|50|NotNull|pk|
+|3|NAME|이름|VARCHAR|60|Null| |
+|4|TELNO|전화번호|VARCHAR|20|Null| |
+|5|EMAILS|이메일|VARCHAR|50|Null| |
+|6|USEYN|활성화여부|CHAR|1|Null| |
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+===== 환경 설정 =====
+Contacts 디바이스 API 가이드 프로그램에서 제공하는 모바일 디바이스의 Contacts 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== res/xml/plugins.xml ===
+
+<code xml>
+<plugins>
+    <!--전자정부 Interface 디바이스 API를 사용하기 위한 Phonegap Plugin 클래스-->
+    <plugin name="EgovInterfacePlugin" value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+    <!--전자정부 Contacts 디바이스 API를 사용하기 위한 Phonegap Plugin 클래스-->
+    <plugin name="Contacts" value="org.apache.cordova.ContactManager"/>
+</plugins>
+</code>
+
+=== res/values/serverinfo.xml ===
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+	<string name="SERVER_URL">http://192.168.100.222:8080/DeviceAPIGuideTotal_Web_V1.7.1</string>
+    </resources>
+</code>
+
+=== AndroidManifest.xml ===
+
+<code xml>
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.READ_CONTACTS" />
+<uses-permission android:name="android.permission.WRITE_CONTACTS" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+</code>
+
+==== Server Application ====
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/add/dvc/EgovContactsAndroidAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+===== 관련 기능 =====
+Contacts 디바이스API 가이드 프로그램은 크게  Contacts **연락처 조회**, **연락처 정보 백업**, **백업된 연락처로 복구** \\
+기능으로 구성되어 있다.
+==== 연락처 조회 ====
+=== 비즈니스 규칙 ===
+== 1. 모바일 기기에 저장된 모든 연락처의 이름, 휴대폰번호, 이메일을 조회한다. ==
+=== 관련 코드 ===
+== 연락처를 조회 한다 ==
+<code>
+function fn_egov_move_localContactList(){	
+    $.mobile.showPageLoadingMsg('a');
+    var fields = ["displayName", "name", "phoneNumbers", "emails"];
+    navigator.contacts.find(fields, fn_egov_contactListSuccess, fn_egov_fail);
+}
+</code>
+== 연락처를 조회 성공 ==
+<code>
+function fn_egov_contactListSuccess(contacts) {
+    console.log('DeviceAPIGuide fn_egov_contactListSuccess Success');
+    var theList = $('#listView');
+    theList.html("");
+    contactsList = contacts;	
+    nPageCount = 0;
+    fn_egov_showList(true);
+	
+    $.mobile.hidePageLoadingMsg('a');
+    $.mobile.changePage("#contactList", "slide", false, false);
+	
+    theList.listview("refresh");
+	
+    setTimeout(loadiScrollList, 1000);
+}
+</code>
+
+== 특정 연락처 상세조회 ==
+<code>
+function fn_egov_move_localContactDetail(index)
+{
+    var displayName = "";
+    var phoneNumber = "";
+    var email = "";
+    
+    displayName = contactsList[index].displayName;
+	
+    if(contactsList[index].phoneNumbers != null) 
+    {
+    	for(var j=0; j<contactsList[index].phoneNumbers.length; j++) 
+        {
+    	    if(contactsList[index].phoneNumbers[j].type == "mobile")
+            {
+    		phoneNumber = contactsList[index].phoneNumbers[j].value;
+    		break;
+    	    }
+        }
+    }
+    if(contactsList[index].emails != null)
+    {
+        for(var j=0; j<contactsList[index].emails.length; j++) 
+        {
+            email = contactsList[index].emails[j].value;
+            break;
+        }
+    }
+    
+    document.getElementById('detailIndex').value = index;
+    document.getElementById('detailName').value = (displayName==null)?'이름없음':displayName;
+    document.getElementById('detailPhone').value = phoneNumber;
+    document.getElementById('detailEmail').value = email;
+
+    $.mobile.changePage("#contactDetail", "slide", false, false);
+}
+</code>
+== 연락처 삭제 ==
+<code>
+function fn_egov_contactLocalDelete()
+{
+    var index = $("#detailIndex").val();
+    contactsList[index].remove(fn_egov_removeSuccess,fn_egov_fail);
+}
+</code>
+=== 관련 화면 및 수행매뉴얼 ===
+^기능^_URL_^Controller^method^화면(HTML)^
+|연락처 목록 조회| | |fn_egov_contactListSuccess|ContactsAPI.html#contactList|
+|연락처 상세 조회| | |fn_egov_move_localContactDetail|ContactsAPI.html#contactDetail|
+|연락처 삭제| | |fn_egov_contactLocalDelete|ContactsAPI.html#contactDetail|
+{{:egovframework:hyb:guide:add:Contacts연락처목록조회.png?320|}} {{:egovframework:hyb:guide:add:Contacts연락처상세정보.png?320|}}\\
+리스트:연락처의 상세 조회를 호출한다. \\
+ + 10개더보기:연락처 목록 10개를 더 보여준다. \\
+삭제:연락처를 삭제 한다
+==== 연락처 정보 백업 ====
+=== 비즈니스 규칙 ===
+== 1. 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다. ==
+== 2. 연락처 백업시 이전에 백업된 연락처와 같은 ID의 연락처는 업데이트 하고 없는 ID 는 새로 추가한다. ==
+=== 관련 코드 ===
+== 서버에 백업된 연락처 총 갯수 요청 ==
+<code>
+function fn_egov_contactBackupCountSuccess(contacts) 
+{	
+    console.log('DeviceAPIGuide fn_egov_contactBackupCountSuccess Success');
+    contactsList = contacts;
+	
+    var url = "/ctt/xml/selectBackupCount.do";
+    var acceptType = "xml";
+
+    var params = {uuid :  device.uuid};
+	
+    // get the data from server
+    window.plugins.EgovInterface.post(url, acceptType, params, function(xmldata) {		
+        console.log('DeviceAPIGuide fn_egov_contactBackupCountSuccess request Completed');
+        $.mobile.hidePageLoadingMsg('a');
+        if($(xmldata).find("resultState").text() == "OK"){
+			
+            var html = '<div class="ui-block-a"><label align="center"><h3>' + String(contactsList.length) + '</h3></label></div>';
+            html += '<div class="ui-block-b"><label align="center"><h3>' + $(xmldata).find("totCount").text() +'</h3></label></div>';
+			
+            var theList = $('#deviceBackupCount');
+            theList.html(html);
+			
+            $.mobile.changePage("#contactBackup", "slide", false, false);
+        }else{			
+            jAlert($(xmldata).find("resultMessage").text(), '오류', 'c');
+        }
+    });	
+}
+</code>
+
+== 연락처 정보를 서버로 백업한다. ==
+<code>
+function fn_egov_contactBackup() 
+{
+    //3G 사용시 과금이 발생 할 수 있다는 경고 메시지 표시
+    if(!fn_egov_network_check(false)) {
+        return;
+    }
+    
+    if(contactsList.length == 0) {
+        return;
+    }
+	
+    $.mobile.showPageLoadingMsg('a');
+	
+    var param = [];	
+    for(var index = 0; index < contactsList.length ; index++) {
+        var displayName = '';
+        var phoneNumber = '';
+        var email = '';
+		
+        if(contactsList[index].displayName != null) {
+            displayName = contactsList[index].displayName;
+        }
+		
+        if(contactsList[index].phoneNumbers != null) {
+            for(var j=0; j<contactsList[index].phoneNumbers.length; j++) {
+                if(contactsList[index].phoneNumbers[j].type == "mobile"){
+                    phoneNumber = contactsList[index].phoneNumbers[j].value;
+                    break;
+                }
+            }
+        }
+        if(contactsList[index].emails != null) {
+            for(var j=0; j<contactsList[index].emails.length; j++) {
+                email = contactsList[index].emails[j].value;
+                break;
+            }
+        }
+        param.push({uuid:device.uuid, contactId:contactsList[index].id, name:displayName, telNo:phoneNumber, emails:email, useYn:'Y'});
+    }
+
+	
+    var url = "/ctt/xml/addContactsInfo.do";
+    var acceptType = "xml";
+    var params = {contactsList : {contactsList : param}};
+	
+    window.plugins.EgovInterface.post(url, acceptType, params, function(xmldata) {		
+        console.log('DeviceAPIGuide fn_egov_contactBackupCountSuccess request Completed');
+        $.mobile.hidePageLoadingMsg('a');
+        if($(xmldata).find("resultState").text() == "OK"){
+            jAlert($(xmldata).find("resultMessage").text(), '정보', 'c');
+			
+            var html = '<div class="ui-block-a"><label align="center"><h3>' + String(contactsList.length) + '</h3></label></div>';
+            html += '<div class="ui-block-b"><label align="center"><h3>' + $(xmldata).find("totCount").text() +'</h3></label></div>';
+			
+            var theList = $('#deviceBackupCount');
+            theList.html(html);
+        }else{
+            jAlert($(xmldata).find("resultMessage").text(), '오류', 'c');
+        }
+    });	
+}
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+^기능^_URL_^Controller^method^화면(HTML)^
+|백업된 연락처 총 갯수 조회|/ctt/xml/selectBackupCount.do|EgovContactsAndroidAPIController|selectContactsCount|ContactsAPI.html#contactBackup|
+|연락처 백업 요청|/ctt/xml/addContactsInfo.do|EgovContactsAndroidAPIController|addContactsInfoXml|ContactsAPI.html#contactBackup|
+{{:egovframework:hyb:guide:add:Contacts연락처백업.png?320|}} \\
+연락처백업:디바이스의 연락처를 서버로 백업한다.
+==== 백업된 연락처로 복구하기 ====
+=== 비즈니스 규칙 ===
+== 1. 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다. ==
+== 2. 연락처 복구시 디바이스의 연락처의 ID와 백업된 연락처의 ID가 같은 경우 디바이스의 연락처를 삭제하고 백업된 연락처로 복구 한다. ==
+=== 관련 코드 ===
+== 서버에 백업된 연락처 총 갯수 요청 ==
+<code>
+function fn_egov_contactRecoveryCountSuccess(contacts) {	
+    console.log('DeviceAPIGuide fn_egov_contactRecoveryCountSuccess Success');
+    contactsList = contacts;
+	
+    var url = "/ctt/xml/selectBackupCount.do";
+    var acceptType = "xml";
+    var params = {uuid :  device.uuid};	
+	
+    // get the data from server
+    window.plugins.EgovInterface.post(url, acceptType, params, function(xmldata) {		
+        console.log('DeviceAPIGuide fn_egov_contactBackupCountSuccess request Completed');
+        $.mobile.hidePageLoadingMsg('a');
+        if($(xmldata).find("resultState").text() == "OK"){			
+            var html = '<div class="ui-block-a"><label align="center"><h3>' + String(contactsList.length) + '</h3></label></div>';
+            html += '<div class="ui-block-b"><label align="center"><h3>' + $(xmldata).find("totCount").text() +'</h3></label></div>';
+			
+            var theList = $('#deviceRecoveryCount');
+            theList.html(html);
+			
+            $.mobile.changePage("#contactRecovery", "slide", false, false);
+        } else {
+            jAlert($(xmldata).find("resultMessage").text(), '오류', 'c');
+        }
+    });
+}
+</code>
+== 백업된 연락처로 복구하기 ==
+<code>
+function contactRecoveryCallBack(ContactData)
+{
+    var id = ContactData["id"];
+    var name = ContactData["name"];
+    var telNo = ContactData["telNo"];
+    var email = ContactData["emails"];
+    
+    var options = new ContactFindOptions();
+    options.filter=String(id); 
+    var fields = ["id"];
+    navigator.contacts.find(fields, 
+                            function(contacts)
+                            {					    						          
+                                if(contacts.length != 0) 
+                                {
+                                    contacts[0].remove(function(contact){},fn_egov_fail);
+                                }
+                            
+                                var contactname = new ContactName();
+                                contactname.middleName = name;
+                            
+                                var myContact = navigator.contacts.create({"name":contactname});
+                            
+                                var phoneNumbers = [2];
+                                phoneNumbers[0] = new ContactField('work', telNo, false);
+                                phoneNumbers[1] = new ContactField('mobile', telNo, false); 
+                                phoneNumbers[2] = new ContactField('home', telNo, false); 
+                                myContact.phoneNumbers = phoneNumbers;
+                            
+                                var emails = [2];
+                                emails[0] = new ContactField('work', email, false);
+                                emails[1] = new ContactField('home', email, false);
+                                myContact.emails = emails;
+                            
+                                myContact.save(function(contact)
+                                               {					            		
+                                                   recoveryParam.push({uuid:device.uuid, contactId:id, newId:contact.id});
+                                                   if(listCount === recoveryParam.length)
+                                                   {
+                                                       $.mobile.hidePageLoadingMsg('a');
+                                                       confirm(String(listCount) + '개의 연락처가 복원되었습니다. 저장된 연락처 정보를 서버와 동기화 합니다.');
+                                                       $.mobile.showPageLoadingMsg('a');
+                                                       fn_egov_contactIdUpdate();	
+                                                   }
+                                               },fn_egov_fail);					            					            	
+                            
+			    }, function(contactError){}, options);
+}
+</code>
+== 복구한 연락처 서버로 동기화 ==
+<code>
+function fn_egov_contactIdUpdate(param,isComplete) {
+    var url = "/ctt/xml/updateContacts.do";
+    var acceptType = "xml";
+    var params = {contactsList : {contactsList : param}};
+    
+    window.plugins.EgovInterface.post(url, acceptType, params, function(xmldata) {		
+        console.log('DeviceAPIGuide fn_egov_contactBackupCountSuccess request Completed');
+        $.mobile.hidePageLoadingMsg('a');
+        if($(xmldata).find("resultState").text() == "OK"){
+            if(isComplete) {
+                jAlert($(xmldata).find("resultMessage").text() +'개의 연락처가 동기화 되었습니다.', '정보', 'c');
+            } else {
+                jAlert('서버에 저장된 연락처 개수와 복원된 연락처 개수가 다릅니다.\n다시 복원 해주세요.', '정보', 'c');
+            }
+            
+            var fields = ["displayName", "name", "phoneNumbers", "emails"];
+            navigator.contacts.find(fields, function(contacts){
+                contactsList = contacts;
+                var html = '<div class="ui-block-a"><label align="center"><h3>' + String(contactsList.length) + '</h3></label></div>';
+                html += '<div class="ui-block-b"><label align="center"><h3>' + $(xmldata).find("totCount").text() +'</h3></label></div>';
+                
+                var theList = $('#deviceRecoveryCount');
+                theList.html(html);
+            }, fn_egov_fail);
+            
+        }else{
+            jAlert($(xmldata).find("resultMessage").text(), '오류', 'c');
+        }
+    });    
+}
+</code>
+=== 관련 화면 및 수행매뉴얼 ===
+^기능^_URL_^Controller^method^화면(HTML)^
+|백업된 연락처 총 갯수 조회|/ctt/xml/selectBackupCount.do|EgovContactsAndroidAPIController|selectContactsCount|ContactsAPI.html#contactBackup|
+|백업된 연락처로 복구|/ctt/xml/contactsInfoList.do|EgovContactsAndroidAPIController|selectContactsInfoListXml|ContactsAPI.html#contactRecovery|
+|복구한 연락처 서버로 동기화|/ctt/xml/updateContacts.do|EgovContactsAndroidAPIController|updateContactsXml|ContactsAPI.html#contactRecovery|
+{{:egovframework:hyb:guide:add:Contacts연락처복원.png?320|}}\\
+연락처복원:서버에 백업된 연락처로 복구한다.
+
+
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+=== ContactsAPI Device Applicaton 컴파일 방법 === 
+  * 디바이스 API 가이드(Android) 프로젝트를 마우스 오른쪽 버튼으로 클릭 후 "Run As"탭의 "Android Application"을 클릭하면 가이드 프로그램이 빌드되어 안드로이드 디바이스에 설치 된다.
+
+{{:egovframework:hyb:guide:Gettingstart_AVDRunAs.png|}} \\
+
+  * "Android Device Chooser" 창이 나타나면 해당 디바이스를 선택 후 "OK" 버튼을 선택한다.
+
+{{:egovframework:hyb:guide:Gettingstart_DeviceChooser.png|}} \\
+
+  * 에뮬레이터를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:ContactsEmuleIntro.png?320|}} {{:egovframework:hyb:guide:add:ContactsEmuleMain.png?320|}}
+
+  * 디바이스를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:ContactsIntro.png?320|}} {{:egovframework:hyb:guide:add:ContactsMain.png?320|}}
+
+=== ContactsAPI Server Applicaton 컴파일 방법 ===  
+
+  * ContactsAPI 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+{{:egovframework:hyb:guide:add:서버실행결과_콘솔.png?840|}}
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스에서 확인 할 수 있다.
+ 
+
+ console.log의 작성 방법은 다음과 같다.
+<code>
+function fn_egov_contactListSuccess(contacts) {
+    console.log('DeviceAPIGuide fn_egov_contactListSuccess Success');
+    var theList = $('#listView');
+    theList.html("");
+    ...
+}
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+{{:egovframework:hyb:guide:add:FileReadWriteconsolelog.png?700|}}
+
+Contacts 디바이스 API 가이드 프로그램 에서는 디버깅을 위하여 다음과 같이 콘솔 정보를 출력한다.\\
+
+^디버그 코드^디버깅 내용^
+|DeviceAPIGuide fn_egov_contactListSuccess | 디바이스내 연락처 목록 조회 성공|
+|DeviceAPIGuide fn_egov_fail + errorCode | 에러코드 사유로 인해 Contacts Device API 실패|
+|DeviceAPIGuide fn_egov_removeSuccess | 연락처 삭제 성공|
+|DeviceAPIGuide fn_egov_sendto_server Response Completed | 서버에 요청한 내용이 성공적으로 처리 된 경우|
+|DeviceAPIGuide fn_egov_sendto_server Response Failed | 서버 내부 처리 오류|
+|DeviceAPIGuide fn_egov_sendto_server Request Failed | 통신 오류|
+|DeviceAPIGuide fn_egov_contactBackupCountSuccess | 백업된 연락처 갯수 조회 성공|
+|DeviceAPIGuide fn_egov_contactRecoveryCountSuccess | 연락처 복구 하기전 조회 성공|
+|DeviceAPIGuide EgovInterface.get request Fail | HTTP GET Method 요청 실패 시|
+|DeviceAPIGuide EgovInterface.post request Fail | HTTP POST Method 요청 실패 시|
+|DeviceAPIGuide EgovInterface.geturl Fail | geturl 함수 요청 실패 시|
+
+==== 배포 ====
+Contacts 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=520&menu=3&submenu=9|Click]]
+
+===== 참고 자료 =====
+  * UX/UI 라이브러리 : jQuery Mobile[[http://jquerymobile.com/demos/1.4.5/|Click]] \\
+  * Phonegap 4.3.0 : [[http://docs.phonegap.com/en/4.0.0/|Click]] \\

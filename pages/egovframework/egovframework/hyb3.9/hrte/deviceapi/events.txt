@@ -1,0 +1,380 @@
+===== Events  =====
+
+==== 설명 ====
+  * 폰갭 라이프 사이클 이벤트 콜백 함수를 정의한다.
+
+==== 제약사항 ====
+  * Events API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+
+
+== startcallbutton ==
+  * 지원하지 않음
+== endcallbutton ==
+  * 지원하지 않음
+== volumedownbutton ==
+  * 지원하지 않음
+== volumeupbutto ==
+  * 지원하지 않음
+
+
+=== iOS ===
+
+== pause ==
+  * pause handler는 Objective-C 에서 작동하지 않는다.
+  * Plugins 이나 PhoneGap API 에서 사용할 수 없다.
+  * 단지, resume 이벤트로 처리된다.
+
+== online ==
+  * 프로그램이 처음 실행되기 위해 초기화할 때는 online 이벤트를 감지하는데 약간의 지연시간이 있다.
+
+== offline ==
+  * 프로그램이 처음 실행되기 위해 초기화할 때는 offline 이벤트를 감지하는데 약간의 지연시간이 있다.
+
+== backbutton ==
+  * 지원하지 않음
+== menubutton ==
+  * 지원하지 않음
+== searchbutton ==
+  * 지원하지 않음
+
+== startcallbutton ==
+  * 지원하지 않음
+== endcallbutton ==
+  * 지원하지 않음
+== volumedownbutton ==
+  * 지원하지 않음
+== volumeupbutto ==
+  * 지원하지 않음
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Battery" value="org.apache.cordova.BatteryListener" />
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.BROADCAST_STICKY" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/config.xml
+<code xml>
+    <feature name="Battery">
+        <param name="ios-package" value="CDVBattery"/>
+    </feature>
+</code>
+
+==== 이벤트 타입 ====
+
+=== deviceready === 
+  * phoneGap 라이브러리 호출을 완료 했을 때 발생한다.
+<code>
+document.addEventListener("deviceready", yourCallbackFunction, false);
+</code>
+
+
+  * Quick Example
+<code>
+document.addEventListener("deviceready", onDeviceReady, false);
+
+function onDeviceReady() {
+    // Now safe to use the Cordova API
+}
+</code>
+
+=== pause === 
+  * phoneGap이 백그라운드에 있을 경우, 중지 됐을 때 발생한다.
+
+<code>
+document.addEventListener("pause", yourCallbackFunction, false);
+
+</code>
+
+
+  * Quick Example
+<code>
+document.addEventListener("pause", onPause, false);
+
+function onPause() {
+    // Handle the pause event
+}
+</code>
+
+=== resume === 
+  * phoneGap이 백그라운드에 있을 경우, 다시 전면에 나타날 때 발생한다.
+
+<code>
+document.addEventListener("resume", yourCallbackFunction, false);
+
+</code>
+
+
+  * Quick Example
+<code>
+document.addEventListener("resume", onResume, false);
+
+function onResume() {
+    // Handle the resume event
+}
+</code>
+
+=== online === 
+  * phoneGap의 네트워크 상태가 온라인일 때, 발생한다.
+
+<code>
+document.addEventListener("online", yourCallbackFunction, false);
+
+</code>
+
+
+  * Quick Example
+<code>
+document.addEventListener("online", onOnline, false);
+
+function onOnline() {
+    // Handle the online event
+}
+</code>
+
+=== offline === 
+  * phoneGap의 네트워크 상태가 오프라인일 때, 발생한다.
+
+<code>
+ocument.addEventListener("offline", yourCallbackFunction, false);
+
+</code>
+
+
+  * Quick Example
+<code>
+document.addEventListener("offline", onOffline, false);
+
+function onOffline() {
+    // Handle the offline event
+}
+</code>
+
+=== backbutton === 
+  * 단말기에 있는 백(back) 버튼을 눌렀을 때, 발생한다.
+
+<code>
+document.addEventListener("backbutton", yourCallbackFunction, false);
+
+</code>
+
+
+  * Quick Example
+<code>
+document.addEventListener("backbutton", onBackKeyDown, false);
+
+function onBackKeyDown() {
+    // Handle the back button
+}
+</code>
+
+=== batterycritical === 
+  * 단말기의 배터리가 경고 수준으로 떨어졌을 경우, phoneGap이 감지했을 때 발생한다.
+  * batterycritical 핸들러는 두 가지 속성을 구성된다:
+	- level: battery 잔량의 백분율 (0-100). (Number)
+	- isPlugged: 단말기가 배터리 충전기에 충전되고 있는지의 여부. (Boolean)
+
+<code>
+window.addEventListener("batterycritical", yourCallbackFunction, false);
+
+</code>
+
+
+  * Quick Example
+<code>
+window.addEventListener("batterycritical", onBatteryCritical, false);
+
+function onBatteryCritical(info) {
+    // Handle the battery critical event
+    alert("Battery Level Critical " + info.level + "%\nRecharge Soon!"); 
+}
+</code>
+
+=== batterylow === 
+  * 단말기의 배터리가 ‘배터리 낮음’ 수준으로 떨어졌을 경우, phoneGap이 감지했을 때 발생한다.
+  * batterycritical 핸들러는 두 가지 속성을 구성된다:
+	- level: battery 잔량의 백분율 (0-100). (Number)
+	- isPlugged: 단말기가 배터리 충전기에 충전되고 있는지의 여부. (Boolean)
+
+<code>
+window.addEventListener("batterylow", yourCallbackFunction, false);
+
+</code>
+
+
+  * Quick Example
+<code>
+window.addEventListener("batterylow", onBatteryLow, false);
+
+function onBatteryLow(info) {
+    // Handle the battery low event
+    alert("Battery Level Low " + info.level + "%"); 
+}
+</code>
+
+
+=== batterystatus === 
+  * 배터리 잔량의 변화가 있을 경우, phoneGap이 감지했을 때 발생한다..
+  * batterycritical 핸들러는 두 가지 속성을 구성된다:
+	- level: battery 잔량의 백분율 (0-100). (Number)
+	- isPlugged: 단말기가 배터리 충전기에 충전되고 있는지의 여부. (Boolean)
+
+<code>
+window.addEventListener("batterystatus", yourCallbackFunction, false);
+
+</code>
+
+
+  * Quick Example
+<code>
+window.addEventListener("batterystatus", onBatteryStatus, false);
+
+function onBatteryStatus(info) {
+    // Handle the online event
+    console.log("Level: " + info.level + " isPlugged: " + info.isPlugged); 
+}
+</code>
+
+
+
+
+=== menubutton ===
+  * 단말기의 메뉴 버튼을 눌렀을 경우 발생한다.
+
+<code>
+document.addEventListener("menubutton", yourCallbackFunction, false);
+
+</code>
+
+* Quick Example
+
+<code>
+document.addEventListener("menubutton", onMenuKeyDown, false);
+
+function onMenuKeyDown() {
+    // Handle the back button
+}
+</code>
+
+
+
+=== searchbutton ===
+  * 단말기의 검색 버튼을 눌렀을 경우 발생한다.
+
+
+<code>
+document.addEventListener("searchbutton", yourCallbackFunction, false);
+
+</code>
+
+* Quick Example
+
+<code>
+document.addEventListener("searchbutton", onSearchKeyDown, false);
+
+function onSearchKeyDown() {
+    // Handle the search button
+}
+</code>
+
+
+
+=== startcallbutton ===
+  * start call 버튼을 눌렀을 경우, 발생한다.
+
+
+<code>
+document.addEventListener("startcallbutton", yourCallbackFunction, false);
+
+</code>
+
+* Quick Example
+
+<code>
+document.addEventListener("startcallbutton", onStartCallKeyDown, false);
+
+function onStartCallKeyDown() {
+    // Handle the start call button
+}
+</code>
+
+
+
+=== endcallbutton ===
+  * end call 버튼을 눌렀을 경우, 발생한다.
+
+
+<code>
+document.addEventListener("endcallbutton", yourCallbackFunction, false);
+
+</code>
+
+* Quick Example
+
+<code>
+document.addEventListener("endcallbutton", onEndCallKeyDown, false);
+
+function onEndCallKeyDown() {
+    // Handle the end call button
+}
+</code>
+
+
+
+=== volumedownbutton ===
+  * volume down 버튼을 눌렀을 경우, 발생한다.
+
+
+<code>
+document.addEventListener("volumedownbutton", yourCallbackFunction, false);
+
+</code>
+
+* Quick Example
+
+<code>
+document.addEventListener("volumedownbutton", onVolumeDownKeyDown, false);
+
+function onVolumeDownKeyDown() {
+    // Handle the volume down button
+}
+</code>
+
+
+=== voumeupbutton ===
+  * volume up 버튼을 눌렀을 경우, 발생한다.
+
+
+<code>
+document.addEventListener("volumeupbutton", yourCallbackFunction, false);
+
+</code>
+
+* Quick Example
+
+<code>
+document.addEventListener("volumeupbutton", onVolumeUpKeyDown, false);
+
+function onVolumeUpKeyDown() {
+    // Handle the volume up button
+}
+</code>
+
+
+==== 파라미터 ====
+	* N/A
+
+==== Objects ====
+	* N/A
+
+==== 참고 자료 ====
+  * Cordova : https://cordova.apache.org/docs/en/8.x/cordova/events/events.html

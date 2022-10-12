@@ -1,0 +1,18 @@
+====== Install ======
+
+===== 모바일 디바이스API 개발환경 준비하기 (3.5) =====
+
+==== SDK 설치하기 ====
+
+  * [[egovframework:hyb:init:add:sdk|SDK 설치하기]]
+
+==== ADT 설치하기 ====
+
+  * [[egovframework:hyb:init:add:adt|ADT 설치하기]]
+
+==== Android Configurator for M2E 플러그인 설치 ====
+
+  * ADT와 M2Eclipse Maven 플러그인 연결을 위한 플러그인이다.
+  * ** Maven 업데이트를 완료한 후에 플러그인 설치를 하여야한다.**
+  * [[egovframework:hyb:hdev:m2e_android_connector|Android Configurator for M2E 설치]]
+

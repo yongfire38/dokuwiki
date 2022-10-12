@@ -1,0 +1,488 @@
+====== 로컬DB (SQLite) 디바이스API 가이드 프로그램 ======
+
+===== 개요 =====
+
+로컬DB(Sqlite) 가이드 프로그램은 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현된 전자정부 디바이스 API에 대한 가이드 앱으로써, 모바일 디바이스의 sqlite관련 기능을 JavaScript기반으로 구성 된 Sqlite DeviceAPI를 통하여 디바이스 내 독립적인 DB를 사용 할 수 있는 기능을 지원한다.
+
+
+==== 특징 ====
+본 가이드 프로그램에서는 디바이스 내 독립적인 DB(Sqlite)를 활용하여 **테이블 생성**, **데이터 추가**, **데이터 수정**, 그리고 **데이터 삭제** 기능을 제공하고 있다. \\
+Sqlite의 특징으로는 로컬 디바이스 내에 비교적 적은양의 간단한 데이터를 저장이 가능하며, 별도의 서버/클라이어트가 불필요하여 경량의 관계형 자료구조 지원에 적합한 DB이다. \\
+또한, 표준 SQL 질의를 통하여 데이터를 보다 유연하게 다룰 수 있으며, WebSQL의 일부 동일한 API사용하므로 쉽게 접근할 수 있는 장정이 있다. \\
+
+=== WebSQL과 비교하여 ===
+  * 안전정이며 제한 없는 저장소 지원 (저장소 크기가 storage 제한)
+  * 기본 설정된 Database
+  * 크로스 플랫폼 (suppport IOS WKWebVIew)
+
+
+==== 기능흐름도 ====
+{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_flow.png?700|}}
+
+==== 전제 조건 ====
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경| 전자정부표준프레임워크 개발환경3.6, Android SDK API 23(version 6.0 Marshmallow)|
+|서버 사이드 개발 환경| 전자정부표준프레임워크 개발환경3.6|
+|Mash up Open API 연계| N/A|
+|테스트 디바이스 | Galaxy S3, G5|
+|테스트 플랫폼 | Android 2.3, Android 6.0 |
+|추가 라이브러리 적용|N/A|
+
+==== 제약사항 ====
+
+^           구분            ^             내용             ^
+|지원 디바이스 및 플랫폼|N/A|
+|크로스 도메인 사용|폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Res/xml/config.xml에서 <access origin="" />에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.|
+|라이선스|N/A|
+
+===== 설명 ===== 
+로컬 DB(SQLite) 디바이스API 가이드 프로그램는 디바이스 내에 **테이블 생성**, **데이터 추가**, **데이터 수정**, 그리고 **데이터 삭제**  기능으로 구성되어 있다.(관련기능 부분참조) \\
+[참고] 본 가이드에서는 웹서버 (통신) 기능은 포함되어 있지 않다.
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Activity|kr.go.egovframework.hyb.sqliteapp.MainActivity|로컬 DB API 가이드 프로그램 Activity Class|
+|CSS|assets/www/css/egovframwork/mbl/hyb/SQLite.css |로컬 DB API 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |assets/www/images/egovframwork/mbl/hyb/ |로컬 DB API 가이드 프로그램 주요 Image 폴더|
+|JS |assets/www/js/egovframwork/mbl/hyb/SQLiteAPI.js |로컬 DB API 가이드 프로그램 주요 JavaScript|
+|RES |assets/www/res/ |로컬 DB API 가이드 프로그램 주요 Resource 폴더|
+|XML |AndroidManiFest.xml |안드로이드 어플리케이션 설정 XML|
+|HTML|assets/www/SQLite.html|로컬 DB API 메인 페이지|
+|HTML|assets/www/intro.html|로컬 DB API Intro 페이지|
+|HTML|assets/www/license.html|로컬 DB API 라이센스 페이지|
+|HTML|assets/www/overview.html|로컬 DB API 기능설명 페이지|
+
+=== 활용 API ===
+
+== OpenDatabase ==
+  * 로컬 DB에 접속(생성) 기능
+
+<code>
+window.sqlitePlugin.openDatabase({name: 'my.db', location: 'default'}, successcb, errorcb);
+</code>
+
+^파라미터^설명^비고^
+|name |DB 이름으로 접속| 동일한 이름이 없는 경우 새로운 DB 생성|
+|location |DB 저장 위치 |'default'의 경로는 /data/data/<Your-Application-Package-Name>/databases/<your-database-name>|
+|successcb |성공시 리턴되는 함수 | |
+|errorcb |실패시 리턴되는 함수 | |
+
+== Transaction == 
+  * SQL 트랜잭션의 기능
+  [특징]
+           * Single-statement transactions
+           * SQL batch transactions
+           * Standard asynchronous transactions
+
+<code>
+db.transaction(onfunction(tx));
+</code>
+
+^파라미터^설명^비고^
+|onfunction |트랜잭션이 성공시 리턴되는 함수 | tx로 쿼리 수행이 가능|
+
+==  Execute Statement == 
+  * 쿼리를 수행하는 기능
+<code>
+tx.executeSql(sql_query, onSuccess, onError);
+</code>
+
+^파라미터^설명^비고^
+|sql_query |수행할 쿼리문 |표준 SQL 문 사용 |
+|onSuccess |성공시 콜백 함수 | |
+|onError |실패의 콜백 함수 | |
+
+==== Server Application ====
+N/A \\
+[참고] 본 가이드에서는 웹서버(통신) 기능은 포함되어 있지 않다. 
+
+===== 환경설정 ===== 
+
+로컬 DB(SQLite) 디바이스API 가이드 프로그램에서 제공하는 테이블 생성, 데이터 추가, 데이터 수정, 데이터 삭제를 위한 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== res/xml/config.xml ===
+
+<code xml>    
+    <!--전자정부 문서뷰어 API를 사용하기 위한 Phonegap Plugin 클래스-->
+    <feature name="SQLitePlugin">
+         <param name="android-package" value="io.sqlc.SQLitePlugin"/>
+    </feature>
+</code>
+
+=== AndroidManifest.xml ===
+
+<code xml>    
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+        
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <permission android:name="kr.go.egovframework.hyb.sqliteapp.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="kr.go.egovframework.hyb.sqliteapp.permission.C2D_MESSAGE" />
+</code>
+
+==== Server Application ====
+N/A
+
+===== 관련기능 ===== 
+로컬 DB(SQLite) API 가이드 프로그램은 로컬 저장소에 독립적인 DB를 생성하고 테이블 생성, 데이터 추가/수정/삭제 등의 기능을 활용 할 수 있는 기능으로 구성되어 있다.
+
+==== DB 접속(생성) 및 테이블 조회하기 ====
+
+=== 비즈니스 규칙 ===
+  * 로컬 DB에 접속하여 테이블 목록을 조회한다. <sub>(지정 DB가 없는 경우 새로운 DB 생성)</sub>
+  * 샘플에서는 'demo.db'를 사용하며 자동적으로 'samplet'테이블을 생성한다.
+
+=== 관련 코드 ===
+
+== DB 접속(생성)과 테이블 조회 및 화면표시 ==
+<code>
+function fn_egov_dbopen(){
+	db = window.sqlitePlugin.openDatabase({name: 'demo.db', location : 'default'}, function(db) {
+		if(db != null){
+			console.log('Test database(demo) has been opened successfully');	
+			fn_egov_dbtablelist();
+		}
+	}, function(error){
+		console.log('Open database ERROR: ' + JSON.stringify(error));
+	});
+}
+
+function fn_egov_dbtablelist() {
+	
+	if(db != null){
+				
+		//샘플DB(demo) 테이블 리스트 불러오기
+		db.transaction(function (tx){
+			tx.executeSql("SELECT name FROM sqlite_master WHERE type='table'", [], function(tx, result){
+				if(result.rows.length ==0){
+					
+					console.log('no tables: ' + result.rows.length);
+					
+					var strhtml="";
+					strhtml += '<li>';	    						                    
+				    strhtml += '     <a href="#" onclick="javascript:fn_egov_create_sample()">';
+				    strhtml += '         <h3> 샘플테이블 만들기</h3>';					    
+				    strhtml += '    </a>';
+				    strhtml += '</li>';        
+				     									 
+					var theList = $('#thetableList');
+				    theList.html(strhtml);	    								        
+				    $.mobile.changePage("#tableInfo", "slide", false, false);
+				    theList.listview("refresh");
+				    listScroll.refresh();
+					    
+				}else{
+					
+					var strhtml="";
+					var len = result.rows.length;					
+					for (var i=0;i<len;i++) {
+						strhtml += '<li>';	    						                    
+					    strhtml += '     <a href="#" onclick="javascript:fn_egov_tabledata()">';
+					    strhtml += '         <h3>테이블이름: '+ result.rows.item(i).name +'</h3>';					    
+					    strhtml += '    </a>';
+					    strhtml += '</li>'; 
+					}						 
+				     									 
+					var theList = $('#thetableList');					
+				    theList.html(strhtml);	    								        
+				    $.mobile.changePage("#tableInfo", "slide", false, false);				    
+				    theList.listview("refresh");				    
+					listScroll.refresh();
+					    
+					console.log('3table Count: ' + result.rows.length)
+				}
+			});
+		}, function (error){
+			console.log('transaction error: ' + error.message);
+		}, function (){
+			console.log('db tablelist transaction OK');
+		});
+		
+	}else{
+		console.log('SQLite DB has not been connected');
+	}
+		
+}
+
+function fn_egov_create_sample() {
+	if(db != null){
+		//샘플DB(demo) 테이블 만들기
+		db.transaction(function (tx){
+			
+			tx.executeSql("CREATE TABLE IF NOT EXISTS samplet (empid integer primary key, empname text, empjob text)");
+			
+		}, function (error){
+			console.log('transaction error: ' + error.message);
+		}, function (){
+			fn_egov_dbtablelist();
+			console.log('db tablelist transaction OK');
+		});
+	}
+	
+}
+</code>
+
+=== 관련 화면 ===
+
+^메인 메뉴 화면 ^샘플 테이블 화면^
+|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_menu.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_opendb.png?320|}}|
+
+==== 샘플 테이블의 데이터 조회 및 추가하기 ====
+
+=== 비즈니스 규칙 ===
+  * 샘플 테이블(samplet)의 데이터를 조회하고 **'데이터 추가'** 버튼을 활용하여 임의의 데이터를 추가한다.
+
+=== 관련 코드 ===
+
+== 테이블 조회 및 추가 호출 ==
+<code>
+function fn_egov_tabledata() {
+	if(db != null){
+		//tname테이블의 데이터 조회 
+		db.transaction(function (tx){
+			
+			tx.executeSql("SELECT empid, empname, empjob FROM samplet", [], function(tx, result) {
+				
+				console.log('select start');
+				var strhtml="";
+				var len = result.rows.length;
+								
+				if(len == 0){
+					strhtml += '<li>';
+					strhtml += '	<h3> - No Data Found - </h3>';					
+				    strhtml += '</li>';
+				}else{									
+					for(var i=0;i<len;i++){											    
+						strhtml += '<li>';
+						strhtml += '    <a href="#" onclick="javascript:fn_egov_dataSelectMenu(\''+ result.rows.item(i).empid +'\')">';
+						strhtml += '		<h3>RowNo: '+ (i+1) +'</h3>';
+						strhtml += '		<h2>&nbsp;&nbsp;&nbsp;EmpID: '+ result.rows.item(i).empid +'</h2>';					    
+					    strhtml += '		<h2>&nbsp;&nbsp;&nbsp;EmpName: '+ result.rows.item(i).empname +'</h2>';
+					    strhtml += '		<h2>&nbsp;&nbsp;&nbsp;EmpJob: '+ result.rows.item(i).empjob +'</h2>';
+					    strhtml += '    </a>';
+					    strhtml += '</li>'; 
+					}
+				}
+				var theList = $('#thedataList');				
+			    theList.html(strhtml);	    								        
+			    $.mobile.changePage("#dataInfo", "slide", false, false);
+			    theList.listview("refresh");
+			    detailScroll.refresh();
+
+			    console.log('data Count: ' + result.rows.length)
+				
+			});
+			
+		}, function (error){
+			console.log('transaction error: ' + error.message);
+		}, function (){			
+			console.log('db tablelist transaction OK');
+		});
+	}
+}
+
+function fn_egov_addsampledata() {
+	if(db != null){
+		
+		db.transaction(function (tx){
+			
+			tx.executeSql("INSERT INTO samplet (empid, empname, empjob) SELECT max(empid) + 1 as empid, ? as empname, ? as empjob from samplet", ['Test','Researcher'], function(tx, result) {
+				console.log('Insert Row Affected Count:' + result.rowsAffected);				
+			});
+			
+		}, function (error){
+			console.log('transaction error: ' + error.message);
+		}, function (){
+			fn_egov_tabledata();
+			console.log('db insert transaction OK');
+		});
+	}
+}
+</code>
+
+^데이터 조회 화면 ^데이터 추가 화면^
+|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_datalist.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_dataadd.png?320|}}|
+
+==== 샘플 테이블의 데이터 수정하기 ====
+
+=== 비즈니스 규칙 ===
+  * 임의 데이터를 클릭하여 **'데이터 수정'** 버튼을 활용하여 해당 데이터를 수정한다.
+
+=== 관련 코드 ===
+
+== 데이터 수정 ==
+<code>
+function fn_egov_moveDataUpdatePage(rowid){
+	
+	if(db != null){
+		
+		db.transaction(function (tx){
+			
+			console.log('rowid:' + rowid);
+			tx.executeSql("SELECT empid, empname, empjob FROM samplet WHERE empid = ?", [rowid], function(tx, result) {
+				
+				console.log('length:' + result.rows.length);
+				
+				if(result.rows.length >0){
+					
+					console.log('empid:' + result.rows.item(0).empid);
+					console.log('empname:' + result.rows.item(0).empname);
+					console.log('empjob:' + result.rows.item(0).empjob);
+					
+					document.getElementById('empID').value = result.rows.item(0).empid;	 
+					document.getElementById('empName').value = result.rows.item(0).empname;
+					document.getElementById('empJob').value = result.rows.item(0).empjob;
+				}			
+			});
+			
+		}, function (error){
+			console.log('transaction error: ' + error.message);
+		}, function (){
+			$.mobile.changePage("#dataUpdateInfo", "slide", false, false);
+			console.log('db insert transaction OK');
+		});
+	}
+	
+}
+
+function fn_egov_updateDataConfirm(){
+	
+	jConfirm('해당 데이터를 수정하시겠습니까?', '알림', 'c', function(r) {
+	    if (r == true) {
+	    	fn_egov_updateData();
+	    }
+	});	
+}
+
+function fn_egov_updateData(){
+	
+	if(db != null){
+		
+		db.transaction(function (tx){
+			
+			var rowid = document.getElementById('empID').value;				 
+			var empName = document.getElementById('empName').value;
+			var empJob = document.getElementById('empJob').value;
+			
+			console.log('rowid:' + rowid);
+			
+			tx.executeSql("UPDATE samplet SET empname = ?, empjob = ? WHERE empid = ?", [empName, empJob, rowid], function(tx, result) {
+				console.log('Update Row Affected Count:' + result.rowsAffected);			
+			});
+			
+		}, function (error){
+			console.log('transaction error: ' + error.message);
+		}, function (){
+			fn_egov_tabledata();
+			console.log('db Update transaction OK');
+		});
+	}
+
+}
+</code>
+
+^데이터 수정 화면 ^데이터 수정 확인 화면^ 데이터 수정 결과 화면^
+|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_update1.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_update2.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_update3.png?320|}}|
+
+==== 샘플 테이블의 데이터 조회 및 삭제하기 ====
+
+=== 비즈니스 규칙 ===
+  * 샘플 테이블(samplet)의 데이터를 조회하고 **'데이터 삭제'** 버튼을 활용하여 해당 데이터를 삭제한다.
+
+=== 관련 코드 ===
+
+== 테이블 조회 및 삭제 호출 ==
+<code>
+function fn_egov_dataDeleteConfirm(rowid){
+	
+	jConfirm('해당 데이터를 삭제하시겠습니까?', '알림', 'c', function(r) {
+	    if (r == true) {
+	    	fn_egov_dataDelete(rowid);
+	    }
+	});	
+}
+
+function fn_egov_dataDelete(rowid){
+	
+	if(db != null){
+		 
+		db.transaction(function (tx){
+			
+			tx.executeSql("DELETE FROM samplet WHERE empid = ?", [rowid], function(tx, result) {
+				console.log('Delete Row Affected Count:' + result.rowsAffected);				
+			});
+			
+		}, function (error){
+			console.log('transaction error: ' + error.message);
+		}, function (){
+			fn_egov_tabledata();
+			console.log('db delete transaction OK');
+		});
+	}
+}
+
+</code>
+
+^데이터 조회 화면 ^데이터 삭제 화면 ^데이터 삭제 결과 화면^
+|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_delete1.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_delete2.png?320|}}|{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_delete3.png?320|}}|
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+
+=== Device Applicaton 컴파일 방법 === 
+
+  * 프로젝트 선택 > 오른쪽 클릭 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일1.png?740|}}
+
+  * 상단의 메뉴 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일2.png?740|}}
+
+ 
+  * 실행할 타겟 선택 > 에뮬레이터, 디바이스(디버깅모드)
+
+{{:egovframework:hyb:guide:add:디바이스컴파일.png?740|}}
+
+  * 디바이스를 이용한 실행 화면
+
+{{:egovframework:hyb3.6:guide:mbl:sqlite:sqlite_run.png?320|}}
+
+=== Server Applicaton 컴파일 방법 ===  
+
+  * 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+{{:egovframework:hyb:guide:add:서버실행결과_콘솔.png?840|}}
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+ 
+
+console.log의 작성 방법의 예시는 다음과 같다.
+<code>
+function onError(e)
+{
+    ...
+    console.log('Error status: ' + e.status + ' - Error message: ' + e.message);
+    ...
+}
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+ {{:egovframework:hyb:guide:add:FileReadWriteconsolelog.png|}}
+
+==== 배포 ====
+로컬 DB(Sqlite) 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=1293&menu=3&submenu=9|Click]] \\
+
+===== 참고자료 ===== 
+  * Cordova 플러그인 정보 : cordova-sqlite-storage[[https://www.npmjs.com/package/cordova-sqlite-storage|Click]] \\

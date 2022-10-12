@@ -1,0 +1,46 @@
+====== MS윈도우즈 CLI도구 설치하기 ======
+
+===== 개요 =====
+MS윈도우즈에서 CLI 도구를 사용하기 위해서는 NodeJS의 npm 도구를 내려받아 설치하여야 한다.
+
+===== 설명 =====
+폰갭 Cordova CLI로 프로젝트를 추가하고 플랫폼 및 폰갭 플러그인을 관리 하는 방법에 대하여 알아본다. MS윈도우즈에서는 안드로이드 플랫폼의 운영만 가능하며 맥OS를 사용하는경우 안드로이드 및 맥북으로의 OS에서만 가능하다.
+
+==== NodeJS CLI 도구 내려받기 ====
+
+=== NodeJS 다운로드 및 설치 ===
+== nodejs.org에서 install버튼을 눌러 다운로드를 받는다.== 
+
+{{:egovframework:hyb3.5:hdev:imp:nodejs_home_01.png?600|}}
+== Finder에서 다운로드 디렉토리로 이동하여 node-v0.xx.x-x64.msi파일을 실행한다.== 
+{{:egovframework:hyb3.5:hdev:imp:nodejs_add_01.png?600|}}
+== 계속(Next) 버튼 클릭한다.== 
+{{:egovframework:hyb3.5:hdev:imp:nodejs_add_02.png?400|}}
+== 설치되는 경로를 확인하고 계속(Next) 버튼 클릭한다.== 
+{{:egovframework:hyb3.5:hdev:imp:nodejs_add_03.png?400|}}
+== 계속 버튼을 클릭하여 설치가 완전히 되도록 진행한다. 윈도우즈의 경우는 설치위치는 C:\Program Files\nodejs로 지정된다.== 
+{{:egovframework:hyb3.5:hdev:imp:nodejs_add_04.png?400|}}
+
+==== 코도바 CLI 도구 설치 ====
+=== npm 명령으로 코도바 CLI 도구 설치 ===
+npm을 이용하여 코도바 CLI를 설치한다.
+<code>
+    C:\> npm install -g cordova
+</code>
+
+=== 코도바 CLI 도구 update ===
+<code>
+    C:\> npm update -g cordova
+</code>
+
+=== 코도바 CLI 도구 정보확인 ===
+<code>
+    C:\> npm info cordova
+</code>
+
+
+=== 프로젝트 추가 ===
+<code>
+    C:\> cordova create hello com.example.hello HelloWorld
+</code>
+

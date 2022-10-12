@@ -1,0 +1,15 @@
+====== Android Configurator for M2E 설치 ======
+
+===== 설명 =====
+
+  * Maven3을 포함하는 m2e 플러그인을 설치한 후에 진행하여야 한다.
+  * 설치하지 않고 진행할 경우 설치 및 maven-generate Life Cycle 이 진행되지 않는 경우가 발생한다.
+  * Android Configurator for M2E 플러그인이 설치되어 있을 않을 경우, 디바이스API New Template Project Wizard 실행 시, 다음과 같은 에러 메세지를 나타낸다. \\ {{:egovframework:hyb:hdev:m2e_android_install_1.png}}
+
+===== 플러그인 설치 =====
+
+  - ** Help > Install New Software… > Add ** \\ {{:egovframework:hyb:hdev:m2e_android_install_2.png?700}} \\ 
+  - ** http://rgladwell.github.com/m2e-android/updates 업데이트 서버 추가** \\ {{:egovframework:hyb:hdev:m2e_android_install_3.png}} \\ 
+  - ** Install 서버 선택 및 대상 플러그인 선택 ** \\ {{:egovframework:hyb:hdev:m2e_android_install_4.png?700}} \\
+  - ** Next > 라이센스 동의 > Finish ** \\ {{:egovframework:hyb:hdev:m2e_android_install_5.png?700}} {{:egovframework:hyb:hdev:m2e_android_install_6.png?700}} \\
+  - ** Intall 진행 및 개발환경 재시작 ** \\ {{:egovframework:hyb:hdev:m2e_android_install_7.png}} {{:egovframework:hyb:hdev:m2e_android_install_8.png}} \\

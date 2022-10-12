@@ -1,0 +1,40 @@
+====== 표준프레임워크 모바일 디바이스 API 가이드 프로그램 2.5 ======
+
+
+===== 모바일 디바이스 API 가이드 프로그램 개요 =====
+  * [[egovframework:hyb:guide:디바이스 API 가이드 프로그램 이란?|모바일 디바이스 API 가이드 프로그램 이란?]]
+  * [[egovframework:hyb:guide:디바이스 API 가이드 프로그램 환경설정|모바일 디바이스 API 가이드 프로그램 환경설정]]
+  * [[egovframework:hyb:guide:디바이스 API 가이드 배포패키지 구성|모바일 디바이스 API 가이드 배포패키지 구성]]
+  * [[egovframework:hyb:guide:디바이스 API 가이드 프로그램 테이블 구성정보|모바일 디바이스 API 가이드 프로그램 테이블 구성정보]]
+
+===== 모바일 디바이스 API 가이드 프로그램 상세가이드(Android) =====
+  * [[egovframework:hyb:guide:add:interface|interface]]
+  * [[egovframework:hyb:guide:add:NPKI (드림시큐리티)|NPKI (드림시큐리티)]]
+  * [[egovframework:hyb:guide:add:NPKI (케이사인)|NPKI (케이사인)]]
+  * [[egovframework:hyb:guide:add:NPKI (소프트포럼)|NPKI (소프트포럼)]]
+  * [[egovframework:hyb:guide:add:Accelerator|Accelerator]]
+  * [[egovframework:hyb:guide:add:Compass|Compass]]
+  * [[egovframework:hyb:guide:add:Camera|Camera]]
+  * [[egovframework:hyb:guide:add:Media|Media]]
+  * [[egovframework:hyb:guide:add:File Read/Write|File Read/Write]]
+  * [[egovframework:hyb:guide:add:Device|Device]]
+  * [[egovframework:hyb:guide:add:Vibrator|Vibrator]]
+  * [[egovframework:hyb:guide:add:Network|Network]]
+  * [[egovframework:hyb:guide:add:GPS|GPS]]
+  * [[egovframework:hyb:guide:add:Contact|Contacts]]
+
+===== 모바일 디바이스 API 가이드 프로그램 상세가이드(iOS) =====
+  * [[egovframework:hyb:guide:ios:interface|interface]]
+  * [[egovframework:hyb:guide:ios:NPKI (드림시큐리티)|NPKI (드림시큐리티)]]
+  * [[egovframework:hyb:guide:ios:NPKI (케이사인)|NPKI (케이사인)]]
+  * [[egovframework:hyb:guide:ios:NPKI (소프트포럼)|NPKI (소프트포럼)]]
+  * [[egovframework:hyb:guide:ios:Accelerator|Accelerator]]
+  * [[egovframework:hyb:guide:ios:Compass|Compass]]
+  * [[egovframework:hyb:guide:ios:Camera|Camera]]
+  * [[egovframework:hyb:guide:ios:Media|Media]]
+  * [[egovframework:hyb:guide:ios:File Read/Write|File Read/Write]]
+  * [[egovframework:hyb:guide:ios:Device|Device]]
+  * [[egovframework:hyb:guide:ios:Vibrator|Vibrator]]
+  * [[egovframework:hyb:guide:ios:Network|Network]]
+  * [[egovframework:hyb:guide:ios:GPS|GPS]]
+  * [[egovframework:hyb:guide:ios:Contact|Contacts]]

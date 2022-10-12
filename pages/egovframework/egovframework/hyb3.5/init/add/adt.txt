@@ -1,0 +1,8 @@
+===== ADT Plugin =====
+
+  - **Help > Install New Software** \\ {{:egovframework:hyb:init:add:adt_1.png?700}} \\
+  - Repository 등록 : **ADD**\\  - Name : Android\\  - Location : https://dl-ssl.google.com/android/eclipse/ \\ {{:egovframework:hyb:init:add:adt_2.png?700}} \\
+  - **해당 Repository 선택 > Developper Tools 선택** \\ {{:egovframework:hyb:init:add:adt_3.png?700}}
+  - **라이센스 동의** \\ {{:egovframework:hyb:init:add:adt_4.png?700}} 
+  - **Installing Software > Warning 시, OK** \\ {{:egovframework:hyb:init:add:adt_5.png?500}} {{:egovframework:hyb:init:add:adt_6.png?500}}
+  - **Install 완료 > Restart Now** : Eclipse 재시작 \\ {{:egovframework:hyb:init:add:adt_7.png?700}}

@@ -1,0 +1,19 @@
+====== Xcode 템플릿 설치가이드 ======
+===== 개요 =====
+본 가이드는 iOS에 템플릿을 설치하고 사용 방법을 제공한다.
+
+===== 템플릿 설치 =====
+
+
+==== 템플릿 다운로드 ====
+  - 인터넷 웹브라우저를 통해 eGovFrame 홈페이지(https://www.egovframe.go.kr/)에 접속하여 사이트 상위메뉴를 통해 “다운로드>개발환경"으로 이동한다. \\ \\  {{:egovframework:dev2:개발환경다운로드.jpg|}} \\ \\
+  - 다운받을 개발환경을 선택한다. \\ - Light Version \\ {{:egovframework:dev2:install3-12.png|}} \\ \\ - Full Version \\ {{:egovframework:dev2:install3-11.png|}} \\ \\
+  - 첨부된 파일을 다운로드받아 압축을 해제한다. \\ - Light Version \\ {{:egovframework:dev2:download_light.jpg|}} \\ \\ - Full Version \\ {{:egovframework:dev2:install7.jpg|}}
+    ✔ C: 또는 D:에 설치할 것을 권고한다. \\ \\
+
+==== 템플릿 추가 ====
+
+  - ** Mac의 Finder를 이용하여, Application > Xcode 우 클릭 후 "Show Package Contents" 또는 "패키지 내용 보기" ** \\ {{:egovframework:hyb:hdev:ios:ios_add_template_1.png}}
+  - ** /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/Xcode/Templates 경로로 이동 **
+  - ** 전자정부 디바이스API 실행환경 템플릿 파일[eGovFrame.zip]을 복사한 후 더블 클릭 ** \\ {{:egovframework:hyb:hdev:ios:ios_add_template_3.png}}
+  - ** Xcode 재 시작 후, 프로젝트 생성 메뉴에 EgovFrame > EgovPhoneFapApplication 을 확인한다. ** \\ {{:egovframework:hyb:hdev:ios:ios_add_template_2.png}}

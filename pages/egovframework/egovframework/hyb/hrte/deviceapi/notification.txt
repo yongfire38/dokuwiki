@@ -1,0 +1,140 @@
+===== Notification =====
+
+==== 설명 ====
+  * 진동 및 소리를 통한 알림 관련 API
+
+==== 제약사항 ====
+  * Notification API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+== notification.beep ==
+  * 환경 설정 > 소리 > 알림음 설정에서 지정한 알림을 재생.
+
+=== iOS ===
+
+== notification.beep ==
+  * 비프(beep)음 설정을 무시한다.
+  * iPhone에서는 beep API를 지원하지 않는다
+# PhoneGap에서는 media API를 통한 오디오 파일 재생으로 비프(beep)를 지원한다.
+# 사용자는 비프(beep)음의 파일을 저장해야 한다..
+# 파일은 30초를 넘지 않아야 하며, www/root 밑에 ‘beep.wav’ 이름으로 저장해야 한다.
+
+== notification.vibrate ==
+  * time: 미리 설정한 진동 시간을 무시하고 아이폰 설정을 따른다.
+
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Notification" value="org.apache.cordova.Notification"/>
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.VIBRATE" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/Cordova.plist
+<code xml>
+<key>Plugins</key>
+<dict>
+    <key>Notification</key>
+    <string>CDVNotification</string>
+</dict>
+</code>
+
+==== 관련 함수 ====
+
+=== notification.alert === 
+  * 설정된 경고창(alert) 나 dialog box을 보여준다.
+
+<code>
+navigator.notification.alert(message, alertCallback, [title], [buttonName])
+</code>
+
+  * Quick Example : 
+
+<code>
+// Android / BlackBerry WebWorks (OS 5.0 and higher) / iPhone
+//
+function alertDismissed() {
+    // do something
+}
+
+navigator.notification.alert(
+    'You are the winner!',  // message
+    alertDismissed,         // callback
+    'Game Over',            // title
+    'Done'                  // buttonName
+);
+</code>
+
+
+=== notification.confirm === 
+  * 실행 여부를 선택하는 확인형 대화상자.
+
+<code>
+navigator.notification.confirm(message, confirmCallback, [title], [buttonLabels])
+</code>
+
+  * Quick Example : 
+
+<code>
+// process the confirmation dialog result
+function onConfirm(buttonIndex) {
+    alert('You selected button ' + buttonIndex);
+}
+
+// Show a custom confirmation dialog
+//
+function showConfirm() {
+    navigator.notification.confirm(
+        'You are the winner!',  // message
+        onConfirm,              // callback to invoke with index of button pressed
+        'Game Over',            // title
+        'Restart,Exit'          // buttonLabels
+    );
+}
+</code>
+
+=== notification.beep  === 
+  * 단말기의 비프(beep)음을 재생한다.
+
+<code>
+navigator.notification.beep(times);
+</code>
+
+
+  * Quick Example : 
+
+<code>
+// Beep twice!
+navigator.notification.beep(2);
+</code>
+
+
+=== notification.vibrate === 
+  * 지정한 시간 동안 단말기의 진동을 울리게 한다.
+
+<code>
+navigator.notification.vibrate(milliseconds)
+</code>
+
+  * Quick Example : 
+
+<code>
+// Vibrate for 2.5 seconds
+//
+navigator.notification.vibrate(2500);
+</code>
+
+
+
+
+==== 참고 자료 ====
+  * Phonegap : http://docs.phonegap.com/en/2.9.0/cordova_notification_notification.md.html#Notification
+
+

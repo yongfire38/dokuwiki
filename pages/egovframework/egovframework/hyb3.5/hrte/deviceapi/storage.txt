@@ -1,0 +1,203 @@
+===== Storage =====
+
+==== 설명 ====
+  * 디바이스의 스토리지 접근 API
+
+==== 제약사항 ====
+  * Storage API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+N/A
+
+
+=== iOS ===
+N/A
+
+
+  
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Storage" value="org.apache.cordova.Storage" />
+</code>
+
+  * app/AndroidManifest
+<code xml>
+No permissions are required.
+</code>
+=== iOS === 
+  * App/Supporting Files/config.xml
+<code xml>
+    <feature name="LocalStorage">
+        <param name="ios-package" value="CDVLocalStorage"/>
+    </feature>
+</code>
+
+==== 관련 함수 ====
+
+=== openDatabase === 
+  * 데이터베이스를 제어할 수 있도록 하는 객체.
+
+<code>
+var dbShell = window.openDatabase(database_name, database_version, database_displayname, database_size);
+</code>
+
+  * Quick Example : 
+<code>
+var db = window.openDatabase("test", "1.0", "Test DB", 1000000);
+</code>
+
+
+==== 파라미터 ====
+
+=== name ===
+  * 데이터베이스의 이름.
+
+
+=== version ===
+  * 데이터베이스의 버전 정보.
+
+
+=== display_name ===
+  * 데이터베이스의 표시 이름.
+
+=== size ===
+  * Bytes 단위의 데이터베이스 크기.
+
+
+==== Objects ====
+
+=== Database ===
+  * 사용자가 데이터베이스를 조작할 수 있도록 함수를 제공하는 객체.
+
+
+<code>
+function populateDB(tx) {
+     tx.executeSql('DROP TABLE IF EXISTS DEMO');
+     tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
+     tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
+     tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
+}
+
+function errorCB(err) {
+    alert("Error processing SQL: "+err.code);
+}
+
+function successCB() {
+    alert("success!");
+}
+
+var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+db.transaction(populateDB, errorCB, successCB);
+</code>
+
+=== SQLTransaction ===
+  * 데이터베이스 객체에 SQL 질의를 할 수 있도록 하는 트랜잭션 객체
+
+<code>
+function populateDB(tx) {
+     tx.executeSql('DROP TABLE IF EXISTS DEMO');
+     tx.executeSql('CREATE TABLE IF NOT EXISTS DEMO (id unique, data)');
+     tx.executeSql('INSERT INTO DEMO (id, data) VALUES (1, "First row")');
+     tx.executeSql('INSERT INTO DEMO (id, data) VALUES (2, "Second row")');
+}
+
+function errorCB(err) {
+    alert("Error processing SQL: "+err);
+}
+
+function successCB() {
+    alert("success!");
+}
+
+var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+db.transaction(populateDB, errorCB, successCB);
+</code>
+
+
+=== SQLResultSet ===
+  * SQLTransaction 객체의 executeSql 함수가 수행된 후, SQLResultSet를 통해 결과가 보여지게 된다.
+
+
+<code>
+function queryDB(tx) {
+    tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
+}
+
+function querySuccess(tx, results) {
+console.log("Returned rows = " + results.rows.length);
+// this will be true since it was a select statement and so rowsAffected was 0
+if (!resultSet.rowsAffected) {
+  console.log('No rows affected!');
+  return false;
+}
+// for an insert statement, this property will return the ID of the last inserted row
+console.log("Last inserted row ID = " + results.insertId);
+}
+
+function errorCB(err) {
+    alert("Error processing SQL: "+err.code);
+}
+
+var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+db.transaction(queryDB, errorCB);
+</code>
+
+=== SQLResultSetList  ===
+  *  SQL 질의를 통해, 구해진 레코드(SQLResultSet 객체)의 속성 중 하나이다.
+
+
+<code>
+function queryDB(tx) {
+    tx.executeSql('SELECT * FROM DEMO', [], querySuccess, errorCB);
+}
+
+function querySuccess(tx, results) {
+    var len = results.rows.length;
+    console.log("DEMO table: " + len + " rows found.");
+    for (var i=0; i<len; i++){
+        console.log("Row = " + i + " ID = " + results.rows.item(i).id + " Data =  " + results.rows.item(i).data);
+    }
+}
+
+function errorCB(err) {
+    alert("Error processing SQL: "+err.code);
+}
+
+var db = window.openDatabase("Database", "1.0", "Cordova Demo", 200000);
+db.transaction(queryDB, errorCB);
+</code>
+
+=== SQLError ===
+  * 에러가 발생했을 경우, 에러 정보를 가지고 있는 객체.
+  * Constants  : 
+^유형^
+|SQLError.UNKNOWN_ERR|
+|SQLError.DATABASE_ERR|
+|SQLError.VERSION_ERR|
+|SQLError.TOO_LARGE_ERR|
+|SQLError.QUOTA_ERR|
+|SQLError.SYNTAX_ERR|
+|SQLError.CONSTRAINT_ERR|
+|SQLError.TIMEOUT_ERR|
+
+<code>
+
+</code>
+
+=== localStorage ===
+  * W3C Storage interface 접근을 지원한다. 
+
+<code>
+var storage = window.localStorage;
+</code>
+
+
+
+
+==== 참고 자료 ====
+  * Phonegap : http://docs.phonegap.com/en/3.3.0/cordova_notification_notification.md.html#Notification
+

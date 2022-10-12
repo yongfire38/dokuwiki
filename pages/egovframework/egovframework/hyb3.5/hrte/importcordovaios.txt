@@ -1,0 +1,38 @@
+====== 실행환경 프로젝트로 Cordova Core 라이브러리 프로젝트 Import - iOS 아이폰  ======
+
+===== 개요 =====
+XCode 실행환경 프로젝트에서 Cordova Core Library를 포함시키는 방법은 2가지로\\
+컴파일된 static library형태(.a확장자)로 포함하거나 라이브러리 프로젝트를 참조 형태로 포함하여 빌드할수 있다.\\
+Apache Cordova Core 프로젝트를 XCode에 포함하여 실행환경이 빌드될때 포함되어 같이 빌드 하는 방법을 확인한다.\\
+\\
+\\
+===== 라이브러리 프로젝트 Import  =====
+iOS 아이폰 DeviceAPI 실행환경에는 Cordova Project가 다음과 같이 포함되어 있다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaios:import_ios_lib_1.png|}}\\
+\\
+파인더에서 CordovaLib.xcodeproj 파일를 XCode 프로젝트에 끌어다 놓는다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaios:import_ios_lib_2.png|}}\\
+\\
+프로젝트에 포함되면 다음과 같이 추가된 결과를 확인할수 있다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaios:import_ios_lib_3.png|}}\\
+\\
+\\
+===== 프로젝트 설정  =====
+라이브러리 프로젝트를 추가한후 몇가지 설정을 맞춰야 정상적으로 사용이 가능하다.\\
+프로젝트명 > Build Phases > Target Dependencies항목으로 이동한다.\\
+(+) 버튼을 눌러서 Target을 추가한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaios:import_ios_lib_4.png|}}\\
+\\
+팝업창에서 프로젝트명 > CordovaLib > CordovaLib를 선택하고 Add로 추가한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaios:import_ios_lib_5.png|}}\\
+\\
+Build Phases > Link Binary With Libraries항목으로 이동한후 (+)버튼을 누른다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaios:import_ios_lib_6.png|}}\\
+\\
+팝업창에서 Workspace > libCordova.a를 선택한후 Add로 추가한다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaios:import_ios_lib_7.png|}}\\
+\\
+정상적으로 적용된 결과는 다음과 같다.\\
+{{:egovframework:hyb3.5:hrte:importcordovaios:import_ios_lib_8.png|}}\\
+\\
+\\

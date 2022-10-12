@@ -1,0 +1,605 @@
+====== Device Info 디바이스API 가이드 프로그램 ======
+
+===== 개요 =====
+
+Device Info 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현된 전자정부 디바이스 API에 대한 가이드 앱으로써, 
+모바일 스마트 디바이스의 메타 정보를 JavaScript 기반으로 구성 된 DeviceInfoAPI 를 통하여 조회 할 수 있도록 지원한다. \\
+또한, 전자정부 표준프레임워크 기반의 웹 서버 어플리케이션과 연계하여 디바이스 내 메타 정보를 조회하여 서버에 전송하고 조회할수 있는 기능으로 구성되어 있다.
+
+==== 특징 ====
+본 가이드 프로그램 에서는 디바이스의 메타 정보 조회 기능의 활용을 가이드 할 수 있도록 **디바이스 정보 조회하기**, **디바이스 정보 서버에 전송하기**, 
+**디바이스 정보 목록을 서버로부터 수신하기** 를 제공하고 있다. \\
+
+==== 기능흐름도 ====
+{{:egovframework:hyb:guide:add:deviceinfo기능흐름도.png?700|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:add:device시퀀스.png|}}
+
+==== 전제 조건 ====
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경|전자정부표준프레임워크 개발환경2.5, Android SDK Revision 18(적용빌드번호 : GINGERBREAD EL21)|
+|서버 사이드 개발 환경|전자정부표준프레임워크 개발환경2.5|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스 |갤럭시S2 |
+|테스트 플랫폼 |Android 2.2|
+|추가 라이브러리 적용|N/A|
+
+==== 제약사항 ====
+
+^           구분            ^             내용             ^
+|지원 디바이스 및 플랫폼|N/A|
+|크로스 도메인 사용|폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Res/xml/config.xml에서 <access origin="" />에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.|
+|라이선스|N/A|
+
+===== 설명 ===== 
+DeviceInfo 디바이스API 가이드 프로그램은 크게 **디바이스 정보 조회하기**, **디바이스 정보 서버에 전송하기**, **디바이스 정보 목록을 서버로부터 수신하기**  \\
+기능으로 구성되어 있다.(관련기능 부분참조)
+
+=== 클래스 다이어그램 ===
+{{:egovframework:hyb:guide:add:deviceinfo클래스다이어그램.png?1024|}}
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Activity|kr.go.egovframework.hyb.DeviceInfoapi.DeviceInfoAPIGuide_AndroidActivity|DeviceInfoAPI 가이드 프로그램 Activity Class|
+|CSS|assets/www/css/egovframwork/mbl/hyb/DeviceInfoAPI.css |DeviceInfoAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |assets/www/images/egovframwork/mbl/hyb/ |DeviceInfoAPI 가이드 프로그램 주요 Image 폴더|
+|JS |assets/www/js/egovframwork/mbl/hyb/DeviceInfoAPI.js |DeviceInfoAPI 가이드 프로그램 주요 JavaScript|
+|JS |assets/www/js/egovframwork/mbl/hyb/messages_ko.js |Validate 메세지 처리 JavaScript|
+|RES |assets/www/res/ |DeviceInfoAPI 가이드 프로그램 주요 Resource 폴더|
+|XML |AndroidManiFest.xml |안드로이드 어플리케이션 설정 XML|
+|HTML|assets/www/DeviceInfoAPI.html|DeviceInfoAPI 메인 페이지|
+|HTML|assets/www/intro.html|DeviceInfoAPI Intro 페이지|
+|HTML|assets/www/license.html|DeviceInfoAPI 라이센스 페이지|
+|HTML|assets/www/overview.html|DeviceInfoAPI 기능설명 페이지|
+
+=== 활용 API ===
+
+== device ==
+  * 모바일 디바이스의 하드웨어 및 소프트웨어 관련 메타 정보를 조회한다.
+
+
+<code>
+	var name = device.name;
+	var cordova= device.cordova;
+	var platform = device.platform;
+	var uuid = device.uuid;
+	var version = device.version;
+</code>
+
+
+^변수^설명^비고^
+|name|디바이스에 셋팅된 명칭을 반환한다.| |
+|cordova|어플리케이션에서 사용된 폰갭 버전을 반환한다.| |
+|platform|모바일 디바이스의 플랫폼 정보를 반환한다.| |
+|uuid|디바이스 고유의 UUID를 반환한다.| |
+|version|디바이스의 플랫폼 버전을 반환한다.| |
+
+== Event[batterycritical] == 
+  * 배터리 상태가 Critical 레벨에 도달 했을때 호출되는 콜백함수 정의
+<code>
+window.addEventListener("batterycritical", yourCallbackFunction, false);
+</code>
+
+== Event[batterylow] == 
+  * 배터리 상태가 Low 레벨에 도달 했을때 호출되는 콜백함수 정의
+<code>
+window.addEventListener("batterylow", yourCallbackFunction, false);
+</code>
+
+== Event[batterystatus] == 
+  * 배터리 상태에 변화가 감지되면 호출되는 콜백함수 정의
+<code>
+window.addEventListener("batterystatus", yourCallbackFunction, false);
+</code>
+
+== 전자정부 Custom Plug-In StorageInfo ==
+  * 모바일 디바이스의 스토리지 용량을 리턴한다.
+
+
+<code>
+var StorageInfo = {
+    totalFileSystemSize: function(success, fail, types) {
+    	
+        return Cordova.exec(success, fail, "StorageInfoPlugin", "fileSystemSize", types);
+    }
+}
+</code>
+
+== 전자정부 Custom Plug-In DeviceNumber ==
+  * 모바일 디바이스의 전화번호를 리턴한다.
+
+<code>
+var DeviceNumber = {
+    getDeviceNumber: function(success, fail, types) {
+    	
+        return Cordova.exec(success, fail, "DeviceNumberPlugin", "deviceNumber", types);
+    }
+}</code>
+
+==== Server Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.hyb.add.dvc.web.EgovDeviceAndroidAPIController.java|DeviceInfoAPI 가이드 프로그램 Controller Class|
+|Service|egovframework.hyb.add.dvc.service.EgovDeviceAndroidAPIService.java|DeviceInfoAPI 가이드 프로그램  Service Class|
+|ServiceImpl|egovframework.hyb.add.dvc.service.impl.EgovDeviceAndroidAPIServiceImpl.java|DeviceInfoAPI 가이드 프로그램  ServiceImpl Class|
+|VO|egovframework.hyb.add.dvc.service.DeviceAndroidAPIVO.java|DeviceInfoAPI 가이드 프로그램 VO Class|
+|DAO|egovframework.hyb.add.dvc.service.impl.DeviceAndroidAPIDAO.java|DeviceInfoAPI 가이드 프로그램 Dao Class|
+|QUERY XML|resources/egovframework/sqlmap/hyb/add/dvc/EgovDeviceAndroidAPIGuide_SQL_xxx.xml|DeviceInfoAPI 가이드 프로그램 QUERY XML|
+
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|디바이스|Device|디바이스 정보 관리|
+
+
+
+=== 테이블 정의서 ===
+
+   * Device
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|TELNO|전화번호|VARCHAR|20|Null|
+|4|STRGE_INFO|스토리지정보|VARCHAR|40|Null|
+|5|LANG|언어|VARCHAR|15|Null|
+|6|NTWRK_DEVICE_INFO|네트워크디바이스정보|VARCHAR|20|Null|
+|7|PG_VER|폰갭버전|VARCHAR|40|Null|
+|8|DEVICE_NM|디바이스명|VARCHAR|200|Null|
+|9|USEYN|활성화여부|CHAR|1|Null|
+
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+===== 환경설정 ===== 
+
+DeviceInfo 디바이스API 가이드 프로그램에서 제공하는 모바일 디바이스의 메타 정보 조회 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== res/xml/config.xml ===
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API를 사용하기 위한 Phonegap Plugin 클래스-->
+    <plugin name="EgovInterfacePlugin" value="kr.go.egovframework.hyb.plugin.EgovInterfacePlugin" />
+</code>
+
+=== res/values/serverinfo.xml ===
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+	<string name="SERVER_URL">http://192.168.100.222:8080/DeviceAPIGuideTotal_Web_V1.7.1</string>
+    </resources>
+</code>
+
+=== AndroidManifest.xml ===
+
+<code xml>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> 
+</code>
+
+
+==== Server Application ====
+
+=== context-properties.xml ===
+  * 업로드 된 파일 저장 위치
+
+<code xml>
+<entry key="fileStorePath" value="파일_저장_경로"/>
+</code>
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/add/dvc/EgovDeviceAndroidAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+===== 관련기능 ===== 
+DeviceInfo 디바이스API 가이드 프로그램은 크게 디바이스 내 메타 정보 조회 기능과 조회된 메타 정보를 서버에 전송하고 조회할수 있는 기능으로 구성되어 있다.
+
+==== 디바이스 정보 조회하기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+
+
+=== 관련 코드 ===
+
+== 디바이스 정보 VO ==
+<code>
+/** 디바이스 정보  VO */
+var deviceInfoVO = {
+    sn : "",
+    uuid : "",
+    os : "",
+    telno : "",
+    strgeInfo : "",
+    ntwrkDeviceInfo : "",
+    pgVer : "",
+    deviceNm : "",
+    useyn : ""
+}
+
+</code>
+
+== 디바이스 정보 화면 표시 ==
+<code>
+function fn_egov_load_deviceInfo() {
+    deviceInfoVO.ntwrkDeviceInfo = fn_egov_get_networkInfo();
+
+    $('.deviceInfo:eq(0)').html(device.platform + " " + device.version);
+    $('.deviceInfo:eq(1)').html(device.uuid);
+    $('.deviceInfo:eq(2)').html(device.cordova);    
+    DeviceNumber.getDeviceNumber(fn_egov_deviceNumber_success, fn_egov_fail, []);
+    $('.deviceInfo:eq(4)').html(deviceInfoVO.ntwrkDeviceInfo);
+    StorageInfo.totalFileSystemSize(fn_egov_totalSpace_success, fn_egov_fail, []);
+} 
+</code>
+
+== 네트워크 정보 조회 ==
+<code>
+function fn_egov_get_networkInfo() {
+    var networkState = navigator.network.connection.type;
+    
+    var states = {};
+    states[Connection.UNKNOWN]  = 'Unknown connection';
+    states[Connection.ETHERNET] = 'Ethernet connection';
+    states[Connection.WIFI]     = 'WiFi connection';
+    states[Connection.CELL_2G]  = 'Cell 2G connection';
+    states[Connection.CELL_3G]  = 'Cell 3G connection';
+    states[Connection.CELL_4G]  = 'Cell 4G connection';
+    states[Connection.NONE]     = 'No network connection';
+    
+    return states[networkState];
+    
+}
+</code>
+
+== 연락처 정보 조회 ==
+<code>
+// 디바이스 전화번호 조회에 대한 성공 콜백 함수
+function fn_egov_deviceNumber_success(result){
+	
+    console.log("DeviceAPIGuide totalFileSystemSize success");
+    deviceInfoVO.telno = result;
+    $('.deviceInfo:eq(3)').html(deviceInfoVO.telno);
+    
+    return result.telno;
+} 
+</code>
+
+== 메모리 정보 조회 ==
+<code>
+// 디바이스 전체 메모리 조회에 대한 성공 콜백 함수
+function fn_egov_totalSpace_success(result){
+	
+    console.log("DeviceAPIGuide totalFileSystemSize success");
+    deviceInfoVO.strgeInfo = result;
+    $('.deviceInfo:eq(5)').html(deviceInfoVO.strgeInfo);
+    
+    return result.totalSpace;
+} 
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+^디바이스 정보조회 화면^
+|{{:egovframework:hyb:guide:add:디바이스정보조회.jpg?320|}}|
+
+OS: 플랫폼 정보 및 버전 \\
+UUID : 디바이스의 고유 아이디 \\
+PhoneGap Version : DeviceInfo 가이드 프로그램에 적용된 폰갭 버전 \\
+Contacts : 디바이스 전화번호 \\
+Connection Type : 디바이스의 네트워크 상태 정보 \\
+Total Memory : 디바이스의 총 메모리 \\
+
+==== 디바이스 정보 서버에 전송하기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+  * 디바이스 정보의 서버 전송은 InterfaceAPI를 이용한다.
+
+=== 관련 코드 ===
+
+== 디바이스 정보 등록==
+<code>
+function fn_egov_regist_deviceInfo() {
+    
+	useYn = "Y";
+	
+	var url = "/dvc/xml/addDeviceInfo.do"; 
+	var accept_type = "json";
+	
+    var params = {
+    	uuid :  device.uuid, 
+    	os : device.platform + " " + device.version,
+        telno :  String(deviceInfoVO.telno), 
+        strgeInfo : deviceInfoVO.strgeInfo,
+        ntwrkDeviceInfo :  deviceInfoVO.ntwrkDeviceInfo , 
+        pgVer : device.cordova};
+        
+	// send the data
+	egovHyb.post(url, accept_type, params, function(jsondata) {
+		var data = JSON.parse(jsondata);
+		
+		if(data.useYn == "OK"){
+			//fn_goDeviceInfoListXml();
+		}else{
+			$("#alert_dialog").click( function() {
+				jAlert('데이터 전송 중 오류가 발생 했습니다.', '전송 오류', 'c');
+				});
+		}			
+		
+	});
+	
+	console.log("DeviceAPIGuide fn_egov_regist_deviceInfo request Completed");
+    
+	
+}
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|디바이스 정보 등록|/dvc/addDeviceInfo.do|insertDeviceInfo|"deviceaddAPIDAO.insertDeviceInfo"|
+
+정보 업로드: 디바이스 정보를 서버로 업로드 한다.
+
+==== 디바이스 정보 목록 조회하기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+
+=== 관련 코드 ===
+
+== 디바이스 정보 목록 조회 ==
+
+<code>
+function fn_egov_move_deviceInfoList() {
+	var url = "/dvc/xml/deviceInfoList.do";
+	var accept_type = "xml";
+	var params = {uuid : device.uuid };
+	
+	// get the data from server
+	window.plugins.EgovInterface.get(url,accept_type, params, function(xmldata) {
+		var list_html = "";
+		
+		$(xmldata).find("deviceInfoList").each(function(){
+			var sn = $(this).find("sn").text();
+            var uuid = $(this).find("uuid").text();
+            var ntwrkDeviceInfo = $(this).find("ntwrkDeviceInfo").text();
+            var os = $(this).find("os").text();
+
+			list_html += "<li><a href='javascript:fn_egov_request_deviceInfoDetail(" + sn + ")'><h3>UUID : " + uuid + "</h3>";
+			list_html += "<p><strong>Network Connection Type : " + ntwrkDeviceInfo + "</strong></p>";
+			list_html += "<p>OS : " + os + "</p></a></li>";
+        });
+		
+		console.log("DeviceAPIGuide fn_egov_move_deviceInfoList request Completed");
+		
+		var theList = $('#theList');
+		theList.html(list_html);
+		$.mobile.changePage("#deviceInfoList", "slide", false, false);
+		theList.listview("refresh");
+		
+	});	
+}
+</code>
+
+
+== 디바이스 정보 상세 조회 ==
+
+<code>
+//서버에 저장된 디바이스 정보의 상세 저보를 요청한다.
+function fn_egov_request_deviceInfoDetail(data){
+	var params = {sn : String(data)};
+	    
+	var url = "/dvc/xml/deviceInfo.do";
+	var accept_type = "xml";
+	
+	// get the data from server
+	window.plugins.EgovInterface.get(url,accept_type, params, function(xmldata) {
+		
+		deviceInfoVO.sn = $(xmldata).find("sn").text();
+		deviceInfoVO.uuid = $(xmldata).find("uuid").text();
+		deviceInfoVO.os = $(xmldata).find("os").text();
+		deviceInfoVO.telno = $(xmldata).find("telno").text();
+		deviceInfoVO.strgeInfo = $(xmldata).find("strgeInfo").text();
+		deviceInfoVO.ntwrkDeviceInfo = $(xmldata).find("ntwrkDeviceInfo").text();
+		deviceInfoVO.pgVer = $(xmldata).find("pgVer").text();
+		deviceInfoVO.deviceNm = $(xmldata).find("deviceNm").text();
+				
+	    $('.deviceInfo:eq(6)').html(deviceInfoVO.os);
+	    $('.deviceInfo:eq(7)').html(deviceInfoVO.uuid);
+	    $('.deviceInfo:eq(8)').html(deviceInfoVO.pgVer);
+	    $('.deviceInfo:eq(9)').html(deviceInfoVO.telno);
+	    $('.deviceInfo:eq(10)').html(deviceInfoVO.ntwrkDeviceInfo);
+	    $('.deviceInfo:eq(11)').html(deviceInfoVO.strgeInfo);
+		$("#btnDelDeviceInfo").attr("href","javascript:fn_egov_confirm_delete_deviceInfo(" + deviceInfoVO.sn + ");");
+				
+	});
+
+	console.log("DeviceAPIGuide fn_egov_request_deviceInfoDetail request Completed");
+		
+    $.mobile.changePage("#deviceInfoDetail", "slide", false, false);
+}
+</code>
+
+<code>
+// 서버에서 반환한 디바이스 정보 리스트를 화면에 출력한다.
+function fn_egov_move_deviceInfoList() {
+	var url = "/dvc/xml/deviceInfoList.do";
+	var accept_type = "xml";
+	var params = {uuid : device.uuid };
+	
+	// get the data from server
+	window.plugins.EgovInterface.get(url,accept_type, params, function(xmldata) {
+		var list_html = "";
+		
+		$(xmldata).find("deviceInfoList").each(function(){
+			var sn = $(this).find("sn").text();
+            var uuid = $(this).find("uuid").text();
+            var ntwrkDeviceInfo = $(this).find("ntwrkDeviceInfo").text();
+            var os = $(this).find("os").text();
+
+			list_html += "<li><a href='javascript:fn_egov_request_deviceInfoDetail(" + sn + ")'><h3>UUID : " + uuid + "</h3>";
+			list_html += "<p><strong>Network Connection Type : " + ntwrkDeviceInfo + "</strong></p>";
+			list_html += "<p>OS : " + os + "</p></a></li>";
+        });
+		
+		console.log("DeviceAPIGuide fn_egov_move_deviceInfoList request Completed");
+		
+		var theList = $('#theList');
+		theList.html(list_html);
+		$.mobile.changePage("#deviceInfoList", "slide", false, false);
+		theList.listview("refresh");
+		
+	});	
+}
+</code>
+
+== 디바이스 정보 삭제 ==
+<code>
+function fn_egov_confirm_delete_deviceInfo(sn){
+	jConfirm('Device 정보를 삭제 하시겠습니까??', '알림', 'c', function(r){
+             if(r == true){
+			 fn_egov_delete_deviceInfo(sn);
+             }else{
+             
+             }
+             
+             });	
+	
+}
+</code>
+
+<code>
+//서버에 저장된 디바이스 정보 삭제를 요청한다.
+function fn_egov_delete_deviceInfo(data){
+	var url = "/dvc/xml/withdrawal.do";
+	var accept_type = "json";
+	
+	var params = {sn : String(data)};
+	// send the data
+	egovHyb.post(url, accept_type, params, function(jsondata) {
+		var data = JSON.parse(jsondata);
+		
+		if(data.useYn == "OK"){
+			$.mobile.changePage("#deviceInfo", { transition: "slide", reverse: true });
+		}else{
+			$("#alert_dialog").click( function() {
+				jAlert('데이터 삭제 중 오류가 발생 했습니다.', '삭제 오류', 'c');
+				});
+		}
+		
+	});
+	
+	console.log("DeviceAPIGuide fn_egov_delete_deviceInfo request Completed");
+	
+}
+
+</code>
+=== 관련 화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|디바이스 정보 목록 조회|/dvc/deviceInfoList.do|selectDeviceList|"deviceaddAPIDAO.selectDeviceInfoList"|
+|디바이스 정보 상세 조회|/dvc/deviceInfo.do|selectDeviceInfo|"deviceaddAPIDAO.selectDeviceInfo"|
+|디바이스 정보 삭제|/dvc/deleteDeviceInfo.do|deleteDeviceInfo|"deviceaddAPIDAO.deleteDeviceInfo"|
+
+^디바이스 정보목록 조회 화면^디바이스 상세정보 조회 화면^
+|{{:egovframework:hyb:guide:add:디바이스정보목록.jpg?320|}}|{{:egovframework:hyb:guide:add:디바이스상세정보.jpg?320|}}|
+
+ 디바이스 정보 조회 : 디바이스 정보 조회를 요청한다.\\
+ 목록 : 디바이스 정보 목록 페이지를 호출한다.\\
+ 삭제 : 디바이스 정보를 삭제한다.
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+
+=== DevicdInfoAPI Device Applicaton 컴파일 방법 === 
+
+  * 프로젝트 선택 > 오른쪽 클릭 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일1.png?740|}}
+
+  * 상단의 메뉴 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일2.png?740|}}
+
+ 
+  * 실행할 타겟 선택 > 에뮬레이터, 디바이스(디버깅모드)
+
+{{:egovframework:hyb:guide:add:디바이스컴파일.png?740|}}
+
+  * 에뮬레이터를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:deviceinfo애뮬.png?700|}}
+
+  * 디바이스를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:deviceinfo인트로.png|}}
+
+=== DeviceInfoAPI Server Applicaton 컴파일 방법 ===  
+
+
+  * DeviceInfoAPI 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+{{:egovframework:hyb:guide:add:서버실행결과_콘솔.png?840|}}
+
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+ 
+
+console.log의 작성 방법의 예시는 다음과 같다.
+<code>
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    ...
+}
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+ {{:egovframework:hyb:guide:add:FileReadWriteconsolelog.png|}}
+
+
+
+
+
+DeviceInfo 디바이스 API 가이드 프로그램 에서는 디버깅을 위하여 다음과 같이 콘솔 정보를 출력한다.
+
+^디버그 코드^디버깅 내용^
+|DeviceAPIGuide fn_egov_onBatteryStatus Success	|배터리 정보 업데이트 성공 콜백함수 호출 시 출력	|
+|DeviceAPIGuide fn_egov_onBatteryLow Success	|배터리 상태 낮은 경우의 콜백함수 호출 시 출력	|
+|Battery Level Critical " + info.level + "%\nRecharge Soon!	|배터리 경고 상태 콜백함수 호출 시 출력	|
+|DeviceAPIGuide totalFileSystemSize success	|전체 메모리 조회에 대한 성공 콜백 함수 호출 시 출력	|
+|DeviceAPIGuide fn_egov_deviceNumber success	|디바이스 전화번호 조회에 대한 성공 콜백 함수 호출 시 출력	|
+|DeviceAPIGuide fn_egov_fail" + error	|	Custom Plug-In 조회에 실패 콜백 함수 호출 시 출력	|
+|DeviceAPIGuide fn_egov_regist_deviceInfo request Completed	|디바이스 정보 서버 전송 성공	|
+|DeviceAPIGuide fn_egov_move_deviceInfoList request Completed	|서버의 디바이스 정보 리스트 전송 성공	|
+|DeviceAPIGuide fn_egov_request_deviceInfoDetail request Completed	|서버의 디바이스 상세정보 전송 성공	|
+|DeviceAPIGuide fn_egov_delete_deviceInfo request Completed	|서버의 디바이스 정보 삭제 성공	|
+
+==== 배포 ====
+DeviceInfo 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=522&menu=3&submenu=9|Click]] \\
+
+===== 참고자료 ===== 
+* UX/UI 라이브러리 : [[http://jquerymobile.com/|jQuery Mobile]] \\
+* Hybrid : [[http://www.phonegap.com/|PhoneGap]] \\

@@ -1,0 +1,75 @@
+====== 전자정부 디바이스 API ======
+
+===== 시작하기 =====
+
+  * [[egovframework:hyb:init:add:getting_started|Android 시작하기]]
+  * [[egovframework:hyb:init:ios:getting_started|iOS 시작하기]]
+
+===== 실행환경 =====
+
+  * [[egovframework:hyb:hrte:전자정부_디바이스api_실행환경_소개|전자정부 디바이스API 실행환경 소개]]
+
+==== 구성요소 ====
+
+  * [[egovframework:hyb:hrte:sdk|SDK]]
+  * [[egovframework:hyb:hrte:Phonegap|Phonegap]]
+  * [[egovframework:hyb:hrte:DeviceAPI|DeviceAPI]]
+  * [[egovframework:hyb:hrte:NPKIAPI|NPKIAPI]]
+  * [[egovframework:hyb:hrte:EgovInterfaceAPI|EgovInterfaceAPI]]
+  * [[egovframework:hyb:hrte:웹 리소스|웹 리소스]]
+  * [[egovframework:hyb:hrte:Device API Plugin|Device API Plugin]]
+
+==== 참고사항 ====
+
+  * [[egovframework:hyb:hrte:Support Features|Support Features]]
+  * [[egovframework:hyb:hrte:참고사항|참고사항]]
+
+==== 실행환경 예제 ====
+
+  * [[egovframework:hyb:hrte:실행환경 예제|실행환경 예제]]
+
+===== 디바이스 API 가이드 프로그램 =====
+
+  * [[egovframework:hyb:guide:디바이스_api_가이드_프로그램_시작하기_getting_started|시작하기]]
+  * [[egovframework:hyb:guide:디바이스_api_가이드_프로그램_이란|가이드 프로그램 소개]]
+
+==== 가이드 프로그램 상세 ====
+  * [[egovframework:hyb:guide:디바이스_api_가이드_프로그램_환경설정|환경설정]]
+  * [[egovframework:hyb:guide:디바이스_api_가이드_프로그램_테이블_구성정보|테이블 구성정보]]
+  * [[egovframework:hyb:guide:디바이스_api_가이드_배포패키지_구성|배포패키지 구성]]
+
+==== 가이드 프로그램 종류 ====
+
+=== Android ===
+
+  * [[egovframework:hyb:guide:add:accelerator | Accelerator 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:camera | Camera 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:compass | Compass 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:contact | Contact 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:device | Device 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:file_read_write | File ReadWrite 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:gps | GPS 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:interface | Interface 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:media | Media 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:network | Network 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:npki_드림시큐리티 | NPKI 드림시큐리티 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:npki_소프트포럼 | NPKI 소프트포럼 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:npki_케이사인 | NPKI 케이사인 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:add:vibrator | Vibrator 가이드 프로그램 ]]
+
+=== iOS ===
+
+  * [[egovframework:hyb:guide:ios:accelerator | Accelerator 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:camera | Camera 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:compass | Compass 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:contact | Contact 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:device | Device 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:file_read_write | File ReadWrite 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:gps | GPS 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:interface | Interface 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:media | Media 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:network | Network 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:npki_드림시큐리티 | NPKI 드림시큐리티 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:npki_소프트포럼 | NPKI 소프트포럼 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:npki_케이사인 | NPKI 케이사인 가이드 프로그램 ]]
+  * [[egovframework:hyb:guide:ios:vibrator | Vibrator 가이드 프로그램 ]]

@@ -1,0 +1,672 @@
+====== Camera 디바이스API 가이드 프로그램 ======
+
+
+
+===== 개요 =====
+
+Camera 가이드 프로그램은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현된 전자정부 디바이스 API에 대한 가이드 앱으로써, 모바일 스마트 디바이스의 Camera 관련 기능을 JavaScript 기반으로 구성 된 Camera DeviceAPI 를 통하여 조회 할 수 있도록 지원한다. \\
+또한, 전자정부 표준프레임워크 기반의 웹 서버 어플리케이션과 연계하여 디바이스 내 Camera 촬영 기능과 갤러리 내에 저장된 사진을 이용하여 필요한 정보를 서버에 전송하고 조회할수 있는 기능으로 구성되어 있다.
+
+==== 특징 ====
+본 가이드 프로그램 에서는 Camera 기능을 가이드 할 수 있도록 **촬영 사진을 서버에 전송하기**, **갤러리의 사진을 서버에 전송하기**, **사진 목록을 서버로부터 수신하기** 를 제공하고 있다. \\
+
+
+
+==== 기능흐름도 ==== 
+{{:egovframework:hyb:guide:add:카메라기능흐름도.png?800}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:add:카메라_기능시퀀스.png|}}
+
+==== 전제 조건 ====
+
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경|전자정부표준프레임워크 개발환경2.5, Android SDK Revision 18(적용빌드번호 : GINGERBREAD EL21)|
+|서버 사이드 개발 환경|전자정부표준프레임워크 개발환경2.5|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스 |갤럭시S2 |
+|테스트 플랫폼 |Android 2.2|
+|추가 라이브러리 적용|N/A |
+
+==== 제약사항 ====
+
+^           구분            ^             내용             ^
+|크로스 도메인 사용|폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Res/xml/config.xml에서 <access origin="" />에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.|
+
+
+===== 설명 ===== 
+Camera 디바이스API 가이드 프로그램은 크게 **촬영 사진을 서버에 전송하기**, **갤러리의 사진을 서버에 전송하기**, **사진 목록을 서버로부터 수신하기** \\
+기능으로 구성되어 있다.(관련기능 부분참조)
+
+=== 클래스 다이어그램 ===
+{{:egovframework:hyb:guide:add:class_cmr.png}}
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Activity|kr.go.egovframework.hyb.cameraapi.CameraAPIGuide_AndroidActivity|CameraAPI 가이드 프로그램 Activity Class|
+|CSS|assets/www/css/egovframwork/mbl/hyb/CameraAPI.css |CameraAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |assets/www/images/egovframwork/mbl/hyb/ |CameraAPI 가이드 프로그램 주요 Image 폴더|
+|JS |assets/www/js/egovframwork/mbl/hyb/CameraAPI.js |CameraAPI 가이드 프로그램 주요 JavaScript|
+|JS |assets/www/js/egovframwork/mbl/hyb/messages_ko.js |Validate 메세지 처리 JavaScript|
+|RES |assets/www/res/ |CameraAPI 가이드 프로그램 주요 Resource 폴더|
+|XML |AndroidManiFest.xml |안드로이드 어플리케이션 설정 XML|
+|HTML|assets/www/CameraAPI.html|CameraAPI 메인 페이지|
+|HTML|assets/www/Intro.html|CameraAPI Intro 페이지|
+|HTML|assets/www/license.html|CameraAPI 라이센스 페이지|
+|HTML|assets/www/overview.html|CameraAPI 기능설명 페이지|
+
+=== 활용 API ===
+
+== camera.getPicture ==
+  * 카메라로 사진을 찍고 찍은 사진을 가져오거나, 단말기의 앨범에서 사진을 선택해서 가져온다. \\
+  * base64로 인코딩된 이미지를 가져오거나 사진 파일의 경로을 통해 사진을 가져온다. \\
+
+<code>
+navigator.camera.getPicture( cameraSuccess, cameraError, [ cameraOptions ] );
+</code>
+
+== cameraOption == 
+
+<code>
+var cameraOption = {};
+  cameraOption  = {
+      quality: 50,
+      destinationType : Camera.DestinationType.FILE_URI,
+      sourceType : Camera.PictureSourceType.CAMERA,
+      targetWidth: 200,
+      targetHeight: 200
+  };
+</code>
+
+^Option^설명^비고^
+|quality|이미지의 품질(해상도)를 백분율로 정의한다.| |
+|destinationType|결과 값의 포맷을 정의한다.|navigator.camera.DestinationType|
+|sourceType|포토 라이브러리, 카메라에서 찍은 사진 등 선택할 소스를 설정한다.|nagivator.camera.PictureSourceType|
+|allowEdit|이미지 선택 전, 이미지 편집 여부.| |
+|encodingType|이미지 파일의 인코딩 종류를 정의한다.|navigator.camera.EncodingType|
+|targetWidth|이미지의 너비(pixel)를 설정한다. 비율은 고정.| |
+|targetHeight|이미지의 높이(pixel)를 설정한다. 비율은 고정.| |
+|mediaType|pictureSourceType이 PHOTOLIBRARY 또는 SAVEDPHOTOALBUM일 때, 미디어의 타입을 설정한다. |nagivator.camera.MediaType|
+|correctOrientation |이미지를 담는동안 이미지 회전 여부.| |
+|saveToPhotoAlbum |이미지를 담은 후, 단말기 저장 여부.| |
+
+== FileTransfer [upload] == 
+  * 서버에 파일을 업로드할 수 있도록 하는 파일 전송 객체.
+<code>
+var options = new FileUploadOptions();
+options.fileKey="file";
+options.fileName=fileURI.substr(fileURI.lastIndexOf('/')+1);
+options.mimeType="text/plain";
+
+var params = new Object();
+params.value1 = "test";
+params.value2 = "param";
+
+options.params = params;
+
+var ft = new FileTransfer();
+ft.upload(fileURI, "http://some.server.com/upload.php", transferSuccess, transferFail, options);
+</code>
+
+== FileUploadOptions == 
+  * 파일 업로드시, 전달할 매개변수를 정의하는 업로드 속성객체
+
+^Option^설명^비고^
+|fileKey|업로드할 파일의 변수명|설정하지 않으면 “file”로 정의된다.|
+|fileName|서버에 저장될 파일의 변수명.|설정하지 않으면 "image.jpg“ 로 정의된다.|
+|mimeType|데이터를 업로드시, mimeType을 설정한다.|설정하지 않으면 "image/jpeg“ 로 정의된다.|
+|params|서버에 추가로 전달할 매개변수.| |
+|chunkedMode|대형 스트림 모드 여부.|설정하지 않으면 "true“ 로 정의된다.|
+
+==== Server Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.hyb.add.cmr.web.EgovCameraAndroidAPIController.java|CameraAPI 가이드 프로그램 Controller Class|
+|Service|egovframework.hyb.add.cmr.service.EgovCameraAndroidAPIService.java|CameraAPI 가이드 프로그램  Service Class|
+|ServiceImpl|egovframework.hyb.add.cmr.service.impl.EgovCameraAndroidAPIServiceImpl.java|CameraAPI 가이드 프로그램  ServiceImpl Class|
+|VO|egovframework.hyb.add.cmr.service.CameraAndroidAPIDefaultVO.java|CameraAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.add.cmr.service.CameraAndroidAPIFileVO.java|CameraAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.add.cmr.service.CameraAndroidAPIVO.java|CameraAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.add.cmr.service.CameraAndroidAPIXmlVO.java|CameraAPI 가이드 프로그램 XML 관련 VO Class|
+|DAO|egovframework.hyb.add.cmr.service.impl.CameraAndroidAPIDAO.java|CameraAPI 가이드 프로그램 Dao Class|
+|Util|egovframework.hyb.add.cmr.service.impl.EgovCameraAndroidFileMngUtil.java|CameraAPI 가이드 프로그램 Util Class|
+|QUERY XML|resources/egovframework/sqlmap/hyb/add/cmr/EgovCameraAndroidAPIGuide_XXX_mysql.xml|CameraAPI 가이드 프로그램 QUERY XML|
+|Idgen XML|resources/egovframework/spring/com/context-idgen.xml|CameraAPI 가이드 프로그램 Id생성 Idgen XML|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 FILE (파일 정보 ID) 항목을 추가해야 한다. 
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|카메라|CAMERA|이미지 정보 관리|
+|파일상세정보|FILE_DETAIL_INFO|파일상세정보 관리|
+
+=== 테이블 정의서 ===
+
+   * CAMERA
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|PHOTO_SJ|사진제목|VARCHAR|255|Null|
+|4|FILE_SN|파일연번|NUMERIC|20|NotNull|
+|5|USEYN|활성화여부|CHAR|1|Null|
+
+  * FILE_DETAIL_INFO
+
+^No^컬럼ID^컬럼명^타입^길이^NULL^
+|1|FILE_SN |파일연번 |NUMERIC |20 |NotNull|
+|2|FILE_STRE_COURS |파일저장경로 |VARCHAR |2000 |Null|
+|3|STRE_FILE_NM |저장파일명 |VARCHAR |255 |Null|
+|4|ORIGNL_FILE_NM |원파일명 |VARCHAR |255 |Null|
+|5|FILE_EXTSN |파일확장자 |VARCHAR |20 |Null|
+|6|FILE_CN | |파일내용 |BLOB |Null|
+|7|FILE_SIZE |파일크기 |NUMERIC |8 |Null|
+
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+===== 환경설정 ===== 
+
+Camera 디바이스API 가이드 프로그램에서 제공하는 모바일 디바이스의 Camera 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== res/xml/config.xml ===
+
+<code xml>
+<plugin name="Camera" value="org.apache.cordova.CameraLauncher" />
+
+<plugin name="File" value="org.apache.cordova.FileUtils" />
+<plugin name="FileTransfer" value="org.apache.cordova.FileTransfer" />
+</code>
+
+=== res/values/serverinfo.xml ===
+<code>
+<string name="SERVER_URL">http://192.168.100.222:8080/DeviceAPIGuideTotal_Web_V1.7.1</string>
+</code>
+
+<code xml>
+    <!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+    <?xml version="1.0" encoding="utf-8"?>
+    <resources>
+	<string name="SERVER_URL">서버_URL</string>
+    </resources>
+</code>
+
+=== AndroidManifest.xml ===
+
+<code xml>
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+</code>
+
+==== Server Aplication ====
+
+=== context-properties.xml ===
+  * 업로드 된 파일 저장 위치
+
+<code xml>
+<entry key="fileStorePath" value="파일_저장_경로"/>
+</code>
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/add/cmr/EgovDeviceAndroidAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+===== 관련기능 ===== 
+Camera 디바이스API 가이드 프로그램은 크게 디바이스 내 Camera 촬영 기능과 갤러리 내에 저장된 사진을 이용하여 필요한 정보를 서버에 전송하고 조회할수 있는 기능으로 구성되어 있다.
+
+==== 촬영 사진을 서버에 전송하기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+  * 이미지 제목은 최소 2글자 최대 20글자로 제한한다. (Validation Rule)
+  * 서버로 전송시 제목이 중복 될 경우 덮어쓰기 여부를 사용자 승인여부에 따라 진행한다.
+
+=== 관련 코드 ===
+
+== 사진 촬영 ==
+<code>
+function fn_cameraPhotograph() {
+	var Camera = navigator.camera;
+	var cameraOption  = {
+			quality: 50,
+			destinationType : Camera.DestinationType.FILE_URI,
+			sourceType : Camera.PictureSourceType.CAMERA,
+			targetWidth: 200,
+			targetHeight: 200
+	};
+	navigator.camera.getPicture(fn_getPhotoAlbumInfo, fn_error, cameraOption);
+}
+</code>
+
+== 이미지 중복 체크 요청 ==
+<code>
+var params = {
+    photoSj : $("#photoSj").val(),
+    uuid : device.uuid
+};
+                          
+$.mobile.showPageLoadingMsg('a');
+// 디바이스의 성능에 따라 PrograssDialog Show 가 완전이 로딩이 된후 다음 코드를 수행하도록 setTimeout 을 사용하여 지연시킨다.
+setTimeout(function()
+           {
+               fn_egov_sendto_server("/cmr/cameraPhotoAlbumCheckiOS.do",params);
+           },
+           500);
+</code>
+== 이미지 중복 체크 ==
+<code>
+function fn_checkPhotoAlbum() {
+	
+	...
+	
+	var url = "/cmr/cameraPhotoAlbumCheck.do";
+	var acceptType = "xml";
+	var check = false;
+	
+	var params = {
+			photoSj : $("#photoSj").val()
+			};
+	
+	egovHyb.post(url, acceptType, params, function(xmldata) {
+		
+	...
+		currentImageSn = $(xmldata).find("sn").text();
+		
+		if(currentImageSn != null && currentImageSn != "") {
+			jConfirm("제목이 중복입니다.\n이미지를 수정하시겠습니까?", "알림", "b", function(result){
+				
+				if(result) {
+					fn_updatePhotograph();
+				}
+			});
+		} else {
+				...
+		}
+	});
+	
+	return check;
+}
+</code>
+
+== 이미지 서버로 전송 ==
+<code>
+function fn_insertPhotograph() {
+	
+	$.mobile.showPageLoadingMsg();
+	
+	var options = new FileUploadOptions();
+	options.fileKey = "file";
+	options.fileName = new Date().format("YYYYMMDDhhmmss") + ".jpg";
+	options.mimeType = "image/jpeg";
+
+	var params = {
+					photoSj : $("#photoSj").val(),
+					uuid : encodeURI(device.uuid)
+				};
+	options.params = params;
+	
+
+	var ft = new FileTransfer();
+	
+	ft.upload(image, loadServer + "/cmr/photoAlbumImageUpload.do", fn_insertSuccess, fn_error, options);
+}
+</code>
+
+<code>
+function fn_updatePhotograph() {
+	
+	$.mobile.showPageLoadingMsg();
+	
+	var options = new FileUploadOptions();
+	options.fileKey = "file";
+	options.fileName = new Date().format("YYYYMMDDhhmmss") + ".jpg";
+	options.mimeType = "image/jpeg";
+
+	var ft = new FileTransfer();
+	
+	var params = {
+					sn : currentImageSn
+				};
+	
+	options.params = params;
+	ft.upload(image, loadServer + "/cmr/photoAlbumImageUpdate.do", fn_insertSuccess, fn_error, options);
+}
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|이미지 중복 체크|/cmr/cameraPhotoAlbumCheck.do|selectPhotoAlbumPhoSj|"cameraAndroidAPIDAO.selectCameraPhotoAlbumPhotoSj"|
+|이미지 업로드 (등록)|/cmr/photoAlbumImageUpload.do|fileUpload|"cameraAndroidAPIDAO.insertCameraPhotoAlbum"|
+|이미지 업로드 (파일 등록)|/cmr/photoAlbumImageUpload.do|fileUpload|"cameraAndroidAPIDAO.insertCameraPhotoAlbumFile"|
+|이미지 업로드 (수정)|/cmr/photoAlbumImageUpdate|fileUpdate|"cameraAndroidAPIDAO.updateCameraPhotoAlbumFile"|
+
+{{:egovframework:hyb:guide:add:egovframework_hyb_guide_add_camera_사진촬영.png|}}
+
+제목 : 2글자 이상 20글자 이하의 규칙이 적용되어 있다. \\
+사진촬영 : 카메라 디바이스를 호출한다. \\
+저장 : 서버에 이미지 중복 체크를 한후 업로드한다.
+
+==== 갤러리 사진을 서버에 전송하기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+  * 이미지 제목은 최소 2글자 최대 20글자로 제한한다. (Validation Rule)
+  * 서버로 전송시 제목이 중복 될 경우 덮어쓰기 여부를 사용자 승인여부에 따라 진행한다.
+
+=== 관련 코드 ===
+
+== 갤러리 ==
+<code>
+function fn_albumPhotograph() {
+	var Camera = navigator.camera;
+	var cameraOption  = {
+			quality: 50,
+			destinationType : Camera.DestinationType.FILE_URI,
+			sourceType : Camera.PictureSourceType.PHOTOLIBRARY,
+			targetWidth: 200,
+			targetHeight: 200
+	};
+	navigator.camera.getPicture(fn_getPhotoAlbumInfo, fn_error, cameraOption);
+}
+</code>
+
+
+== 이미지 중복 체크 요청 ==
+<code>
+var params = {
+    photoSj : $("#photoSj").val(),
+    uuid : device.uuid
+};
+                          
+$.mobile.showPageLoadingMsg('a');
+// 디바이스의 성능에 따라 PrograssDialog Show 가 완전이 로딩이 된후 다음 코드를 수행하도록 setTimeout 을 사용하여 지연시킨다.
+setTimeout(function()
+           {
+               fn_egov_sendto_server("/cmr/cameraPhotoAlbumCheckiOS.do",params);
+           },
+           500);
+</code>
+
+== 이미지 중복 체크 요청 ==
+<code>
+var params = {
+    photoSj : $("#photoSj").val(),
+    uuid : device.uuid
+};
+                          
+$.mobile.showPageLoadingMsg('a');
+// 디바이스의 성능에 따라 PrograssDialog Show 가 완전이 로딩이 된후 다음 코드를 수행하도록 setTimeout 을 사용하여 지연시킨다.
+setTimeout(function()
+           {
+               fn_egov_sendto_server("/cmr/cameraPhotoAlbumCheckiOS.do",params);
+           },
+           500);
+</code>
+== 이미지 중복 체크 ==
+<code>
+function fn_checkPhotoAlbum() {
+	
+	...
+	
+	var url = "/cmr/cameraPhotoAlbumCheck.do";
+	var acceptType = "xml";
+	var check = false;
+	
+	var params = {
+			photoSj : $("#photoSj").val()
+			};
+	
+	egovHyb.post(url, acceptType, params, function(xmldata) {
+		
+	...
+		currentImageSn = $(xmldata).find("sn").text();
+		
+		if(currentImageSn != null && currentImageSn != "") {
+			jConfirm("제목이 중복입니다.\n이미지를 수정하시겠습니까?", "알림", "b", function(result){
+				
+				if(result) {
+					fn_updatePhotograph();
+				}
+			});
+		} else {
+				...
+		}
+	});
+	
+	return check;
+}
+</code>
+
+== 이미지 서버로 전송 ==
+<code>
+function fn_insertPhotograph() {
+	
+	$.mobile.showPageLoadingMsg();
+	
+	var options = new FileUploadOptions();
+	options.fileKey = "file";
+	options.fileName = new Date().format("YYYYMMDDhhmmss") + ".jpg";
+	options.mimeType = "image/jpeg";
+
+	var params = {
+					photoSj : $("#photoSj").val(),
+					uuid : encodeURI(device.uuid)
+				};
+	options.params = params;
+	
+
+	var ft = new FileTransfer();
+	
+	ft.upload(image, loadServer + "/cmr/photoAlbumImageUpload.do", fn_insertSuccess, fn_error, options);
+}
+</code>
+
+<code>
+function fn_updatePhotograph() {
+	
+	$.mobile.showPageLoadingMsg();
+	
+	var options = new FileUploadOptions();
+	options.fileKey = "file";
+	options.fileName = new Date().format("YYYYMMDDhhmmss") + ".jpg";
+	options.mimeType = "image/jpeg";
+
+	var ft = new FileTransfer();
+	
+	var params = {
+					sn : currentImageSn
+				};
+	
+	options.params = params;
+	ft.upload(image, loadServer + "/cmr/photoAlbumImageUpdate.do", fn_insertSuccess, fn_error, options);
+}
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|이미지 중복 체크|/cmr/cameraPhotoAlbumCheck.do|selectPhotoAlbumPhoSj|"cameraAndroidAPIDAO.selectCameraPhotoAlbumPhotoSj"|
+|이미지 업로드 (등록)|/cmr/photoAlbumImageUpload.do|fileUpload|"cameraAndroidAPIDAO.insertCameraPhotoAlbum"|
+|이미지 업로드 (파일 등록)|/cmr/photoAlbumImageUpload.do|fileUpload|"cameraAndroidAPIDAO.insertCameraPhotoAlbumFile"|
+|이미지 업로드 (수정)|/cmr/photoAlbumImageUpdate|fileUpdate|"cameraAndroidAPIDAO.updateCameraPhotoAlbumFile"|
+
+{{:egovframework:hyb:guide:add:egovframework_hyb_guide_add_camera_갤러리.png|}} 
+
+제목:2글자 이상 20글자 이하의 규칙이 적용되어 있다. \\
+사진촬영:카메라 디바이스를 호출한다. \\
+저장:서버에 이미지 중복 체크를 한후 업로드한다.
+
+==== 서버의 사진 목록 조회하기 ====
+
+=== 비즈니스 규칙 ===
+  * 네트워크를 체크하여 Wi-Fi가 아닐 경우에는 사용자 승인여부에 따라 동작한다.
+
+=== 관련 코드 ===
+
+== 서버의 사진 목록 요청 ==
+
+<code>
+function fn_selectPhotoAlbumList(params) {
+	
+	var url = "/cmr/cameraPhotoAlbumList.do";
+	var acceptType = "xml";
+	
+	egovHyb.post(url, acceptType, params, function(xmldata) {
+		
+		console.log("DeviceAPIGuide fn_selectPhotoAlbumList request Completed");
+		
+		fn_event_checkPage(xmldata);
+	});
+	
+}
+</code>
+
+== 사진 상세 조회 ==
+
+<code>
+function fn_selectPhotoAlbumDetail(imageSrc) {
+	
+	var url = "/cmr/cameraPhotoAlbumDetail.do";
+	var acceptType = "xml";
+	
+	var params = {
+					sn : currentImageSn
+					};
+	
+	egovHyb.post(url, acceptType, params, function(xmldata) {
+		console.log("DeviceAPIGuide fn_selectPhotoAlbumDetail request Completed");
+		
+		fn_displayDetail(imageSrc, xmldata);
+	});
+}
+</code>
+
+== 사진 삭제 ==
+<code>
+function fn_deletePhotoAlbumInfo() {
+	
+	console.log("fn_deletePhotoAlbumInfo Start.");
+	
+	var url = "/cmr/deleteCameraPhotoAlbum.do";
+	var acceptType = "xml";
+	
+	var params = {
+			sn : currentImageSn
+			};
+	
+	egovHyb.post(url, acceptType, params, function(xmldata) {
+		console.log("DeviceAPIGuide fn_deletePhotoAlbumInfo request Completed");
+		
+		jAlert("삭제되었습니다", "알림", "b", function(){
+			
+			$.mobile.changePage($("#listPhotoAlbum"), {changeHash:false});
+		});
+		
+	});
+}
+</code>
+
+=== 관련 화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|사진목록 조회|/cmr/cameraPhotoAlbumList.do|selectCameraPhotoAlbumList|"cameraAndroidAPIDAO.selectCameraPhotoAlbumInfoList"|
+|사진상세정보 조회|/cmr/cameraPhotoAlbumDetail.do|selectPhotoAlbum|"cameraAndroidAPIDAO.selectCameraPhotoAlbumInfo"|
+|사진 삭제|/cmr/deleteCameraPhotoAlbum.do|deleteCameraPhotoAlbum|"cameraAndroidAPIDAO.deleteCameraPhotoAlbumInfo"|
+|사진 파일 삭제|/cmr/deleteCameraPhotoAlbum.do|deleteCameraPhotoAlbum|"cameraAndroidAPIDAO.deleteCameraPhotoAlbumInfoFile"|
+|사진 이미지 조회|/cmr/getImage.do|getImageInf|"cameraAndroidAPIDAO.selectImageFileInfo"|
+
+{{:egovframework:hyb:guide:add:egovframework_hyb_guide_add_camera_목록조회.png|}} {{:egovframework:hyb:guide:add:egovframework_hyb_guide_add_camera_상세정보.png|}}
+
+ 리스트 : 선택한 리스트의 상세 정보를 요청한다.\\
+ 더보기 : 서버의 사진 목록 10개를 더 로딩한다.\\
+ 목록 : 서버 사진목록 페이지를 호출한다.\\
+ 삭제 : 선택된 사진을 삭제한다.
+
+===== 컴파일 디버깅 배포 ===== 
+
+==== 컴파일 ====
+
+=== CameraAPI Device Applicaton 컴파일 방법 === 
+
+  * 프로젝트 선택 > 오른쪽 클릭 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일1.png?740|}}
+
+  * 상단의 메뉴 > Run As > Android Application
+
+{{:egovframework:hyb:guide:add:카메라_컴파일2.png?740|}}
+
+ 
+  * 실행할 타겟 선택 > 에뮬레이터, 디바이스(디버깅모드)
+
+{{:egovframework:hyb:guide:add:디바이스컴파일.png?740|}}
+
+  * 에뮬레이터를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:카메라_컴파일4.png?400|}} {{:egovframework:hyb:guide:add:카메라_컴파일5.png?400|}}
+
+  * 디바이스를 이용한 실행 화면
+
+{{:egovframework:hyb:guide:add:카메라_컴파일6.png?400|}} {{:egovframework:hyb:guide:add:카메라_컴파일7.png?400|}}
+
+
+
+=== CameraAPI Server Applicaton 컴파일 방법 ===  
+
+
+  * CameraAPI 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:add:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+{{:egovframework:hyb:guide:add:서버실행결과_콘솔.png?840|}}
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 Phonegap 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+ 
+
+ console.log의 작성 방법은 다음과 같다.
+<code>
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    ...
+}
+</code>
+
+ 디버깅 코드가 실행 되면 아래와 같은 메시지를 개발도구의 콘솔 메시지 창에서 볼 수 있다.
+
+{{:egovframework:hyb:guide:add:FileReadWriteconsolelog.png?700|}}
+
+
+Camera 디바이스 API 가이드 프로그램 에서는 디버깅을 위하여 다음과 같이 콘솔 정보를 출력한다.
+
+^디버그 코드^디버깅 내용^
+|DeviceAPIGuide fn_egov_deviceConfig Success|디바이스의 서버 정보를 성공적으로 획득 시.|
+|DeviceAPIGuide fn_egov_getPhotoAlbumInfo Success | 촬영한 사진 또는 갤러리의 사진의 이미지를 성공적으로 불러올 시.|
+|DeviceAPIGuide fn_egov_insertSuccess request Completed | 사진 파일 업로드를 성공적으로 수행 시.|
+|DeviceAPIGuide fn_egov_selectPhotoAlbumDetail request Completed | 사진 정보 상세 정보 조회를 성공적으로 수행 시.|
+|DeviceAPIGuide fn_egov_selectPhotoAlbumList request Completed | 사진 목록 조회를 성공적으로 수행 시.|
+|DeviceAPIGuide fn_egov_deletePhotoAlbumInfo request Completed | 사진 삭제를 성공적으로 수행 시.|
+|DeviceAPIGuide fn_egov_checkPhotoAlbum request Completed | 사진 제목 중복 체크를 성공적으로 수행 시.|
+
+==== 배포 ====
+Camera 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=516&menu=3&submenu=9|Click]] \\
+
+===== 참고자료 ===== 
+  * UX/UI 라이브러리 : [[http://jquerymobile.com/|jQuery Mobile]] \\
+  * Hybrid : [[http://www.phonegap.com/|PhoneGap]] \\

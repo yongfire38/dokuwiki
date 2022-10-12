@@ -1,0 +1,199 @@
+====== MagicXSign NPKI API ======
+===== 개요 =====
+MagicXSign은 PhoneGap Plugin을 사용하여 Android, iPhone 에서 드림시큐리티 MagicXsign 과 MagicMRS를 사용하기 위한 라이브러리 입니다.
+
+==== 특징 ====
+
+{{:egovframework:hyb:guide:add:npki_드림시큐리티:magicxsign전체흐름도.png|}}
+  * 공인인증서(NPKI)를 이용한 서명 및 인증서 검증 방법제공
+  * 인증서 이동서버를 통해 PC의 인증서를 스마트폰으로 이동
+  * 상기 모듈들은 Native로 구성이 되어 있지만 PhoneGap Plugin 을 통해 WebView를 통해 사용
+  * iOS 의 경우 APP 의 Keychain 에 인증서 저장
+  * Android 의 경우 SDCard/NPKI 에 인증서 저장
+
+==== 전제조건 ====
+
+^구분^내용^
+|테스트 디바이스 |Galaxy S2|
+|테스트 플랫폼 |Android 2.3.6|
+
+NPKI MagicXSign Library
+^파일명^설명^
+|libs/MagicMRS.jar| MagicXSign 라이브러리 |
+|libs/MagicXSign.jar| MagicXSign 라이브러리 |
+|libs/XSIGN_PhoneGapPlugin.jar| MagicXSign PhoneGap Plugin Class 라이브러리 |
+|libs/armeabi/libDSToolkitV30Jni.so| MagicXSign 라이브러리 |
+|libs/armeabi/libMagicMRSPhone.so| MagicXSign 라이브러리 |
+|assets/www/js/egovframework/mbl/hyb/MagicXSign.js| MagicXSign PhoneGap Plugin JavaScript|
+
+res/xml/plgins.xml 설정
+<code xml>
+<plugin name="MagicXSignPlugin" value="com.dreamsecurity.magicxsign.PhoneGapPlugin" />
+</code>
+
+===== API Doc =====
+==== MagicXSign(PKI) 함수 ====
+== 인증서 서명 / 서명 검증 프로세스 ==
+
+{{:egovframework:hyb:guide:add:npki_드림시큐리티:magicxsign인증서서명검증시퀀스.png?740|}}
+
+^인증서검증방법^제품명^
+|CRL(Certificate Revocation List)|일종의 블랙리스트 방식 \\ CA가 인증서 폐기 목록을 특정 시간에 생성하게 되므로 실제 인증서의 상태와 폐기 목록상의 상태가 틀린 경우가 발생 \\ 무료 서비스 |
+|OCSP(Online Cerificate Status Protocol)|실시간으로 상태를 확인 가능 \\ 유료 서비스 \\ 특정 CA와 사용 계약을 맺어서 사용 \\ 특정 CA에서 OCSP 용 인증서를 발급, 1년마다 갱신 |
+
+
+
+== window.plugins.magicxsign.init ==
+  * MagicXSign 을 사용하기 위해 초기화를 한다. \\
+
+<code>
+window.plugins.magicxsign.init(var Flag)
+</code>
+
+^Option^설명^비고^
+|Flag|MagicXSign Debug 출력 여부|true:디버그 출력, false:디버그 출력 안함|
+
+<code>
+window.plugins.magicxsign.init("false");
+window.plugins.magicxsign.init("true");
+</code>
+
+== window.plugins.magicxsign.getcertlist == 
+  * 단말의 인증서를 jsonString 형식으로 맞추어서 읽어온다.
+
+<code>
+window.plugins.magicxsign.getcertlist( success return , fail return, jsonString);
+</code>
+
+^Option^설명^비고^
+|success return|성공시 리턴되는 함수| |
+|fail return|실패시 리턴되는 함수| |
+|jsonString|인증서의 정보 요청| |
+
+== jsonString == 
+  * 조회 할 인증서의 정보
+
+^속성^내용^속성^내용^
+|issuer|인증서 발급 기관|name|사용자이름|
+|ver|버전|sn|일련번호|
+|issuedn|발급자|start|만료일(시작)|
+|end|만료일(끝)|subjdn|주체자|
+|pubkeyalgo|공개키 알고리즘|pubkey|공개키|
+|aia|기관 정보 접근|aki|발급자 키식별자|
+|ski|주체자 키식별자|keyuse|키사용|
+|policy|정책|policyid|정책 ID|
+|subaltname|주체 대채이름|crl|CRL 위치|
+
+<code>
+var setDefine = ["oidname","issuer","name","subjdn","start","end"];
+window.plugins.magicxsign.getcertlist(getcertlistSuccess, getcertlistFail, JSON.stringify(setDefine));
+</code>
+
+== window.plugins.magicxsign.certdel ==
+  * 인증서를 삭제 한다.
+
+<code>
+window.plugins.magicxsign.certdel(success return, fail return, Cert Index);
+</code>
+
+^Option^설명^비고^
+|success return|성공시 리턴되는 함수| |
+|fail return|실패시 리턴되는 함수| |
+|Cert Index|인증서 Index(0 부터 시작)|window.plugins.magicxsign.getcertlist 호출에 대한 결과 index 값|
+
+<code>
+window.plugins.magicxsign.certdel(certdelSuccess, certdelFail, 0);
+</code>
+
+== window.plugins.magicxsign.certchagepassword ==
+  * 인증서의 비밀번호를 변경한다.
+
+<code>
+window.plugins.magicxsing.certchagepassword(success return, fail return, jsonString);
+</code>
+
+^Option^설명^비고^
+|success return|성공시 리턴되는 함수| |
+|fail return|실패시 리턴되는 함수| |
+|jsonString|인증서 Index, 구/신 비밀번호를 jsonString 전달| |
+
+<code>
+var setDefine = {};
+setDefine["certindex"] = iCertIndex;	//선택된 인증서 index
+setDefine["oldpassword"] = oldpassword;	//선택된 인증서 Password
+setDefine["newpassword"] = newpassword;	//신규 인증서 Password
+window.plugins.magicxsing.certchagepassword(certchagepasswordSuccess, certchagepasswordFail, JSON.stringify(setDefine));
+</code>
+
+== window.plugins.magicxsign.makesign ==
+  * 서명 데이터를 생성한다.
+
+<code>
+window.plugins.magicxsing.makesign(success return, fail return, jsonString);
+</code>
+
+^Option^설명^비고^
+|success return|성공시 리턴되는 함수| |
+|fail return|실패시 리턴되는 함수| |
+|jsonString|인증서 Index, 구/신 비밀번호를 jsonString 전달| |
+
+<code>
+var setDefine = {};
+setDefine["plaintext"] = encodeURIComplnent(MagicXSign_makeQueryString(form)));
+setDefine["uri"] = sURI;
+setDefine["certindex"] = document.getElementById("xsigncertindex").value;
+setDefine["certpassword"] = document.getElementById("xsigncertpassword").value;
+window.plugins.magicxsign.makesign(makesign_ok, makesign_fail, JSON.stringify(setDefine));
+</code>
+
+==== MagicMRS(인증서이동) API ====
+
+PC의 인증서를 스마트폰으로 옮기는 서비스
+
+== 인증서 이동 흐름도==
+{{:egovframework:hyb:guide:add:npki_드림시큐리티:magicxsign인증서이동흐름도.png?740|}}
+
+== window.plugins.magicxsign.mrs_makecode ==
+  * 인증서버에 접속 하여 인증번호를 얻어온다.
+
+<code>
+window.plugins.magicxsign.mrs_makecode(success return, fail return, jsonString);
+</code>
+
+^Option^설명^비고^
+|success return|성공시 리턴되는 함수| |
+|fail return|실패시 리턴되는 함수| |
+|jsonString|phoneno, serverip, serverport, serviceid 형태의 Json String| |
+
+<code>
+var setDefine = {};
+setDefine["phoneno"] = "123456789";
+setDefine["serverip"] = "125.141.204.173";
+setDefine["serverport"] = "10001";
+setDefine["serviceid"] = "dreamAPP";
+window.plugins.magicxsign.makesign(makesign_ok, makesign_fail, JSON.stringify(setDefine));
+</code>
+
+== window.plugins.magicxsign.mrs_waitcert ==
+  * 인증서를 전송 받아 저장하고 인증서 정보를 리턴한다.
+
+<code>
+window.plugins.magicxsign.mrs_makecode(success return, fail return, jsonString);
+</code>
+
+^Option^설명^비고^
+|success return|성공시 리턴되는 함수| |
+|fail return|실패시 리턴되는 함수| |
+|jsonString|얻어온 인증서의 정보 보기용|certlist 함수 참조|
+
+<code>
+var setDefine = ["oidname","issuer","name","subjdn","start","end"]
+window.plugins.magicxsign.mrs_waitcert(getcertlistSuccess, getcertlistFail, JSON.stringify(setDefine));
+</code>
+
+== window.plugins.magicxsign.mrs_stopcertmove ==
+  * 인증서 이동을 중지한다.
+
+<code>
+window.plugins.magicxsign.mrs_stopcertmove();
+</code>

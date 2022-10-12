@@ -1,0 +1,131 @@
+====== 모바일 디바이스 API 개발을 위한 Gatting Started ( 지원 Platform : iOS ) ======
+
+===== 개요 =====
+본 가이드는 전자정부 표준프레임워크에서 제공하는 모바일 디바이스 API 실행환경, 개발환경, 가이드프로그램의 적용 및 실습을 위한 기본 환경 구축 내용이다.
+빠른 시간 내에 모바일 디바이스 API 활용 하이브리드 앱 개발을 위한 기본 기능을 활용하기 위해 3단계 따라하기 방식으로 진행된다.
+  - 개발환경 설치 : 실습을 위한 개발환경을 구축한다.
+  - 프로젝트 생성 및 설정 : 제공한 샘플 프로젝트를 이용하여 앱 어플리케이션을 생성하고 웹 어플리케이션을 통해 실행해 본다.
+  - 자세히 들여보기 : 생성/실행한 프로젝트의 내부 소스코드를 학습하여 전자정부 표준 프레임워크 기반의 웹 어플리케이션과 전자정부 디바이스API 프레임워크 기반의 앱 어플리케이션 구현 원리를 이해한다.
+
+전자정부 표준프레임워크 기반의 웹 어플리케이션과 모바일 디바이스 API 실행환경 기반의 앱 어플리케이션 개발 및 실행을 위한 구현도구의 환경정보는 다음과 같다
+
+^항목^설명^비고^
+| 운영체제 | Mac 10.7.4 버젼 이상 | |
+| SDK | iOS SDK 6.0 이상 | |
+| 개발도구 | xCode 4.5.2 이상 | |
+| PhoneGap | Cordova-2.9.0| 타버젼 지원 안됨. |
+
+===== Step 1. 설치 =====
+
+==== 다운로드 ====
+    - xCode Download : [[https://developer.apple.com/xcode/|Click]]
+    - Cordova Download : [[http://www.phonegap.com/install/|Click]]
+
+==== 개발 환경 설치 ====
+1) 다운로드 받은 xCode 파일을 열어 설치파일(Xcode and iOS SDK)을 실행한다.\\
+{{:egovframework:hyb:init:ios:xcode설치0001.jpg?500|}}\\
+2) 설치 프로그램이 실행되고 계속하기를 누른다.\\
+{{:egovframework:hyb:init:ios:xcode설치0003.jpg?500|}}\\
+    * xCode는 크기가 9GB 가 넘기 때문에 디스크 용량을 충분히 확보한 곳에 설치한다.
+3) 설치 완료.\\
+{{:egovframework:hyb:init:ios:xcode설치0004.jpg?500|}}\\
+4) 설치 확인 : Finder 를 열어 응용프로그램에서 xCode 생성 여부를 확인한다.\\
+{{:egovframework:hyb:init:ios:xcode실행파일.png?500|}}\\
+5) 설치시 오류나 기타 사항은 애플 개발자 사이트를 참고한다.\\
+    * xCode 참고 : [[https://developer.apple.com/support/xcode/|Click]]
+
+==== Cordova (Phonegap) 설치 ====
+1) 폰갭 사이트에서 인스톨 페이지를 선택한다.\\
+{{:egovframework:hyb2.7:init:iOS:phonegapmain.png?700|}}\\
+2) 폰갭 버전 2.9.0을 선택하여 다운로드 받는다.\\
+{{:egovframework:hyb2.7:init:iOS:installphonegap.png?700|}}\\
+3)설치시 오류나 기타 사항은 폰갭 사이트를 참고한다.\\
+    * phonegap 참고 : [[http://docs.phonegap.com/en/1.9.0/guide_getting-started_ios_index.md.html#Getting%20Started%20with%20iOS|Click]]
+
+==== 전자 정부 디바이스 API 실행환경 설치 ====
+=== 실행환경 구성하기 ===
+\\
+PhoneGap 업데이트로 프로젝트 생성방식의 변경으로 표준프레임워크 모바일 디바이스 API 2.5버젼에서 제공하였던 xCode 템플릿은 사용할 수 없다.\\ \\
+1) 다운로드.\\
+- 디바이스 API 실행환경 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=703&menu=3&submenu=7|Click]]\\
+\\
+{{:egovframework:hyb2.7:init:iOS:hrtedownload.png?700|}}\\
+{{:egovframework:hyb2.7:init:ios:hrtedownload2.png?700|}}\\
+{{:egovframework:hyb2.7:init:ios:hrtedownload3.png?700|}}\\
+2) 다운로드 받은 압축파일의 확장자를 .zip으로 변경한다.\\
+{{:egovframework:hyb2.7:init:iOS:changezip.png?|}}\\
+3) 압축을 풀고 프로젝트 파일을 더블클릭하여 xCode를 실행한다.
+4) 상단의 Product > Build 를 클릭하여 프로젝트를 빌드한다.\\
+{{:egovframework:hyb:init:ios:프로젝트설치17.png?700|}}\\
+5) xCode 중앙에 빌드 성공여부를 확인하고 시뮬레이터 및 디바이스에서 테스트 한다.\\
+{{:egovframework:hyb:init:ios:프로젝트설치18.png?700|}}\\
+6) 디바이스에서 테스트할 경우, Apple 개발자 인증서가 있어야 된다. 인증서 취득 과정은\\ [[https://developer.apple.com/library/ios/#documentation/ToolsLanguages/Conceptual/YourFirstAppStoreSubmission/EnrollintheiOSDeveloperProgram/EnrollintheiOSDeveloperProgram.html#//apple_ref/doc/uid/TP40011375-CH2-SW2|Click]]에서 참조할 수 있다.
+
+
+== 실행 화면 ==
+{{:egovframework:hyb2.7:init:iOS:runhrte.png?320|}}
+
+===== Step 2. 프로젝트 실행 =====
+==== Device Application ====
+
+    - **실행환경 예제를 설치한다.**[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:hrte:%EC%8B%A4%ED%96%89%ED%99%98%EA%B2%BD_%EC%98%88%EC%A0%9C|실행환경 예제 설치하러 가기]] \\
+    - **프로젝트에서 대상을 iPhone Simulater로 선택 한뒤 실행 버튼을 누른다** \\ {{:egovframework:hyb:init:ios:프로젝트실행1.png?700|}} \\
+    - **Organizer 을 통해 앱 어플리케이션에 대한 디버그 메시지를 확인 할 수 있다** \\ {{:egovframework:hyb:init:ios:프로젝트실행2.png?700|}} \\
+    - ** 디바이스에서 실행을 하기 위해선 Code Signing 이 필요하다 (애플 홈페이지 참조)** : [[https://developer.apple.com/support/technical/code-signing.html|Click]]\\
+    - ** 디바이스에서 테스트할 경우, Apple 개발자 인증서가 있어야 된다. ** : [[https://developer.apple.com/library/ios/#documentation/ToolsLanguages/Conceptual/YourFirstAppStoreSubmission/EnrollintheiOSDeveloperProgram/EnrollintheiOSDeveloperProgram.html#//apple_ref/doc/uid/TP40011375-CH2-SW2|인증서 취득 과정]]
+
+==== Web Application ====
+  * Web Application은 전자정부 표준 프레임워크 2.7을 기반으로 만들어진 어플리케이션이므로, 아래를 참고한다.\\
+  * [[egovframework:dev:gettingstarted|전자정부 표준 프레임워크 2.7 보러가기]]
+
+===== Step 3. 자세히 들여다 보기 =====
+==== 주요 Page ====
+
+=== 구조 ===
+
+^디렉토리^파일^비고^
+|www/css/egovframework/mbl/cmm/|EgoMobile-1.3.2.css|모바일 실행환경 공통 css 파일|
+|www/css/egovframework/mbl/cmm/|jquery.mobile-1.3.2css|query mobile 의 css 파일 |
+|www/css/egovframework/mbl/cmm/|theme-1.1.1.css|테마 파일 |
+|www/css/egovframework/mbl/cmm/swipebutton/|jquery-mobile-custom.css |swipebutton 관련 css 파일 |
+|www/js/egovframework/mbl/cmm/|cordova.min.js |cordova의 js 파일 |
+|www/js/egovframework/mbl/cmm/|EgovComeModuleAPI.js |디바이스API 공통 js 파일 |
+|www/js/egovframework/mbl/cmm/|EgovMobile-1.3.2.js|모바일 실행환경의 공통 js 파일 |
+|www/js/egovframework/mbl/cmm/|jquery-1.9.1.min.js|jQuery 의 js 파일 |
+|www/js/egovframework/mbl/cmm/|jquery.mobile-1.1.1.min.js|jQuery Mobile 의 js 파일|
+|www/js/egovframework/mbl/cmm/|jquery.validate.min.js|Validation 관련 js 파일|
+|www/js/egovframework/mbl/cmm/|json2.js|json 관련 js 파일|
+|www/js/egovframework/mbl/cmm/|modernizr-2.0.4.js|Device API 확인을 위한 공통 js 파일 |
+|www/js/egovframework/mbl/cmm/swipebutton/|jquery-mobile-custom.js|swipebutton 관련 js 파일 |
+|projectName/Plugins/|EgovInterface.h|디바이스API표준 통신 구현 파일|
+|projectName/Plugins/|EgovInterface.m|디바이스API표준 통신 구현 파일|
+|projectName/eGovModule/|EGovComModule.h|실행환경 통신 모듈|
+|projectName/eGovModule/|libEGovComModule.a|실행환경 통신 모듈|
+|projectName/Supporting Files/|config.xml|phoneGap 설정 파일|
+|projectName/Supporting Files/|ProjectName-Info.plist|어플리케이션 설정 파일|
+|CordovaLib.xcodeproj|header|phonegap 프레임워크|
+
+=== 구성 ===
+
+^유형^배포형태^다운로드URL^관련페이지^
+|다운로드|zip |[[https://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=509&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:%EB%94%94%EB%B0%94%EC%9D%B4%EC%8A%A4_api_%EA%B0%80%EC%9D%B4%EB%93%9C_%ED%94%84%EB%A1%9C%EA%B7%B8%EB%9E%A8_%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0_getting_started|실행환경 가이드 바로가기]] |
+|Accelerator|zip|[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=675&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:accelerator|Accelerator 가이드 바로가기]] |
+|Camera|zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=677&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:camera|Camera 가이드 바로가기]] |
+|Compass |zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=679&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:compass|Compass 가이드 바로가기]] |
+|Contacts |zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=681&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:contact|Contacts 가이드 바로가기]] |
+|Device|zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=683&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:device|Device 가이드 바로가기]] |
+|FileReadWriter |zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=685&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:file_read_write|FileReadWriter 가이드 바로가기]] |
+|GPS |zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=687&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:gps|GPS 가이드 바로가기]] |
+|Interface|zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=689&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:interface|Interface 가이드 바로가기]] |
+|Media |zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=691&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:media|Media 가이드 바로가기]] |
+|Network |zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=693&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:network|Network 가이드 바로가기]] |
+|PKIMagicXSign |zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=695&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:npki_%EB%93%9C%EB%A6%BC%EC%8B%9C%ED%81%90%EB%A6%AC%ED%8B%B0|PKIMagicXSign 가이드 바로가기]] |
+|PKIWizSign|zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=697&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:npki_%EC%BC%80%EC%9D%B4%EC%82%AC%EC%9D%B8|PKIWizSign 가이드 바로가기]] |
+|PKIXecureSmart|zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=699&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:npki_%EC%86%8C%ED%94%84%ED%8A%B8%ED%8F%AC%EB%9F%BC|PKIXecureSmart 가이드 바로가기]] |
+|Vibrator|zip |[[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=701&menu=3&submenu=7|다운로드 바로가기 ]] |[[https://www.egovframe.go.kr/wiki/doku.php?id=egovframework:hyb2.7:guide:ios:vibrator|Vibrator 가이드 바로가기]] |
+
+===== 관련 환경 =====
+
+  * [[egovframework:hyb2.7:hdev:imp:overview|디바이스API 구현도구]]
+  * [[egovframework:hyb2.7:hrte:전자정부_디바이스api_실행환경_소개|디바이스API 실행환경]]
+  * [[egovframework:mrte:ux_ui:ux_ui_controller_component|전자정부 모바일 표준 프레임워크 실행환경]]

@@ -1,0 +1,114 @@
+===== Device  =====
+
+==== 설명 ====
+  * 디바이스의 하드웨어 또는 소프트웨어에 대한 정보를 제공한다.
+
+=== 전역 API ===
+<code>
+var phoneName = window.device.name;
+var phoneName = device.name;
+</code>
+
+==== 제약사항 ====
+  * Device API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+
+== device.name ==
+  * 디바이스별로 차이가 있지만, 모델명 대신에 제품명을 출력한다.
+  * 제품명은 간혹 코드를 나타낸다.
+  * Nexus One 은 "Passion", Motorola Droid 은 "voles"
+
+== device.version ==
+  * Android 2.1 미만 버전에서는 지원하지 않는다.
+
+=== iOS ===
+
+== device.name ==
+  * 모델명 대신 단말기에 등록한 사용자의 이름을 출력한다.
+  * iTunes 내에 설정한 이름. ("Joe's iPhone")
+
+== device.platform ==
+  * 모든 디바이스는 ‘iPhone’ 으로 출력한다. 
+  * 공급자에 따라 다르게 출력될 수 있다.
+
+
+
+  
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Device" value="org.apache.cordova.Device" />
+</code>
+
+  * app/AndroidManifest
+<code xml>
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+</code>
+
+=== iOS === 
+N/A
+
+==== 속성 ====
+
+=== device.name === 
+  * 디바이스의 제품명이나 모델명.
+<code>
+var string = device.name;
+</code>
+
+=== device.phonegap ===
+  * Phonegap(Cordova) API의 버전 정보.
+<code>
+var name = device.cordova;
+</code>
+
+=== device.platform ===
+  * 디바이스의 운영체제(OS)의 이름.
+<code>
+var string = device.platform;
+</code>
+
+=== device.uuid ===
+  * 디바이스 출고 시, 제작자가 부여한 범용 고유 식별자(UUID).
+<code>
+var string = device.uuid;
+</code>
+
+=== device.version ===
+  * 디바이스의 운영체제(OS)의 버전 정보.
+<code>
+var string = device.version;
+</code>
+
+
+==== 참고 자료 ====
+  * Phonegap : http://docs.phonegap.com/en/2.9.0/cordova_device_device.md.html#Device
+
+==== 파라미터 ====
+
+=== ===
+  * 
+
+<code>
+
+</code>
+
+
+^유형^설명^타입^비고^
+| | | | |
+
+==== Objects ====
+
+=== Acceleration ===
+  * 
+
+<code>
+
+</code>
+
+^유형^설명^타입^비고^
+| | | | |

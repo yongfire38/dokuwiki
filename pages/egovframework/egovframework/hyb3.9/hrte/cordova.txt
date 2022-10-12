@@ -1,0 +1,107 @@
+====== Apache Cordova ======
+===== 개요 =====
+
+PhoneGap 은 HTML5, JavaScript, CSS를 사용하여 디바이스 하이브리드 어플리케이션을 구축하기 위한 오픈소스 프레임워크 이다. Phonegap은 Apache재단에서 관리하게 되면서 Cordova로 이름이 변경되었다.
+
+===== 설명 =====
+PhoneGap의 전체 구성은 아래와 같이 구성되어 있으며 해당 구성에 사용자가 정의한 플러그인 추가기능을 통한 확장이 가능하다
+
+PhoneGap은 기본적으로 두 가지의 컴포넌트를 포함한다 
+  * 브라우저 (웹뷰 등)에서 실행 될 JavaScript내에서 디바이스의 고유 기능을 제어 할 PhoneGap JavaScript API
+  * PhoneGap 자바스크립트와 연계 될 플랫폼 별 Native Code
+PhoneGap은 Device API 제어를 위해 미리 구현 한 JavaScript 및 SDK 연계를 위한 Native Code 외에 추가기능을 위해 구현 된 Plug-In을 구성하고 있는 PhoneGap Custom Plug-In 과 PhoneGap Custom Native Plug-In이 추가된다. 
+
+아래 그림을 참고하면 PhoneGap는 웹 표준 기술로 처리 할 수 없는 기술 처리를 위한 Device API를 사용한다. Device API 제어를 위해 JavaScript로 구현되어 제공되는 PhoneGap.js 와 플랫폼 별 WebView를 상속 받아 Mobile Web Application과 연계를 Native Code의 집합인 PhoneGap.jar와 PhoneGap.framework로 구성한다. 또한, PhoneGap Plug-in 영역은 자바스크립트 구현 부분과 Native 구현 부분으로 구성한다. 자바스크립트 커스텀 플러그인의 작성은 Cordova.exec Function을 호출하여 구현하며, Native 구현은 커스텀 플러그인 작성을 위해 CDVPlugin 클래스를 상속 받는다.
+
+{{:egovframework:hyb:hrte:폰갭_구성도.png?500|}}
+
+^	구분	^	설명	^
+|	 Mobile Web Application 	|	HTML, CSS, 사용자 정의 JavaScript	|
+|	 PhoneGap JavaScript Engine 	|	Device API 제어를 위해JavaScript로 구현되어 제공	|
+|		|	cordova(PhoneGap).js	|
+|	 PhoneGap Native Engine 	|	플랫폼 별 WebView를 상속받아 Mobile Web Application과 연계를 위한 Native Code	|
+|		|	cordova(PhoneGap).jar, cordova(PhoneGap).framework	|
+|	 PhoneGap Custom Plug-In 	|	기능 확장을 위해 추가 된 Plug-In을 위한 JavaScript 코드	|
+|		|	사용자 정의 JavaScript Plug-In 을 포함	|
+|		|	플랫폼 별로 플러그인을 위한 Native 코드 구성이 상이함에 따라 JavaScript 구성또한 다를 수 있음	|
+|	 PhoneGap Custom Native Plug-In 	|	기능 확장을 위해 추가 된 Plug-In을 위한 플랫폼 Native 코드	|
+
+
+==== 라이브러리 구성 ====
+PhoneGap 프로젝트는 일반적인 디바이스 어플리케이션 SDK 프로젝트 내에 하이브리드 앱 구현을 위한 PhoneGap 프레임워크 및 추가 웹리소스가 추가 된 구조이다.
+
+PhoneGap 라이브러리는 웹 리소스와 디바이스 고유 기능 연계를 위한 디바이스 별 Native Code 와 JavaScript 코드로 구성 되어있다.
+
+=== Android ===
+
+  * cordovalib.jar : Android 고유 기능 호출을 위한 Native Code
+  * cordova.js : 실제 디바이스 API가 포함되어 있으며 cordovalib.jar 내의 Naitve Code 함수를 플러그인 형태로 호출한다.
+
+=== iOS ===
+
+  * CordovaLib.xcodeproj : iOS 고유 기능 호출을 위한 Native Code가 존재하는 Sub 프로젝트
+  * cordova.js : 실제 디바이스 API가 포함되어 있으며 cordova.framework 내의 Naitve Code 함수를 플러그인 형태로 호출한다.
+
+==== PhoneGap 지원 Device API ====
+
+PhoneGap 에서는 기본적으로 다음과 같은 디바이스 API를 제공하여 디바이스 하이브리드 어플리케이션을 통한 디바이스의 고유기능의 호출을 지원한다.
+
+^PhoneGap Device API^개요^
+|Accelerometer	|디바이스 모션 센서 접근(현재 가속도 정보등등) |
+|Camera	|디바이스의 기본 카메라 어플리케이션에 접근 |
+|Capture	|장치의 오디오, 이미지 및 비디오 캡처 기능에 대한 액세스를 제공|
+|Compass	|디바이스 포인팅 방향 정보 처리|
+|Connection	|디바이스의 cellular, wifi 정보 접근 (호스트 네임등등) |
+|Contacts	|디바이스의 연락처 데이터 베이스에 접근(연락처 만들기, 검색등등) |
+|Device	|디바이스 H/W S/W 정보에 접근 (디바이스명, 플랫폼버전등등) |
+|Events	|폰갭이 모두 로드 되었을때, 딱 한번 deviceready 메소드를 수행한다. (엔트리 포인트 . .) |
+|File	|파일 시스템 계층의 읽기, 쓰기, 탐색등의  기능 제공|
+|Geolocation 	|디바이스 GPS센서에 접근 (현재 위치등등) |
+|Media	|디바이스의 오디오 파일을 저장하고 기록할 수 있는 기능을 제공|
+|Notification	|영상 음성, 진동등을 통한 알림 제공. (alert, confirm, beep, vibrate등등을 발생 시키는 . .) |
+|Storage	|디바이스 스토리지에 대한 접근을 제공|
+
+
+==== PhoneGap License ====
+
+PhoneGap은 아파치 코르도바 라는 이름으로 아파치 소프트웨어 재단에 기부되었다. 아파치 재단에 의해 PhoneGap은 아파치 라이선스 2.0 버전을 가지고 있는 오픈 소스이다.\\
+PhoneGap 라이선스는 다음 URL을 참고한다.
+
+http://www.phonegap.com/about/license
+
+==== PhoneGap 지원 플랫폼 (호환성)====
+
+PhoneGap을 활용한 디바이스 별 지원 플랫폼은 다음 URL을 참고한다. 각 디바이스 API 별 상세내용은 Device API Doc 내용을 참고할 수 있다.
+
+http://www.phonegap.com/about/feature
+
+
+==== PhoneGap 참고사항 ====
+
+=== 크로스 도메인 활용 (Domain Whitelist Guide) ===
+폰갭에서는 모든 네크워크 접속을 차단하는 보안 정책을 기본으로 사용하고 있다.
+개발자는 특정 도메인이나 하위 도메인으로 접속하여 외부자원을 사용해야 할 경우 아래의 내용을 참조하여 설정 가능하다. 
+
+=== Android ===
+  * Res/xml/config.xml에서 외부 도메인을 선언하여 외부 자원의 사용을 위한 도메인을 추가 설정할 수 있다.
+<code xml>
+<cordova>
+<access origin="http://127.0.0.1*"/> <!-- allow local pages -->
+	<access origin="https://example.com" />
+	<access origin="https://example.com" subdomains="true" />
+	/* 서브 도메인에 관한 설정 */
+
+	<access origin=".*"/>
+	/*  모든 도메인에 대한 접속 허용 설정 */
+</cordova>
+</code>
+
+
+=== iOS ===
+   *  Supporting Files/config.xml에서 외부 도메인을 선언하여 외부 자원의 사용을 위한 도메인을 추가 설정할 수 있다.
+<code xml>
+        <access origin="https://example.com">
+</code>
+
+===== 참고자료 =====
+  * http://www.phonegap.com/

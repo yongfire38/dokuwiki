@@ -1,0 +1,31 @@
+====== 표준프레임워크 모바일 디바이스 API 가이드 프로그램 3.10 ======
+
+
+===== 모바일 디바이스 API 가이드 프로그램 개요 =====
+  * [[egovframework:hyb3.6:guide:디바이스 API 가이드 프로그램 이란?|모바일 디바이스 API 가이드 프로그램 이란?]]
+  * [[egovframework:hyb3.6:guide:디바이스 API 가이드 프로그램 환경설정|모바일 디바이스 API 가이드 프로그램 환경설정]]
+  * [[egovframework:hyb3.6:guide:디바이스 API 가이드 배포패키지 구성|모바일 디바이스 API 가이드 배포패키지 구성]]
+  * [[egovframework:hyb3.9:guide:TableInfo|모바일 디바이스 API 가이드 프로그램 테이블 구성정보]]
+  * [[egovframework:hyb3.10:guide:SwaggerUI|모바일 디바이스 API 가이드 프로그램(Web) Swagger UI 적용 방법(v3.10)]]
+===== 모바일 디바이스 API 가이드 프로그램 상세가이드(Android, iOS) V3.9 =====
+  * Accelerator ([[egovframework:hyb3.9:guide:add:Accelerator|Android]], [[egovframework:hyb3.9:guide:ios:Accelerator|iOS]])
+  * Camera ([[egovframework:hyb3.9:guide:add:Camera|Android]], [[egovframework:hyb3.9:guide:ios:Camera| iOS]])
+  * Compass ([[egovframework:hyb3.9:guide:add:Compass|Android]], [[egovframework:hyb3.9:guide:ios:Compass|iOS]])
+  * Contacts ([[egovframework:hyb3.9:guide:add:Contact|Android]], [[egovframework:hyb3.9:guide:ios:Contact| iOS]])
+  * DeviceInfo ([[egovframework:hyb3.9:guide:add:Device|Android]], [[egovframework:hyb3.9:guide:ios:Device| iOS]])
+  * File Read/Write ([[egovframework:hyb3.9:guide:add:File Read/Write|Android]], [[egovframework:hyb3.9:guide:ios:File Read/Write| iOS]])
+  * GPS ([[egovframework:hyb3.9:guide:add:GPS|Android]], [[egovframework:hyb3.9:guide:ios:GPS| iOS]])
+  * Interface ([[egovframework:hyb3.9:guide:add:interface|Android]], [[egovframework:hyb3.9:guide:ios:interface|iOS]])
+  * Media ([[egovframework:hyb3.9:guide:add:Media|Android]], [[egovframework:hyb3.9:guide:ios:Media| iOS]])
+  * Network ([[egovframework:hyb3.9:guide:add:Network|Android]], [[egovframework:hyb3.9:guide:ios:Network| iOS]])
+  * Vibrator ([[egovframework:hyb3.9:guide:add:Vibrator|Android]], [[egovframework:hyb3.9:guide:ios:Vibrator| iOS]])
+  * PushNotifications ([[egovframework:hyb3.9:guide:add:PushNotifications|Android]], [[egovframework:hyb3.9:guide:ios:PushNotifications|iOS]])
+  * FileOpener ([[egovframework:hyb3.9:guide:add:FileOpener|Android]], [[egovframework:hyb3.9:guide:ios:FileOpener|iOS]])
+  * StreamingMedia ([[egovframework:hyb3.9:guide:add:StreamingMedia|Android]], [[egovframework:hyb3.9:guide:ios:StreamingMedia|iOS]])
+  * Barcodescanner ([[egovframework:hyb3.9:guide:add:Barcodescanner|Android]], [[egovframework:hyb3.9:guide:ios:Barcodescanner|iOS]])
+  * WebResourceUpdate ([[egovframework:hyb3.9:guide:add:WebResourceUpdate|Android]], [[egovframework:hyb3.9:guide:ios:WebResourceUpdate|iOS]])
+  * DeviceFileMgmt ([[egovframework:hyb3.9:guide:add:DeviceFileMgmt|Android]], [[egovframework:hyb3.9:guide:ios:DeviceFileMgmt|iOS]])
+  * JailbreakDetection ([[egovframework:hyb3.9:guide:add:JailbreakDetection|Android]], [[egovframework:hyb3.9:guide:ios:JailbreakDetection|iOS]])
+  * SocketIO ([[egovframework:hyb3.9:guide:add:SocketIO|Android]], [[egovframework:hyb3.9:guide:ios:SocketIO|iOS]])
+  * SQLite ([[egovframework:hyb3.9:guide:add:SQLite|Android]], [[egovframework:hyb3.9:guide:ios:SQLite|iOS]])
+  * Unzip ([[egovframework:hyb3.9:guide:add:Unzip|Android]], [[egovframework:hyb3.9:guide:ios:Unzip|iOS]])

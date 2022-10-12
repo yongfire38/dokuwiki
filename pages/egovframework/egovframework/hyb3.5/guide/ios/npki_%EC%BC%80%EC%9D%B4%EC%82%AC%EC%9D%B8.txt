@@ -1,0 +1,707 @@
+====== NPKI(WizSign) 디바이스API 가이드 프로그램 ======
+
+===== 개요 =====
+NPKI 가이드 프로그램(WizSign)은 모바일 디바이스 API 실행환경을 활용하여 하이브리드 앱을 개발 시 참고 및 활용될 수 있도록 구현 된 전자정부 디바이스 API에 대한 가이드 앱으로써,
+모바일 스마트 디바이스의 NPKI 관련 기능을 JavaScript 기반으로 구성 된 NPKI DeviceAPI 를 통하여 이용 할 수 있도록 지원한다. \\
+
+또한, 전자정부 표준프레임워크 기반의 웹 서버 어플리케이션과 연계하여 모바일기기에 저장된 인증서를 정부에서 제공하는 인증을 이용하여 인증서 인증을 하고 결과를 서버에 저장하며 인증서 인증 결과 로그를 조회하는 기능으로 구성되어 있다. \\
+
+==== 특징 ====
+본 가이드 프로그램 에서는 NPKI 기능을 가이드 할 수 있도록 ** 모바일 기기 인증서 선택/인증하기 **, ** 인증 로그 정보 보기 ** 기능을 제공하고 있으며 웹 서버 어플리케이션에 ** 표준 보안 API ** 를 적용하여 인증서 정보를 확인 할 수 있는 기능으로 구현되었다.
+
+==== 기능흐름도 ==== 
+{{:egovframework:hyb:guide:add:NPKI기능흐름도.png?540|}}
+
+==== 기능시퀀스 ==== 
+{{:egovframework:hyb:guide:add:NPKI시퀀스다이어그램.png?400|}}
+
+==== 전제조건 ====
+
+^           구분            ^             내용             ^
+|Local 디바이스 개발 환경  |Xcode 6.3.2, PhoneGap 4.3.0|
+|서버 사이드 개발 환경  |전자정부표준프레임워크 개발환경 3.5|
+|Mash up Open API 연계|N/A|
+|테스트 디바이스  |iPhone4, iPhone6 |
+|테스트 플랫폼  |iOS 7.1.2, iOS 8.3 |
+|추가 라이브러리 적용|WizSign 라이브러리 적용\\ wizsignpg.js, cert.db, WizSignPG.h, WizSignPGlib.a|
+
+==== 제약사항 ====
+
+=== NPKI 라이브러리 ===
+  * NPKI 디바이스 API 가이드 프로그램에는 보안모듈이 포함되어있지 않기 때문에 해당 보안 모듈회사로 라이센스 계약 및 지원 요청을 해야한다. \\
+
+
+^업체명^담당자^전화번호^홈페이지^
+|(주)케이사인|신동수 선임|02-564-0182|[[http://www.ksign.com]]|
+
+=== 전자정부 보안표준 API 적용을 위한 방법 ===
+전자정부 보안표준 API를 사용하기 위해서는 별도로 보안표준 API를 신청하여야 하며, 이는 행정전자서명 인증관리센터(http://www.gpki.go.kr)에서 주관하고 있다. \\
+\\
+서비스 신청 방법은 다음과 같다. \\
+\\
+▶ 표준 API 보급관리시스템 접속이 가능한 경우 \\
+ㅇ [표준API보급관리시스템] 에서 웹으로 API신청(공문, 구성도 첨부) \\
+ㅇ 서비스 URL : http://api.gpki.go.kr \\
+공문은 한국지역정보개발원 - 지역정보센터 - 정보기반과로 보내주면 된다. \\
+공문 내용은 업무시스템명, 담당자, 연락처 및 표준 API 를 신청한다는 내용. \\
+- 해당서비스는 행정망에서만 이용가능함 - \\
+\\
+▶ 외부망 (http://api.gpki.go.kr 접속 불가) 일경우  \\
+ㅇ 행정전자서명 인증관리센터(http://www.gpki.go.kr) 사이트의 "자료실-인증서신청관련양식-7.표준 API 신청방법 및 표준 API 신청서"에 있는 표준 API 신청서를 작성하셔서 공문과 함께 신청서를 보내주면 된다. \\
+ 공문 수신처 : 한국지역정보개발원 - 지역정보센터 - 정보기반과  \\
+ 공문 내용은 업무시스템명, 담당자, 연락처 및 표준 API 를 신청한다는 내용. \\
+\\
+기타 자세한 정보 확인 및 문의는 행정전자서명 인증관리센터(http://www.gpki.go.kr)를 참고한다. \\
+\\
+
+=== 지원 디바이스 및 플랫폼 ===
+== iPhone 의 경우 장치의 연산속도에 따른 문제가 발생할 수 있다. ==
+    * 문제 : 폰갭 오류시.
+    * 해결방안 : setTimeout() 함수로 phonegap 로딩 순서를 지연시킨다.\\
+<code>
+    document.addEventListener('DOMContentLoaded', function () { setTimeout(loaded, 200); }, false);
+</code>
+    * 문제 : iScroll5 컨텐츠 내용 높이 계산 오류.
+    * 해결방안 : setTimeout() 함수로 컨텐츠에 css 적용이 완료되고 iscroll 생성이 되도록 한다.
+<code>
+setTimeout(function()
+           {
+               myScroll = new iScroll(thisPage, 
+                                      { 
+                                          checkDOMChanges: true,
+                                          onBeforeScrollStart:function(e)
+                                          {
+                                          }
+                                      });
+           },
+           500);
+</code>
+== CallBack 함수에서 alert() 를 포함하면 문제가 발생할수 있다 (phoneGap) ==
+    * 문제 : 폰갭에 지정한 콜백 함수에서 alert() 메시지 호출시 동작 오류.
+    * 해결 방안 : 비동기 함수를 사용하거나 alert()처럼 스레드를 잡는 함수는 사용하지 않는다.
+
+크로스 도메인 사용 ===폰갭에서 특정 외부 도메인이나 외부 도메인의 하위 도메인을 사용해야할 경우,\\ Resource/Cordova.plist에서 <key>ExternalHosts</key> 항목에 외부 도메인 주소를 추가 설정해야 외부 도메인에 접속할 수 있다.
+
+===== 설명 ===== 
+NPKI 디바이스API 가이드 프로그램은 크게 모바일 기기내의 인증서를 선택 및 서명 데이터를 만들어 웹 서버 어플리케이션으로 전송하여 인증서를 인증하는 기능과 인증서로 인증된 로그 데이터를 조회하는 기능으로 구성되어 있다.(관련기능 부분참조)
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:hyb:guide:ios:pki_class.png?1024}}
+
+==== Device Application ====
+
+=== 관련 소스 ===
+
+^유형^대상소스명^비고^
+|CSS|www/css/egovframwork/mbl/hyb/PKIWizSignAPI.css |NPKIAPI 가이드 프로그램 주요 Cascading Style Sheets|
+|IMAGE |www/images/egovframwork/mbl/hyb/ |NPKIAPI 가이드 프로그램 주요 Image 폴더|
+|JS |www/js/egovframwork/mbl/hyb/PKIWizSignAPI.js |NPKIAPI 가이드 프로그램 주요 JavaScript|
+|JS |www/js/egovframwork/mbl/hyb/wizsignpg.js |NPKIAPI 가이드 프로그램 주요 JavaScript|
+|JS |www/js/egovframwork/mbl/hyb/messages_ko.js |Validate 메세지 처리 JavaScript|
+|HTML|www/NPKIWizSignAPI.html|NPKIAPI 메인 페이지|
+|HTML|www/license.html|NPKIAPI 라이센스 페이지|
+|HTML|www/overview.html|NPKIAPI 기능설명 페이지|
+
+=== 전체 기능 API ===
+
+[[egovframework:hyb3.5:guide:ios:npki_케이사인:wizsign_doc|WizSign API DOC]]
+
+=== 활용 API ===
+
+== doSignature ==
+  * 선택한 인증서로 전자서명을 수행하여 서명값을 반환한다. \\
+
+- 파라메터 : 인증서 번호, 인증서 비밀번호, 서명대상 원문 \\
+- 반환값(해시 테이블) \\
+  'signedData' : 서명데이터
+  'errMsg' : 에러 발생시 에러메시지
+
+
+<code>
+var args = new Array();
+args[0] = selectCertNum.toString() ;
+args[1] = '1';
+args[2] = stringToSign;
+
+WizSignPG.doSignature(args, function(result) {
+        var signedData = result['signedData'];	// 서명데이터
+    }, function(error) {
+        alert(error['errMsg']);	// 에러메시지
+});
+</code>
+
+== getCertificates == 
+  * 저장된 인증서목록을 가져와 반환한다.
+  
+- 파라메터 : N/A \\
+- 반환값(해시 테이블) \\
+  'Certificates' : 인증서 목록
+  'errMsg' : 에러 발생시 에러메시지
+
+<code>
+WizSignPG.getCertificates("", function(result) {
+    var certList = result['Certificates'];
+
+    for(var i=0 ; i<certList.length ; i++) {
+        certList[i]['NUM'];
+        certList[i]['주체자'];
+        certList[i]['발급자'];
+        certList[i]['만료일'];
+    }
+
+    }, function(error) {
+        alert("error['errMsg']);
+});
+</code>
+
+인증서 정보 해시테이블
+^해시테이블^설명^
+|NUM|인증서 번호|
+|버전|인증서 버전|
+|일련번호|인증서 시리얼번호|
+|서명알고리즘|인증서 서명알고리즘|
+|발급자|인증서의 발급자 정보|
+|효력발생일|인증서의 효력 발생일|
+|만료일|인증서 만료일|
+|주체자|인증서 주체자 정보|
+|공개키알고리즘|인증서 공개키 알고리즘|
+|발급자시리얼번호|발급자시리얼번호|
+|공개키|공개키값|
+|기관키식별자|기관키식별자|
+|주체자식별자|주체자식별자|
+|정책|정책|
+|주체대체이름|주체대체이름|
+|CRL분배지점|CRL분배지점|
+|기관정보액세스|기관정보액세스(OCSP)|
+|키사용|키사용용도|
+|서명|인증서 서명값|
+
+== verifyCertPassword ==
+  * 선택한 인증서의 비밀번호를 검증한다.
+
+- 파라메터 : 인증서 번호, 인증서 비밀번호 \\
+- 반환값(해시 테이블) \\
+  'result' : 인증서 비밀번호 검증결과(성공시 'OK')
+  'errMsg' : 에러 발생시 에러메시지
+
+
+<code>
+var args = new Array();
+args[0] = certNum.toString();
+args[1] = certPass;
+
+WizSignPG.verifyCertPassword(args, function(result) {
+    var runResult = result['result'];
+
+    if(runResult == 'OK') {
+        alert('인증서 비밀번호가 일치합니다.');	
+    }
+			
+    }, function(error) {
+    alert(error['errMsg']);
+});
+</code>
+
+
+== changeCertPassword ==
+  * 선택한 인증서의 비밀번호를 변경한다.
+
+- 파라메터 : 인증서 번호, 인증서 비밀번호, 새로운 인증서 비밀번호 \\
+- 반환값(해시 테이블) \\
+  'result' : 인증서 비밀번호 변경 결과(성공시 'OK')
+  'errMsg' : 에러 발생시 에러메시지
+
+<code>
+var args = new Array();
+args[0] = certNum.toString();
+args[1] = beforePass;
+args[2] = afterPass;
+						
+WizSignPG.changeCertPassword(args, function(result) {
+    var runResult = result['result'];
+
+    if(runResult == 'OK') {
+        alert('인증서 비밀번호를 변경하였습니다.');	
+    }
+
+    }, function(error) {
+    alert(error['errMsg']);
+});
+</code>
+
+
+== removeCert ==
+  * 선택한 인증서를 삭제한다.
+
+- 파라메터  인증서 번호 \\
+- 반환값(해시 테이블) \\
+  'result' : 인증서 삭제 결과(성공시 'OK')
+  'Certificate' : 삭제된 인증서 정보
+  'errMsg' : 에러 발생시 에러메시지
+
+<code>
+var args = new Array();
+args[0] = certNum.toString();
+	
+WizSignPG.removeCert(args, function(result) {
+    var runResult = result['result'];
+
+    if(runResult == 'OK') {
+        alert('인증서가 삭제되었습니다.')
+    }			
+	
+    }, function(error) {
+        alert(error['errMsg']);			
+});
+</code>
+
+
+== doValidateCert ==
+  * 선택한 인증서의 유효성 검증을 수행한다. (CRL 검증)
+
+- 파라메터  인증서 번호 \\
+- 반환값(해시 테이블) \\
+  'result' : 인증서 CRL 검증결과(성공시 'OK')
+  'status' : 인증서 상태
+  'errMsg' : 에러 발생시 에러메시지
+
+
+<code>
+var args = new Array();
+args[0] = certNum.toString();
+		
+WizSignPG.doValidateCert(args, function(result) {
+    var runResult = result['result'];
+    var certStatus = result['status'];
+			
+    if(runResult == 'OK') {
+        alert(certStatus);	
+    }
+		
+    }, function(error) {
+	alert(error['errMsg']);
+});
+</code>
+
+==== Server Application ====
+
+=== 관련 소스 ===
+^유형^대상소스명^비고^
+|Controller|egovframework.hyb.ios.pki.web.EgovPKIiOSAPIController.java|NPKIAPI 가이드 프로그램 Controller Class|
+|Service|egovframework.hyb.ios.pki.service.EgovPKIiOSAPIService.java|NPKIAPI 가이드 프로그램  Service Class|
+|ServiceIimpl|egovframework.hyb.ios.pki.service.impl.EgovPKIiOSAPIServiceImpl.java|NPKIAPI 가이드 프로그램  ServiceImpl Class|
+|VO|egovframework.hyb.ios.pki.service.PKIiOSAPIDefaultVO.java|NPKIAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.ios.pki.service.PKIiOSAPIVO.java|NPKIAPI 가이드 프로그램 VO Class|
+|VO|egovframework.hyb.ios.pki.service.PKIiOSAPIXmlVO.java|NPKIAPI 가이드 프로그램 XML 관련 VO Class|
+|DAO|egovframework.hyb.ios.pki.service.impl.PKIiOSAPIDAO.java|NPKIAPI 가이드 프로그램 Dao Class|
+|QUERY XML|resources/egovframework/sqlmap/hyb/ios/pki/EgovPKIiOSAPIGuide_SQL_XXX.xml|NPKIAPI 가이드 프로그램 QUERY XML|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|NPKIAPI 가이드 프로그램 Id생성 Idgen XML|
+
+=== 관련 테이블 ===
+^테이블명^테이블명(영문)^비고^
+|PKI|PKI|인증서 인증 로그 관리|
+
+=== 테이블 정의서 ===
+
+   * PKI
+
+^No^컬럼ID^컬럼명^타입^길이^Null^
+|1|SN|일련번호|NUMERIC|6|NotNull|
+|2|UUID|UUID|VARCHAR|50|NotNull|
+|3|DN|인증데이터|VARCHAR|255|Null|
+|4|CFTFC_DT|인증날짜시간|DATETIME| |Null|
+|5|ENTRPRS_SE_CODE|업체구분|CHAR|15|Null|
+
+
+=== ERD ===
+{{:egovframework:hyb:guide:ios:erd.jpg|}}
+
+
+=== 표준 보안 API ===
+
+<code>
+public String verifyCert(PKIAndroidAPIVO pkiVo) throws Exception {
+    // API 초기화
+    GpkiApi.init("C:/libgpkiapi_jni/conf");
+    String sign;
+    sign = pkiVo.getSign();	
+    return verify(Base64.decode(sign));   	
+}
+
+private String verify(final byte[] bSignedData)  {
+    String sClientName = "";
+    try {
+        // 서명값을 검증
+        SignedData signedData = null;
+        signedData = new SignedData();			
+        signedData.verify(bSignedData);		
+			
+        // 서명자의 인증서 검증을 위해서 서버의 서명용 인증서 획득
+        X509Certificate clientCert = null;
+        clientCert = signedData.getSignerCert(0);
+	
+        // 인증서 검증
+        CertPathValidator certPathValiditor = null;
+        certPathValiditor = new CertPathValidator("C:/libgpkiapi_jni/conf/gpkiapi.conf");
+			
+        // 신뢰하는 최상위 인증서 추가
+        X509Certificate rootCertRsa = null;
+        rootCertRsa = Disk.readCert("C:/libgpkiapi_jni/conf/root-rsa2.der");
+        X509Certificate rootCertRsaSha = null;
+        rootCertRsaSha = Disk.readCert("C:/libgpkiapi_jni/conf/root-rsa-sha2.der");
+        certPathValiditor.addTrustedRootCert(rootCertRsa);
+        certPathValiditor.addTrustedRootCert(rootCertRsaSha);			
+			
+        // 클라이언트의 인증서 검증 범위 설정
+        certPathValiditor.setVerifyRange(CertPathValidator.CERT_VERIFY_FULL_PATH);
+			
+        // 클라이언트의 인증서 폐지여부 확인 설정 (CRL/ARL 검증 설정함)
+        certPathValiditor.setRevokationCheck(CertPathValidator.REVOKE_CHECK_ARL | CertPathValidator.REVOKE_CHECK_CRL);
+			
+        // 인증서 검증 요청
+        certPathValiditor.validate(CertPathValidator.CERT_SIGN, clientCert);	
+					
+        sClientName = clientCert.getSubjectDN();			
+			
+			
+    } catch (Exception e) {			
+        sClientName = "";
+    }
+    return sClientName;
+}
+</code>
+
+
+===== 환경설정 ===== 
+
+NPKI 디바이스API 가이드 프로그램에서 제공하는 모바일 디바이스의 NPKI 관련 기능을 활용하기 위하여 필요한 항목 및 그 환경 설정은 다음과 같다.
+
+==== Device Application ====
+
+=== config.xml===
+
+== Plugin ==
+<code xml>
+    <feature name="InterfaceAPI">
+        <param name="ios-package" value="EgovInterface"/>
+    </feature>
+    <feature name="WizSignPG">
+        <param name="ios-package" value="WizSignPG"/>
+    </feature>
+</code>
+
+=== [Project_Name]/eGovModule/EGovComModule.h ===
+
+<code>
+<!--전자정부 Interface 디바이스 API에서 사용하기 위한 서버경로 설정-->
+#define kSERVER_URL     @"Server_URL"
+</code>
+
+==== Server Application ====
+
+=== resource/egovframework/sqlmap/sql-map-config_[DB명].xml ===
+<code xml>
+<sqlMap resource="egovframework/sqlmap/hyb/ios/pki/EgovPKIiOSAPIGuide_SQL_[DB명].xml"/>
+</code>
+
+=== 표준 보안 API ===
+설정 참조
+
+===== 관련기능 ===== 
+NPKI 디바이스 API 가이드는 크게 ** 모바일 기기 인증서 선택/인증하기 **, ** 인증 로그 정보 보기 ** 기능으로 구성되어있다.
+
+==== 모바일 기기 인증서 선택/인증하기 ====
+
+=== 비즈니스 규칙 ===
+디바이스 API를 통해 모바일 기기에 저장된 인증서 리스트를 조회하고, 리스트에서 선택한 인증서로 인증서 인증을 한다.
+
+=== 관련코드  ===
+
+디바이스 API 내의 인증서 리스트 조회 함수를 사용하는 JavaScript 코드를 통해 인증서 리스트를 조회하고, 서명 데이터를 만드는 JavaScript 함수를 사용하여 서명한다.
+<code>
+// 인증서 리스트 조회
+function fn_egov_go_certlist()
+{
+    console.log("PKIWizSignAPIGuide fn_egov_go_certlist");
+    $.mobile.showPageLoadingMsg('a');
+    WizSignPG.getCertificates(fn_egov_getcertlistSuccess, fn_egov_getcertlistFail);
+}
+
+// 인증서 비밀번호 확인
+function fn_egov_confirm_password() {
+    console.log('PKIWizSignAPIGuide fn_egov_confirm_password()');
+    
+    var args = new Array();
+    var tmpIndex = document.getElementById("xsigncertindex").value;
+    args[0] = '1';//tmpIndex.toString();
+    args[1] = $("#loginPasswd").val();
+    console.log(args);
+	
+    WizSignPG.verifyCertPassword(args, function(result) {
+                                     //Certificates
+                                     var runResult = result['result'];
+                                     var error = result['errMsg'];
+                                     
+                                     if(error!=null){
+                                         alert(error);
+                                     }
+                                     
+                                     if(runResult == 'OK') {
+                                         console.log("PKIWizSignAPIGuide fn_egov_confirm_password Completed");
+//                                         alert('인증서 비밀번호가 일치합니다.');
+                                         fn_egov_make_sign();
+                                     } else {
+                                         console.log("PKIWizSignAPIGuide fn_egov_confirm_password Failed");
+                                     }
+                                 }, function(error) {
+                                     alert("Error: \r\n" + error['errMsg']);
+                                 });
+}
+
+// 인증서 서명
+function fn_egov_make_sign()
+{
+    console.log('PKIWizSignAPIGuide fn_egov_make_sign()');
+    var args = new Array();
+    args[0] = '1';//document.getElementById("xsigncertindex").value;
+    args[1] = $("#loginPasswd").val();
+    args[2] = "usrId=&password=&name=";
+    
+    WizSignPG.doSignature(args, fn_egov_makesign_ok, fn_egov_makesign_fail);
+}
+
+// 인증서 서명 데이터 서버로 인증 요청
+function fn_egov_makesign_ok(arg)
+{
+    var signedData = arg['signedData'];
+    var params = {uuid :  device.uuid,
+            sign: signedData,
+            entrprsSeCode: 'PKI02'};
+	
+    alert('Http Method:POST\nAcceptType:JSON\n전송데이터:' + JSON.stringify(params));
+    $.mobile.showPageLoadingMsg('a');
+    EgovInterface.submitAsynchronous(
+                                     [params, "/pki/addPKIiOSInfo.do"],
+                                     function(result) {
+                                         console.log("PKIWizSignAPIGuide fn_egov_makesign_ok request Completed");
+                                         var str = '{';
+                                         for (myKey in result){
+                                             str += myKey + ':' + result[myKey] + '\n';
+                                         }
+                                         str += '}';
+                                         alert('응답방식:RESTful\n응답Type:json, post\nParam:\n' + str);
+                                         //window.history.back();
+                                         $.mobile.hidePageLoadingMsg('a');
+                                         location.href = "index.html";
+                                     },
+                                     function(error) {
+                                         console.log("PKIWizSignAPIGuide fn_egov_makesign_ok request Failed");
+                                         var str = '{';
+                                         for (myKey in error){
+                                             str += myKey + ' : ' + error[myKey] + '\n';
+                                         }
+                                         str += '}';
+                                         alert('응답방식:RESTful\n전송Type:json, post\nParam:\n' + str);
+                                         $.mobile.hidePageLoadingMsg('a');
+                                     }
+                                     );
+}
+
+//올레인증서 호출
+function doKISAShowApp() {
+    var args = new Array();
+    args[0] = 'PhoneGapTest';
+    args[1] = '01';
+    
+    WizSignPG.runShowApp(args, function(result) {
+                             // result
+                             var runResult = result['result'];
+                             // runResult == 'OK' -> 실행성공
+                             console.log("PKIWizSignAPIGuide doKISAShowApp Completed");
+                         }, function(error) {
+                             console.log("PKIWizSignAPIGuide doKISAShowApp Failed");
+                             navigator.notification.alert("Error: \r\n" + error['errMsg']);
+                         });
+}
+
+// PKCS#12데이터를 인증서로 변환하여 저장한다.
+function makeCert(strP12, certPass, newPass) {
+    
+    var args = new Array();
+    args[0] = strP12;
+    args[1] = certPass;
+    args[2] = newPass;
+    
+    WizSignPG.importPKCS12(args, function(result) {
+                           
+                           var runResult = result['result'];
+                           var certInfo = result['Certificate'];
+                           
+                           if(runResult == 'OK') {
+                               console.log("PKIWizSignAPIGuide makeCert Completed");
+                               navigator.notification.alert('[' + certInfo['주체자'] + '] 인증서가 생성되었습니다.1')
+                               fn_egov_go_certlist();
+                           }
+                           }, function(error) {
+                               console.log("PKIWizSignAPIGuide makeCert Failed");
+                               navigator.notification.alert("Error: \r\n" + error['errMsg']);
+                           });
+}
+
+// KISA ollehApp으로부터 받은 URL데이터를 처리하여 PKCS#12데이터를 반환한다.
+function handleOpenURL(url)
+{
+    console.log('handleOpenURL');
+    var g_p12cert = callback_kisaShowApp(url);
+    makeCert(g_p12cert, 'han9476046946', 'han9476046946');
+}
+
+
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|인증서 인증|/pki/xml/addPKIiOSInfo.do|addPKIInfoXml|"PKIiOSAPIDAO.insertPKIInfo"|
+
+^인증서 리스트^인증서 인증^
+|{{:egovframework:hyb:guide:ios:wiz_cert_list.png|}}|{{:egovframework:hyb:guide:ios:wiz_log.png|}}|
+
+인증서 리스트 화면에서 인증할 인증서를 선택하고 인증서 인증 화면에서 PASSWD 항목에 패스워드를 입력 후 "인증 확인" 버튼을 클릭한다. \\
+단, PASSWD 항목에서 validation을 확인하고, 조건이 불충분 할 경우 오류 메시지가 출력된다.
+
+인증 확인 : 인증서 인증을 하기 위해서 PASSWD 항목에 인증서 패스워드를 입력 후 "인증 확인" 버튼을 클릭한다. \\
+Back 버튼 : **NPKI 디바이스 API 가이드 프로그램 메뉴** 화면 또는 **인증서 리스트** 화면으로 이동한다. \\
+
+==== 인증 로그 정보 보기 ====
+
+
+=== 비즈니스 규칙 ===
+
+웹 서버 어플리케이션으로 부터 인증서 인증 결과 로그를 조회한다. \\
+
+=== 관련코드  ===
+
+<code>
+function fn_egov_go_loginInfoList()
+{
+    $.mobile.changePage("#loginInfoList", "slide", false, false);
+	
+    // get the data from server
+    console.log('fn_egov_go_loginInfoList()');
+    var accept_type = "json";
+    $.mobile.showPageLoadingMsg('a');
+    // get the data from server
+    EgovInterface.submitAsynchronous(
+                                     ["/pki/pkiInfoList.do"],
+                                     function(result) {
+                                         console.log("PKIWizSignAPIGuide fn_egov_go_loginInfoList Completed");
+                                         var list_html = "";
+                                         var totcnt = result.pkiInfoList.length;
+                                         
+                                         for (var i = 0; i < totcnt; i++) {
+                                             var data = result.pkiInfoList[i];
+                                             var entrprsSe = "NONE";
+                                             var entrprsSeCode = data.entrprsSeCode;
+                                             if(entrprsSeCode == 'PKI01')
+                                                 entrprsSe = "MagicXSign";
+                                             else if(entrprsSeCode == 'PKI02')
+                                                 entrprsSe = "WizSign";
+                                             else if(entrprsSeCode == 'PKI03')
+                                                 entrprsSe = "XecureSmart";
+                                             
+                                             list_html += "<li><h3>subjdn : " + data.dn + "</h3>";
+                                             list_html += "<p><strong>Date : " + data.crtfcDt + "</strong></p>";
+                                             list_html += "<p>NPKI : " + entrprsSe + "</p></li>";
+                                         }
+                                         var theList = $('#theLogList');
+                                         theList.html(list_html);
+                                         $.mobile.changePage("#loginInfoList", "slide", false, false);
+                                         theList.listview("refresh");
+                                         $.mobile.hidePageLoadingMsg('a');
+                                         setTimeout(loadiScrollList, 1000);
+                                     },
+                                     function(error) {
+                                         console.log("PKIWizSignAPIGuide fn_egov_go_loginInfoList Failed");
+                                         var str = '{';
+                                         for (var myKey in error){
+                                             str += myKey + ' : ' + error[myKey] + '\n';
+                                         }
+                                         str += '}';
+                                         alert('응답방식:RESTful\n전송Type:json, post\nParam:\n' + str);
+                                         $.mobile.hidePageLoadingMsg('a');
+                                     }
+                                     );
+}
+</code>
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^QueryID^
+|인증서 인증 결과 로그 조회|/pki/xml/pkiInfoList.do|EgovPKIiOSAPIController|selectPKIInfoListXml|PKIiOSAPIDAO.selectPKIInfoList|
+
+{{:egovframework:hyb:guide:ios:wiz_log.png|}}
+
+===== 컴파일 디버깅 배포 ===== 
+==== 컴파일 ====
+=== NPKI Device Applicaton 컴파일 방법 ===
+1. 디바이스 또는 시뮬레이터에서 실행하고자 할 경우 빨간 테두리 영역을 클릭한다.\\
+{{:egovframework:hyb:guide:ios:xcode실행영역선택1.png|}}\\
+2. 디바이스 또는 시뮬레이터를 선택한다.\\
+{{:egovframework:hyb:guide:ios:xcode실행영역선택2.png|}}\\
+3. 실행 버튼을 클릭한다.\\
+{{:egovframework:hyb:guide:ios:xcode실행버튼.png|}}\\
+4. 인트로 화면과 메인 화면을 확인한다.\\
+{{:egovframework:hyb:guide:ios:wiz_intro2.png|}}{{:egovframework:hyb:guide:ios:wiz_main2.png|}}
+
+=== NPKI Server Applicaton 컴파일 방법 ===
+
+  * NPKIAPI 서버사이드 가이드 프로그램의 실행은 프로젝트를 마우스 오른쪽 버튼을 클릭 한후 Run As>Run On Server 버튼을 통해 실행 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:서버실행.png?640|}}
+
+  * 빌드가 성공적으로 수행 되면 이클립스의 콘솔 창에서 'Server Startup in xxx ms' 메시지를 확인 할 수 있다.
+
+{{:egovframework:hyb:guide:ios:웹서버실행성공.png?700|}} 
+
+==== 디버깅 ====
+
+디바이스 어플리케이션에서 발생한 오류 내용 확인 및 디버깅을 위해서는 폰갭 프레임워크에서 제공하는 console.log를 이용할 수 있다. console.log 함수는 자바스크립트 구문에서 사용할 수 있는 디버그 코드로 이클립스 및 Xcode에서 확인 할 수 있다.
+    * 실제 콘솔 로그 예
+<code>
+function fn_egov_network_check(doCheck)
+{
+    console.log('DeviceAPIGuide fn_egov_network_check');
+    var networkState = navigator.network.connection.type;
+    ...
+}
+</code>
+    * xCode 콘솔 창
+{{:egovframework:hyb:guide:ios:cameradebugxcode.png?700|}}\\
+    * Organizer 로그 창
+{{:egovframework:hyb:guide:ios:cameradebugorganizer.png?700|}}\\
+
+NPKI API 가이드 프로그램 에서는 디버깅을 위하여 다음과 같이 콘솔 정보를 출력한다.
+
+^디버그 코드^디버깅 내용^
+|PKIWizSignAPIGuide deviceready Success|Device 준비 성공 시|
+|PKIWizSignAPIGuide fn_egov_makesign_ok request Completed|웹 서버 어플리케이션으로 부터 인증서 인증 성공 시 |
+|PKIWizSignAPIGuide fn_egov_makesign_ok request Failed|웹 서버 어플리케이션으로 부터 인증서 인증 실패 시 |
+|PKIWizSignAPIGuide fn_egov_makesign_ok Success|인증서 서명 성공 시 |
+|PKIWizSignAPIGuide fn_egov_makesign_fail Failed|인증서 서명 실패 시 |
+|PKIWizSignAPIGuide fn_egov_getcertlistSuccess Success|인증서 리스트 조회 성공 시 |
+|PKIWizSignAPIGuide fn_egov_getcertlistFail Failed|인증서 리스트 조회 실패 시 |
+|PKIWizSignAPIGuide doKISAShowApp Failed|올레인증서 호출 실패 시|
+|PKIWizSignAPIGuide doKISAShowApp Completed|올레인증서 호출 성공 시|
+|PKIWizSignAPIGuide makeCert Completed|올레인증서 저장 성공 시|
+|PKIWizSignAPIGuide makeCert Failed|올레인증서 저장 실패 시|
+
+==== 배포 ====
+NPKI 디바이스 API 가이드 다운로드 : [[http://www.egovframe.go.kr/cop/bbs/selectBoardArticle.do?bbsId=BBSMSTR_000000000161&nttId=698&menu=3&submenu=9|Click]]
+
+===== 참고자료 ===== 
+  * UX/UI 라이브러리 : jQuery Mobile[[http://jquerymobile.com/demos/1.4.5/|Click]] \\
+  * Phonegap 4.3.0 : [[http://docs.phonegap.com/en/4.0.0/|Click]] \\
+  * NPKIAPI : (주)케이사인 [[http://www.ksign.com]] \\
+  * 표준보안API : http://www.gpki.go.kr/ \\

@@ -1,0 +1,135 @@
+===== Compass  =====
+
+==== 설명 ====
+  * 디바이스의 방향(방위각)을 구하는 기능을 제공한다.
+
+==== 제약사항 ====
+  * Compass API의 플랫폼별 제약사항은 다음과 같다.
+
+=== Android ===
+
+== compassOptions ==
+  * filter 를 지원하지 않는다.
+  
+== compassHeading == 
+  * trueHeading 을 지원하지 않는다. magneticHeading과 동일.
+  * magneticHeading과 magneticHeading 이 동일하기 때문에headingAccuracy 는 항상 0 이다. 
+
+=== iOS ===
+
+== compassHeading ==
+  * trueHeading은 navigator.geolocation.watchLocation()이 동작하고 있을 때만 감지된다.
+  * iOS4 이상의 단말기에서는 단말기가 회전했을 때 trueHeading 값을 감지한다.
+
+==== 환경 설정 ====
+
+=== Android ===
+  * app/res/xml/config.xml
+<code xml>
+<plugin name="Compass" value="org.apache.cordova.CompassListener" />
+</code>
+
+=== iOS === 
+  * App/Supporting Files/config.xml
+<code xml>
+    <feature name="Compass">
+        <param name="ios-package" value="CDVLocation"/>
+    </feature>>
+</code>
+
+==== 관련 함수 ====
+
+=== compass.getCurrentHeading === 
+  * 디바이스의 방위 센서가 감지한 현재 방향을 가져온다. ( 0 ~ 359.9)
+<code>
+navigator.compass.getCurrentHeading(compassSuccess, compassError, compassOptions);
+</code>
+
+  * Quick Example
+<code>
+function onSuccess(heading) {
+    alert('Heading: ' + heading.magneticHeading);
+};
+
+function onError(error) {
+    alert('CompassError: ' + error.code);
+};
+
+navigator.compass.getCurrentHeading(onSuccess, onError);
+</code>
+
+=== compass.watchHeading === 
+  * 특정 시간 간격으로 방위 센서가 감지한 빙향 정보를 가져온다.
+<code>
+var watchID = navigator.compass.watchHeading(compassSuccess, compassError, [compassOptions]);
+</code>
+
+  * Quick Example
+<code>
+function onSuccess(heading) {
+    var element = document.getElementById('heading');
+    element.innerHTML = 'Heading: ' + heading.magneticHeading;
+};
+
+function onError(compassError) {
+        alert('Compass error: ' + compassError.code);
+};
+
+var options = { frequency: 3000 };  // Update every 3 seconds
+
+var watchID = navigator.compass.watchHeading(onSuccess, onError, options);
+</code>
+
+=== compass.clearWatch === 
+  * watchHeading()을 통해 작동 중인 방위 센서(watchID)를 중지한다.
+<code>
+navigator.compass.clearWatch(watchID);
+</code>
+
+  * Quick Example
+<code>
+var watchID = navigator.compass.watchHeading(onSuccess, onError, options);
+
+... 
+
+navigator.compass.clearWatch(watchID);
+</code>
+
+==== 파라미터 ====
+
+=== compassSuccess === 
+  * 방위 센서의 메소드가 성공했을 때 실행하는 함수. 
+  * heading: 방위 센서가 감지한 방위 정보. (compassHeading)
+<code>
+function(heading) {
+    // Do something
+}
+</code>
+
+=== compassError === 
+  * 방위 센서의 메소드가 실패했을 때의 파라미터.
+<code>
+function(CompassError) { 
+    // Handle the error 
+}
+</code>
+
+=== compassOptions ===
+  * 방위 센서의 옵션을 정의한다.
+  * **iOS만 지원한다.**
+
+^유형^설명^타입^비고^
+|frequency|특정 시간 간격으로 방위 센서를 감지한다.|Number|기본 : 100|
+|filter|watchHeadingFilter() 메소드에 사용하는 속성으로, 특정 filter 값 이상일 때만 감지한다.|Number| |
+
+=== compassHeading ===
+  * 방위 센서에서 전달받은 방향 정보를 나타낸다.
+
+^유형^설명^타입^비고^
+|magneticHeading|자기 방위 값을 나타낸다.|Number|0 ~ 359.99|
+|trueHeading|진북을 기준으로 진방위 값을 나타내며, 음수는 진방위 값을 나타낼 수 없음을 의미한다. |Number|0 ~ 359.99|
+|headingAccuracy|방위 각도에 대한 편차 값을 나타낸다.|Number| |
+|timestamp|방위를 감지한 시각을 milliseconds 단위로 나타낸다.| | |
+
+==== 참고자료 ====
+  * Phonegap : http://docs.phonegap.com/en/2.9.0/cordova_compass_compass.md.html#Compass

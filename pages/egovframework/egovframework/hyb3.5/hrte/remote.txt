@@ -1,0 +1,61 @@
+===== 개요 =====
+폰갭(코도바)프로젝트를 디바이스 또는 시뮬레이터에서 테스트 하는경우 제한적 상황이 발생한다.\\
+이때 웹뷰에 보여지는 태그의 렌더링된 결과가 어떻게 되는지 로딩 소요시간이 어떻게 되는지 등을 용이하게 모니터링 및 디버깅이 가능하여 편리하다.
+
+
+==== 제약사항 ====
+    * 안드로이드의 경우 API level 19 Kitkat (version 4.4)이상에서 가능
+    * iOS SDK 5.0 이상 (국내출시 모든 아이폰 지원) 
+
+
+==== 장점 ====
+    * 원격 디버깅은 하이브리드앱 작업시 Webview관련 웹 화면에 대한 디버깅을 용이하도록 지원한다.
+    * 퍼블리셔가 디바이스별 디자인요소를 수정시 작업을 수월하게 한다.
+    * javascript 디버깅을 용이하게 하며 결과를 console모드에서 확인하고 값을 수정할수 있다.
+    * html 웹요소를 실시간 수정이 가능하며 console모드에서 실시간 수정이 가능하다.
+    * 이미지및 각종 웹요소의 네트워크 전송시간등을 모니터링 할수 있다.
+
+
+===== 안드로이드 원격디버깅 =====
+
+==== 사용법 ====
+데스크탑 PC의 크롬 브라우저에서 안드로이드 웹뷰의 웹화면을 디버깅할수 있게 지원한다.
+
+   * 설정에서 USB debugging을 설정한다. \\
+ {{:egovframework:hyb3.5:hrte:remote_debug_01.png?400|}} \\
+
+   * Kitkat 4.4 (API level 19) 이상의 시뮬레이터 및 디바이스를 구동한다. \\
+ {{:egovframework:hyb3.5:hrte:remote_debug_02.png?400|}} \\
+
+   * 크롬 브라우저를 구동하고 주소창에 [[chrome://inspect]] 입력한다. inspect를 누르면 디버깅창으로 이동한다.\\
+ {{:egovframework:hyb3.5:hrte:remote_debug_03.png?600|}} \\
+
+   * 디버그 모드에서 원격의 시뮬레이터 또는 디바이스 Webview 내용의 디버깅 정보가 표시된다. \\
+ {{:egovframework:hyb3.5:hrte:remote_debug_04.png?600|}} \\
+
+   * 디버그창의 요소지정시 결과 화면영역에서 표시가 가능하다. \\
+ {{:egovframework:hyb3.5:hrte:remote_debug_05.png?400|}} \\
+
+
+
+===== iOS 원격디버깅 =====
+
+==== 사용법 ====
+맥북의 사파리 브라우저에서 아이폰 웹뷰의 웹화면을 디버깅 할수 있게 지원한다.
+
+   * 사파리 설정에서 Advanced > WebInspector를 설정한다. \\
+ {{:egovframework:hyb3.5:hrte:remote_debug_ios_01.png?300|}} \\
+
+   * 시뮬레이터 및 디바이스에서 앱을 구동한다.(iOS에서는 국내출시 모든버전 가능) \\
+ {{:egovframework:hyb3.5:hrte:remote_debug_ios_02.png?300|}} \\
+
+   * 맥 OSX 사파리 브라우저를 구동하고 환경설정 > 고급에서 메뉴 막대에서 개발자용 메뉴 보기 체크한다.\\
+ {{:egovframework:hyb3.5:hrte:remote_debug_ios_03.png?600|}} \\
+
+   * 사파리 브라우저에서 개발자용 메뉴에서 사용기기를 활성화면을 선택한다. \\
+ {{:egovframework:hyb3.5:hrte:remote_debug_ios_04.png?600|}} \\
+
+   * 디버그창에서 화면영역과 렌더링결과를 확인하고 스크립트 디버깅이 가능하다. \\
+ {{:egovframework:hyb3.5:hrte:remote_debug_ios_05.png?600|}} \\
+
+

@@ -1,0 +1,180 @@
+====== Cordova(Phonegap) 업그레이드 방법 소개 ======
+
+===== 개요 =====
+전자정부 디바이스 API 실행환경은 Cordova(Phonegap)을 기반으로 한다.\\
+Cordova는 Apache재단에서 오픈소스로서 지속적이고 안정적인 업그레이드를 진행하고 있으며 
+전자정부 디바이스 API 실행환경 사용은 사용자의 안전성과 자유로운 확장성을 위해 오픈소스를 기반으로 하고 있다.
+Cordova의 경우도 새로운 버전이 나왔을경우에 새로운 버전으로 적용할수 있으며 아래 세부 내용을 참고 한다.
+
+===== 제약조건 =====
+전자정부 디바이스 API 실행환경 v3.5 기준
+
+===== 선행조건 =====
+
+다음을 참고하여 CLI도구를 설치해야 한다.\\
+맥OSX에서는 iOS(아이폰)및 안드로이드를 모두 설치할수 있고\\
+Winodws에서는 안드로이드만 설치가 가능하다.\\
+\\
+[[egovframework:hyb3.5:hdev| Cordova CLI도구 npm 설치 (node.js의 도구와 동일)]]\\
+\\
+다음 링크를 참조하여 CLI 도구에서\\
+1) 프로젝트를 추가하고\\
+2) 플랫폼 추가\\
+3) 플러그인 추가를 차례대로 진행한다.\\
+\\
+[[egovframework:hyb3.5:hdev:imp:useclitools| CLI도구로 Cordova프로젝트 생성, 플랫폼생성(iOS,안드로이드) 및 플러그인 추가 방법]]\\
+\\
+
+===== Cordova 업그레이드 절차 (iOS 아이폰) =====
+생성된 최신의 iOS 아이폰 코도바 프로젝트에서\\
+다음파일을 복사해서 모바일 전자정부 디바이스API 앱 프로젝트로 복사해서 넣으면 된다. (* 기존 파일 삭제후 복사 붙여넣기)\\
+\\
+** XCode가 아닌 맥OSX의 Finder에서 작업을 진행하며 교체해야 할 목록은 다음과 같다.**\\
+\\
+
+==== XCode에서 교체대상 리소스 확인 ====
+실제 작업은 편의상 Finder에서 작업을 하며 XCode에서는 대상만 확인한다.
+
+===1. 코도바 Plugin ===
+ Plugins그룹안에 있는 모든 파일이 교체 대상이다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_xcode_2.png|}}
+\\
+===2. 코도바 코어 라이브러리 프로젝트 ===
+ 코도바 코어LIB 프로젝트가 대상이며 참조프로젝트 형태로 등록되어 있다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_xcode_3.png|}}\\
+\\
+
+===3. 코도바 웹소스 ===
+모바일 전자정부 표준프레임워크 DeviceAPI에서는 Assets그룹내에 존재하며 다음 목록을 확인한다.\\
+ /www/js/egovframework/mbl/cmm/plugins/ 디렉토리내 모든파일\\
+ /www/js/egovframework/mbl/cmm/cordova.js\\
+ /www/js/egovframework/mbl/cmm/cordova_plugins.js\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_xcode_1.png|}}\\
+
+==== Finder에서 다음 목록을 교체 ====
+XCode는 종료하고 Finder에서 기존 대상을 삭제한후 복사 및 붙여넣기를 진행한다.
+
+===1. 코도바 Plugin ===
+ Plugins그룹안에 있는 모든 파일이 교체 대상이다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_finder_2.png|}}\\
+\\
+===2. 코도바 코어 라이브러리 프로젝트 ===
+ 코도바 코어LIB 프로젝트가 대상이며 참조프로젝트 형태로 등록되어 있다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_finder_3.png|}}\\
+\\
+
+===3. 코도바 웹소스 ===
+모바일 전자정부 표준프레임워크 DeviceAPI에서는 Assets그룹내에 존재하며 다음 목록을 확인한다.\\
+ /www/js/egovframework/mbl/cmm/plugins/ 디렉토리내 모든파일\\
+ /www/js/egovframework/mbl/cmm/cordova.js\\
+ /www/js/egovframework/mbl/cmm/cordova_plugins.js\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_finder_1.png|}}\\
+
+==== XCode에서 코도바 플러그인 클래스파일 등록 ====
+본 작업이 필요한 이유는 코도바 플러그인 ID가 변경되었다. \\
+예를 들면 디바이스 플러그인의 경우 org.apache.cordova.device => cordova-plugin-device로 변경되어서 재등록이 필요하다.
+
+===1. 새로운 버전 코도바 Plugin등록 ===
+새로운 버전의 코도바 Plugin 클래스파일을 Finder => XCode로 끌어놓기 한다.\\
+모든 플러그인 클래스 파일들에 대해 반복해서 처리한다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_reg_1.png|}}\\
+
+===2. 파일 추가옵션 선택 ===
+Copy items if needed 및 Create groups을 체크한 다음 Finish를 선택하여 마무리 한다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_reg_2.png|}}\\
+
+===3. 링크가 깨진 플러그인 삭제 ===
+XCode에서 다음처럼 빨간색으로 링크가 깨진 기존 플러그인 클래스 파일을 삭제한다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_reg_3.png|}}\\
+오른 마우스 클릭 또는 Ctrl+트랙패드 클릭을 하여 메뉴 호출한다음 Delete을 한다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_delete_menu_1.png|}}\\
+
+
+==== XCode에서 추가 프레임워크 등록 ====
+새로운 코도바 버전에서 사용하는 프레임워크( 의존관계에 있는 추가 iOS 라이브러리)를 추가하여야 한다.\\
+
+===1. XCode에서 프레임워크(iOS 라이브러리)등록 화면으로 이동 ===
+좌측 프로젝트명 선택 > General 탭 > Linked Frameworks and Libraries 항목에 추가해야 한다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_xcode_framework_0.png|}}\\
+
+===2. 새로운 프레임워크(iOS 라이브러리) 등록 ===
+iOS는 Cocoa Framework를 기반으로 하는데 하위 구성 Framework가 여러개 존재하며 Framework는 일종의 핵심라이브러리이다.\\
+(+) 버튼을 누른후 다음 3가지 의존성을 갖는 프레임워크를 추가한다.\\
+ 1. AddressBookUI.framework\\
+ 2. AVFoundation.framework\\
+ 3. CoreTelephony.framework\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_xcode_framework_1.png|}}\\
+\\
+목록에서 선택한후 Add를 눌러 필요한 만큼 반복하여 마무리 한다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_xcode_framework_2.png|}}\\
+
+==== config.xml에 추가항목 설정 ====
+코도바 최신 버전에 추가된 항목을 추가로 입력하여 설정한다.\\
+
+<code xml>
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <allow-intent href="itms:*" />
+    <allow-intent href="itms-apps:*" />
+    <preference name="AllowInlineMediaPlayback" value="false" />
+    <preference name="BackupWebStorage" value="cloud" />
+    <preference name="DisallowOverscroll" value="false" />
+    <preference name="EnableViewportScale" value="false" />
+    <preference name="KeyboardDisplayRequiresUserAction" value="true" />
+    <preference name="MediaPlaybackRequiresUserAction" value="false" />
+    <preference name="SuppressesIncrementalRendering" value="false" />
+    <preference name="SuppressesLongPressGesture" value="false" />
+    <preference name="Suppresses3DTouchGesture" value="false" />
+    <preference name="GapBetweenPages" value="0" />
+    <preference name="PageLength" value="0" />
+    <preference name="PaginationBreakingMode" value="page" />
+    <preference name="PaginationMode" value="unpaginated" />
+    <preference name="CameraUsesGeolocation" value="false" />
+</code>
+
+==== 오류 코드 수정 ====
+오류가 발생하는 원인은 코도바 라이브러리가 버전 업그레이드 되면서 Method가 제거된 항목이 있기 때문이다.
+=== 1. MainViewController.m ===
+<code objective-c>
+- (void)webViewDidFinishLoad:(UIWebView*)theWebView
+{
+    // Black base color for background matches the native apps
+    theWebView.backgroundColor = [UIColor blackColor];
+ 
+    return [super webViewDidFinishLoad:theWebView];
+ 
+}
+</code>
+다음 코드를 주석처리한다.
+<code objective-c>
+/*
+- (void)webViewDidFinishLoad:(UIWebView*)theWebView
+{
+    // Black base color for background matches the native apps
+    theWebView.backgroundColor = [UIColor blackColor];
+ 
+    return [super webViewDidFinishLoad:theWebView];
+ 
+}
+*/
+</code>
+
+=== 2. CDVCustom.m ===
+<code objective-c>
+[self.webView stringByEvaluatingJavaScriptFromString:javaScriptString]; 
+</code>
+새로운 버전에서 remove method가 있으므로 다음과 같이 변경하여야 한다.
+<code objective-c>
+[self.commandDelegate evalJs:javaScriptString];
+</code>
+
+
+==== 정상적용 여부 확인 ====
+모바일 표준프레임워크 DeviceAPI 하이브리드 프로젝트중 DeviceInfo샘플로 확인한다.\\
+코도바 ver 6.x로 하는경우 ios 플러그인 버전은 4.x로 표시되는것을 볼수 있다.\\
+{{:egovframework:hyb3.5:hrte:upgradeios:ios_upgrade_xcode_framework_ok.png|}}\\
+
