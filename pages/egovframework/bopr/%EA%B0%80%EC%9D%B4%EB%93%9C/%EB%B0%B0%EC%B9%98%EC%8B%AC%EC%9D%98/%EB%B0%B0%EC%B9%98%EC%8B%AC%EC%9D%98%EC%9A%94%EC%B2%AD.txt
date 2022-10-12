@@ -1,0 +1,148 @@
+====== 개요 ======
+배치심의요청 관리를 통해 사용자가 해당 관련 배치를 등록, 조회, 수정, 삭제, 재요청 등을 수행할 수 있도록 한다.
+
+====== 기능 설명 ======
+  - 배치심의요청을 등록할 수 있다.
+  - 배치심의요청을 조회할 수 있다.
+  - 배치심의요청을 수정할 수 있다.
+  - 배치심의요청을 삭제할 수 있다.
+  - 배치심의요청을 재요청할 수 있다.
+
+===== 관련소스 =====
+
+^유형^대상소스명^비고^
+|Controller|egovframework.bopr.bam.web.EgovBatchDlbrtController.java|배치심의요청 Controller Class|
+|Service|egovframework.bopr.bam.service.EgovBatchDlbrtService.java|배치심의요청 Service Class|
+|ServiceImpl|egovframework.bopr.bam.service.impl.EgovBatchDlbrtServiceImpl.java|배치심의요청 ServiceImpl Class|
+|VO|egovframework.bopr.bam.service.BatchDlbrtVO.java|배치심의요청  VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|DAO|egovframework.bopr.bam.service.impl.BatchDlbrtDAO.java|배치심의요청 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/bopr/bam/EgovBatchDlbrtList.jsp|배치심의요청 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/bam/EgovBatchDlbrtRegist.jsp|배치심의요청 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/bam/EgovBatchDlbrtUpdate.jsp|배치심의요청 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/bam/EgovBatchDlbrtDetail.jsp|배치심의요청 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/bopr/bam/batchDlbrt/batchDlbrt_SQL_Mysql.xml|배치심의요청 MySQL용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/bam/batchDlbrt/batchDlbrt_SQL_Oracle.xml|배치심의요청 Oracle용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/bam/batchDlbrt/batchDlbrt_SQL_Tibero.xml|배치심의요청 Tibero용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/bam/batchDlbrt/batchDlbrt_SQL_Altibase.xml|배치심의요청 Altibase용 QUERY XML| 
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/bopr/bam/batchDlbrt.xml|배치심의요청 Validator XML|
+|Message properties|resources/egovframework/message/com/message-common_ko_KR.properties|배치심의요청 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|배치심의요청 Id생성 Idgen XML|
+
+===== 관련테이블 =====
+
+^테이블명^테이블명(영문)^비고^
+|배치심의요청 정보|TN_BATCH_DLBRT|배치심의요청 정보를 관리한다.|
+
+\\
+====== 화면 설명 ======
+===== 목록 화면 =====
+^Action^URL^Controller method^QueryID^
+|배치심의요청 목록조회|/bopr/bam/EgovBatchDlbrtList.do|selectBatchDlbrtList|"batchDlbrtDAO.selectBatchDlbrtList"|
+|배치심의요청 목록조회 카운트|N/A|N/A|"batchDlbrtDAO.selectBatchDlbrtListTotCnt"|
+|배치심의요청 목록삭제|/bopr/bam/EgovBatchDlbrtListDelete.do|deleteBatchDlbrt|"batchDlbrtDAO.deleteBatchDlbrt"|
+
+{{:egovframework:bopr:가이드:배치심의:EgovBatchDlbrtList-1.png|}}
+  * 등록된 배치심의요청이 페이징처리되어 목록으로 조회할 수 있다.
+  * 승인여부선택(①)으로 승인여부로 원하는 배치심의요청건만을 필터링 할 수 있으며, 검색조건선택(②)으로 검색조건으로 배치심의번호, 배치명을 설정할 수 있다. 검색어입력란(③)에 원하는 검색어를 입력(검색조건선택에서 아무것도 선택하지 않는 경우에는 활성화되지 않는다.)한 뒤 검색버튼(⑤)을 클릭하여 조건조회를 할 수 있다.
+  * 배치심의요청이 등록된 등록일자(④)로 검색이 가능하다. 첫번째 일자는 검색조건의 시작 일자, 두번째 일자는 검색조건의 종료 일자를 선택할 수 있다. 시작 일자만 입력하는 경우 해당 일자 이후에 등록된 배치심의를 모두 표시하며, 종료 일자만 입력하는 경우 해당 일자 이전에 등록된 배치심의를 모두 표시한다. 모두 입력하는 경우 시작 일자와 종료 일자 사이에 등록된 배치심의를 검색한다.
+  * 초기화(⑤) 버튼을 클릭하면 모든 검색조건을 초기화 시킨다. 일자 검색의 경우 수동으로 삭제 할 수 없으므로 초기화 버튼으로만 삭제가 가능하다.
+  * 배치명(⑩)을 클릭하면 상세조회로 이동한다.
+  * 등록 : 등록버튼(⑦)을 클릭하면 배치심의요청등록 화면으로 이동한다.
+  * ⑨의 부분에 체크박스가 존재하며, 가장 위의 제목단의 체크박스를 클릭하면 전체선택, 하단의 배치명 앞의 체크박스를 클릭하면 해당 건 별로 선택이 가능하다.
+  * 삭제 : 삭제버튼(⑧)을 클릭하면 체크되어있는 한개 또는 복수의 배치심의요청을 삭제할 수 있다.(단, 이미 심의가 이루어진 요청건은 삭제할 수 없다.)
+  * 페이지 이동(⑪)
+    - 숫자 클릭 : 해당 숫자의 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prev.png|}} : 이전 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_next.png|}} : 다음 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prevend.png|}} : 맨 처음 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_nextend.png|}} : 마지막 페이지로 이동한다.
+    - 조회 건수가 100개 이하여서 페이지가 열개 이하인 경우 경우 화살표는 표시되지 않는다.
+
+===== 등록 화면 =====
+^Action^URL^Controller method^QueryID^
+|배치심의요청 등록화면호출|/bopr/bam/EgovBatchDlbrtInsertView.do|insertBatchDlbrtView|N/A|
+|배치심의요청 등록|/bopr/bam/EgovBatchDlbrtInsert.do|insertBatchDlbrt|"batchDlbrtDAO.insertBatchDlbrt"|
+
+  배치심의요청 등록은 처리유형에 따라 두개의 화면 구성을 가진다.
+{{:egovframework:bopr:가이드:배치심의:EgovBatchDlbrtRegist-1.png|}}
+  * 위의 화면은 신규등록 처리유형 시이다.
+  * 업무심의번호(③)를 클릭하면 업무심의 선택 팝업화면이 호출된다. 하단의 업무심의 명도 이 팝업을 통해 입력이 자동으로 이루어진다.
+  * 목록 : 목록버튼(①)을 클릭하면 현재의 입력을 취소하고 목록화면으로 이동한다.
+  * 등록 : 등록버튼(②)을 클릭하면 배치심의요청를 등록한다.
+  * 설정파일(⑤) : 배치의 설정파일을 추가할 수 있다. xml 확장자를 가진 파일만이 등록이 가능하며, 설정파일의 분석을 통해 배치ID와 배치명을 결정하게 된다. 하단의 상세경로에 설정파일을 배포할 경로에 대해 미리 저장할 수 있다.
+  * 첨부파일(⑥) : 배치 클래스 파일이나 실행파라미터 등의 첨부파일을 추가할 수 있다. 파일이 하나 추가되는 경우 파일의 유형을 선택할 수 있는 콤보박스와 상세경로를 지정할 수 있는 입력 창이 생겨난다.
+  * 처리유형(④) : 배치를 신규 등록할것인지 삭제를 할것인지를 선택할 수 있다. 처리유형을 변경하면 현재까지의 입력되었던 내용이 모두 초기화되며, 화면 구성이 변경된다.
+
+{{:egovframework:bopr:가이드:배치심의:EgovBatchDlbrtRegist-2.png|}}
+  * 위의 화면은 삭제 처리유형 시이다.
+  * 업무심의번호(③)를 클릭하면 업무심의 선택 팝업화면이 호출된다. 하단의 업무심의 명도 이 팝업을 통해 입력이 자동으로 이루어진다.
+  * 목록 : 목록버튼(①)을 클릭하면 현재의 입력을 취소하고 목록화면으로 이동한다.
+  * 등록 : 등록버튼(②)을 클릭하면 배치심의요청를 등록한다.
+  * 배치ID(④)을 클릭하면 배치심의 선택 팝업이 호출된다. 삭제의 경우 이미 배포되어있는 배치로 처리를 해야 하기 때문에 필수 입력이 되며, 상위 업무심의를 선택한 이후에 팝업의 호출이 가능하다.
+  * 배치명(⑤)는 삭제 요청의 경우 자동적으로 Delete Request 로 입력된다.
+  * 처리유형(⑥) : 배치를 신규 등록할것인지 삭제를 할것인지를 선택할 수 있다. 처리유형을 변경하면 현재까지의 입력되었던 내용이 모두 초기화되며, 화면 구성이 변경된다.
+
+===== 업무심의 선택 팝업 화면 =====
+^Action^URL^Controller method^QueryID^
+|업무심의 팝업 목록조회|/bopr/bam/EgovJobDlbrtPopupList.do|selectJobDlbrtPopupList|"jobDlbrtDAO.selectJobDlbrtPopupList"|
+|업무심의 팝업 목록조회 카운트|N/A|N/A|"jobDlbrtDAO.selectJobDlbrtPopupListTotCnt"|
+
+{{:egovframework:bopr:가이드:배치심의:EgovJobDlbrtPopupList-1.png|}}
+  * 배치심의요청 등록시 배치가 속하는 업무를 선택한다.
+  * 업무심의요청에서 승인이 된 업무만이 표시된다.
+  * 검색조건선택(①)으로 검색조건으로 업무심의번호, 업무심의제목을 설정할 수 있으며, 검색어입력란(②)에 원하는 검색어를 입력(검색조건선택에서 아무것도 선택하지 않는 경우에는 활성화되지 않는다.)한 뒤 검색버튼(③)을 클릭하여 조건조회를 할 수 있다.
+  * 업무심의번호(④)을 클릭하면 부모화면으로 해당 업무심의번호 값을 전송한다.
+  * 페이지 이동(⑤)
+    - 숫자 클릭 : 해당 숫자의 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prev.png|}} : 이전 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_next.png|}} : 다음 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prevend.png|}} : 맨 처음 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_nextend.png|}} : 마지막 페이지로 이동한다.
+    - 조회 건수가 100개 이하여서 페이지가 열개 이하인 경우 경우 화살표는 표시되지 않는다.
+
+===== 배치심의 선택 팝업 화면 =====
+^Action^URL^Controller method^QueryID^
+|업무심의 팝업 목록조회|/bopr/bam/EgovBatchDlbrtPopupList.do|selectBatchDlbrtPopupList|"batchDlbrtDAO.selectBatchDlbrtPopupList"|
+|업무심의 팝업 목록조회 카운트|N/A|N/A|"batchDlbrtDAO.selectBatchDlbrtPopupListTotCnt"|
+
+{{:egovframework:bopr:가이드:배치심의:EgovBatchDlbrtPopupList-1.png|}}
+  * 배치심의요청 등록시 삭제 처리유형에 한하여 삭제할 배치를 선택한다.
+  * 이미 배포되었고 사용중인 배치만이 표시된다.
+  * 검색조건선택(①)으로 검색조건으로 배치ID, 배치명을 설정할 수 있으며, 검색어입력란(②)에 원하는 검색어를 입력(검색조건선택에서 아무것도 선택하지 않는 경우에는 활성화되지 않는다.)한 뒤 검색버튼(③)을 클릭하여 조건조회를 할 수 있다.
+  * 배치ID(④)을 클릭하면 부모화면으로 해당 배치ID 값을 전송한다.
+  * 페이지 이동(⑤)
+    - 숫자 클릭 : 해당 숫자의 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prev.png|}} : 이전 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_next.png|}} : 다음 페이지목록(10Page 단위)로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_prevend.png|}} : 맨 처음 페이지로 이동한다.
+    - {{:egovframework:bopr:가이드:배치정보:icon_nextend.png|}} : 마지막 페이지로 이동한다.
+    - 조회 건수가 100개 이하여서 페이지가 열개 이하인 경우 경우 화살표는 표시되지 않는다.
+
+===== 상세 화면 =====
+^Action^URL^Controller method^QueryID^
+|배치심의요청 상세조회|/bopr/bam/EgovBatchDlbrt.do|selectBatchDlbrt|"batchDlbrtDAO.selectBatchDlbrt"|
+|배치심의요청 삭제|/bopr/bam/EgovBatchDlbrtDelete.do|deleteBatchDlbrt|"batchDlbrtDAO.deleteBatchDlbrt"|
+
+{{:egovframework:bopr:가이드:배치심의:EgovBatchDlbrtDetail-1.png|}}
+  * 배치심의요청이 상세조회된다.
+  * 목록 : 목록버튼(①)을 클릭하면 목록화면으로 이동한다.
+  * 수정 : 수정버튼(②)을 클릭하면 배치심의요청 수정 화면으로 이동한다.
+  * 삭제 : 심의가 이루어지지 않은 요청건에 대하여 삭제한다.(심의가 이루어진경우 삭제버튼이 보이지 않음)
+  * 재요청 : 심의 반려가 이루어진 요청건에 대해서 재심의를 요청할 수 있다.
+  * 설정파일 혹은 첨부파일의 파일명 링크(③)를 클릭하면 해당 파일을 다운로드 받아 확인할 수 있다.
+
+===== 수정 화면 =====
+^Action^URL^Controller method^QueryID^
+|배치심의요청 수정화면호출|/bopr/bam/EgovBatchDlbrtUpdateView.do|updateBatchDlbrtView|"batchDlbrtDAO.selectBatchDlbrt"|
+|배치심의요청 재요청시 수정화면호출|/bopr/bam/EgovBatchDlbrtReconfirm.do|batchDlbrtReconfirm|"batchDlbrtDAO.selectBatchDlbrt"|
+|배치심의요청 수정|/bopr/bam/EgovBatchDlbrtUpdate.do|updateBatchDlbrt|"batchDlbrtDAO.updateBatchDlbrt"|
+|배치심의요청 삭제|/bopr/bam/EgovBatchDlbrtDelete.do|deleteBatchDlbrt|"batchDlbrtDAO.deleteBatchDlbrt"|
+
+{{:egovframework:bopr:가이드:배치심의:EgovBatchDlbrtUpdate-1.png|}}
+  * 요구되는 정보들을 수정한뒤 저장버튼을 누르면 수정이 이루어진다.
+  * 목록 : 목록버튼(①)을 클릭하면 목록화면으로 이동한다.
+  * 수정 : 저장버튼(②)을 클릭하면 변경된 해당 내용을 저장하여 반영한다. 배치설정파일의 경로 변경과, 배치첨부파일의 삭제, 추가등록, 배치설명 등의 수정만이 가능하다.
+  * 배치설정파일(③)은 변경이 불가능하며 상세경로의 수정은 가능하다.
+  * 배치첨부파일(④)은 삭제, 추가등록이 가능하다. 추가등록은 ⑤의 파일선택을 통해 진행이 가능하며, 추가 파일이 등록되면 파일의 유형을 선택할 수 있는 콤보박스와 상세경로를 지정할 수 있는 입력 창이 생겨난다.

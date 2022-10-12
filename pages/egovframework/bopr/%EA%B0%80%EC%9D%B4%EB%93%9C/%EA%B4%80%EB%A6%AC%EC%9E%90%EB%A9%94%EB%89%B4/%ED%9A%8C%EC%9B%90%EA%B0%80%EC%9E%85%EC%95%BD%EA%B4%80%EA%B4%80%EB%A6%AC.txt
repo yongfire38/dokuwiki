@@ -1,0 +1,38 @@
+====== 개요 ======
+회원가입시 필요한 약관내용에 대한 등록과 수정이 가능하도록 한다.
+
+====== 기능 설명 ======
+  - 약관내용을 등록할 수 있다.
+  - 약관내용을 수정할 수 있다.
+
+^유형^대상소스명^비고^
+|Controller|egovframework.bopr.uam.web.EgovCcmCmmnDetailCodeManageController.java|약관정보관리 Controller Class|
+|Service|egovframework.bopr.uam.service.EgovStplatManageService.java|약관정보관리 Service Class|
+|ServiceImpl|egovframework.bopr.uam.service.impl.EgovStplatManageServiceImpl.java|약관정보관리 ServiceImpl Class|
+|VO|egovframework.egovframework.bopr.uam.service.StplatVO.java|약관정보관리 VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|DAO|egovframework.egovframework.bopr.uam.service.impl.StplatManageDAO.java|약관정보관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/bopr/uam/EgovStplatCnfirmManage.jsp|약관정보관리 조회 및 수정 페이지|
+|QUERY XML|/egovframework/sqlmap/bopr/uam/UserManage_SQL_Mysql.xml|사용자정보관리 MySQL용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/uam/UserManage_SQL_Oracle.xml|사용자정보관리 Oracle용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/uam/UserManage_SQL_Tibero.xml|사용자정보관리 Tibero용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/uam/UserManage_SQL_Altibase.xml|사용자정보관리 Altibase용 QUERY XML| 
+
+
+===== 관련테이블 =====
+
+^테이블명^테이블명(영문)^비고^
+|약관정보|TN_STPLATINFO|약관정보를 관리한다.|
+
+\\
+====== 화면 설명 ======
+
+===== 회원가입 약관관리 화면 =====
+^Action^URL^Controller method^QueryID^
+|약관정보관리 수정|/uss/umt/stplatCnfirmUpdate.do|stplatCnfirmUpdate|"stplatManageDAO.updateStplat"|
+
+{{:egovframework:bopr:가이드:관리자메뉴:egovstplatcnfirmmanage.png|}}
+  * 수정
+    - 약관내용②을 입력한다.
+    - 정보동의내용③을 입력한다.
+    - 수정버튼①을 클릭한다.

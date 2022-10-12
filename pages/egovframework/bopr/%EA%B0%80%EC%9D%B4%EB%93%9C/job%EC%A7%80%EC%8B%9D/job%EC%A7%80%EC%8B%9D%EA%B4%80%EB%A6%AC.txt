@@ -1,0 +1,127 @@
+====== 개요 ======
+Job지식 관리를 통해 사용자가 Job지식을 등록, 조회, 수정 할 수 있도록 한다.
+
+====== 기능 설명 ======
+  - Job지식를 등록할 수 있다.
+  - Job지식를 수정할 수 있다.
+  - Job지식를 조회할 수 있다.
+
+===== 관련소스 =====
+
+^유형^대상소스명^비고^
+|Controller|egovframework.bopr.ikm.web.EgovJobKnwldgManageController.java|지식관리 Controller Class|
+|Service|egovframework.bopr.ikm.service.EgovJobKnwldgManageService.java|지식관리 Service Class|
+|ServiceImpl|egovframework.bopr.ikm.service.impl.EgovJobKnwldgManageServiceImpl.java|지식관리 ServiceImpl Class|
+|VO|egovframework.bopr.ikm.service.JobKnwldgManageVO.java|지식관리 VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|DAO|egovframework.bopr.uam.service.impl.JobKnwldgManageDAO.java|지식관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/bopr/ikm/EgovJobKnwldgList.jsp|지식관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/ikm/EgovJobKnwldgInsert.jsp|지식관리 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/ikm/EgovJobKnwldgUpdt.jsp|지식관리 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/bopr/ikm/EgovJobKnwldgDetail.jsp|지식관리 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/bopr/ikm/JobKnwldgManage_SQL_Mysql.xml|지식관리 MySQL용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/ikm/JobKnwldgManage_SQL_Oracle.xml|지식관리 Oracle용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/ikm/JobKnwldgManage_SQL_Tibero.xml|지식관리 Tibero용 QUERY XML| 
+|QUERY XML|/egovframework/sqlmap/bopr/ikm/JobKnwldgManage_SQL_Altibase.xml|지식관리 Altibase용 QUERY XML| 
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/bopr/ikm/JobKnwldgManage.xml|지식관리 Validator XML|
+|Message properties|resources/egovframework/message/com/message-common_ko_KR.properties|Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|Idgen XML|
+
+===== 관련테이블 =====
+
+^테이블명^테이블명(영문)^비고^
+|지식정보관리|TN_KNWLDG|지식정보를 관리한다.|
+
+\\
+====== 화면 설명 ======
+===== 목록 화면 =====
+^Action^URL^Controller method^QueryID^
+|지식관리 검색|/bopr/ikm/EgovJobKnwldgList.do|selectJobKnwldgList|"jobKnwldgManageDAO.selectJobKnwldgList"|
+|지식관리 등록화면 호출|/bopr/ikm/EgovJobKnwldgInsertView.do|insertJobKnwldgView|N/A|
+|지식관리 비공개로 전환|/bopr/ikm/EgovJobKnwldgListDelete.do|deleteJobKnwldgList|"jobKnwldgManageDAO.deleteJobKnwldg"|
+|지식관리 상세보기|/bopr/ikm/EgovJobKnwldg.do|selectJobKnwldg|"jobKnwldgManageDAO.selectJobKnwldg"|
+
+{{:egovframework:bopr:가이드:job지식:egovjobknwldglist.png|}}
+  * 목록 검색
+    - 검색조건①을 선택한다.
+    - 검색어②를 입력한다.
+    - 등록일자까지 추가로 검색할땐, 등록일자(③,④)를 입력한다.
+    - 검색버튼⑤을 클릭하여 검색 기능을 실행한다.
+    - 등록일자를 리셋하고 싶을땐, 초기화버튼⑥을 클릭한다.
+
+  * 등록 화면 이동
+    - '등록' 버튼⑦을 클릭한다
+
+  * 비공개로 전환 기능 수행
+    - 지식을 전체선택(체크박스⑨클릭) 또는 개별선택(체크박스⑩클릭) 한다.
+    - 비공개로 전환버튼⑧을 클릭하여 해당 지식의 공개여부를 비공개로 전환한다.
+
+  * 상세정보보기로 이동
+    - 해당 지식명⑪을 클릭하여 상세보기로 이동한다.
+
+===== 등록 화면 =====
+^Action^URL^Controller method^QueryID^
+|지식관리 목록화면 이동|/bopr/ikm/EgovJobKnwldgList.do|selectJobKnwldgList|"jobKnwldgManageDAO.selectJobKnwldgList"|
+|지식관리 등록|/bopr/ikm/EgovJobKnwldgInsertView.do|insertJobKnwldg|"jobKnwldgManageDAO.insertJobKnwldg"|
+
+{{:egovframework:bopr:가이드:job지식:egovjobknwldginsert.png|}}
+  * 목록 화면 이동
+    - 목록버튼①을 클릭한다.
+
+  * 등록
+    - 공개여부③를 선택한다.
+    - 지식유형④을 선택한다.
+    - 폐기유무⑤를 선택한다.
+    - 폐기유무를 폐기완료로 선택했을 경우 폐기일⑥을 입력한다.
+    - 지식명⑦을 입력한다.
+    - 지식내용⑧을 입력한다.
+    - 첨부파일⑨을 입력한다.
+    - 등록버튼②을 클릭하여 입력한 내용을 등록한다.
+
+===== 수정 화면 =====
+^Action^URL^Controller method^QueryID^
+|지식관리 목록화면 이동|/bopr/ikm/EgovJobKnwldgList.do|selectJobKnwldgList|"jobKnwldgManageDAO.selectJobKnwldgList"|
+|지식관리 수정|/bopr/ikm/EgovJobKnwldgInsertView.do|updateJobKnwldg|"jobKnwldgManageDAO.updateJobKnwldg"|
+
+{{:egovframework:bopr:가이드:job지식:egovjobknwldgupdt.png|}}
+  * 목록 화면 이동
+    - 목록버튼①을 클릭한다.
+
+  * 등록
+    - 공개여부③를 선택한다.
+    - 지식유형④을 선택한다.
+    - 폐기유무⑤를 선택한다.
+    - 폐기유무를 폐기완료로 선택했을 경우 폐기일⑥을 입력한다.
+    - 지식명⑦을 입력한다.
+    - 지식내용⑧을 입력한다.
+    - 첨부파일⑨을 입력한다.
+    - 수정버튼②을 클릭하여 입력한 내용을 수정한다.
+
+===== 상세 화면 =====
+^Action^URL^Controller method^QueryID^
+|지식관리 목록화면 이동|/bopr/ikm/EgovJobKnwldgList.do|selectJobKnwldgList|"jobKnwldgManageDAO.selectJobKnwldgList"|
+|지식관리 수정화면 이동|/bopr/ikm/EgovJobKnwldgUpdateView.do|updateJobKnwldgView|"jobKnwldgManageDAO.selectJobKnwldg"|
+|지식관리 댓글수정으로 이동|/com/cop/cmt/selectSingleComment.do|selectSingleComment|"BBSCommentDAO.selectComment"|
+|지식관리 댓글 삭제|/com/cop/cmt/deleteComment.do|deleteComment|"BBSCommentDAO.deleteComment"|
+|지식관리 댓글 등록|/com/cop/cmt/insertComment.do|insertComment|"BBSCommentDAO.insertComment"|
+
+{{:egovframework:bopr:가이드:job지식:egovjobknwldgdetail.png|}}
+  * 목록 화면 이동
+    - 목록버튼①을 클릭한다.
+
+  * 수정 화면 이동
+    - 수정버튼②을 클릭한다.
+
+  * 댓글수정
+    - 해당 댓글의 수정버튼③을 클릭한다.
+
+  * 댓글삭제
+    - 해당 댓글의 삭제버튼④을 클릭한다.
+
+  * 댓글입력
+    - 해당 지식에 대한 평가점수⑤를 선택한다.
+    - 댓글내용⑥을 입력한다.
+    - 댓글등록버튼⑦을 클릭하여 입력한 댓글을 등록한다.
+    - 입력한 내용을 초기화 하고 싶을땐, 댓글초기화버튼⑧을 클릭한다.
+  
