@@ -1,0 +1,12 @@
+=== AutoVerifyTestResultsTest_ExpectedDataSet.xml ===
+<code:xml>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+    <NOTICE NOTICE_ID="201" 
+            NOTICE_TITLE="201번 공지"  
+            NOTICE_CONTENTS="테스트용으로 자동 입력된 공지사항 201번입니다."
+            NOTICE_LAST_MODIFIER="OracleDataSetTest.class"
+    />
+</dataset>
+</code>

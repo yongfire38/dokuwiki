@@ -1,0 +1,94 @@
+====== 서버 개발환경 3.5.0 설치가이드 ======
+
+===== 개요 =====
+전자정부 표준프레임워크에서 제공하는 서버 환경 3.5.0 구성 가이드를 제공한다.
+
+===== 설명 =====
+전자정부 표준프레임워크에서 제공하는 서버환경을 설치하기 위한 서버 환경 구성 가이드를 제공한다.
+  * 서버환경 구성(Windows) \\  윈도우 환경에서 전자정부 표준프레임워크에서 제공하는 설치파일을 이용하여 서버 환경을 구성한다.
+
+  * 서버환경 구성(Unix 계열) \\  Unix 계열(Aix, Linux, Solaris) 환경에서 eGovFrame에서 제공하는 설치파일을 이용하여 서버 환경을 구성한다.
+
+  * 설치가이드 \\  윈도우 환경 및 Unix 계열 설치가이드는 동일하며, Unix계열의 SVN 설치가이드를 별도로 제공한다.
+         *  {{:egovframework:dev3.5:eGovCI & Nexus 설정 가이드 v3.5.pdf|eGovCI & Nexus 설정 가이드 v3.5}}
+         *  {{:egovframework:dev3.5:SVN 설치 가이드[리눅스용].pdf|SVN 설치 가이드(리눅스용)}}
+
+===== 설치가이드  =====
+
+==== 서버 개발환경 다운로드 ====
+  - 인터넷 웹브라우저를 통해 eGovFrame 홈페이지(https://www.egovframe.go.kr/)에 접속하여 사이트 상위메뉴를 통해 “다운로드>개발환경>3.x 다운로드"으로 이동한다. \\ {{:egovframework:dev3.5:서버개발환경다운로드1.png?800|}} \\ \\
+  - 서버 개발환경 게시물을 조회한다. \\ {{:egovframework:dev3.5:서버개발환경다운로드2.png?800|}}\\ \\
+  - 첨부된 파일을 다운로드받아 압축을 해제한다. \\ {{:egovframework:dev3.5:install_file_list_v3.5.png?800|}} \\ 
+
+==== 서버환경 구성(Windows) ====
+
+  - Install 구성
+    * eGovCI-3.5.0_32bit.exe (32bit용) 또는 eGovCI-3.5.0_64bit.exe (64bit용) 파일을 수행하여 설치를 진행한다.
+
+  - 설치환경
+    * apache-ant-1.9.5
+    * apache-maven-3.3.3
+    * apache-tomcat-7.0.62
+    * hudson 3.2.2
+    * nexus 2.11.3-01
+    * cvs-1-11-22
+    * jdk1.5.0_22
+    * jdk1.6.0_45
+    * jdk1.7.0_80
+    * VisualSVN-Server-2.7.3-win32.msi - 32bit용 (필요시 설치)
+    * VisualSVN-Server-2.7.3-x64.msi - 64bit용 (필요시 설치)
+
+  ✔ 주의
+  JDK 1.7 이상 필요, svn은 별도로 설치 필요
+  TOMCAT 메모리 설정이 필요한 경우 : start.bat(시작파일)파일에서 set JAVA_OPTS 설정을 변경
+  시작파일 : start.bat
+
+  - 설치 구성 내역
+    * 사용포트 변경시(eGovCI-3.5.0/bin/apache-tomcat-7.0.50/conf/server.xml) 파일수정
+    * 서비스 실행은 설치폴더\start.bat 파일을 수행하여 진행한다.
+    * Hudson(CI) 설치확인 \\ http://XXX.XXX.XXX.XXX:8080/hudson/로 들어가서 확인한다. \\ {{:egovframework:dev3.5:hudson3.2.2_확인.png?450|CI check}}
+    * Hudson(CI)가 정상동작하는지 확인한다. \\ {{:egovframework:dev3.5:hudson3.2.2_정상.png?450|build}}
+    * Nexus 설치확인 \\ http://XXX.XXX.XXX.XXX:8080/nexus/로 들어가서 확인한다. \\ {{:egovframework:dev3.5:nexus.2.11.3-01_확인.png?450|Nexus Check}}
+    * Nexus의 repository가 정상적으로 보이는지 확인한다. \\ {{:egovframework:dev3.5:nexus.2.11.3-01_정상.png?450|Nexus Repository}}
+
+✔ 주의: 포트번호 3690과 8080이 방화벽으로 막혀있다면 방화벽설정에서 3690과 8080포트를 허용해 주어야 한다.\\
+
+✔ Subversion(SVN) 설치 및 관리는 지원하지 않는다.(사용자 자체설치)
+
+==== 서버환경 구성(Unix 계열) ====
+
+  - Install 구성
+    * eGovCI-3.5.0.tar.gz 파일을 수행하여 설치를 진행한다.
+
+  - 설치환경
+    * apache-ant-1.9.5
+    * apache-maven-3.3.3
+    * apache-tomcat-7.0.62
+    * hudson 3.2.2
+    * nexus 2.11.3-01
+
+  - 서버별 JDK를 설정한다.
+    * JDK 설치는 사용자에 의해 시스템별로 자체 설치한다.(서버용 개발환경에서 지원하지 않음)
+    * SVN(Subversion) 설치는 사용자에 의해 시스템별로 자체 설치한다.(서버용 개발환경에서 지원하지 않음)
+
+ ✔ 주의
+  JDK 1.7 이상 필요, svn은 별도로 설치 필요
+  JAVA_HOME 설정이 필요한 경우 : setEnv.sh(환경설정)파일에서 export JAVA_HOME을 강제로 지정할 것
+  TOMCAT 메모리 설정이 필요한 경우 : setEnv.sh(환경설정)파일에서 CI_OPTS 설정을 변경 
+  실행파일 : start.sh
+
+==== 서버 개발환경 구동이 안될 경우 ====
+
+{{:egovframework:dev3.5:hudsonerror.png|}}
+
+서버 개발환경의 start.sh(start.bat) 기동 시 다음처럼 security.xml 부분에서 멈추는 경우가 발생할 수 있음. (Windows, Mac, Linux 등) \\ 
+센터에서는 메모리 등의 문제로 허드슨의 플러그인이 정상적으로 올라가지 않는 오류로 추정하고 있으며, 몇가지의 해결 방안이 있음.
+
+ - 플러그인 삭제
+    * 서버 개발환경 루트 디렉토리/home/hudson/plugins 디렉토리 내의 일부 플러그인 삭제
+    * 플러그인의 경우, copyartifact, deploy, jna_native_support-plugin, maven-plugin, subversion 플러그인을 제외한 나머지 플러그인은 삭제 가능
+
+ - 순차적인 Deploy
+    * Hudson 혹은 Nexus 둘 중 하나를 서버 개발환경 루트 디렉토리/bin/apache-tomcat-7.0.62/webapps 디렉토리 내에서 임의로 타 디렉토리로 이동
+    * start로 기동 후 임의로 빼놓았던 나머지 하나를 webapps 폴더로 이동하여 auto-deploying
+    * Nexus를 사용하지 않을 경우, Nexus를 webapps에서 삭제하기를 권장함

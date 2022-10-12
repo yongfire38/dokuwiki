@@ -1,0 +1,80 @@
+====== 개발자 개발환경 설치가이드 ======
+===== 개요 =====
+본 가이드는 전자정부 표준프레임워크에서 제공하는 개발자 개발환경의 사용 방법을 제공한다.
+
+===== Step 1. 개발환경 설치 =====
+
+
+==== 개발자 개발환경 다운로드 ====
+  - 인터넷 웹브라우저를 통해 eGovFrame 홈페이지(https://www.egovframe.go.kr/)에 접속하여 사이트 상위메뉴를 통해 “다운로드>개발환경"으로 이동한다. \\ \\ 
+    {{:egovframework:dev3.5:개발환경다운로드_3.5.jpg|}} \\ \\
+  - 환경에 따라 다운받을 개발환경을 선택한다. \\ - 32bit/64bit Version \\ \\
+  - 첨부된 파일을 다운로드받아 압축을 해제한다.  \\ ✔ C: 또는 D:에 설치할 것을 권고한다. \\ \\
+
+==== 개발자 개발환경 실행 ====
+  - eclipse를 실행한다. \\ {{:egovframework:dev3.5:개발환경_설치위치_3.5.jpg|}} \\ \\ ✔ Fail to create Java Virtual Machine 오류가 발생할 경우 eclipse가 설치된 디렉토리의 **eclipse.ini** 파일에 JVM 경로를 지정해 주도록 한다. \\ 개발자 개발환경을 사용하기 위해서는 자바 1.7 이상의 버전이 설치되어야 한다. \\ {{:egovframework:dev3.5:install_vm_3.5.jpg|}} \\ \\
+  - eclipse를 실행 후 Workspace Launcher 팝업이 나타나면 전자정부 개발환경에서 제공하는 workspace를 선택한다. \\ {{:egovframework:dev3.5:개발환경_workspace지정_3.5.jpg|}} \\  
+✔ 전자정부 표준프레임워크에서는 eclipse에 eGovFrame 관련 설정정보를 세팅하여 배포한다. 따라서 C:\eGovFrameDev-3.0.0-32bit\workspace와 같이 eGovFrame 개발환경에서 기본적으로 제공해주는 workspace를 선택하는 것을 권장한다. \\ \\ 
+
+==== 퍼스펙티브(Perspective) 전환 ====
+  - eclipse가 정상적으로 실행되면 우측 상단의 Perspective가 eGovFrame으로 되어있는지 확인한다. \\ {{:egovframework:dev2:install_perspective.jpg|}}
+✔ 만약 Perspective가 eGovFrame이 아닐 경우 다음의 절차를 따른다.
+  * Perspective 좌측에 있는 아이콘을 클릭하여 "__O__ther... > Open Perspective > eGovFrame"을 선택한다. \\ {{:egovframework:dev2:install_other.jpg?250|}} \\ {{:egovframework:dev2:install_select.jpg|}} \\ \\ 
+
+===== Step 2. 프로젝트 생성 및 실행 =====
+
+==== 프로젝트 생성 ====
+  - 메뉴 표시줄에서 **File** > **New** > **eGovFrame Web Project**를 선택한다. \\ 또는, **Ctrl+N** 단축키를 이용하여 새로작성 마법사를 실행한 후 **eGovFrame** > **eGovFrame Web Project**을 선택하고 **Next**를 클릭한다. \\ {{:egovframework:dev2:imp:editor:ide:4th_new_web.png|}} \\ \\
+  - 프로젝트 명과 Maven 설정에 필요한 값들을 입력하고 **Next**를 클릭한다. \\ {{:egovframework:dev2:imp:editor:웹.png|}} \\ \\
+  - 예제 소스 파일 생성 여부를 체크하고 **Finish**를 클릭한다. \\ {{:egovframework:dev2:imp:editor:ide:4th_web_example.png|}} \\ \\
+
+==== 서버 설치 ====
+  * Tomcat 서버를 설치해 보도록 한다. 
+  - eclipse 하단의 Servers 탭을 클릭하고, 마우스 우클릭하여 "Ne__w__ > Server"를 선택한다. \\ {{:egovframework:dev2:install_new_server.jpg|}} \\ \\
+  - Apache > Tomcat v7.0 Server를 선택 후 Next를 클릭하고 Download and Install 버튼을 클릭하여 서버 설치를 완료한다. \\ {{:egovframework:dev3.5:install-newsvr_v7.jpg|}} {{:egovframework:dev3.5:install_tomcatsvr_v7.jpg|}} \\ \\
+
+==== 프로젝트 실행 ====
+  - 실행할 프로젝트를 마우스 우클릭하고 "__R__un As > Run on Server"를 선택한다. \\ {{:egovframework:dev2:install_runonsvr.jpg|}} \\ \\
+  - Choose an existing server를 선택하고  [[egovframework:dev3.5:clntinstall#서버 설치|서버 설치]]에서 설치한 서버를 선택 후 Next 버튼을 클릭하고 실행할 프로젝트를 Add한다. \\ {{:egovframework:dev3.5:install_choosesvr_v7.jpg|}} {{:egovframework:dev2:install_configuresvr.jpg|}} \\
+  - 다음과 같은 화면이 실행되는지 확인한다. \\ {{:egovframework:dev2:basicsample.jpg|}} \\ 
+
+✔ 프로젝트 생성 후 "Could not open JDBC Connection for transaction" 메시지가 나타날 경우 [[egovframework:dev3.5:imp:dbio_editor:hsqldb_guide|HSQLDB 설정 가이드]]를 참고하여 HSQLDB를 연결한다. \\ \\ 
+
+===== 기타 설정 =====
+==== DB 정보 변경 ====
+  * 전자정부에서는 MySql, Oracle, Altibase, Tibero를 지원한다. 본 가이드에서는 MySql로 DB 정보를 변경하는 예제를 실습해 보도록 한다. \\
+  - DB 정보를 변경할 프로젝트의 sql-map-config.xml 파일을 다음과 같이 수정한다. \\ {{:egovframework:dev2:sqlmapconf.jpg|}} \\
+  - context-datasource.xml 파일을 다음과 같이 수정하고 사용할 DB 정보를 입력한다. \\ {{:egovframework:dev2:contextds.jpg|}} \\
+  - pom.xml 파일에 다음과 같은 dependency를 추가한다. \\ {{:egovframework:dev2:dependency.jpg|}} \\
+  - 프로젝트 마우스 우클릭 후 "__R__un As > Maven install"을 선택한다. \\ {{:egovframework:dev2:maveninstall.jpg|}} \\
+
+==== Data Source Explorer 연결  ====
+[[egovframework:dev2:imp:editor:dbio_editor:data_source_explorer#Data Source Explorer|Data Source Explorer연결 가이드]]를 참고한다. \\
+
+==== 다국어 지원 방안 ====
+✔ 개발자 개발환경의 영문 버전을 사용할 경우 eclipse 설치 디렉토리에 있는 eclipse.ini 파일을 다음과 같이 수정한다. \\ **-Duser.language=en** \\ **-Duser.country=US** \\ 
+{{:egovframework:dev3.5:install_en-j7.jpg|}}
+
+
+✔ 개발자 개발환경의 국문 버전을 사용할 경우 eclipse 설치 디렉토리에 있는 eclipse.ini 파일을 동일한 방법으로 수정한다. \\ **-Duser.language=ko** \\ **-Duser.country=KR**
+
+==== 성능 향상 방안 ====
+✔ 다음과 같은 설졍을 통해 구현도구(eclipse)의 성능 및 속도를 높일 수 있다. 
+아래 설정은 필수 적용사항이 아니므로, 필요한 경우 참고자료로 활용한다. 
+
+1. eclipse theme 기능 변경
+
+{{:egovframework:dev2:eclipse성능개선_theme수정.jpg|}}
+   - Window >> Preferences >> General >> Appearance >> Theme를 Classic으로 변경.
+   - Use mixed fonts and colors for labels 체크를 해지
+   - Apply 후 eclipse 재실행.
+
+2. eclipse.ini 파일 수정 \\ \\ 필요에 따라 아래의 설정정보를 수정할 수 있다.\\ 메모리 설정의 경우, 각 컴퓨터의 메모리 용량에 따라 설정하여야한다. (1~2G : 256m, 2~3G, 512m, 4G~ : 1024m 권장)
+
+   -Xverify:none                   \\ 클래스 검사 생략. eclipse 실행 시간 단축
+   -XX:+UseParallelGC              \\ Parallel Collector를 사용. 병렬 가비지 컬렉션.
+   -XX:-UseConcMarkSweepGC         \\ 병행 mark-sweepGC 기능을 수행하여 GUI 응답 속도 처리
+   -XX:PermSize=32M                \\ eclipse 클래스 로딩 기본 메모리
+   -XX:MaxPermSize=128M            \\ eclipse 클래스 로딩 최대 메모리
+   -Xms256m                        \\ eclipse 실행시 잡는 최소 메모리
+   -Xmx256m                        \\ eclipse 실행시 잡는 최대 메모리

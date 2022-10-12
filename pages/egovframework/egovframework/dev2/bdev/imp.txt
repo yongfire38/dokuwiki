@@ -1,0 +1,19 @@
+====== Manual ======
+
+===== 개발프레임워크 배치개발환경 =====
+  * [[eGovframework:DEV2:bdev:imp:Overview|개발프레임워크 배치개발환경 소개]] \\ 개발프레임워크 배치개발환경의 목표, 제공 서비스 정보 등을 안내한다.
+
+  * [[eGovframework:DEV2:bdev:imp:Client|개발자 개발환경]] \\ 개발자를 위한 배치개발환경으로 배치 관련 템플릿 프로젝트와 파일 생성 기능을 제공한다.
+
+==== 개발자 개발환경 설치가이드 ====
+  * [[eGovframework:DEV2:bdev:imp:ClntInstall|개발자 개발환경 설치가이드]] \\ 개발자 개발환경을 다운로드 받아 설치 후 프로젝트를 생성해서 실행하기까지의 가이드를 제공한다. \\
+
+==== 배치개발환경 구현도구  ====
+  * [[eGovframework:DEV2:bdev:imp:batch_ide|Batch IDE]] \\ eGovFrame기반의 배치 어플리케이션 개발 시 개발자 편의성을 위하여 eclipse기반의 Perspective, Menu, 배치 템플릿 생성 마법사 등을 제공한다.
+    * [[eGovframework:DEV2:bdev:imp:batch_template_wizard|Batch Template Project Wizard]] \\ 개발자의 편의성을 위하여 eGovFrame기반의 배치 템플릿 생성 마법사를 제공한다.
+    * [[eGovframework:DEV2:bdev:imp:create_batch_job_wizard|Batch Job Wizard]] \\ 개발자의 편의성을 위하여 배치 개발시 필요한 작업 파일을 손쉽게 생성할 수 있는 마법사를 제공한다.
+    * [[eGovframework:DEV2:bdev:imp:create_batch_job_exec_wizard|Batch Job Launcher Wizard]] \\ 개발자의 편의성을 위하여 배치 개발시 필요한 작업 실행 파일을 손쉽게 생성할 수 있는 마법사를 제공한다.
+    * [[eGovframework:DEV2:bdev:imp:create_batch_configuration|Batch Configuration]] \\ 배치개발환경 사용시 Job Parameter, Job Reader/Writer, Listener를 직관적으로 등록 및 사용하기 위한 관리 환경을 제공한다.
+
+==== 배치개발환경 테스트도구 ====
+  * [[egovframework:dev2:bdev:tst:batch_job_test_wizard|Batch Job Test Wizard]] \\ 전자정부 표준프레임워크에서는 생성된 배치 관련 파일을 활용하여 간단히 테스트할 수 있는 테스트 마법사를 제공한다.

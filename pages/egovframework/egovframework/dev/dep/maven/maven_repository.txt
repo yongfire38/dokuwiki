@@ -1,0 +1,58 @@
+===== 개요 =====
+Maven Repository는 artifact들의 저장소로 로컬 및 리모트 repository로 구성되며 프로젝트의 pom.xml에서 선언한 dependency들을 저장소로부터 불러와서 사용한다.
+
+===== 설명 =====
+  * Maven 설치 시 로컬에 Maven artifact들을 저장하고 관리하는 repository가 자동으로 구성된다.\\ 기본 설정은 C:\Documents and Settings\Administrator\.m2\repository 디렉토리에 구성된다. 
+
+  * Maven 리모트 repository \\ Maven에서 제공하는 central respositoty와 각 기업 또는 organization에서 제공하고 있는 리모트 repository들이 있으며 \\ 개발자는 환경 설정을 통해 하나 이상의 외부 repository에서 필요로 하는 artifact들을 다운로드 받아 사용할 수 있다. 
+{{:egovframework:dev:dep:build:maven_clip_image002_0001.jpg|}}
+  * 로컬 repository : artifact들을 로컬 파일 시스템에 cache하는 기능으로 원격 repository에서 다운로드 받아 artifact들을 저장하고 관리한다.
+  * 원격 repository : 주로 HTTP 서버로 3rd 파티에서 제공하는 artifact들을 제외한 거의 모든 artifact들을 제공한다.
+
+===== 환결설정 =====
+Maven의 환경 설정 파일인 settings.xml 파일에서 로컬 repository의 위치 변경 및 리모트 repository에 대한 설정을 할 수 있다. \\ \\
+
+==== 로컬 리포지토리 위치 변경 ====
+<code:xml>
+<settings>
+  <!-- localRepository
+   | The path to the local repository maven will use to store artifacts.
+   |
+   | Default: ~/.m2/repository-->
+  <localRepository>C:/java/.m2/repository</localRepository>
+</settings>
+</code>
+
+==== Nexus 연동 세팅 ====
+[[egovframework:dev:dep:nexus|NEXUS 활용을 통한 Maven Repository 관리]]
+
+===== 사용법 =====
+==== Maven Repository 호출 프로세스 ====
+  일반적인 개발 시에 주로 사용되는 라이브러리 관리 메커니즘은 필요로 하는 라이브러리를 프로젝트 내부 디렉터리에 담고 
+  path 설정을 통해 사용하고 있으나 Maven에서는 의존성 설정 메커니즘(라이브러리를 설정 파일에 선언하여 사용함) 통해 사용하고
+  관리한다. 
+
+1. 프로젝트의 pom.xml에서 라이브러리 선언
+2. 개발자 로컬 리포지토리에서 선언한 라이브러리 검색
+  - 존재 시 프로젝트에 라이브러리 cache
+  - 존재하지 않을 경우 리모트 리포지토리에 요청
+3. 리모트 리포지토리에서 선언한 라이브러리 검색
+  - 로컬 리포지토리는 리모트 리포지토리에서 검색된 artifact를 내려 받아 저장한다.
+
+==== 로컬 repository의 디렉토리 구조 및 artifact 저장 방법 ====
+  artifact가 저장되는 디렉토리 구조  
+  : groupId / artifact name / version / artifact name-version.jar & artifact name-version.pom
+  
+  예) groupId: org.easymock
+      artifactId: easymock
+      version: 2.4 
+     - 저장 위치: org/easymock/easymock/2.4/easymock-2.4.jar & easymock-2.4.pom
+
+{{:egovframework:dev:dep:maven:mvn-repo.gif|}}
+
+
+
+
+===== 참고 자료 =====
+[[http://mvnrepository.com/|Maven Central Repository]]
+

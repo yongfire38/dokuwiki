@@ -1,0 +1,85 @@
+====== STS (Spring Tool Suite) 활용 가이드 ======
+
+
+===== 개요 =====
+
+이클립스 외 STS의 사용자 증가로 인한 개발자 편의성을 위하여 STS에서 표준프레임워크를 사용할 수 있도록 활용가이드를 제공한다.
+이 활용가이드는 STS내에서 공통컴포넌트 All-in-one을 생성하는 예제이다. \\ \\
+
+
+===== 들어가기 전에 =====
+
+- 표준프레임워크 개발자용 개발환경 3.10.0 은 [[https://www.eclipse.org/downloads/packages/release/2020-06/r|Eclipse 2020-06 (4.16)]]과 Spring IDE Core 3.9.13을 적용하였다.\\
+- 본 가이드는 이와 동일한 [[https://github.com/spring-projects/toolsuite-distribution/wiki/Spring-Tool-Suite-3|Spring Tool Suite 3.9.13 full distribution on Eclipse 4.16]]을 사용하였다.\\ \\
+ ✔ STS4에서는 Spring Legacy Project를 지원하지 않기 때문에 별도의 플러그인을 설치해주어야한다. \\ \\
+===== Step 1. 프로젝트 생성 =====
+
+1. STS에서 Spring Legacy Project를 생성한다.
+
+메뉴표시줄에서 File > New > Spring Legacy Project를 선택한다.
+\\ {{:egovframework:dev3.10:etcdevtool:sts:1createproject.png?600|}}\\ \\
+
+
+2. Templates에서 Simple Spring Web Maven를 선택한다.
+
+3. 프로젝트 명을 입력하고 Finish를 클릭한다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:2simplespringwebmaven.png?600|}} \\
+
+
+
+4. 프로젝트가 maven으로 되어있지 않으면, 프로젝트 선택 후 마우스 오른쪽 버튼 Configure > Convert to Maven Project를 선택한다. 
+\\ {{:egovframework:dev3.10:etcdevtool:sts:3converstmaven.png?600|}} \\
+
+
+
+===== Step 2. 공통컴포넌트 배포파일 다운로드 =====
+
+1. 표준프레임워크 포털(https://www.egovframe.go.kr/)에 접속하여 다운로드 > 공통컴포넌트를 선택한다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:5downloadcommon.png?1000|}} \\
+
+2. 필요한 공통컴포넌트 버전의 all-in-one 배포파일을 다운로드 받는다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:6downloadcommon.png?1000|}} \\
+
+
+===== Step 3. 공통컴포넌트 배포파일 import 및 실행 =====
+
+1. 다운로드 받은 배포파일의 압축을 푼다. 그리고 압축을 푼 파일들을 복사해서 이클립스의 egovframework-all-in-one 프로젝트 아래에 붙여 넣는다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:14download_common.png?600|}} \\
+
+2. 프로젝트명을 마우스 우클릭하여 Maven > Update Project...를 실행한다. (Force Update of Snapshots/Releases를 선택한다)
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:8updatemaven.png?600|}} \\
+\\ {{:egovframework:dev3.10:etcdevtool:sts:9updatemaven.png?600|}} \\
+
+3. 프로젝트명을 마우스 우클릭하여 run as > maven clean과 install을 실행한다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:7runinstall.png?600|}} \\
+
+4. 프로젝트명을 마우스 우클릭하여 run as > run on server을 실행한다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:10runonserver.png?600|}} \\
+
+5. 공통컴포넌트를 설치한 뒤, 실행시키면 아래와 같은 창을 확인할 수 있다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:12final.png?1000|}} \\
+===== 참고 ======
+
+===리파지토리 설정===
+Preferences > Maven > User Settins에서 리파지토리 위치를 설정할 수 있다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:12mavensetting.png?600|}} \\ 
+
+===서버설정===
+사용하고자 하는 서버가 없는 경우, Manually define a new server를 선택하고 필요한 서버를 추가한다. 
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:11newserver.png?600|}} \\ 
+
+
+===공통컴포넌트 설정도구===
+공통컴포넌트를 설치한 프로젝트 내에 위치한 “globals.properties” 파일의 정보를 바꿔야 한다.(globals.properties　파일의 위치: src/main/resources > egovframework > egovProps > globals.properties을 확인한다.) 해당 properties 파일에 수동으로 정보를 입력한다. 그리고 maven clean, maven install을 한 후 run as-run on server 를 실행한다.
+
+\\ {{:egovframework:dev3.10:etcdevtool:sts:13globalproperties.png?1000|}} \\ 

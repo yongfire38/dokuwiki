@@ -1,0 +1,30 @@
+====== Batch Job Wizard Additional Configuration ======
+
+===== 설명 =====
+
+배치 작업 파일 생성시 기본적인 항목 외에 추가적으로 설정 가능한 항목들에 대한 설명이다. \\
+
+^항목^항목 사용처^설명^
+| Job Listeners | Job Add 시 | Job 수행 중 도출된 정보에 대한 접근?? |
+| Step Listeners | Step Add 시 | Step 수행 중 도출된 정보에 대한 접근?? |
+| Chunk Listeners | Step Add 시 | Chunk 수행 중 도출된 정보에 대한 접근?? |
+| Shared values | Step Add 시 | 배치 작업 파일을 수행할 경우 재수행 가능 여부에 대한 설정 |
+
+===== 사용법 =====
+==== Job Listeners 설정 ====
+  - Job Listeners를 사용할 경우 Job Listeners 하단의 **Add**를 클릭한다.
+  - 기 등록한 [[egovframework:dev2:bdev:imp:create_batch_job_wizard:listener_mgmt#job_listeners|Job Listeners]] 중 사용할 **Listener**를 선택하고 **OK**를 클릭한다.
+
+==== Step Listeners 설정 ====
+  - Step Listeners를 사용할 경우 Step Listeners 탭에서 Step Listeners 우측의 **Add**를 클릭한다.
+  -  기 등록한 [[egovframework:dev2:bdev:imp:create_batch_job_wizard:listener_mgmt#step_listeners|Step Listeners]] 중 사용할 **Listener**를 선택하고 **OK**를 클릭한다. \\ 
+
+==== Chunk Listeners 설정 ====
+  - Chunk Listeners를 사용할 경우 Chunk Listeners 탭에서 Chunk Listeners 우측의 **Add**를 클릭한다.
+  - 기 등록한 [[egovframework:dev2:bdev:imp:create_batch_job_wizard:listener_mgmt#chunk_listeners|Chunk Listeners]] 중 사용할 **Listener**를 선택하고 **OK**를 클릭한다. 
+
+==== Shared values 설정 ====
+  - Shared values를 사용할 경우 Shared values 탭에서 Shared values 우측의 **Add**를 클릭한다. 
+  - 공유하고 하는 값을을 선택 및 설정하고 **OK**를 클릭한다. \\ ✔ Shared values란 작업간 정보 공유 관리로 Job내의 Step을 수행하던 중에 나온 결과값을 다른 Step에서 사용할 수 있다. \\ ✔ Shared values는 다음과 같이 사용할 수 있다. \\  
+
+**설정하는 예시 XML **

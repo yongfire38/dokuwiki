@@ -1,0 +1,18 @@
+====== Install ======
+
+===== 개요 =====
+Change Management의 설치는 WAR file을 프로젝트에 설치되어 있는 WAS 서버에 deploy를 하면 된다.\\
+예를 들어, Apache Tomcat 5.5.X가 설치되어 있다면, WAR file을 [tomcat.home]/webapps 디렉토리에 복사하고, Tomcat Console을 통해 WAR file을 올린다.\\
+
+===== 설명 =====
+Change Management의 설치는 WAR file을 프로젝트에 설치되어 있는 WAS 서버에 deploy를 하면 된다.\\
+예를 들어, Apache Tomcat 5.5.X가 설치되어 있다면, WAR file을 [tomcat.home]/webapps 디렉토리에 복사하고, Tomcat Console을 통해 WAR file을 올린다.\\
+
+===== 환경설정 =====
+==== DB설정 ====
+
+==== 환경설정 ====
+
+===== 사용법 =====
+===== 샘플 =====
+===== 참고자료 =====

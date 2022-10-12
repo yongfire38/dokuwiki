@@ -1,0 +1,71 @@
+===== 개요 =====
+
+===== 설명 =====
+
+먼저, 데이터베이스 준비(기동, DataSource 생성)에 대해 알아보자.\\
+테스트를 위해 사용할 수 있는 Database 가 준비되어 있고 이를 위한 접근 방법에 대한 안내까지 받았다면 고민할 필요는 없다.\\
+만약 이러한 상황이 아니라면, apache dbcp datasource 를 이용하여 생성하면 되고, springframework 를 사용하고 있다면 더더욱 간단히 해결될 수 있다.\\
+사실, egovframework 의 개발환경에서 제공하고 있는 CI Server 를 이용해 반복적으로 테스트를 수행하기 위해서는 테스트만을 위한 전용 DBMS 를 준비하는 것이 이상적이지만, 테스트 수행 후 깔끔하게 rollback 을 수행한다면 테스트 용 전용 DBMS 가 없어도 큰 무리는 없다.\\
+
+===== 환경설정 =====
+
+Maven Project 인 경우에는 아래와 같은 dependency 를 설정하면 된다.
+
+<code:java>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.unitils</groupId>
+            <artifactId>unitils</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+</code>
+
+===== 사용법 =====
+
+unitils.properties 에 필요한 내용을 아래 환경설정부분에서 안내하는대로 설정하고, Test Case 작성 시 **@RunWith(UnitilsJUnit4TestClassRunner.class)** 을 선언하면 된다.
+
+===== 샘플 =====
+
+Unitils 는 springframework 와 달리 DataSource 가 아닌 TestDataSource 라는 것을 사용한다. \\
+이 TestDataSource 는 Unitils 설정에 따라 선언과 동시에 DataSource 를 Getting 하는 것 뿐 아니라 dbmaintain 과 같은 별도의 작업을 동시에 수행할 수 있다.\\ 이는 다음에 설명하기로 하고, 여기서는 단순히 unitils 를 이용하여 TestDataSource 를 Getting 하는 예제만을 이해하도록 한다.
+
+<code:java>
+@RunWith(UnitilsJUnit4TestClassRunner.class)
+public class DataSourceGetTest_unitilsDataSource {
+ 
+ /*
+  * unitils.properties 에 설정 된 database 접근 정보를 기반으로 
+  * 테스트 용 DataSource 를 만든 후 자동으로 injection 해 준다.
+  * (unitils.properties 파일의 위치와 이름은 변경할 수 없다.)
+  * 
+  * @see  unitils.properties
+  */
+ @TestDataSource    
+ private DataSource dataSource;
+
+ @Test
+ public void checkTestDataSource() {
+  assertNotNull("dataSource를 정상적으로 get 했는지를 확인한다.", dataSource);
+ }
+}
+</code>
+
+위 Test Case 가 수행되기 위한 설정 파일은 unitils.properties 파일로서 다음과 같다.\\
+<code:text>
+# Properties for the PropertiesDataSourceFactory
+database.driverClassName=org.hsqldb.jdbcDriver
+database.url=jdbc:hsqldb:sampledb
+database.userName=sa
+database.password=
+</code>
+===== 참고자료 =====
+
+[[http://www.junit.org/]] \\
+[[http://www.unitils.org]]

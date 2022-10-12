@@ -1,0 +1,215 @@
+===== EasyMock과 Untils를 함께 사용한 샘플 소스 =====
+다음은 EasyMock과 Unitils를 함께 사용한 샘플의 전체 소스이다.
+
+==== Test Class ====
+<code:java>
+package egovframework.guideprogram.test.testcase.mock;
+
+
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertNotNull;
+import static org.unitils.reflectionassert.ReflectionAssert.assertPropertyLenientEquals;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import egovframework.guideprogram.test.target.mock.BoardVO;
+import egovframework.guideprogram.test.target.mock.CollaboratorDao;
+import egovframework.guideprogram.test.target.mock.EasyMockService;
+
+
+public class EasyMockOnlyTest {
+
+    /**
+     * EgovDao에 대한 Mock Object
+     */
+    private CollaboratorDao mockDao;
+    
+    /**
+     * 테스트 대상 서비스
+     */
+    private EasyMockService service;
+
+    /**
+     * test fixture 준비
+     */
+    @Before
+    public void setUp() {
+        mockDao = createMock(CollaboratorDao.class);
+        service = new EasyMockService();
+        service.setCollaboratorDao(mockDao);
+    }
+
+    /**
+     * Mocking하고자 하는 메소드가 리턴값을 갖는 경우에 대한 예
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testSelectList() throws Exception {
+        assertNotNull("테스트 대상이 잘 생성되었는지 확인", service);
+        assertNotNull("Mock Object가 잘 생성되었는지 확인", mockDao);
+        
+        // EasyMock를 이용하여 Mocking하고자 하는 메소드를 추가함
+        expect(mockDao.selectList()).andReturn(Arrays.asList(new BoardVO(101), new BoardVO(102)));
+        replay(mockDao);
+        
+        // 테스트 대상 메소드를 실행한다.
+        List<BoardVO> selectList = service.selectList();
+        
+        // 결과를 확인한다.
+        assertNotNull("테스트 대상이 잘 생성되었는지 확인", selectList);
+        assertPropertyLenientEquals("id", Arrays.asList(101, 102), selectList);
+
+        // EasyMock를 이용하여 Mocking하고자 하는 메소드를 검증함
+        verify(mockDao);
+    }
+
+    /**
+     * Mocking하고자 하는 메소드가 리턴값을 갖는 경우에 대한 예
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testInsert() throws Exception {
+        assertNotNull("테스트 대상이 잘 생성되었는지 확인", service);
+        assertNotNull("Mock Object가 잘 생성되었는지 확인", mockDao);
+        
+        BoardVO board = new BoardVO(103);
+
+        // EasyMock를 이용하여 Mocking하고자 하는 메소드를 알려줌
+        mockDao.insert(board);
+        replay(mockDao);
+
+        // 테스트 대상 메소드를 실행한다.
+        service.insert(board);
+
+        // EasyMock를 이용하여 Mocking하고자 하는 메소드를 검증함
+        verify(mockDao);
+    }
+}
+</code>
+
+==== Target Class ====
+테스트 대상 클래스(EasyMockService)와 관련 객체(CollaboratorDao), VO 클래스이다.
+
+<code:java>
+package egovframework.guideprogram.test.target.mock;
+
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+@Service("easyMockService")
+public class EasyMockService {
+
+    @Resource(name="collaboratorDao")
+    private CollaboratorDao collaboratorDao;
+    
+    public void setCollaboratorDao(CollaboratorDao dao) {
+        collaboratorDao = dao;
+    }
+
+    public List<BoardVO> selectList() throws Exception {
+        List<BoardVO> result =  collaboratorDao.selectList();
+        return result;
+    }
+
+    public void insert(BoardVO vo) throws Exception {
+        collaboratorDao.insert(vo);
+    }
+}
+</code>
+
+<code:java>
+package egovframework.guideprogram.test.target.mock;
+
+import java.util.List;
+
+public interface CollaboratorDao {
+
+    List<BoardVO> selectList();
+
+    void insert(BoardVO vo);
+
+}
+</code>
+
+<code:java>
+package egovframework.guideprogram.test.target.mock;
+
+public class BoardVO {
+
+    /** id */
+    private int id;
+
+    /** userName */
+    private String userName;
+
+    /** content */
+    private String content;
+
+    /**
+     * Constructor
+     */
+    public BoardVO() {
+        super();
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param id
+     */
+    public BoardVO(int id) {
+        super();
+        this.id = id;
+    }
+
+    /**
+     * Constructor
+     * 
+     * @param id
+     * @param userName
+     * @param content
+     */
+    public BoardVO(int id, String guestName, String content) {
+        super();
+        this.id = id;
+        this.userName = guestName;
+        this.content = content;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String guestName) {
+        this.userName = guestName;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+}
+</code>

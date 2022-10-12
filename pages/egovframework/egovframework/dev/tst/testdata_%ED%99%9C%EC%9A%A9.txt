@@ -1,0 +1,300 @@
+===== 개요 =====
+데이터베이스 관련 CRUD 단위 테스트 수행 시, 테스트 수행 전에 데이터베이스에 필요한 데이터를 미리 저장해 두고 테스트 종료 후 이를 삭제하는 등의 작업을 좀 더 편리하게 수행할 수 있는 방법을 가이드한다.
+
+===== 설명 =====
+DBUnit 을 사용할 경우 유용한 기본적인 기능은 다음과 같다.
+  * XML 로 필요한 데이터를 선언 해 두면 단위 테스트 수행 시 이 데이터가 데이터베이스에 자동 저장된다
+  * 데이터베이스 관련 테스트를 수행하고 그 결과값이 미리 XML 로 저장해 놓은 데이터와 자동으로 비교된다.
+  * 테스트 수행 후 트랜잭션 commit/rollback을 지정할 수 있다.
+그러나, DBUnit 을 직접 테스트 코드에서 사용하기 위해서는 별도의 이 XML 파일을 Load 하는 등의 별도 프로그램 로직이 필요하여 사용하기에 불편함이 따른다. \\
+이의 해소를 위해서 Unitils 는 DBUnit 관련한 기능을 Annotation만으로도 간단하게 사용할 수 있는 기능을 제공하므로, 이를 활용하는 방법을 안내한다.
+
+===== 환경설정 =====
+
+==== 필요한 라이브러리 ====
+Maven Project 인 경우에는 아래와 같은 dependency 를 설정하면 된다.
+
+<code:java>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.4.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.unitils</groupId>
+            <artifactId>unitils</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+</code>
+
+==== unitils.properties ====
+
+먼저 HSQLDB 를 사용하는 경우를 살펴보자. 설정의 내용이 많으므로 편의 상 조각조각으로 나눠서 설명하도록 한다.
+
+=== DBMS 연결 정보 설정 ===
+<code:java>
+# Properties for the PropertiesDataSourceFactory
+database.driverClassName=org.hsqldb.jdbcDriver
+database.url=jdbc:hsqldb:hsql://localhost/sampledb
+database.userName=sa
+database.password=
+</code>
+
+=== 트랜잭션 설정 ===
+DBUnit 을 이용해 데이터를 저장 혹은 삭제한 경우 commit/rollback 할런지를 설정하는 부분이다. \\이 부분은 Test Case 를 작성할 때 동적으로 변경할 수 있으므로 우선은 disabled 로 선언 해 둔다. \\ (CI 등을 활용하여 주기적으로 반복 테스트를 수행할 경우에는 rollback으로 설정하는 것을 권장한다.)
+<code:java>
+# Default behavior concerning execution of tests in a transaction. Supported values are 'disabled', 'commit' and 'rollback'.
+# If set to disabled, test are not executed in a transaction by default. If set to commit, each test is run in a transaction,
+# which is committed. If set to rollback, each test is run in a transaction, which is rolled back.
+DatabaseModule.Transactional.value.default=disabled
+</code>
+
+=== DBMS 설정 ===
+사용하는 DBMS 의 종류, 스키마 정보 등을 설정하는 부분이다. \\ 
+Unitils 는 여기서 언급된 종류의 DBMS를 지원하며 여기에 없는 DBMS 는 unitils 의 기능을 제한적으로 사용할 수 밖에 없으므로 설정하지 않는다.
+<code:java>
+# This property specifies the underlying DBMS implementation. Supported values are 'oracle', 'db2', 'mysql', 'hsqldb' and 'postgresql'.
+# The value of this property defines which vendor specific implementations of DbSupport and ConstraintsDisabler are chosen.
+database.dialect=hsqldb
+
+# A comma-separated list of all used database schemas. The first schema name is the default one, if no schema name is
+# specified in for example a dbunit data set, this default one is used.
+# A schema name is case sensitive.
+database.schemaNames=PUBLIC
+
+# Type of transaction manager that should be created:
+# simple: a simple transaction manager that wraps the datasource to control transactions
+# spring: a transaction manager that delegates actions to the transaction manager that is configured in the current spring context
+# auto: this will first try to load the spring transaction manager. if spring is not available, it will load the simple transaction manager
+transactionManager.type=auto
+</code>
+
+===== 사용법 =====
+
+unitils.properties 에 필요한 내용을 아래 환경설정부분에서 안내하는대로 설정하고, Test Case 작성 시 **@RunWith(UnitilsJUnit4TestClassRunner.class)** 을 선언하면 된다.\\
+또한 테스트 용 데이터를 XML 포맷으로 작성하고 이를 **@DataSet** 혹은 **@ExpectedDataSet** 과 같은 방법으로 선언한다.
+
+===== 샘플 =====
+
+==== unitils.properties ====
+<code:java>
+# Properties for the PropertiesDataSourceFactory
+database.driverClassName=org.hsqldb.jdbcDriver
+database.url=jdbc:hsqldb:hsql://localhost/sampledb
+database.userName=sa
+database.password=
+DatabaseModule.Transactional.value.default=disabled
+database.dialect=hsqldb
+database.schemaNames=PUBLIC
+transactionManager.type=auto
+</code>
+
+==== 테스트 수행 전 자동으로 입력할 데이터 ====
+파일의 이름은 AutoInsertionTestDataTest_DataSet.xml 이다.
+<code:xml>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+    <NOTICE NOTICE_ID="101"
+            NOTICE_TITLE="101번 공지"
+            NOTICE_CONTENTS="테스트용으로 자동 입력된 공지사항 101번입니다."
+            NOTICE_REGISTRATION_DATE="2009-03-18"
+            NOTICE_LAST_MODIFIER="OracleDataSetTest.xml"
+            NOTICE_LAST_MODIFIED_DATE="2009-03-17"
+            NOTICE_FILE_CNT="0"
+            NOTICE_RETRIEVED_CNT="0"
+    />
+    <NOTICE NOTICE_ID="102"
+            NOTICE_TITLE="102번 공지"
+            NOTICE_CONTENTS="테스트용으로 자동 입력된 공지사항 102번입니다."
+            NOTICE_REGISTRATION_DATE="2009-03-18"
+            NOTICE_LAST_MODIFIER="OracleDataSetTest.xml"
+            NOTICE_LAST_MODIFIED_DATE="2009-03-17"
+            NOTICE_FILE_CNT="0"
+            NOTICE_RETRIEVED_CNT="0"
+    />
+    <NOTICE NOTICE_ID="103"
+            NOTICE_TITLE="103번 공지"  
+            NOTICE_CONTENTS="테스트용으로 자동 입력된 공지사항 103번입니다."
+            NOTICE_REGISTRATION_DATE="2009-03-18"
+            NOTICE_LAST_MODIFIER="OracleDataSetTest.xml"
+            NOTICE_LAST_MODIFIED_DATE="2009-03-17"
+            NOTICE_FILE_CNT="0"
+            NOTICE_RETRIEVED_CNT="0"
+    />
+</dataset>
+</code>
+
+==== 테스트 수행 결과를 자동으로 비교할 데이터 ====
+파일 이름은 AutoVerifyTestResultsTest_ExpectedDataSet.xml 이다.
+<code:xml>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+    <NOTICE NOTICE_ID="201" 
+            NOTICE_TITLE="201번 공지"  
+            NOTICE_CONTENTS="테스트용으로 자동 입력된 공지사항 201번입니다."
+            NOTICE_LAST_MODIFIER="OracleDataSetTest.class"
+    />
+</dataset>
+</code>
+
+==== 테스트 케이스 작성 샘플 ====
+<code:java>
+package egovframework.guideprogram.test.testcase.persistence.testdata;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.unitils.UnitilsJUnit4TestClassRunner;
+import org.unitils.database.annotations.TestDataSource;
+import org.unitils.database.annotations.Transactional;
+import org.unitils.database.util.TransactionMode;
+import org.unitils.dbunit.annotation.DataSet;
+import org.unitils.dbunit.annotation.ExpectedDataSet;
+import org.unitils.spring.annotation.SpringApplicationContext;
+import org.unitils.spring.annotation.SpringBean;
+
+import egovframework.guideprogram.test.target.application.notice.NoticeDao;
+import egovframework.guideprogram.test.target.application.notice.NoticeVo;
+
+@RunWith(UnitilsJUnit4TestClassRunner.class)
+@Transactional(TransactionMode.ROLLBACK)
+@DataSet("/META-INF/persistence/testdata/AutoInsertionTestDataTest_DataSet.xml")
+@SpringApplicationContext({"/META-INF/persistence/connection/datasource-spring-with-unitils.xml",
+	                              "/META-INF/spring/context-common.xml", 
+	                              "/META-INF/spring/context-sqlmap.xml"})
+public class DaoOperationTest_noticeDao {
+
+	/**
+	 * unitils.properties 에 설정 된 database 접근 정보를 기반으로 
+	 * 테스트 용 DataSource 를 만든 후 자동으로 injection 해 준다.
+	 * (unitils.properties 파일의 위치와 이름은 변경할 수 없다.)
+	 * 
+	 * updateDataBaseSchema.enabled=true 로 설정되어 있으면
+	 * dbMaintainer.script.locations 에서 지정한 위치의 sql 문을 실행시켜준다.
+	 * 주의) 생성 시점은 test 메소드가 실행되기 전이다.
+	 *        따라서, 단순히 TestDataSource 만 선언하는 것이 아니라,
+	 *        하나 이상의 test 메소드라도 있어야 결과 확인이 가능하다.
+	 * 
+	 * @see		unitils.properties
+	 * @see      dbMaintainer.script.locations 에서 지정한 위치의 sql 문
+	 */
+	@TestDataSource
+	private DataSource dataSource;
+	
+	/** 테스트를 위해 만든 타겟 클래스로서 공지사항 비즈니스 구현을 위한 Dao */
+	@SpringBean("noticeDao")
+	private NoticeDao noticeDao;
+	
+	/** 테스트를 위해 만든 타겟 클래스로서 공지사항 비즈니스 구현을 위한 Value Object */
+	private NoticeVo noticeVo;
+	
+	/**
+	 * 공지사항 등록을 위한 Value Object 를 만들어내는 메소드로서 테스트 수행 직전에 수행
+	*/
+	@Before
+	public void makeNoticeVo() {
+		noticeVo = new NoticeVo();
+		noticeVo.setId(201);
+    	        noticeVo.setTitle("201번 공지");
+    	        noticeVo.setContents("테스트용으로 자동 입력된 공지사항 201번입니다.");
+    	        noticeVo.setLastModifier("OracleDataSetTest.class");
+
+                long currentTime = new java.util.Date().getTime();
+		noticeVo.setRegistrationDate(new java.sql.Date(currentTime));
+	}
+	
+	/**
+	 * 자동으로 생성된 Test 용 DataSource 를 정상적으로 Get 했는지를 확인
+	*/
+	@Test
+	public void checkTestDataSource() {
+		assertNotNull("Test DataSource 를 정상적으로 get 했는지를 확인한다.", dataSource);
+	}
+	
+	/**
+	 * 자동으로 생성된 Test 용 Dao 를 정상적으로 Get 했는지를 확인
+	*/
+	@Test
+	public void checkTestDao()  {
+		assertNotNull("Test 대상 Dao 를 정상적으로 get 했는지를 확인한다.", noticeDao);
+	}
+	
+	/**
+	 * Dao 의 selectCount 메소드에 대한 테스트
+	 * 테스트용 데이터) 클래스에 선언한 DataSet 에 정의 된 데이터
+	 * 테스트 결과) DataSet 에 3건을 정의했으므로 selectCount 의 결과는 3건이면 성공
+	*/
+	@Test
+	public void testSelectCount() {
+		int count = noticeDao.selectCount();
+		assertEquals("테스트용 데이터셋 3건을 입력한 뒤 전체 목록을 조회하면 3건임을 확인", 3, count);
+	}
+	
+	/**
+	 * Dao 의 selectList 메소드에 대한 테스트
+	 * 테스트용 데이터) 클래스에 선언한 DataSet 에 정의 된 데이터
+	 * 테스트 결과) 전체 목록을 조회하여 각각의 내용을 담은 Value Object 가 Null 이 아니면 성공
+	*/
+	@Test
+	public void testSelectList() {
+		List<NoticeVo> noticeList = noticeDao.selectList();
+		
+		for(NoticeVo noticeVo:noticeList) {
+			assertNotNull("조회한 noticeVo 객체가 null 이 아님을 확인", noticeVo);
+		}
+	}
+	
+	/**
+	 * Dao 의 Insert 메소드에 대한 테스트
+	 * 테스트용 데이터 ) 테스트 프로그램 수행 중 만들어낸 noticeVo
+	 * 테스트 결과) 테스트용 데이터셋 1건을 추가 입력한 뒤 목록조회하면 4건이면 성공
+	*/
+	@Test
+	@ExpectedDataSet("/META-INF/persistence/testdata/AutoVerifyTestResultsTest_ExpectedDataSet.xml")
+	public void testInsert() {
+		assertNotNull(noticeVo);
+    	noticeDao.insert(noticeVo);
+		int count = noticeDao.selectCount();
+		assertEquals("테스트용 데이터셋 1건을 추가 입력한 뒤 목록조회하면 4건임을 확인", 4, count);
+	}
+	
+	/**
+	 * Dao 의 Delete 메소드에 대한 테스트
+	 * 테스트용 데이터 ) DataSet 에 선언한 항목 중 2건에 해당하는 Id 값(101, 102)
+	 * 테스트 결과) 테스트용 데이터셋 3건을 입력한 뒤2건을 삭제 후 목록조회하면 1건이면 성공
+	*/
+	@Test
+	public void testDelete() {
+		noticeDao.delete(101);
+		noticeDao.delete(102);
+		int count = noticeDao.selectCount();
+		assertEquals("테스트용 데이터셋 3건을 입력한 뒤2건을 삭제 후 목록조회하면 1건임을 확인", 1, count);
+	}
+}
+
+</code>
+
+===== 참고자료 =====
+
+[[http://www.junit.org/]] \\
+[[http://www.dbunit.org/]] \\
+[[http://www.unitils.org]]

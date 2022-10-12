@@ -1,0 +1,28 @@
+===== 개요 =====
+개발환경 필수요소와 선택요소에 대한 개요를 설명한다.
+
+===== 설명 =====
+전자정부 표준 프레임워크에서는 개발환경을 경량화하기 위해 개발환경을 필수 요소와 선택 요소로 구분하여 개발환경 필수요소가 설치되어 있는 경량 개발환경과 개발환경 필수요소와 선택요소가 모두 설치되어 있는 통합 개발환경을 제공한다.
+
+===== 개발환경 필수요소 =====
+^구분^소프트웨어명^라이선스^
+| IDE  | eGovFrame IDE | |
+| Code Generation | eGovFrame Code Generator| |
+| Code Inspection | PMD, FindBugs | BSD, LGPL |
+| Test Case | JUnit | CPL |
+| Build Tool | Maven | Apache2.0 |
+| Configuration Management | Subversive | Subversion License |
+| CI Server | Hudson| MIT |
+| Configuration Management | Subversion | Subversion License |
+
+===== 개발환경 선택요소 =====
+^구분^소프트웨어명^라이선스^
+| UML Editor | AmaterasUML | EPL |
+| ERD Editor | AmaterasERD | EPL |
+| DBIO Editor | DBIO | |
+| WebFlow Editor | Spring WebFlow | Apache2.0 |
+| Mock Support | EasyMock | MIT |
+| DB Support | DBUnit | ㅣLGPL2.1 |
+| Test Coverage | EclEmma | CPL |
+| TestCase Generation | TestCase Generator | |
+| Build Tool | Nexus| GNU |

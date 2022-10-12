@@ -1,0 +1,14 @@
+====== Add Batch Nature  ======
+
+===== 개요 =====
+ 
+기존 전자정부 표준프레임워크를 사용했던 개발자들을 위해 새롭게 개발한 배치개발환경을 손쉽게 사용하기 위한 Batch Nature를 추가하는 기능을 제공한다.
+
+===== 설명 =====
+
+사용하던 전자정부 표준프레임워크의 Nature에 Batch Nature를 추가시켜 프로젝트를 새롭게 생성하고 구성해야 하는 번거로움을 덜어주었다.
+
+  * Add Batch Nature : 하단의 메뉴를 활용하여 기존 전자정부 표준프레임워크 프로젝트에 손쉽게 Batch Nature를 추가할 수 있다. \\ {{:egovframework:dev2:bdev:imp:addbatchnature_addbatchnaturemenu.png?450|}}
+  * Remove Batch Nature : 하단의 메뉴를 활용하여 추가한 Batch Nature를 제거할 수 있다. \\ {{:egovframework:dev2:bdev:imp:addbatchnature_removebatchnaturemenu.png?450|}}
+
+✔ 다음과 같이 전자정부 표준프레임워크를 통해서 생성한 프로젝트의 경우에만 사용할 수 있는 기능이다. \\ {{:egovframework:dev2:bdev:imp:addbatchnature_devcoreprj.png|전자정부 표준프레임워크 Core 프로젝트}}

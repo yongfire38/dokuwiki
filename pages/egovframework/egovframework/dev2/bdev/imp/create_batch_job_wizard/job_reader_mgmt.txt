@@ -1,0 +1,348 @@
+====== Job Reader 설정 ======
+
+===== 설명 =====
+
+배치 수행시 사용되는 입력 데이터를 등록하여 사용할 수 있는 관리 환경을 제공한다. \\
+
+
+===== 사용법 =====
+==== Job Reader 구성 ====
+  - 메뉴 표시줄에서 **Window** > **Preferences**를 선택한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:batchjobtstwizard_jobparameters_menu.png?600|}} \\ \\ 
+  - Preferences 페이지의 우측 목록에서 **eGovFrame** > **Batch** > **Job Reader/Writer**를 선택하고 **Job Reader 탭**을 선택 후 New 버튼을 클릭하여 새로운 Job Reader 를 추가한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_reader_new.png?600|}} \\ \\
+  - 등록하기 위한 Job Reader 이름을 지정하고 해당 Resource Type과 ReaderType 선택후 확인버튼을 클릭하여 Job Reader 를 추가한다.\\ ✔ Job Reader 등록시 중복되는 Name은 등록할 수 없다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_reader_register.png.png|}}
+
+==== 제공하는 Job Reader별 설명 ====
+=== FixedFlatFileItemReader ===
+  * FixedFlatFileItemReader 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:fixedflatfileitemreader.png?450|}} \\ \\   
+  * FixedFlatFileItemReader 사용시 대상 XML 설정 
+==  ==
+<code xml>
+<bean id="TestJob.TestStep1.FixedFlatFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+      <property name="resource" value="file:./src/main/resources/egovframework/batch/data/inputs/txtData.txt" />
+        <property name="lineMapper">
+            <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+                <property name="lineTokenizer">
+                    <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                        <property name="names" value="name, credit" />
+                        <property name="columns" value="1-9, 10-11" />
+                    </bean>
+                </property>
+                <property name="fieldSetMapper">
+                    <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                        <property name="targetType" value="egovframework.brte.sample.domain.trade.CustomerCredit" />
+                    </bean>
+                </property>
+            </bean>
+        </property>
+</bean>
+</code>
+
+
+=== DelimitedFlatFileItemReader	 ===
+  * DelimitedFlatFileItemReader	 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:delimitedflatfileitemreader.png?450|}} \\ \\   
+  * DelimitedFlatFileItemReader	 사용시 대상 XML 설정
+==  ==
+<code xml>
+<bean id="TestJob.TestStep2.DelimitedFlatFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+    <property name="resource" value="file:./src/main/resources/egovframework/batch/data/inputs/csvData.csv" />
+    <property name="lineMapper">
+        <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+            <property name="lineTokenizer">
+                <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                    <property name="delimiter" value="," />
+                    <property name="names" value="name,credit" />
+                </bean>
+            </property>
+            <property name="fieldSetMapper">
+                <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                    <property name="targetType" value="egovframework.brte.sample.domain.trade.CustomerCredit" />
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>
+</code>
+
+
+=== EgovFixedFlatFileItemReader	 ===
+  * EgovFixedFlatFileItemReader	 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovfixedflatfileitemreader.png?450|}} \\ \\    
+  * EgovFixedFlatFileItemReader	 사용시 대상 XML 설정
+==  ==
+<code xml>
+<bean id="TestJob.TestStep3.EgovFixedFlatFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+    <property name="resource" value="file:./src/main/resources/egovframework/batch/data/inputs/txtData.txt" />
+    <property name="lineMapper">
+        <bean class="egovframework.brte.core.item.file.mapping.EgovDefaultLineMapper">
+            <property name="lineTokenizer">
+                <bean class="egovframework.brte.core.item.file.transform.EgovFixedLengthTokenizer">
+                    <property name="columns" value="1-9,10-11" />
+                </bean>
+            </property>
+            <property name="objectMapper">
+                <bean class="egovframework.brte.core.item.file.mapping.EgovObjectMapper">
+                    <property name="type" value="egovframework.brte.sample.domain.trade.CustomerCredit" />
+                    <property name="names" value="name,credit" />
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>
+</code>
+
+
+=== EgovDelimitedFlatFileItemReader	 ===
+  * EgovDelimitedFlatFileItemReader 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovdelimitedflatfileitemreader.png?450|}} \\ \\    
+  * EgovDelimitedFlatFileItemReader	 사용시 대상 XML 설정
+==  ==
+<code xml>
+<bean id="TestJob.TestStep4.EgovDelimitedFlatFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader" scope="step">
+    <property name="resource" value="file:./src/main/resources/egovframework/batch/data/inputs/csvData.csv" />
+    <property name="lineMapper">
+        <bean class="egovframework.brte.core.item.file.mapping.EgovDefaultLineMapper">
+            <property name="lineTokenizer">
+                <bean class="egovframework.brte.core.item.file.transform.EgovDelimitedLineTokenizer">
+                    <property name="delimiter" value="," />
+                </bean>
+            </property>
+            <property name="objectMapper">
+                <bean class="egovframework.brte.core.item.file.mapping.EgovObjectMapper">
+                    <property name="type" value="egovframework.brte.sample.domain.trade.CustomerCredit" />
+                    <property name="names" value="name,credit" />
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>
+</code>
+
+
+=== FixedMultiResourceItemReader	 ===
+  * FixedMultiResourceItemReader	 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:fixedmultiresourceitemreader.png?450|}} \\ \\
+  * FixedMultiResourceItemReader	 사용시 대상 XML 설정
+==  ==
+<code xml>
+<bean id="TestJob.TestStep5.FixedMultiResourceItemReader" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
+    <property name="resources" value="file:./src/main/resources/egovframework/batch/data/inputs/*.txt" />
+    <property name="delegate" ref="TestJob.TestStep5.delegatingReader" />
+</bean>
+<bean id="TestJob.TestStep5.delegatingReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    <property name="lineMapper">
+        <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+            <property name="lineTokenizer">
+                <bean class="org.springframework.batch.item.file.transform.FixedLengthTokenizer">
+                    <property name="names" value="name,credit" />
+                    <property name="columns" value="1-9,10-11" />
+                </bean>
+            </property>
+            <property name="fieldSetMapper">
+                <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                    <property name="targetType" value="egovframework.brte.sample.domain.trade.CustomerCredit" />
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>
+</code>
+
+ 
+=== DelimitedMultiResourceItemReader	 ===
+  * DelimitedMultiResourceItemReader	 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:delimitedmultiresourceitemreader.png?450|}} \\ \\
+  * DelimitedMultiResourceItemReader	 사용시 대상 XML 설정
+==  ==
+<code xml>
+<bean id="TestJob.TestStep6.DelimitedMultiResourceItemReader" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
+        <property name="resources" value="file:./src/main/resources/egovframework/batch/data/inputs/*.csv" />
+        <property name="delegate" ref="TestJob.TestStep6.delegatingReader" />
+</bean>
+<bean id="TestJob.TestStep6.delegatingReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    <property name="lineMapper">
+        <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+            <property name="lineTokenizer">
+                <bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+                    <property name="delimiter" value="," />
+                    <property name="names" value="name,credit" />
+                </bean>
+            </property>
+            <property name="fieldSetMapper">
+                <bean class="org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper">
+                    <property name="targetType" value="egovframework.brte.sample.domain.trade.CustomerCredit" />
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>
+</code>
+
+ 
+=== EgovFixedMultiResourceItemReader	 ===
+  * EgovFixedMultiResourceItemReader	 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovfixedmultiresourceitemreader.png?450|}} \\ \\
+  * EgovFixedMultiResourceItemReader	 사용시 대상 XML 설정
+==  ==
+<code xml>
+<bean id="TestJob.TestStep7.EgovFixedMultiResourceItemReader" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
+        <property name="resources" value="file:./src/main/resources/egovframework/batch/data/inputs/*.txt" />
+        <property name="delegate" ref="TestJob.TestStep7.delegatingReader" />
+</bean>
+<bean id="TestJob.TestStep7.delegatingReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    <property name="lineMapper">
+        <bean class="egovframework.brte.core.item.file.mapping.EgovDefaultLineMapper">
+            <property name="lineTokenizer">
+                <bean class="egovframework.brte.core.item.file.transform.EgovFixedLengthTokenizer">
+                    <property name="columns" value="1-9,10-11" />
+                </bean>
+            </property>
+            <property name="objectMapper">
+                <bean class="egovframework.brte.core.item.file.mapping.EgovObjectMapper">
+                    <property name="type" value="egovframework.brte.sample.domain.trade.CustomerCredit" />
+                    <property name="names" value="name,credit" />
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>
+</code>
+
+ 
+=== EgovDelimitedMultiResourceItemReader	 ===
+  * EgovDelimitedMultiResourceItemReader	 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovdelimitedmultiresourceitemreader.png?450|}} \\ \\
+  * EgovDelimitedMultiResourceItemReader	 사용시 대상 XML 설정
+==  ==
+<code xml>
+<bean id="TestJob.TestStep.EgovDelimitedMultiResourceItemReader" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
+        <property name="resources" value="file:./src/main/resources/egovframework/batch/data/inputs/*.csv" />
+        <property name="delegate" ref="TestJob1.TestStep.delegatingReader" />
+</bean>
+<bean id="TestJob.TestStep.delegatingReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+    <property name="lineMapper">
+        <bean class="egovframework.brte.core.item.file.mapping.EgovDefaultLineMapper">
+            <property name="lineTokenizer">
+                <bean class="egovframework.brte.core.item.file.transform.EgovDelimitedLineTokenizer">
+                    <property name="delimiter" value="," />
+                </bean>
+            </property>
+            <property name="objectMapper">
+                <bean class="egovframework.brte.core.item.file.mapping.EgovObjectMapper">
+                    <property name="type" value="egovframework.brte.sample.domain.trade.CustomerCredit" />
+                    <property name="names" value="name,credit" />
+                </bean>
+            </property>
+        </bean>
+    </property>
+</bean>
+</code>
+
+
+=== CustomizeFileReader	 ===
+  * CustomizeFileReader	선택시 마법사 \\   ✔ 사용자 임의 지정 Reader를 등록하고 싶을 경우 사용하는 항목입니다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:customizefilereader.png?450|}} \\ \\
+
+==== ====
+
+=== IbatisPagingItemReader ===
+  * IbatisPagingItemReader 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:ibatispagingitemreader.png?450|}} \\ \\
+  * IbatisPagingItemReader 사용시 대상 XML 설정
+== ==
+<code xml>
+<bean id="TestJob.TestStep1.IbatisPagingItemReader" class="org.springframework.batch.item.database.IbatisPagingItemReader">
+     <property name="queryId" value="getAllCustomerCredits" />
+     <property name="sqlMapClient">
+            <bean class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+                <property name="dataSource" ref="dataSource" />
+                <property name="configLocation" value="file:./src/main/resources/egovframework/sqlmap/brte/sql-map-config.xml" />
+            </bean>
+     </property>
+</bean>
+</code>
+
+
+=== CustomizedJdbcCursorItemReader ===
+  * CustomizedJdbcCursorItemReader 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:customizedjdbccursoritemreader.png?450|}} \\ \\
+  * CustomizedJdbcCursorItemReader 사용시 대상 XML 설정
+== ==
+<code xml>
+<bean id="TestJob.TestStep2.CustomizedJdbcCursorItemReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+    <property name="dataSource" ref="dataSource" />
+    <property name="sql" value="SELECT name,credit FROM customer" />
+    <property name="rowMapper">
+        <bean class="egovframework.brte.sample.domain.trade.CustomerCreditRowMapper" />
+    </property>
+</bean>
+</code>
+
+
+=== SqlPagingQueryJdbcItemReader ===
+  * SqlPagingQueryJdbcItemReader 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:sqlpagingqueryjdbcitemreader1.png?450|}} {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:sqlpagingqueryjdbcitemreader2.png?450|}} \\
+  * SqlPagingQueryJdbcItemReader 사용시 대상 XML 설정
+== ==
+<code xml>
+<bean id="TestJob.TestStep3.SqlPagingQueryJdbcItemReader" class="org.springframework.batch.item.database.JdbcPagingItemReader" scope="step">
+    <property name="dataSource" ref="dataSource" />
+    <property name="rowMapper">
+        <bean class="egovframework.brte.sample.domain.trade.CustomerCreditRowMapper" />
+    </property>
+    <property name="queryProvider">
+        <bean class="org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean">
+            <property name="dataSource" ref="dataSource" />
+            <property name="sortKey" value="name" />
+            <property name="selectClause" value="SELECT name,credit" />
+            <property name="fromClause" value="FROM customer" />
+            <property name="whereClause" value="WHERE credit > :credit" />
+            <property name="pageSize" value="2" />
+        </bean>
+    </property>
+    <property name="parameterValues">
+            <map>
+                <entry key="credit" value="10000" />
+            </map>
+    </property>
+</bean>
+</code>
+
+===CustomizeDBReader===
+  * CustomizeDBReader 선택시 마법사 \\ ✔ 사용자 임의 지정 Reader를 등록하고 싶을 경우 사용하는 항목입니다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:customizedbreader.png?450|}} \\ \\ 
+
+
+=== 각 마법사내 입력 항목에 대한 설명 ===
+== ==
+^  구분  ^  항목명  ^  설명  ^
+|  File  | Resource | 입력 대상이 되는 파일의 경로 및 파일명 설정 |
+|  File  | Field Name | 구분자, 고정길이 등에 의해 구분되어 Mapping 할 VO의 Field 설정 |
+|  File  | Column Length | 고정길이 방식으로 읽기 위한 고정길이 값 설정 |
+|  File  | Delimiter | 구분자 방식으로 읽기 위한 구분자 값 설정 |
+|  File  | VO Class | 데이터를 객체화 할 클래스 설정 |
+|  DB  | iBatis Statement | 사용자가 정의 해놓은 iBatis 설정 파일에서 사용할 쿼리 ID |
+|  DB  | Configuration File | SqlMapCofig 설정 파일 경로 및 파일명 설정 |
+|  DB  | Sql | 데이터베이스에 접근할 쿼리 설정|
+|  DB  | Row Mapper | ResultSet의 데이터를 VO로 Mapping 하도록 사용자가 RowMapper 인터페이스를 구현한 클래스 |
+|  DB  | PageSize | 쿼리 실행 시마다 데이터베이스에서 읽어오는 엔티티의 수 설정 |
+|  DB  | Sql-SortColumn | 쿼리 결과를 정렬하여 가져올 수 있는 기준 컬럼 설정 |
+|  DB  | Sql-SELECT | 쿼리의 SELECT 절 |
+|  DB  | Sql-FROM | 쿼리의 FROM 절 |
+|  DB  | Sql-WHERE | 쿼리의 WHERE 절 |
+|  DB  | Datasource Bean ID | 데이터베이스 연결을 위해 사용할 데이터소스의 빈ID |
+|  DB  | Database Type | 데이터베이스 종류 설정 |
+
+==== 배치 작업 파일 생성시 Job Reader 적용 ====
+  - [[egovframework:dev2:bdev:imp:create_batch_job_wizard#사용법|Batch Job Wizard]]에서 새로운 배치 작업 파일 생성시 Step Add의 Reader 항목 우측 **Add** 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjobwizard_addreader.png?450|}} \\ \\
+  - 기 설정된 Job Reader 항목 중 등록할 항목을 선택하고 OK 버튼을 클릭하여 Reader를 추가한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjobwizard_donereader.png?450|}} \\ \\
+
+
+
+
+==== 참고사항 ====
+
+  * 전자정부 표준프레임워크 배치개발환경에서 제공하는 기본 Job Reader 항목 \\ 
+== ==
+^구분^항목명^설명^항목의 하위 구성 요소^
+| File | [[#FixedFlatFileItemReader|FixedFlatFileItemReader]] | 스프링에서 제공하는 LineMapper, Tokenizer, FieldSetMapper를 사용하여 파일의 데이터를 고정길이 방식으로 읽는 ItemReader | org.springframework.batch.item.file.FlatFileItemReader,\\ org.springframework.batch.item.file.mapping.DefaultLineMapper,\\ org.springframework.batch.item.file.transform.FixedLengthTokenizer,\\ org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper |
+| File | [[#DelimitedFlatFileItemReader|DelimitedFlatFileItemReader]] | 스프링에서 제공하는 LineMapper, Tokenizer, FieldSetMapper를 사용하여 파일의 데이터를 구분자 방식으로 읽는 ItemReader | org.springframework.batch.item.file.FlatFileItemReader,\\ org.springframework.batch.item.file.mapping.DefaultLineMapper,\\  org.springframework.batch.item.file.transform.DelimitedLineTokenizer,\\ org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper |
+| File | [[#EgovFixedFlatFileItemReader|EgovFixedFlatFileItemReader]] | 전자정부에서 제공하는 LineMapper, Tokenizer, ObjectMapper를 사용하여 파일의 데이터를 고정길이 방식으로 읽는 성능 개선된 ItemReader | org.springframework.batch.item.file.FlatFileItemReader,\\ egovframework.brte.core.item.file.mapping.EgovDefaultLineMapper,\\ egovframework.brte.core.item.file.transform.EgovFixedLengthTokenizer,\\ egovframework.brte.core.item.file.mapping.EgovObjectMapper |
+| File | [[#EgovDelimitedFlatFileItemReader|EgovDelimitedFlatFileItemReader]] | 전자정부에서 제공하는 LineMapper, Tokenizer, ObjectMapper를 사용하여 파일의 데이터를 구분자 방식으로 읽는 성능 개선된 ItemReader | org.springframework.batch.item.file.FlatFileItemReader,\\ egovframework.brte.core.item.file.mapping.EgovDefaultLineMapper,\\ egovframework.brte.core.item.file.transform.EgovDelimitedLineTokenizer,\\ egovframework.brte.core.item.file.mapping.EgovObjectMapper |
+| File | [[#FixedMultiResourceItemReader|FixedMultiResourceItemReader]] | 스프링에서 제공하는  LineMapper, Tokenizer, FieldSetMapper를 사용하여  파일의 데이터를 고정길이 방식으로 읽는 ItemReader이며, 복수개의 파일을 읽음 | org.springframework.batch.item.file.MultiResourceItemReader,\\ org.springframework.batch.item.file.mapping.DefaultLineMapper,\\ org.springframework.batch.item.file.transform.FixedLengthTokenizer,\\ org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper |
+| File | [[#DelimitedMultiResourceItemReader|DelimitedMultiResourceItemReader]] | 스프링에서 제공하는 LineMapper, Tokenizer, FieldSetMapper를 사용하여 파일의 데이터를 구분자 방식으로 읽는 ItemReader이며, 복수개의 파일을 읽음 | org.springframework.batch.item.file.MultiResourceItemReader,\\ org.springframework.batch.item.file.mapping.DefaultLineMapper,\\ org.springframework.batch.item.file.transform.DelimitedLineTokenizer,\\ org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper |
+| File | [[#EgovFixedMultiResourceItemReader|EgovFixedMultiResourceItemReader]] | 전자정부에서 제공하는 LineMapper, Tokenizer, ObjectMapper를 사용하여 파일의 데이터를 고정길이 방식으로 읽는 성능 개선된 ItemReader이며, 복수개의 파일을 읽음| org.springframework.batch.item.file.MultiResourceItemReader,\\ egovframework.brte.core.item.file.mapping.EgovDefaultLineMapper,\\ egovframework.brte.core.item.file.transform.EgovFixedLengthTokenizer,\\ egovframework.brte.core.item.file.mapping.EgovObjectMapper |
+| File | [[#EgovDelimitedMultiResourceItemReader|EgovDelimitedMultiResourceItemReader]] | 전자정부에서 제공하는 LineMapper, Tokenizer, ObjectMapper를 사용하여 파일의 데이터를 구분자 방식으로 읽는 성능 개선된 ItemReader이며, 복수개의 파일을 읽음| org.springframework.batch.item.file.MultiResourceItemReader,\\ egovframework.brte.core.item.file.mapping.EgovDefaultLineMapper,\\ egovframework.brte.core.item.file.transform.EgovDelimitedLineTokenizer,\\ egovframework.brte.core.item.file.mapping.EgovObjectMapper |
+| File | [[#CustomizeFileReader|CustomizeFileReader]] | 사용자가 등록한 파일 ItemReader | 사용자 정의 |
+| DB | [[#IbatisPagingItemReader|IbatisPagingItemReader]] | 스프링에서 제공하는 SqlMapClient를 사용하여 DB데이터를 Ibatis방식으로 읽는 ItemReader이며, 페이지 단위로 읽음 | org.springframework.batch.item.database.IbatisPagingItemReader,\\ org.springframework.orm.ibatis.SqlMapClientFactoryBean |
+| DB | [[#CustomizedJdbcCursorItemReader|CustomizedJdbcCursorItemReader]] | 사용자가 정의한 RowMapper 를 사용하여 DB데이터를 Jdbc방식으로 읽는 ItemReader이며, 커서 단위로 읽음| org.springframework.batch.item.database.JdbcCursorItemReader,\\ RowMapper를 상속 받아 구현한 사용자 지정 Mapper Class |
+| DB | [[#SqlPagingQueryJdbcItemReader|SqlPagingQueryJdbcItemReader]] | 스프링에서 제공하는 SqlProvider와 사용자가 정의한 RowMapper를 사용하여 DB데이터를 Jdbc방식으로 읽는 ItemReader이며, 페이지 단위로 읽음| org.springframework.batch.item.database.JdbcPagingItemReader, \\ RowMapper를 상속 받아 구현한 사용자 지정 Mapper Class, \\ org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean |
+| DB | [[#CustomizeDBReader|CustomizeDBReader]] | 사용자가 등록한 DB ItemReader | 사용자 정의 |

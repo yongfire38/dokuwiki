@@ -1,0 +1,348 @@
+====== DB Test Case ======
+
+===== 개요 =====
+JUnit, DbUnit, spring-test, Unitils 를 이용하여 DB 관련 Test Case 를 작성하고 실행하는 방법을 안내한다.
+
+===== 설명 =====
+Persistence layer 인 DAO 를 개발하고, 이 DAO 의 단위 기능을 테스트하는 경우에 대해 안내한다.
+이를 위한 Test Case 를 개발 할 경우에 사전 고려사항은 다음과 같다.
+
+  * 데이터베이스 준비(기동, DataSource 생성 등)
+  * 테이블 생성 및 초기 데이터 입력
+  * DAO 구현 시 각 메소드 별로 주고 받는 데이터인 Value Object 에 대한 준비
+  * DAO 테스트 용 데이터의 Rollback 혹은 Commit 처리
+
+따라서, 데이터베이스가 아직 준비 되지 않은 경우에는 개발자 로컬에 hsqldb, derby, mysql 과 같은 dbms를 임시로 설치하기도 한다.\\
+데이터베이스가 준비 되었다 하더라도 테이블 생성 스크립트를 작성하고 직접 dbms 와 연결하여 commit 후의 데이터를 확인해야 한다.\\
+또한, 프로그램이 수정 보완 되는 과정에서 여러 번 중복 테스트를 하기 위해서는 다시 dbms 에 접속하여 rollback 을 하는 등의 작업을 수행하기도 한다.
+
+만약 dbunit / unitils / spring-test 등을 기본으로 몇 가지 Tip 을 적절히 이용하면 보다 손 쉽게 데이터베이스 관련 테스트 케이스 개발을 수행 할 수 있다.
+
+==== Getting DataSource ====
+
+먼저, 데이터베이스 준비(기동, DataSource 생성)에 대해 알아보자.\\
+테스트를 위해 사용할 수 있는 Database 가 준비되어 있고 이를 위한 접근 방법에 대한 안내까지 받았다면 고민할 필요는 없다.\\
+만약 이러한 상황이 아니라면, apache dbcp datasource 를 이용하여 생성하면 되고, springframework 를 사용하고 있다면 더더욱 간단히 해결될 수 있다.\\
+사실, egovframework 의 개발환경에서 제공하고 있는 CI Server 를 이용해 반복적으로 테스트를 수행하기 위해서는 테스트만을 위한 전용 DBMS 를 준비하는 것이 이상적이지만, 테스트 수행 후 깔끔하게 rollback 을 수행한다면 테스트 용 전용 DBMS 가 없어도 큰 무리는 없다.\\
+
+=== springframework 를 이용하는 경우 ===
+
+아래는 spring-test 를 활용해 springframework 에 설정 한 DataSource 를 Get 하는 예제이다.
+
+<code:java>
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:META-INF/persistence/connection/datasource-spring.xml" })
+public class DataSourceGetTest_springDataSource {
+
+     /*
+      * ContextConfiguration 에서 제시한 configuration 에
+      * dataSource 라는 이름의 bean 이 선언되어 있으면 자동으로 injection 된다.
+      * 
+      * @see META-INF/persistence/datasource.xml, META-INF/persistence/jdbc.properties
+      */
+     @Resource(name = "dataSource")
+     DataSource dataSource;
+
+
+     @Test
+     public void checkDataSource() {
+          assertNotNull("Spring의  dataSource를 정상적으로 get 했는지를 확인한다.", dataSource);
+     }
+}
+</code>
+
+이 프로그램이 동작하기 위한 설정 파일은 다음과 같다.
+
+datasource-spring.xml
+<code:xml>
+ <context:property-placeholder location="classpath:/META-INF/persistence/connection/datasource.properties"/>
+
+ <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+      <property name="driverClassName" value="${driver}"/>
+      <property name="url" value="${dburl}"/>
+      <property name="username" value="${username}"/>
+      <property name="password" value="${password}"/>
+      <property name="defaultAutoCommit" value="false"/>
+      <property name="poolPreparedStatements" value="true"/>
+ </bean>
+</code>
+
+datasource.properties
+<code:text>
+driver=org.hsqldb.jdbcDriver
+dburl=jdbc:hsqldb:sampledb
+username=sa
+password=
+</code>
+
+=== unitils 를 이용하는 경우 ===
+Unitils 는 springframework 와 달리 DataSource 가 아닌 TestDataSource 라는 것을 사용한다. \\
+이 TestDataSource 는 Unitils 설정에 따라 선언과 동시에 DataSource 를 Getting 하는 것 뿐 아니라 dbmaintain 과 같은 별도의 작업을 동시에 수행할 수 있다.\\ 이는 다음에 설명하기로 하고, 여기서는 단순히 unitils 를 이용하여 TestDataSource 를 Getting 하는 예제만을 이해하도록 한다.
+
+<code:java>
+@RunWith(UnitilsJUnit4TestClassRunner.class)
+public class DataSourceGetTest_unitilsDataSource {
+ 
+ /*
+  * unitils.properties 에 설정 된 database 접근 정보를 기반으로 
+  * 테스트 용 DataSource 를 만든 후 자동으로 injection 해 준다.
+  * (unitils.properties 파일의 위치와 이름은 변경할 수 없다.)
+  * 
+  * @see  unitils.properties
+  */
+ @TestDataSource    
+ private DataSource dataSource;
+
+ @Test
+ public void checkTestDataSource() {
+  assertNotNull("dataSource를 정상적으로 get 했는지를 확인한다.", dataSource);
+ }
+}
+</code>
+
+위 Test Case 가 수행되기 위한 설정 파일은 unitils.properties 파일로서 다음과 같다.\\
+<code:text>
+# Properties for the PropertiesDataSourceFactory
+database.driverClassName=org.hsqldb.jdbcDriver
+database.url=jdbc:hsqldb:sampledb
+database.userName=sa
+database.password=
+</code>
+주의해야 할 점은 이 unitils.properties 파일은 unitils.jar 파일에 포함되어 있고 이를 개발자가 over-writing하는 방식이다.\\
+개발자가 내용을 변경하고자 할 경우(실제론 반드시 변경하게 되어 있다.)에는 이 파일이 저장되어야 할 위치가 root classpath 여야 한다는 것이다.\\
+즉 src/test/resource 바로 아래에 존재해야 인식을 한다. \\ unitils 를 사용하면 이 점이 불편하다. (위치를 runtime 시에 설정하고 싶지만, 이러한 기능이 제공되지 않는다. 심지어 파일 이름도 수정할 수 없다.) \\ 하지만 unitils.properties 파일을 일단 한번 만들어두고 나면 여기서부터 unitils-local.properties 와 같은 식으로 얼마든지 추가로 아무 위치에나(물론 클래스 로더가 인식할 수 있는 곳에) 생성할 수도 있으며 run-time 시에 이러한 파일들을 읽어들일 수도 있다.
+
+=== unitils 와 springframework 를 동시에 사용하는 경우 ===
+Unitils 의 기능과 springframework 의 기능을 조합해 보자.
+springframework 에서 제공하는 DataSource 생성하는 부분을 unitils 의 그것으로 설정하고 unitils 의 다른 기능 (테이블을 만들어주는 등의) 을 동시에 사용하는 것으로 소스와 설정 파일은 다음과 같다.
+
+<code:java>
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:META-INF/persistence/connection/datasource-spring-with-unitils.xml" })
+public class DataSourceGetTest_springWithUnitils {
+
+     /*
+      * ContextConfiguration 에서 제시한 configuration 에
+      * dataSource 라는 이름의 bean 이 선언되어 있으면 자동으로 injection 된다.
+      * 여기서는 unitils 에서 생성한 dataSource 를 spring이 인식하는 구조이다.
+      * 
+      * @see META-INF/persistence/datasource-spring-with-unitils.xml
+      */
+     @Resource(name = "dataSource")
+     DataSource dataSource;
+
+
+     @Test
+     public void checkDataSource() {
+          assertNotNull("Spring의  dataSource를 정상적으로 get 했는지를 확인한다.", dataSource);
+     }
+}
+</code>
+
+untils.properties 파일은 여전히 존재해야 하며, datasource-spring.xml 과 같은 역할을 datasource-spring-with-unitils.xml 로 이름을 바꿔서 아래와 같이 설정해보자. 이미 위 테스트 코드에서는 datasource-spring.xml 대신 datasource-spring-with-unitils.xml 을 로드하고 있음을 확인하자.
+
+datasource-spring-with-unitils.xml
+<code:xml>
+<bean id="dataSource" class="org.unitils.database.UnitilsDataSourceFactoryBean" />
+</code>
+
+==== TestData Auto-Insertion and Auto-Verification ====
+
+DBUnit 을 이용하면 Test 에 필요한 데이터 (미리 데이터베이스에 저장되었으면 하는 값과 같은) 를 별도의 XML 파일에 저장해 두고 Test Case 수행 시 이를 읽어들일 수 있다. \\
+단, 이러한 기능을 사용하려면 DBUnit 에서 제공하는 API 를 이용해 유틸성 프로그램을 추가로 개발해야 하는 번거로움이 있다. \\ Unitils 는 이러한 번거로움을 없애고 간편한 설정과 Annotation 만으로 DBUnit 을 훨씬 쉽게 사용할 수 있다. \\
+설사 DBUnit 을 모르더라도, 테스트 데이터를 외부 XML 로 저장해 둔 뒤에 읽어들이면 자동으로 데이터베이스에 Insert 해 주고 예상했던 값과 역시 자동으로 비교해주는 기능이라는 것을 이해하면 된다.
+
+먼저, 이를 위한 환경 설정을 살펴보자. database 연결 정보는 위에서 언급했으므로 생략한다.\\
+아래는 DBUnit 기능을 사용하기 위해 DBMS 별로 Unitils 가 구현한 것을 확인하고 해당 DBMS 를 설정하면 된다. 만약 여기에 없는 altibase 나 tibero 같은 DBMS 는 지원되지 않음을 확인할 수 있다.
+unitils.properties
+<code:text>
+# This property specifies the underlying DBMS implementation. Supported values are 'oracle', 'db2', 'mysql', 'hsqldb' and 'postgresql'.
+# The value of this property defines which vendor specific implementations of DbSupport and ConstraintsDisabler are chosen.
+database.dialect=hsqldb
+</code>
+
+
+==== Update Database Schema ====
+
+Unitils 를 이용하면 테스트가 수행될 때 자동으로 테스트에 필요한 테이블을 생성하고 Update 할 수 있다.
+
+먼저 이를 위해서는 테이블 생성 스크립트를 준비하고, 이를 적절한 폴더에 위치시켜야 하며 unitils.properties 파일을 설정해야 한다.
+
+  * unitils.properties
+데이터베이스 스키마 정보를 자동으로 update 할지를 설정하며, 이 때 사용하는 sql 문을 저장해 둔 디렉토리 경로를 설정한다.\\
+dbMaintainer.disableConstraints.enabled 는 단위 테스트 수행 시 테이블간의 제약 조건을 제외한다는 것으로 true 로 지정하면 이 관계를 임시적으로 끊는 등의 별도 작업없이 진행이 되므로 유용하다.
+<code:text>
+# If set to true, the DBMaintainer will be used to update the unit test database schema. This is done once for each
+# test run, when creating the DataSource that provides access to the unit test database.
+updateDataBaseSchema.enabled=true
+
+# Comma separated list of directories and files in which the database update scripts are located. Directories in this
+# list are recursively searched for files.
+dbMaintainer.script.locations=src/test/resources/META-INF/persistence/maintenance/hsqldb
+</code>
+
+위와 같이 설정하고, 단순히 unitils 의 TestDataSource 를 선언하기만 하면 아래와 같은 작업이 실행 된 로그를 확인할 수 있다. (물론 hsqldb가 기동되어야 한다.)
+<code:text>
+정보: Creating data source. Driver: org.hsqldb.jdbcDriver, url: jdbc:hsqldb:hsql://localhost/sampledb, user: sa, password: <not shown>
+2009. 4. 23 오후 4:04:36 org.unitils.database.DatabaseModule updateDatabase
+정보: Checking if database has to be updated.
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.version.impl.DefaultExecutedScriptInfoSource checkExecutedScriptsTable
+경고: Executed scripts table "PUBLIC"."DBMAINTAIN_SCRIPTS" doesn't exist yet or is invalid. A new one is created automatically.
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.structure.impl.DefaultConstraintsDisabler disableConstraints
+정보: Disabling contraints in database schema PUBLIC
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.clean.impl.DefaultDBClearer clearSchemas
+정보: Clearing (dropping) database schema PUBLIC
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.DBMaintainer updateDatabase
+정보: Database update scripts have been found and will be executed on the database.
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.clean.impl.DefaultDBCleaner cleanSchemas
+정보: Cleaning database schema PUBLIC
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.DBMaintainer executeScripts
+정보: Executing script script/001_initial.sql
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.structure.impl.DefaultConstraintsDisabler disableConstraints
+정보: Disabling contraints in database schema PUBLIC
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.structure.impl.DefaultSequenceUpdater updateSequences
+정보: Updating sequences and identity columns in database schema PUBLIC
+</code>
+
+===== 환경설정 =====
+
+Maven Project 인 경우에는 아래와 같은 dependency 를 설정하면 된다.
+
+<code:java>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <version>2.4.3</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.maven.artifact.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.unitils</groupId>
+            <artifactId>unitils</artifactId>
+            <version>2.2</version>
+            <scope>test</scope>
+        </dependency>
+</code>
+
+Unitils 를 이용하면 위처럼 TestDataSource 를 생성하거나, spring+unitils 조합의 DataSource 를 생성함과 동시에 테스트에 필요한 테이블을 생성하고 초기 데이터를 입력할 수 있다.
+
+먼저 이를 위해서는 테이블 생성 스크립트를 준비하고, 이를 적절한 폴더에 위치시켜야 하며 unitils.properties 파일을 설정해야 한다.
+
+아래는 이를 위한 설정을 해 둔 이클립스 메이븐 프로젝트의 예제이다.\\
+{{:egovframework:dev2:tst:junit_6.unitils.jpg?700x600}} \\
+
+이제 각 파일의 실제 내용을 살펴보자.
+
+먼저 unitils.properties 파일로, 여러 개의 unitils 관련 파일을 관리하고 싶을 경우 아래와 같이 해당 위치를 선언해두면 된다.
+물론 동시에는 하나의 설정 값만 인식된다. (반복해서 언급하지만, 이 파일을 동적으로 로드할 수 있도록 기능이 제공되면 편리할 듯 하다.)
+
+  * unitils.properties
+<code:java>
+unitils.configuration.localFileName=META-INF/persistence/unitils-local-hsqldb.properties
+#unitils.configuration.localFileName=META-INF/persistence/unitils-local-oracle.properties
+#unitils.configuration.localFileName=META-INF/persistence/unitils-local-mysql.properties
+#unitils.configuration.localFileName=META-INF/persistence/unitils-local-altibase.properties
+#unitils.configuration.localFileName=META-INF/persistence/unitils-local-tibero.properties
+</code>
+
+위에서 DBMS 별로 설정 파일을 구성해 놓은 이유는 DMBS 별로 설정해야 하는 값이 다르기 때문이다.
+먼저 HSQLDB 를 사용하는 경우를 살펴보자. 설정의 내용이 많으므로 편의 상 조각조각으로 나눠서 설명하도록 한다.
+
+  * unitils-local-hsqldb.properties (1) 
+DBMS 연결 정보 설정 부분이다.
+<code:java>
+# Properties for the PropertiesDataSourceFactory
+database.driverClassName=org.hsqldb.jdbcDriver
+database.url=jdbc:hsqldb:hsql://localhost/sampledb
+database.userName=sa
+database.password=
+</code>
+
+  * unitils-local-hsqldb.properties (2) 
+DBUnit 을 이용해 데이터를 저장 혹은 삭제한 경우 commit/rollback 할런지를 설정하는 부분이다. \\이 부분은 Test Case 를 작성할 때 동적으로 변경할 수 있으므로 우선은 disabled 로 선언 해 둔다. \\ (CI 등을 활용하여 주기적으로 반복 테스트를 수행할 경우에는 rollback으로 설정하는 것을 권장한다.)
+<code:java>
+# Default behavior concerning execution of tests in a transaction. Supported values are 'disabled', 'commit' and 'rollback'.
+# If set to disabled, test are not executed in a transaction by default. If set to commit, each test is run in a transaction,
+# which is committed. If set to rollback, each test is run in a transaction, which is rolled back.
+DatabaseModule.Transactional.value.default=disabled
+</code>
+
+  * unitils-local-hsqldb.properties (3)
+사용하는 DBMS 의 종류, 스키마 정보 등을 설정하는 부분이다. \\ 
+Unitils 는 여기서 언급된 종류의 DBMS를 지원하며 여기에 없는 DBMS 는 unitils 의 기능을 제한적으로 사용할 수 밖에 없으므로 설정하지 않는다.
+<code:java>
+# This property specifies the underlying DBMS implementation. Supported values are 'oracle', 'db2', 'mysql', 'hsqldb' and 'postgresql'.
+# The value of this property defines which vendor specific implementations of DbSupport and ConstraintsDisabler are chosen.
+database.dialect=hsqldb
+
+# A comma-separated list of all used database schemas. The first schema name is the default one, if no schema name is
+# specified in for example a dbunit data set, this default one is used.
+# A schema name is case sensitive.
+database.schemaNames=PUBLIC
+
+# Type of transaction manager that should be created:
+# simple: a simple transaction manager that wraps the datasource to control transactions
+# spring: a transaction manager that delegates actions to the transaction manager that is configured in the current spring context
+# auto: this will first try to load the spring transaction manager. if spring is not available, it will load the simple transaction manager
+transactionManager.type=auto
+</code>
+
+  * unitils-local-hsqldb.properties (4)
+데이터베이스 스키마 정보를 자동으로 update 할지를 설정하며, 이 때 사용하는 sql 문을 저장해 둔 디렉토리 경로를 설정한다.\\
+dbMaintainer.disableConstraints.enabled 는 단위 테스트 수행 시 테이블간의 제약 조건을 제외한다는 것으로 true 로 지정하면 이 관계를 임시적으로 끊는 등의 별도 작업없이 진행이 되므로 유용하다.
+<code:java>
+# If set to true, the DBMaintainer will be used to update the unit test database schema. This is done once for each
+# test run, when creating the DataSource that provides access to the unit test database.
+updateDataBaseSchema.enabled=true
+
+# Comma separated list of directories and files in which the database update scripts are located. Directories in this
+# list are recursively searched for files.
+dbMaintainer.script.locations=src/test/resources/META-INF/persistence/maintenance/hsqldb
+
+# If set to true, an implementation of org.unitils.dbmaintainer.constraints.ConstraintsDisabler will be used to disable
+# the foreign key and not null constraints of the unit test database schema.
+# The ConstraintsDisabler is configured using the properties specified below. The property with key 'database.dialect'
+# specifies which implementation is used.
+dbMaintainer.disableConstraints.enabled=true
+</code>
+
+위와 같이 설정하고, 단순히 unitils 의 TestDataSource 를 선언하기만 하면 아래와 같은 작업이 실행 된 로그를 확인할 수 있다. (물론 hsqldb가 기동되어야 한다.)
+<code:text>
+정보: Creating data source. Driver: org.hsqldb.jdbcDriver, url: jdbc:hsqldb:hsql://localhost/sampledb, user: sa, password: <not shown>
+2009. 4. 23 오후 4:04:36 org.unitils.database.DatabaseModule updateDatabase
+정보: Checking if database has to be updated.
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.version.impl.DefaultExecutedScriptInfoSource checkExecutedScriptsTable
+경고: Executed scripts table "PUBLIC"."DBMAINTAIN_SCRIPTS" doesn't exist yet or is invalid. A new one is created automatically.
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.structure.impl.DefaultConstraintsDisabler disableConstraints
+정보: Disabling contraints in database schema PUBLIC
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.clean.impl.DefaultDBClearer clearSchemas
+정보: Clearing (dropping) database schema PUBLIC
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.DBMaintainer updateDatabase
+정보: Database update scripts have been found and will be executed on the database.
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.clean.impl.DefaultDBCleaner cleanSchemas
+정보: Cleaning database schema PUBLIC
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.DBMaintainer executeScripts
+정보: Executing script script/001_initial.sql
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.structure.impl.DefaultConstraintsDisabler disableConstraints
+정보: Disabling contraints in database schema PUBLIC
+2009. 4. 23 오후 4:04:36 org.unitils.dbmaintainer.structure.impl.DefaultSequenceUpdater updateSequences
+정보: Updating sequences and identity columns in database schema PUBLIC
+</code>
+
+===== 사용법 =====
+
+===== 샘플 =====
+

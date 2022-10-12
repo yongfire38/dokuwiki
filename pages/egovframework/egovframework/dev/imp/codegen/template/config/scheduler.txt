@@ -1,0 +1,31 @@
+====== Scheduler Code Gen. ======
+
+===== 개요 =====
+ "SchedulerFactoryBean 을 이용한 스케줄링한 작업의 시작 설정"을 Code Generation 기능을 사용하여 쉽게 작성할 수 있다. 
+
+
+===== 설명 =====
+
+ Scheduler Configuration 의 설명은 다음 실행환경 가이드를 참조한다. 
+
+  * [[egovframework:rte:fdl:scheduling |실행환경 Scheduling Configuration Guide ]]
+
+===== 사용법 =====
+
+1.	Show Template : Window>Show View>eGovFrame Templates 를 선택한다.  \\
+
+{{:egovframework:dev:imp:codegen:template:config:image001.png|Show Template}}  \\
+
+2.	작성하고자 하는 Configuration의 템플릿을 선택한다.  \\
+
+{{:egovframework:dev:imp:codegen:template:config:scheduler:image003.png|New Scheduler 선택}}   \\
+ 
+3.	화면 UI 를 통해 필요한 항목을 입력한 뒤 최종적으로 Finish 버튼을 클릭한다.  \\
+
+{{:egovframework:dev:imp:codegen:template:config:scheduler:image005.png|상세 정보 입력}}   \\
+ 
+4.	생성된 Configuration 파일을 확인한다.  \\
+
+{{:egovframework:dev:imp:codegen:template:config:scheduler:image007.png|생성된 Configuration 파일 확인}}   \\
+
+ 

@@ -1,0 +1,28 @@
+====== 템플릿 기반 Code Gen. ======
+
+===== 개요 =====
+ 
+템플릿 기반 Code Gen. 은 미리 정의된 템플릿을 사용하여 eGovFramework을 기반으로 하는CRUD 프로그램을 생성하거나 필요한 Configuration/Property 파일을 쉽게 작성할 수 있는 기능이다. eGovFramework 의 개발환경의 구현도구에서는 다음과 같은 Template 기반 Code Generation 기능을 제공한다.  
+
+- CRUD 프로그램 자동생성 
+: 데이터베이스 테이블을 참조하여 웹서비스가 가능한 CRUD Java Code 및  Jsp, 
+SqlMapConfig 파일, SqlMap 파일 자동 생성.
+
+- Configuration 설정 파일 자동 생성 
+  - Data Source 
+  - Transaction 
+  - Cache
+  - Id Generation
+  - Logging
+  - Property
+  - Scheduling
+
+- 사용자 정의 템플릿 추가 기능 
+
+===== 사용법 =====
+
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen:Template:CRUDCodegen:CRUD 프로그램 자동 생성 기능 사용법]] 
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen.Template:ConfigurationCodegen:Configuration 설정 파일 자동 생성 기능 사용법]]
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen:Template:CustomCodegen:사용자 정의 템플릿 추가 기능 사용법]] 
+
+===== 참고자료 ====

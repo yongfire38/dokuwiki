@@ -1,0 +1,32 @@
+===== 개요 =====
+전자정부 표준 프레임워크의 Light Version 개발환경에 대한 개요를 설명한다.
+
+===== 설명 =====
+전자정부 표준 프레임워크에서는 개발환경을 경량화하기 위해 개발환경을 필수 요소와 선택 요소로 구분하였다.\\
+Light Version 개발환경은 개발환경 필수 요소만이 설치되어있는 경량 개발환경으로 소규모 프로젝트에서 사용하기 용이한 개발환경이다. 또한 프로젝트에서 개발환경 선택 요소가 필요한 경우, 필요 기능만을 선택적으로 구성할 수 있는 맞춤형 개발환경 도구도 제공한다. 
+
+===== 통합개발환경 구성내역 =====
+^소프트웨어^버전^설명^
+| Eclipse | 3.6.2 | Source Editor |
+| egovframework.dev.imp.core| 1.0.0 | 전자정부 표준 프레임워크 개발환경의 메뉴가 포함되어있다.|
+| egovframework.dev.imp.ide| 2.0.0 | 전자정부 표준 프레임워크 개발환경의 필수요소인 eGovFrame Perspective, Menu, 프로젝트 생성 마법사, 템플릿기반 프로젝트 생성 마법사, 맞춤형 개발환경 설치 마법사, 공통컴포넌트 생성조립도구, 공통컴포넌트 설정정보 관리, 서버연동정보관리(Nexus, SVN)가 포함되어 있다.  |
+| egovframework.dev.imp.codegen| 1.1.1 | 전자정부 표준 프레임워크 개발환경의 필수요소인 템플릿 기반 Code Gen, 모델 기반 Code Gen이 포함되어 있다.|
+| AmaterasUML | | |
+| Maven(m2eclipse)|0.12.1| 전자정부 표준 프레임워크에서는 Maven 기반 프로젝트를 생성하기 때문에 전자정부 프로젝트를 정상적으로 생성하기 위해서는 Maven이 설치되어 있어야 한다.|
+| Spring Core | 3.6  | false |
+| PMD| 3.2.6 | Code Inspection 도구|
+| FindBugs | 1.3.9| Code Inspection 도구|
+| JUnit| 4.8.1| 단위 테스트 도구 |
+| SVN Connector | 0.7.9| SVN 서버와 연결하기 위한 클라이언트측 플러그인(Subversive)|
+
+
+
+
+===== 사용법 =====
+전자정부 개발프레임워크 통합개발환경을 다운로드(http://www.egovframe.go.kr)하여 설치할 디렉토리에 압축을 푼 후 eclipse를 실행하면 경량개발환경을 사용할 수 있다. 맞춤형 개발환경을 구성하기 위해서는 Perspective를 eGovFrame으로 변경한 후 상단에 있는 eGovFrame통합메뉴  Configuration > Customize Development Tool을 열고 필요한 기능만을 선택하여 설치한다. 
+ eGovFrameDev-2.0.0.beta-LightVer
+
+===== 참고자료 =====
+
+^옵션^설명^기본값^
+| Generate Example | 프로젝트 생성시 예제 소스 포함 여부를 선택한다. | false |

@@ -1,0 +1,20 @@
+=== unitils-local-hsqldb.properties ===
+<code:ini>
+# HSQLDB 연결 정보 설정
+database.driverClassName=org.hsqldb.jdbcDriver
+database.url=jdbc:hsqldb:hsql://localhost/sampledb
+database.userName=sa
+database.password=
+# 트랜잭션 처리 설정 ( 'disabled', 'commit', 'rollback' )
+DatabaseModule.Transactional.value.default=disabled
+# DataSet, ExpectedDataSet 사용을 위한 dms 정보 설정 ( 'oracle', 'db2', 'mysql', 'hsqldb', 'postgresql' )
+database.dialect=hsqldb
+# 스키마 이름 설정
+database.schemaNames=PUBLIC
+# 트랜잭션 매니저 설정 ( 'auto', 'spring', 'simple' )
+transactionManager.type=auto
+# 테이블 자동 생성 등의 스키마 관리 기능 사용 여부 및 DML 위치 설정
+updateDataBaseSchema.enabled=true
+dbMaintainer.script.locations=src/test/resources/META-INF/persistence/maintenance/hsqldb
+dbMaintainer.disableConstraints.enabled=true
+</code>

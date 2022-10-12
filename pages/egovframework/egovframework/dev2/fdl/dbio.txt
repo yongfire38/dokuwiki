@@ -1,0 +1,51 @@
+====== DBIO Editor ======
+
+===== 개요 =====
+ 
+DBIO는 DataBase Input/Output의 약자로 개발환경에서 제공하는 데이터베이스 접근에 관한 표준적인 방법이다. 
+데이터베이스를 쉽고 일관된 API로 접근할수 있도록 해주며 업무컴포넌트 개발시에 데이터베이스 벤더에 관계없이 코딩할수 있도록 해준다.
+eGovFrameWork 의 DBIO Editor 는 DBIO 를 쉽게 가공할 수 있도록 유용한 기능을 제공한다. 
+
+===== 설명 =====
+ 
+
+ {{:egovframework:dev2:fdl:image001.gif|}}
+\\ <sup> <그림 1> DBIO Editor의 구성  </sup> 
+
+
+DBIO Editor는 SQL 편집기, SQL Tester 도구 와 Configuration Editor로 구성되어 있고, 주요기능은 다음과 같다.  
+
+  * SQL MAP Config File 편집 기능
+  * SQL MAP File 편집 기능 
+  * 데이터 베이스 접속 정보 설정
+  * 테이블 정보 조회
+  * 사용자 정의 Query 생성 기능
+  * Query 테스트 및 결과 조회 기능
+  * Query 목록 검색 및 조회
+
+===== 환경설정 =====
+
+사용자가 DBIO Editor를 사용하기 위해서는 사용자의 eclipse 개발환경에 eGovFrameWork DBIO 를 업데이트해야 한다. 업데이트하는 방법은 다음과 같다. 
+
+  - 사용자의 eclipse 개발환경에서 메뉴 > Help > Software Updates 를 클릭한다. (<그림 2> 참조)
+  - "Software Updates and Add-ons" 다이얼로그 창에서 Available Software 탭을 클릭한다. 
+  - "Available Software" 목록 우측에 있는 "Add Site..." 버튼을 클릭한다. (<그림 3> 참조)
+  - "Add Site" 다이얼로그 창에 있는 Location 입력 항목에 "http://192.168.100.16:8080/egovframework/update" 를 입력하고 "OK" 버튼을 클릭한다. (<그림 4> 참조)
+  - "Available Software" 목록에 입력한 Url 이 추가된다. 
+  - 입력한 Url 의 하위 트리 항목을 확장하여 eGovFramework Development Environment 의 eGovFramework DBIO Feature 를 선택한다. 
+  - "Available Software" 목록 우측에 있는 "Install..." 버튼을 클릭한다. (<그림 5> 참조)
+
+{{:egovframework:dev2:fdl:sqlmapconfig2-1.jpg|}}
+\\ <sup>  <그림 2> Software Updates  </sup> 
+
+{{:egovframework:dev2:fdl:sqlmapconfig2-2.jpg|}}
+\\ <sup>  <그림 3> "Available Software" 목록  </sup> 
+
+{{:egovframework:dev2:fdl:sqlmapconfig2-3.jpg|}}
+\\ <sup>  <그림 4> Location 입력  </sup> 
+
+{{:egovframework:dev2:fdl:sqlmapconfig2-4.jpg|}}
+\\ <sup>  <그림 5> Install </sup> 
+
+
+

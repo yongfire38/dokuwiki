@@ -1,0 +1,22 @@
+====== Job Parameters 설정 ======
+
+===== 개요 =====
+
+배치개발환경에서 제공하는 테스트 마법사를 이용할 경우 사용자의 편의성을 위해 배치 구성 파라메터를 추가하는 관리 환경을 제공한다.
+
+===== 설명 =====
+
+배치 테스트를 진행할 경우 사용할 파라메터들을 추가 등록하여 활용한다.
+
+
+===== 사용법 =====
+==== Job Parameters 설정 ====
+=== Job Parameters 구성 ===
+  - 메뉴 표시줄에서 **Window** > **Preferences**를 선택한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:batchjobtstwizard_jobparameters_menu.png?600|}} \\ \\ 
+  - Preferences 페이지의 우측 목록에서 **eGovFrame** > **Batch** > **Job Parameter**를 선택하고 New 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:preferences_parameter_new.png?600}} \\ \\ 
+  - 등록하기 위한 Job Parameter 이름과 값을 입력하고 해당 Data Type을 선택한 후 확인버튼을 클릭하여 Job Parameter를 추가한다. \\ ✔ Job Parameter 등록시 중복되는 Parameter Name은 등록할 수 없다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:preferences_parameter_register.png?300}}\\ \\
+
+=== 배치 테스트 구성시 Job Parameters 적용 ===
+  - [[egovframework:dev2:bdev:tst:batch_job_test_wizard#사용법|Batch Job Test 마법사]]에서 새로운 테스트 파일 생성시 Job Parameters 항목 우측의 **Add** 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:test_jobparameter_add.png?450}}
+  - 기 설정된 Job Parameters 항목 중 테스트에 활용할 항목을 선택하고 OK 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:test_jobparameter_register.png?300}} \\ \\ 
+  - 추가된 Job Parameter를 확인한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:test_jobparameter_finish.png?450}} \\ \\

@@ -1,0 +1,41 @@
+====== File(SAM)-Web Batch Template Project Wizard ======
+
+
+===== 사용법(Continue) =====
+ __**[[egovframework:dev2:bdev:imp:batch_template_wizard#(계속 진행)|<< 이전 과정 보기]]**__\\
+==  ==
+
+**5.** 프로젝트 명과 Maven 설정에 필요한 값들을 입력하고 **Finish**를 클릭한다. \\ {{:egovframework:dev2:bdev:imp:batch_template_wizard:sam_web_template.png?450|File(SAM)-Web Project 설정}} \\ \\
+
+**6.** 생성된 프로젝트 우클릭 후 Properties에 들어가 Deployment Assembly에 Maven Dependency가 있는지 확인한다. \\ 없을 경우 Add - Java Build Path Entries - Maven Dependencies를 추가한다. \\  \\
+{{:egovframework:dev2:bdev:imp:batch_template_wizard:batchdeploy.png|}} \\ \\
+**7.** 배치작업 수행 전, 배치작업에 필요한 스키마를 정의한다. \\  
+  * 배치작업 수행을 위해서는 배치작업에 필요한 데이터베이스가 구성되어야 정상적으로 동작한다. 전자정부에서는 데이터베이스 구성용 스크립트를 제공한다.
+  * [[egovframework:rte2:brte:batch_example:setup|예제 설치의 3번(HSQL) 또는 HSQL 외 DB 연결 순서(HSQL 외)]]을 참고하여 스키마를 정의한다. \\
+**8.** 서버를 실행하여 배치 템플릿 프로젝트가 올바르게 실행되는지 확인한다. (서버 설치가 되있지 않은 경우 [[egovframework:dev2:clntinstall#서버 설치|서버 설치 방법]]을 참고한다.) \\   
+    * 실행 화면 \\ {{:egovframework:dev2:bdev:imp:batch_template_wizard:sam_web_template_result.png?640|File(SAM)-Web Project}} \\ \\
+**9.** **배치실행** 버튼을 클릭하면 배치 작업이 실행되고 작업에 대한 실행 결과가 출력된다. \\ 
+    * 배치작업 결과 화면 \\ {{:egovframework:dev2:bdev:imp:batch_template_wizard:sam_web_template_run_result_.png?650|File(SAM)-Web Project 배치작업 결과}} \\ \\
+
+==== 참고사항 ====
+✔ 프로젝트 실행시 target runtime을 현재 이클립스에서 사용하고있는 web/was 서버(ex:tomcat)로 설정 해주어야 한다. \\
+✔ 입력 데이터로 사용될 파일은 /main/resources/egovframework/batch/data/inputs에 있다.(ItemReader 설정의 resource property를 통해 변경 가능) \\
+✔ 배치작업을 통해 생성되는 결과물 파일은 사용자 PC의 User.Home 경로에 생성되도록 기본 설정 되있다.(BatchRunController 클래스 또는 ItemWriter 설정의 resource property를 통해 변경 가능하다.)
+
+**eGovFrame Batch Template Project 설정 페이지**
+
+^옵션^설명^기본값^
+| Project Name | 새 프로젝트 이름을 입력한다. | 공백 |
+| Contents | Use default Workspace location체크시 기본 작업공간에 프로젝트 명으로 프로젝트 디렉토리가 생성된다. \\ 임의의 디렉토리 선택시 옵션을 해제하고 **Browse**버튼을 클릭하여 위치를 선택한다. | Use default Workspace location |
+| Target Runtime | 웹 어플리케이션을 실행할 타겟 서버를 선택한다. | <None> |
+| Dynamic Web Module Version | 동적 웹 모듈 버젼을 선택한다. | 2.5 |
+| Group Id | Maven에서의 Group Id를 입력한다. | 공백 |
+| Artifact Id | Maven에서의 Artifact Id를 입력한다. | 공백 |
+| Version | Maven에서의 버젼을 입력한다. | 1.0.0 |
+
+**제공 Sample Job (입력 리소스 유형이 File(SAM)인 프로젝트)**
+^  Job  ^  Reader  ^  Writer  ^  Job 설명  ^
+^ delimitedToDelimitedJob | [[egovframework:rte2:brte:batch_core:item_reader#FlatFile ItemReader|FlatFileItemReader]] | [[egovframework:rte2:brte:batch_core:item_writer#FlatFile ItemWriter|FlatFileItemWriter]] | File(SAM) 형태의 자료에서 원천 데이터를 구분자 기준으로 입력받아 배치작업 처리 후, 구분자 방식의 데이터를 저장하는 파일로 결과물을 생성하는 Job |
+^ fixedLengthToFixedLengthJob | [[egovframework:rte2:brte:batch_core:item_reader#FlatFile ItemReader|FlatFileItemReader]] | [[egovframework:rte2:brte:batch_core:item_writer#FlatFile ItemWriter|FlatFileItemWriter]] | File(SAM) 형태의 자료에서 원천 데이터를 고정길이 방식으로 입력받아 배치작업 처리 후, 고정길이 방식의 데이터를 저장하는 파일로 결과물을 생성하는 Job  |
+^ fixedLengthToIbatisJob | [[egovframework:rte2:brte:batch_core:item_reader#FlatFile ItemReader|FlatFileItemReader]] | [[egovframework:rte2:brte:batch_core:item_writer#Database ItemWriter|IbatisBatchItemWriter]]| File(SAM) 형태의 자료에서 원천 데이터를 고정길이 방식으로 입력받아 배치작업 처리 후, iBatis를 이용해 데이터베이스 테이블에 데이터를 저장하는 Job |
+^ fixedLengthToJdbcJob | [[egovframework:rte2:brte:batch_core:item_reader#FlatFile ItemReader|FlatFileItemReader]] | [[egovframework:rte2:brte:batch_core:item_writer#Database ItemWriter|JdbcBatchItemWriter]]| File(SAM) 형태의 자료에서 원천 데이터를 고정길이 방식으로 입력받아 배치작업 처리 후, JDBC를 이용해 데이터베이스 테이블에 데이터를 저장하는 Job  |

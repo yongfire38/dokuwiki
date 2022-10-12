@@ -1,0 +1,137 @@
+====== 개발프레임워크 개발환경 소개 ======
+
+===== 개요 =====
+전자정부 표준프레임워크의 개발환경 대해 전체적인 개요를 설명한다. 
+
+
+
+===== 설명 =====
+
+==== 개발환경 목표 ====
+전자정부 표준프레임워크 개발환경은 비즈니스 프로그램 개발, 버전관리, 단위 테스트, 빌드 등의 개발 Life-Cycle 전반에 대한 지원 도구를 제공한다. \\
+  * Implementation Tool
+  * Test Tool
+  * Configuration & Change Management Tool
+  * Deployment Tool
+
+||^전체 구조 및 구성요소||
+||  {{:egovframework:dev2:bdev:imp:개발환경구성도.jpg|}}  ||
+|^Implementation Tool | 프로그램 개발, 테스트, 디버그 등 개발자 개별 개발환경을 제공|
+|^Test Tool | 개발 프로그램에 대한 단위 테스트용 프로그램 작성 및 개별 배치 테스트 지원 |
+|^Conf. & Change & Batch Mgt. Tool | 개발 프로그램에 대한 형상 식별, 버전관리, 이슈 관리 \\ 및 모니터링 도구 제공 |
+|^Deployment Tool | CI (Continuous Integration)와 서버 이관 관련 도구 제공|
+ \\
+
+==== 개발자 개발환경과 서버 개발환경 ====
+=== 개발자 개발환경 === 
+개발자 개발환경은 Implementation Tool(Editor, Debug, IDE, Common Component, Mobile IDE, Batch IDE)과 Test Tool(Test Reporting, Unit Test, Batch Test)로 구성되어있다. \\ {{:egovframework:dev2:bdev:imp:clntoverview.jpg|}} \\
+
+개발자 개발환경의 세부 기능을 좀 더 자세히 살펴보면 **개발자들이 필수적으로 사용해야 하는 기능**과 **개발 편의성을 위해 선택적으로 사용하는 기능**으로 구분됨을 알 수 있다.  \\
+이에 따라 전자정부 표준프레임워크에서는 개발환경을 경량화하기 위해 개발자 필수 기능만으로 구성된 [[egovframework:dev2:client#경량 개발환경|경량 개발환경]]을 제공한다. 경량 개발환경은 개발자들이 간편하게 설치하여 사용할 수 있으며 소규모 프로젝트에서 사용하기 용이한 개발환경이다. \\
+또한 전자정부 표준프레임워크에서는 개발자 필수 기능과 개발 편의성 향상을 위한 선택적 기능을 모두를 설치한 [[egovframework:dev2:client#통합 개발환경|통합 개발환경]]도 제공한다. \\
+개발자는 프로젝트의 상황에 적합한 환경을 다운로드하여 사용하도록 한다. \\ \\
+
+=== 서버 개발환경 ===
+서버 개발환경은 Deployment Tool(Build, Deploy)과 Conf. & Change Mgt. Tool(Configuration Management, Change Management)로 구성되어 있다. \\ {{:egovframework:dev2:bdev:imp:svroverview.jpg|}} \\
+
+전자정부 표준프레임워크에서는 서버 개발환경 역시 프로젝트에서 필수적으로 사용하는 기능과 선택적으로 사용하는 기능으로 구분하였다. \\
+프로젝트 상황에 따라 Deployment Tool과 Conf. & Change Mgt. Tool 중 일부 기능을 선택적으로 사용할 수 있다.[[egovframework:dev2:server|(서버 개발환경)]]
+
+==== 개발 프로세스 ====
+개발환경에서 제공하는 개발환경 도구를 기반으로 개발을 진행할 경우 제시될 수 있는 개발 프로세스이다. \\
+개발 프로세스는 아래의 4개 영역으로 분류되며 각 영역에서 수행하는 상세 프로세스는 그림에서 확인할 수 있다.
+  * 개발자 PC
+  * 형상관리 서버
+  * CI 서버
+  * 어플리케이션 서버
+{{:egovframework:dev2:4._개발_프로세스_설계2.jpg|}} \\
+
+===== 환경 설정 =====
+
+==== 기본 환경 ====
+
+^  항목  ^  권장버전  ^  비고  |
+|Java Development Kit|5.0| |
+|Servlet|2.4| |
+|Eclipse IDE for Java EE Developers|4.2.1|http://www.eclipse.org/downloads/|
+
+==== WAS ====
+
+^이름 ^권장버전 ^자바호환성 ^비고 |
+|Jboss application platform |4.3.0 |JDK 5.0 | |
+|Tmax JEUS |6.0.0.5 |JDK 5.0 이상 | |
+|Oracle WebLogic Server |9.2 |JDK 5.0 이상 | |
+
+
+==== DBMS ====
+
+^이름 ^권장버전 ^비고 |
+|Mysql |5.1.30 | |
+|Tibero |3.0(sp2) | |
+|Altibase DBMS Server |5.1.3.18 | |
+|Oracle |9.2(mp3) | |
+
+==== Open Source Software 사용 현황 ====
+
+^서비스 그룹^서비스^^오픈소스 소프트웨어^버전^라이선스^확장 및 개발^
+|Implemtation Tool|Editor|Source Editor|Eclipse|4.2.1|EPL & EDL| |
+| | |IDE| N/A ||| 신규 개발 |
+| | |Common Component| N/A ||| 신규 개발 |
+| | |Customize Development Tool| N/A ||| 신규 개발 |
+| | |Mobile IDE| N/A ||| 신규 개발 |
+| | |Mobile Common Component| N/A ||| 신규 개발 |
+| | |Mobile Code Verification| N/A ||| 신규 개발 |
+| | |Add Plug-In| N/A ||| 신규 개발 |
+| | |Batch IDE| N/A ||| 신규 개발 |
+| | |UML Editor|AmaterasUML| 1.3.2 |EPL 1.0| |
+| | |ERD Editor|AmaterasERD| 1.0.8 |EPL 1.0| |
+| | |DBIO Editor| N/A |||신규 개발 |
+| | |Web Flow| Spring Web Flow | 2.0.7 | | |
+| | |Code Generation| N/A |||신규 개발 |
+| | |Code Inspection| PMD, FindBugs | 3.2.6, 1.3.9 | BSD, LGPL | |
+| | |Server Connection Management| N/A |||신규 개발 |
+| |Debug|Local Debug|Eclipse| 3.6.2 |EPL & EDL| |
+| | |Remote Debug|Eclipse| 3.6.2 |EPL & EDL| |
+|TestTool|Unit Test|Test Case|JUnit| 4.8.2, 3.8.2 |CPL| |
+| | |Mock Support|EasyMock| 3.0 |MIT| |
+| | |DB Support|DbUnit| 2.4.8 |LGPL 2.1| |
+| |Test Automation||Ant, Maven| 1.8.2, 3.0.3 |Apache License 2.0| |
+| |Test Reporting||Ant, Maven| 1.8.2, 3.0.3 |Apache License 2.0|기능 추가|
+| |Test Coverage||EMMA| 2.1 |CPL| |
+| |TestCase Generator|| N/A |||신규 개발 |
+| |Batch Test|| N/A |||신규 개발 |
+|Deployment Tool|Build|Build Tool|Maven| 3.0.3 |Apache License 2.0| |
+| | |CI Server|Hudson| 1.398 |Creative Commons Attribution \\ Share-Alike License,MIT| |
+| | |Nexus| Nexus | 1.8.0.1 |GPL| |
+| |Deploy||N/A|||신규 개발 |
+|Conf.& Change Mgt.Tool|Configuration Management||Subversion| |Subversion License| |
+| |Change Management||jTrac| |Apache License 2.0|UI 재개발|
+
+✔ DBUnit, EasyMock, Emma, Ant 사용이 필요한 경우 제공된 pom.xml 파일에 있는 주석을 풀고 Maven Install을 실행하도록 한다.
+
+===== 사용법 =====
+
+개발환경 메인은 개발프레임워크 개발 환경에 대한 소개 및 링크 URL 정보를 관리한다. \\
+일반 사용자가 개발도구를 사용하기 위해서는 각 프로젝트의 개발환경에 맞게 개발도구의 링크 URL을 변경하여야 한다. 이를 변경하기 위해서는 다음의 절차를 따라야 한다.
+  - **관리자 로그인**\\ 시스템 초기 배포시 admin/admin123으로 셋팅되어 있으며 로그인 후 비밀번호를 변경하여야 한다.\\
+  - **메뉴 관리**\\ 각 도구에 대한 프로젝트 별 링크 URL 정보 및 활성화 여부를 수정하여 저장한다.\\ \\ 
+
+==== 환경설정 ====
+  - 개발환경 메인 Tool 설치\\ 전자정부 표준프레임워크 포탈(http://www.egovframe.go.kr)을 통해 개발환경 메인 Tool을 내려받고 해당 WAS서버에 Deploy한다.\\ \\
+  - DB 스키마 생성\\ 전자정부 표준프레임워크 포탈(http://www.egovframe.go.kr)을 통해 개발환경 메인 Tool의 DB Schema 생성 sql 다운로드 후 DB에 접속하여 sql을 실행한다.\\ \\ 
+  - DB 접속정보 변경\\ 개발환경 메인 Tool을 해당 WAS에 Deploy한 후 배포위치 하위의 WEB-INF/config/context-datasource.xml 파일을 해당 프로젝트에 맞게 변경한다.\\ 배포시 MySQL 데이터베이스의 dev 유저로 기본 세팅되어 있다.\\ \\
+
+==== 초기 화면 ====
+{{:egovframework:dev2:com:초기화면-로그인전.gif|}}
+  - 개발환경 개발도구의 각각의 메인페이지로 이동할 수 있다.\\
+  - 일반사용자가 사용전에 각 프로젝트 환경에 맞게 개발도구에 대한 환경설정이 되어 있어야 하며, 그에 대한 링크 URL을 관리자가 수정해 주어야 한다.\\
+
+==== 관리자 로그인 ====
+{{:egovframework:dev2:dep:배포_로그인2.jpg|}}
+  - 아이디, 비밀번호를 입력한다.\\
+  - '로그인' 버튼을 클릭한다.\\
+
+==== 메뉴 관리 ====
+{{:egovframework:dev2:com:메뉴관리.gif|}}
+  - 각 도구별 URL을 입력하고 활성화 여부를 선택한다.\\
+  - '저장' 버튼을 클릭한다.\\

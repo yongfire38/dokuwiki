@@ -1,0 +1,148 @@
+===== Test Automation을 위한 build.xml =====
+다음은 Test Automation을 위한 build.xml 샘플이다. Ant를 사용할 경우 다음과 같이 쓰면 된다.
+
+<code:xml>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="egovframework-dev-tst-ant" basedir="." . . .>
+
+    <property name="src.dir" value="src/main/java" />
+    <property name="resource.dir" value="src/main/resources" />
+    <property name="build.dir" value="build/classes" />
+
+    <property name="testsrc.dir" value="src/test/java" />
+    <property name="testresource.dir" value="src/test/resources" />
+    <property name="testbuild.dir" value="build/testclasses" />
+
+    <property name="testreports.dir" value="build/junit-reports" />
+
+    <property name="lib.dir" value="lib" />
+    <property name="buildlib.dir" value="build/lib" />
+
+    <path id="master-classpath">
+        <path location="${lib.dir}/ant-1.6.5.jar" />
+         . . . 중략 . . .
+    </path>
+
+    <path id="test-classpath">
+        <path location="${lib.dir}/ant-testutil-1.7.1.jar" />
+         . . . 중략 . . .
+    </path>
+
+    <target name="clean">
+        <delete failonerror="false" includeEmptyDirs="true">
+            <fileset dir="${build.dir}" />
+            <fileset dir="${testbuild.dir}" />
+            <fileset dir="${testreports.dir}" />
+        </delete>
+    </target>
+
+    <target name="build">
+        <mkdir dir="${build.dir}" />
+
+        <javac destdir="${build.dir}"
+               source="1.5"
+               target="1.5"
+               debug="true"
+               encoding="UTF-8"
+               deprecation="false"
+               optimize="false"
+               failonerror="true">
+            <src path="${src.dir}" />
+            <classpath refid="master-classpath" />
+        </javac>
+
+        <jar jarfile="build/${ant.project.name}.jar" compress="true">
+            <fileset dir="${build.dir}">
+                <include name="**/*" />
+            </fileset>
+        </jar>
+
+        <copy todir="${build.dir}" preservelastmodified="true">
+            <fileset dir="${resource.dir}" includes="**/*" />
+        </copy>
+    </target>
+
+    <target name="tests" depends="build" description="Run tests">
+
+        <delete dir="${testbuild.dir}" />
+        <mkdir dir="${testbuild.dir}" />
+        <delete dir="${testreports.dir}" />
+        <mkdir dir="${testreports.dir}" />
+
+        <javac srcdir="${testsrc.dir}"
+               destdir="${testbuild.dir}"
+               debug="true"
+               encoding="UTF-8"
+               deprecation="true">
+            <classpath path="${build.dir}" />
+            <classpath refid="master-classpath" />
+            <classpath refid="test-classpath" />
+        </javac>
+
+        <copy todir="${testbuild.dir}" preservelastmodified="true">
+            <fileset dir="${build.dir}" includes="**/*" />
+            <fileset dir="${testresource.dir}" includes="**/*" />
+        </copy>
+
+        <junit forkmode="perBatch"
+               printsummary="true"
+               haltonfailure="yes"
+               haltonerror="yes">
+            <classpath refid="master-classpath" />
+            <classpath refid="test-classpath" />
+            <classpath path="${testbuild.dir}" />
+            <sysproperty key="ant.home" value="${ant.home}" />
+
+            <formatter type="xml" />
+
+            <batchtest fork="yes" todir="${testreports.dir}">
+                <fileset dir="${testbuild.dir}">
+                    <include name="**/*Test.class" />
+                    <exclude name="**/Abstract*Test.class" />
+                </fileset>
+            </batchtest>
+        </junit>
+
+    </target>
+
+    <!-- Junit Test Result Report  -->
+    <target name="junitreport" depends="tests">
+        <junitreport todir="${testhtml.dir}">
+            <fileset dir="${testreports.dir}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report format="frames" todir="${testhtml.dir}" />
+        </junitreport>
+    </target>
+
+    <path id="egov.lib">
+        <path refid="master-classpath" />
+        <path location="${antlib.dir}/egovtest/egovframework-dev-tst-ant.jar" />
+    </path>
+
+    <taskdef resource="egovtest.properties"
+             classpathref="egov.lib"
+             description="egovtest junit tasks:" />
+
+    <!-- JUnit Excel Report -->
+    <target name="egovtest" depends="tests">
+        <egov-junitreport todir="${testxls.dir}">
+            <fileset dir="${testreports.dir}" includes="**/TEST-*.xml" />
+        </egov-junitreport>
+    </target>
+
+    <target name="egovtest-full" depends="tests">
+        <egov-junitreport todir="${testxls.dir}"
+                          outputname="egovtest-junit-full.xls"
+                          templatepath="${basedir}/build/template-kr.xls"
+                          summary="0,B,6"
+                          packages="0,B,11"
+                          lists="1,A,5">
+            <fileset dir="${testreports.dir}"
+                     includes="**/TEST-*.xml" />
+        </egov-junitreport>
+    </target>
+
+</project>
+</code>

@@ -1,0 +1,37 @@
+====== Code Generation ======
+
+===== 개요 =====
+ 
+eGovFramework 의 개발환경 구현도구에서는 다음과 같은 Code Generation 기능을 제공한다. 
+
+
+== 템플릿 기반 Code Gen. ==
+미리 정의된 템플릿을 사용하여 eGovFramework을 기반으로 하는CRUD 프로그램을 생성하거나 필요한 Configuration/Property 파일을 쉽게 작성할 수 있다. 
+
+== 모델 기반 Code Gen.==
+클래스 다이어그램에서 정의한 모델을 통해 eGovFramework에 기반한 자바 코드를 자동생성한다. 
+
+===== 설명 =
+eGovFramework 구현도구의 Code Generation 기능은 다음과 같은 편의성을 제공한다.
+
+|설계자| 	응용 프로그램 설계 모형 집중과 Prototype 통해 위험 예방 가능|
+|개발자| 	Source Code 개발 집중과 빠른 테스트 수행 가능|
+|유지보수자|	표준 템플릿 형태로 높은 이해 제공, 신뢰성 높은 유지보수 가능|
+
+
+===== 사용법 =====
+
+  * [[eGovframework:DEV:IMP:Editor:IDE:CodeGen:Template:Template 기반 Code Gen.]] 
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen:Template:CRUDCodegen:CRUD 프로그램 자동 생성 기능]] 
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen.Template:ConfigurationCodegen:Configuration 설정 파일 자동 생성 기능]]
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen:Template:CustomCodegen:사용자 정의 템플릿 추가 기능]] 
+
+
+  * [[eGovframework:DEV:IMP:Editor:IDE:CodeGen:Model:Model 기반 Code Gen.]] 
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen:Model:UMLCodegen:구현도구의 UML 클래스 다이어그램을 사용한 코드 자동 생성]] 
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen.Model:XMICodegen:XMI 파일을 이용한 코드 자동 생성]]
+    * [[eGovframework:DEV:IMP:editor:IDE:CodeGen:Model:Export:구현도구의 UML 클래스 다이어그램을 XMI 파일로 Export하는 기능]] 
+
+
+===== 참고자료 ====
+

@@ -1,0 +1,52 @@
+====== Listeners 설정 ======
+
+===== 설명 =====
+
+배치 수행시 각 Job, Step, Chunk의 Pre 혹은 Post에서 다양한 이벤트를 잡아낼 수 있는 Listeners 관리 환경을 제공한다. \\
+
+^항목명^하위 항목^설명^
+| Listeners | Job | Job 수행시 수행 중인 Job 의 전, 후 이벤트를 잡아냄 | 
+| | Step | Step 수행시 수행 중인 Step 의 전, 후 이벤트를 잡아냄 | 
+| | Chunk | Chunk 수행시 수행 중인 Chunk 의 전, 후 이벤트를 잡아냄 | 
+
+===== 사용법 =====
+
+==== Job Listener 설정 ====
+=== Job Listener 구성 ===
+  - 메뉴 표시줄에서 **Window** > **Preferences**를 선택한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:batchjobtstwizard_jobparameters_menu.png?600|}} \\ \\ 
+  - Preferences 페이지의 우측 목록에서 **eGovFrame** > **Batch** > **Listener**를 선택하고 **Job 탭**을 선택 후 New 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_joblistener_new.png?600}} \\ \\ 
+  - 등록하기 위한 JobListener를 이름을 지정하고 해당 Listener 클래스를  추가하고 확인버튼을 클릭하여 새로운 Job Listener 를 추가한다. \\ ✔ Job Listener 등록시 중복되는 Name은 등록할 수 없다. \\  {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_joblistener_register.png?300|}}
+
+
+
+=== 배치 작업 파일 생성시 Job Listener 적용 ===
+  - [[egovframework:dev2:bdev:imp:create_batch_job_wizard#사용법|Batch Job Wizard]]에서 새로운 배치 작업 파일 생성시 Job Add의 Job Listeners 항목 하단 **Add** 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_joblistener_add.png?600}}  \\ \\   
+  - 기 설정된 Job Listener 항목 중 등록할 항목을 선택하고 OK 버튼을 클릭하여 Listener를 추가한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_joblistener_register.png?400}} \\ \\ 
+  - Batch Job Wizard의 Job Listeners 에 Listener 등록을 확인한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_joblistener_finish.png?600}} \\ \\ 
+
+==== Step Listener 설정 ====
+=== Step Listener 구성 ===
+  - 메뉴 표시줄에서 **Window** > **Preferences**를 선택한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:batchjobtstwizard_jobparameters_menu.png?600|}} \\ \\ 
+  - Preferences 페이지의 우측 목록에서 **eGovFrame** > **Batch** > **Listener**를 선택하고 **Step 탭**을 선택 후 New 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_steplistener_new.png?600}} \\ \\ 
+  - 등록하기 위한 StepListener를 이름을 지정하고 해당 Listener 클래스를 추가하고 확인버튼을 클릭하여 새로운 Step Listener 를 추가한다. \\  ✔ Step Listener 등록시 중복되는 Name은 등록할 수 없다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_steplistener_register.png?300}} \\ \\ 
+
+
+
+=== 배치 작업 파일 생성시 Step Listener 적용 ===
+  - [[egovframework:dev2:bdev:imp:create_batch_job_wizard#사용법|Batch Job Wizard]]에서 새로운 배치 작업 파일 생성시 Step Add의 Step Listeners 항목 우측 **Add** 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_steplistener_add.png?600}} \\ \\ 
+  - 기 설정된 Step Listener 항목 중 등록할 항목을 선택하고 OK 버튼을 클릭하여 Listener를 추가한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_steplistener_register.png?400|}}
+  - Batch Job Wizard의 Step Listeners 에 Listener 등록을 확인한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_steplistener_finish.png?600}} \\ \\ 
+
+==== Chunk Listener 설정 ====
+=== Chunk Listener 구성 ===
+  - 메뉴 표시줄에서 **Window** > **Preferences**를 선택한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:batchjobtstwizard_jobparameters_menu.png?600|}} \\ \\ 
+  - Preferences 페이지의 우측 목록에서 **eGovFrame** > **Batch** > **Listener**를 선택하고 **Chunk Listener 탭**을 선택 후 New 버튼을 클릭한다.\\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_chunklistener_new.png?600}} \\ \\ 
+  - 등록하기 위한 ChunkListener를 이름을 지정하고 해당 Listener 클래스를  추가하고 확인버튼을 클릭하여 새로운 Chunk Listener 를 추가한다. \\  ✔ Chunk Listener 등록시 중복되는 Name은 등록할 수 없다.\\  {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_chunklistener_register.png?300}}
+
+
+
+
+=== 배치 작업 파일 생성시 Chunk Listener 적용 ===
+  - [[egovframework:dev2:bdev:imp:create_batch_job_wizard#사용법|Batch Job Wizard]]에서 새로운 배치 작업 파일 생성시 Step Add의 Chunk Listeners 항목 우측 **Add** 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_chunklistener_add.png?600}}  \\ \\ 
+  - 기 설정된 Chunk Listener 항목 중 등록할 항목을 선택하고 OK 버튼을 클릭하여 Listener를 추가한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_chunklistener_register.png?400}} \\ \\ 
+  - Batch Job Wizard의 Chunk Listeners 에 Listener 등록을 확인한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjob_chunklistener_finish.png?600}} \\ \\ 

@@ -1,0 +1,15 @@
+===== 개요 =====
+Tomcat에서 해당 프로젝트의 Web Module Path를 설정하는 방법을 설명한다.
+
+===== 설명 =====
+모바일 사이트 템플릿 프로젝트 생성 후 css 깨짐 현상, 하위 컴포넌트 메뉴 링크 실행시 오류현상이 나타날 때 본 가이드를 참고한다.
+
+
+===== 사용방법 =====
+  - 해당 프로젝트의 Tomcat 서버 기동을 중지한다. \\ {{:egovframework:dev2:imp:editor:serverpath_00.png|}} \\ \\
+  - Tomcat 서버 이름을 더블클릭하여 Tomcat 설정창을 연다. \\ {{:egovframework:dev2:imp:editor:serverpath_01.png|}} \\ \\
+  - Modules 탭의 해당 프로젝트를 선택 후 Edit 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:serverpath_02.png|}} \\ \\
+  - 나타나는 Edit Web Module 팝업창에서 Path를 / 로 지정 후 OK 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:serverpath_03.png|}} \\ \\
+  - 변경된 내용을 확인한다. \\ {{:egovframework:dev2:imp:editor:serverpath_04.png|}} \\ \\
+  - 변경된 설정을 저장한다.(Crtl + S 또는 File 메뉴의 Save 클릭) \\ {{:egovframework:dev2:imp:editor:serverpath_05.png|}} \\ \\
+  - Tomcat 서버를 재기동한다 

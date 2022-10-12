@@ -1,0 +1,33 @@
+====== 단위 테스트, TDD ======
+
+===== 개요 =====
+개발자가 개발하는 프로그램에 대해 단위 기능 확인을 위해 수행하는 테스트가 단위 테스트이며, 이 단위테스트를 기반으로 프로그램을 개발하는 것을 TDD (Test Driven Development) 라고 한다.
+
+==== 주요 개념 ====
+
+=== Test Case ===
+
+=== Test Fixture ===
+
+=== Mocking ===
+
+=== Green Bar ===
+
+==== 사용 된 오픈 소스 ====
+^이름              ^설명                                                        ^          
+|JUnit           |단위 테스트 클래스 작성과 실행을 위한 기본적인 기능을 제공  |
+|EasyMock        |단위 테스트 클래스 작성 시 Mocking 을 위해 사용            |
+|DbUnit          |데이터베이스 관련 Test Fixture 자동 생성 등의 DB Support 를 위해 사용 |
+|EMMA            |Test Coverage 분석 |
+|Spring Test     |Springframework 의 Test 관련 기능 활용|
+|Unitils         |JUnit, EasyMock, DbUnit, Spring Test, Ibatis, Hibernate 등을 유연한 구조로 엮어서 테스트할 수 있는 기반 구조 및 유틸을 제공|
+
+===== 설명 =====
+
+===== 환경설정 =====
+
+===== 사용법 =====
+
+===== 샘플 =====
+
+===== 참고자료 =====

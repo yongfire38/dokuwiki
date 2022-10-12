@@ -1,0 +1,14 @@
+===== 개요 =====
+eclipse에 외부 브라우저를 설정하는 방법을 설명한다.
+
+===== 설명 =====
+모바일 사이트 템플릿 프로젝트 생성 후 모바일 환경에 최적화된 브라우저로 실행을 원할 경우 본 가이드를 참고한다.
+
+===== 사용방법 =====
+  - 설치를 원하는 브라우저의 사이트에 들어가 설치파일을 다운로드 받는다. \\ Google Chrome: http://www.google.com/chrome/?hl=ko \\ Firefox: http://www.mozilla.or.kr/ko/ \\ Safari: http://www.apple.com/kr/safari/download/ \\ \\
+  - 이클립스를 실행 후 Preferences 창에서 **General > Web Browser** 를 클릭한다. \\ {{:egovframework:dev2:imp:editor:browser_preference.jpg|}} \\ \\
+  - **New**를 클릭하여 Add External Web Browser 팝업창에서 Browse 버튼을 클릭한다.
+  - 추가할 외부 브라우저의 설치파일을 선택하고 열기 버튼을 클릭한다.
+  - Location에 해당 파일의 위치가 입력되었는지 확인 후 Name에 해당 브라우저의 이름을 입력하고 OK 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:browser_popup.jpg|}} \\ \\
+  - Use e__x__ternal web browser 라디오 버튼을 클릭하고 자신이 입력한 외부 브라우저를 선택 후 OK 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:browser_selected.jpg|}}
+ 

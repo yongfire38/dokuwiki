@@ -1,0 +1,21 @@
+===== 개요 =====
+전자정부 표준 프레임워크의 Light Version 개발환경에 대한 개요를 설명한다.
+
+===== 설명 =====
+전자정부 표준 프레임워크에서는 개발환경을 경량화하기 위해 개발환경을 필수 요소와 선택 요소로 구분하였다.\\
+Light Version 개발환경은 개발환경 필수 요소만이 설치되어있는 경량 개발환경으로 소규모 프로젝트에서 사용하기 용이한 개발환경이다. 또한 프로젝트에서 개발환경 선택 요소가 필요한 경우, 필요 기능만을 선택적으로 구성할 수 있는 맞춤형 개발환경 도구도 제공한다. 
+
+===== 설치가이드  =====
+^소프트웨어^버전^설치방법^
+| Eclipse | 3.6.2 | 다운로드 주소 http://www.eclipse.org/에서 Downloads의 Eclipse IDE for Java EE Developers의 Helios Packages 다운로드|
+| Spring Core | 2.3.0  | 업데이트 주소 http://dist.springframework.org/release/IDE에서 Spring Core 설치 |
+| Maven(m2eclipse) | 0.12.1 | 업데이트 주소 http://m2eclipse.sonatype.org/sites/m2e |
+| eGovFrame | 2.0.0 | 업데이트 주소 http://www.egovframe.go.kr/update에서 eGovFrame Core, IDE, AmaterasUML, CodeGen, CodeGen Templates 설치 |
+| Subversive SVN Connector | 2.2.2 |업데이트 주소 http://download.eclipse.org/releases/helios Collaboration 항목에서 Subversive SVN Team provider (Incubation) 설치http://community.polarion.com/projects/subversive/download/eclipse/2.0/helios-site/에서 subversive SVN Connectors 설치|
+| PMD | 3.2.6 | 업데이트 주소 http://pmd.sourceforge.net/eclipse에서 PMD for Eclipse 3 설치 |
+| FindBugs | 1.3.9 | 업데이트 주소 http://findbugs.cs.umd.edu/eclipse |
+| JUnit | 4.8.1 | Eclipse 3.6.2버전에 JUnit 4.8.1 버전이 내장되어 있으므로 따로 설치할 필요 없음 |
+| Properties Editor | 4.8.1 | http://propedit.sourceforge.jp/eclipse/updates/  |
+
+
+주의 eGovFrame CodeGenerator은 AmaterasUML에 dependency가 존재하므로, eGovFrame CodeGenerator을 설치하기 전에 AmaterasUML을 설치하도록 한다.

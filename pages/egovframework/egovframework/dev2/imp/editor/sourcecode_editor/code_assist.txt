@@ -1,0 +1,1 @@
+{{:egovframework:dev2:imp:editor:sourcecode_editor:codeassisttemplate.gif|}}

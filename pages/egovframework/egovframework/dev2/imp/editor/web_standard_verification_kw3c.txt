@@ -1,0 +1,34 @@
+====== Web Standard Verification ======
+
+===== 개요 =====
+ 
+eGovFrame에서는 한국정보화진흥원(NIA)에서 제공하는 웹표준 진단 프로그램을 사용 할 수 있는 방법을 제공한다.
+(※ 버전 3.X 이상에서는 제공하지 않는 기능입니다.)
+
+
+===== 설명 =====
+
+웹표준 진단 프로그램은 웹사이트의 웹표준(HTML, CSS)준수 여부를 진단하고 웹표준 문법 오류를 유형별로 구분하여 웹개발자 및 콘텐츠 제작사가 웹사이트를 지속적으로 관리하고 개선 할 수 있도록 도와주는 프로그램이다. \\
+웹표준 진단 프로그램의 상세한 기능 및 사용 방법 및 설치 방법 및 이슈사항은 한국정보화진흥원(http://www.nia.or.kr) 홈페이지 또는 한국정보화진흥원에서 제공하는 웹표준 진단 프로그램 가이드를 참고한다.
+
+===== 진단방법 =====
+
+==== eGovFrame 메뉴를 이용한 방법====
+  - eGovFrame 통합메뉴에서 eGovFrame > Implementation > Web Standard Verification(KW3C)를 클릭한다. \\ {{:egovframework:dev2:imp:editor:kw3c_실행.png?200|실행}}
+  - 진단 프로그램을 실행한다. \\ {{:egovframework:dev2:imp:editor:진단도구실행.png?500|}}
+
+==== 한국정보화진흥원 홈페이지에서 설치 프로그램을 다운받아 설치하는 방법 ====
+  - 한국정보화진흥원 홈페이지(http://www.nia.or.kr)에 접속한다. \\ {{:egovframework:dev2:imp:editor:nia홈페이지.png?500|홈페이지}}
+  - 한국정보화진흥원 홈페이지에서 웹표준 진단 프로그램을 다운받아 설치한다. \\ {{:egovframework:dev2:imp:editor:nia_팝업.png?450|다운로드}}
+  - 웹표준 진단 프로그램을 설치한 후 실행한다. \\ {{:egovframework:dev2:imp:editor:진단도구실행.png?500|진단도구실행}}
+
+===== 참고 =====
+** 권장 사용 환경 **
+^구분^사양^
+|운영체제| - Windows XP Service Pack 3 \\ - Windows Server 2003 Service Pack 2 \\ - Windows Server 2008 Service Pack 2 \\ - Windows Vista Service Pack 2 \\ - Windows7 |
+|CPU|펜티엄4 2GHz 이상|
+|RAM|512 MB 이상|
+|HDD|200MB 이상(평가수가 많은 경우 사이트 용량 만큼 필요)|
+|Java|검사기능 실행을 위해 JAVA 설치가 필요|
+
+✔ 웹표준 진단 프로그램 실행시 실행 방법이나, 기타 문의 사항 등이 발생하였을 경우 한국정보화진흥원(NIA) 홈페이지(http://www.nia.or.kr) 또는 한국정보화진흥원에서 제공하는 가이드를 참고한다.

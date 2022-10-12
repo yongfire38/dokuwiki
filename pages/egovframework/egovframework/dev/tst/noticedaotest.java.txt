@@ -1,0 +1,122 @@
+<code:java>
+@RunWith(UnitilsJUnit4TestClassRunner.class)
+@Transactional(TransactionMode.ROLLBACK)
+@SpringApplicationContext({"/META-INF/persistence/connection/datasource-spring-with-unitils.xml",
+	                   "/META-INF/spring/context-common.xml", 
+	                   "/META-INF/spring/context-sqlmap.xml"})
+public class DaoOperationTest_noticeDao {
+
+	/**
+	 * unitils.properties 에 설정 된 database 접근 정보를 기반으로 
+	 * 테스트 용 DataSource 를 만든 후 자동으로 injection 해 준다.
+	 * (unitils.properties 파일의 위치와 이름은 변경할 수 없다.)
+	 * 
+	 * updateDataBaseSchema.enabled=true 로 설정되어 있으면
+	 * dbMaintainer.script.locations 에서 지정한 위치의 sql 문을 실행시켜준다.
+	 * 주의) 생성 시점은 test 메소드가 실행되기 전이다.
+	 *        따라서, 단순히 TestDataSource 만 선언하는 것이 아니라,
+	 *        하나 이상의 test 메소드라도 있어야 결과 확인이 가능하다.
+	 * 
+	 * @see		unitils.properties
+	 * @see      dbMaintainer.script.locations 에서 지정한 위치의 sql 문
+	 */
+	@TestDataSource
+	private DataSource dataSource;
+	
+	/** 테스트를 위해 만든 타겟 클래스로서 공지사항 비즈니스 구현을 위한 Dao */
+	@SpringBean("noticeDao")
+	private NoticeDao noticeDao;
+	
+	/** 테스트를 위해 만든 타겟 클래스로서 공지사항 비즈니스 구현을 위한 Value Object */
+	private NoticeVo noticeVo;
+	
+	/**
+	 * 공지사항 등록을 위한 Value Object 를 만들어내는 메소드로서 테스트 수행 직전에 수행
+	*/
+	@Before
+	public void makeNoticeVo() {
+		noticeVo = new NoticeVo();
+		noticeVo.setId(201);
+    	        noticeVo.setTitle("201번 공지");
+    	        noticeVo.setContents("테스트용으로 자동 입력된 공지사항 201번입니다.");
+    	        noticeVo.setLastModifier("OracleDataSetTest.class");
+
+                long currentTime = new java.util.Date().getTime();
+		noticeVo.setRegistrationDate(new java.sql.Date(currentTime));
+	}
+	
+	/**
+	 * 자동으로 생성된 Test 용 DataSource 를 정상적으로 Get 했는지를 확인
+	*/
+	@Test
+	public void checkTestDataSource() {
+		assertNotNull("Test DataSource 를 정상적으로 get 했는지를 확인한다.", dataSource);
+	}
+	
+	/**
+	 * 자동으로 생성된 Test 용 Dao 를 정상적으로 Get 했는지를 확인
+	*/
+	@Test
+	public void checkTestDao()  {
+		assertNotNull("Test 대상 Dao 를 정상적으로 get 했는지를 확인한다.", noticeDao);
+	}
+	
+	/**
+	 * Dao 의 selectCount 메소드에 대한 테스트
+	 * 테스트용 데이터) 클래스에 선언한 DataSet 에 정의 된 데이터
+	 * 테스트 결과) DataSet 에 3건을 정의했으므로 selectCount 의 결과는 3건이면 성공
+	*/
+	@Test
+        @DataSet("/META-INF/persistence/testdata/AutoInsertionTestDataTest_DataSet.xml")
+	public void testSelectCount() {
+		int count = noticeDao.selectCount();
+		assertEquals("테스트용 데이터셋 3건을 입력한 뒤 전체 목록을 조회하면 3건임을 확인", 3, count);
+	}
+	
+	/**
+	 * Dao 의 selectList 메소드에 대한 테스트
+	 * 테스트용 데이터) 클래스에 선언한 DataSet 에 정의 된 데이터
+	 * 테스트 결과) 전체 목록을 조회하여 각각의 내용을 담은 Value Object 가 Null 이 아니면 성공
+	*/
+	@Test
+        @DataSet("/META-INF/persistence/testdata/AutoInsertionTestDataTest_DataSet.xml")
+	public void testSelectList() {
+		List<NoticeVo> noticeList = noticeDao.selectList();
+		
+		for(NoticeVo noticeVo:noticeList) {
+			assertNotNull("조회한 noticeVo 객체가 null 이 아님을 확인", noticeVo);
+		}
+	}
+	
+	/**
+	 * Dao 의 Insert 메소드에 대한 테스트
+	 * 테스트용 데이터 ) 테스트 프로그램 수행 중 만들어낸 noticeVo
+	 * 테스트 결과) 테스트용 데이터셋 1건을 추가 입력한 뒤 목록조회하면 4건이면 성공
+	*/
+	@Test
+        @DataSet("/META-INF/persistence/testdata/AutoInsertionTestDataTest_DataSet.xml")
+	@ExpectedDataSet("/META-INF/persistence/testdata/AutoVerifyTestResultsTest_ExpectedDataSet.xml")
+	public void testInsert() {
+		assertNotNull(noticeVo);
+    	noticeDao.insert(noticeVo);
+		int count = noticeDao.selectCount();
+		assertEquals("테스트용 데이터셋 1건을 추가 입력한 뒤 목록조회하면 4건임을 확인", 4, count);
+	}
+	
+	/**
+	 * Dao 의 Delete 메소드에 대한 테스트
+	 * 테스트용 데이터 ) DataSet 에 선언한 항목 중 2건에 해당하는 Id 값(101, 102)
+	 * 테스트 결과) 테스트용 데이터셋 3건을 입력한 뒤2건을 삭제 후 목록조회하면 1건이면 성공
+	*/
+	@Test
+        @DataSet("/META-INF/persistence/testdata/AutoInsertionTestDataTest_DataSet.xml")
+	public void testDelete() {
+		noticeDao.delete(101);
+		noticeDao.delete(102);
+		int count = noticeDao.selectCount();
+		assertEquals("테스트용 데이터셋 3건을 입력한 뒤2건을 삭제 후 목록조회하면 1건임을 확인", 1, count);
+	}
+}
+
+</code>
+

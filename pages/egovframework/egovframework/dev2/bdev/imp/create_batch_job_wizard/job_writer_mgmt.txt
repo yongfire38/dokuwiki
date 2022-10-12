@@ -1,0 +1,305 @@
+====== Job Writer 설정 ======
+
+===== 설명 =====
+
+배치 수행시 사용되는 출력 데이터를 등록하여 사용할 수 있는 관리 환경을 제공한다. \\
+
+===== 사용법 =====
+
+==== Job Writer 구성 ====
+  - 메뉴 표시줄에서 **Window** > **Preferences**를 선택한다. \\ {{:egovframework:dev2:bdev:tst:batch_job_test_wizard:batchjobtstwizard_jobparameters_menu.png?600|}} \\ \\ 
+  - Preferences 페이지의 우측 목록에서 **eGovFrame** > **Batch** > **Job Reader/Writer**를 선택하고 **Job Writer 탭**을 선택 후 New 버튼을 클릭한다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_writer_new.png?600}} \\ \\ 
+  - 등록하기 위한 Job Writer 이름을 지정하고 해당 Resource Type과 WriterType 선택후 확인버튼을 클릭하여 Job Writer 를 추가한다. \\ ✔ Job Writer 등록시 중복되는 Name은 등록할 수 없다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:preferences_writer_register.png}} \\ \\ 
+
+
+==== 제공하는 Job Writer별 설명 ====
+=== DelimitedFlatFileItemWriter ===
+  * DelimitedFlatFileItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:delimitedflatfileitemwriter.png?450|}} \\ \\
+  * DelimitedFlatFileItemWriter 사용시 대상 XML 설정
+== ==
+<code xml>
+<bean id="TestJob.TestStep1.DelimitedFlatFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="resource" value="file:./target/test_output/output.csv" />
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="name,credit" />
+                    </bean>
+                </property>
+                <property name="delimiter" value="," />
+            </bean>
+        </property>
+    </bean>
+</code>
+ 
+=== FormatterFlatFileItemWriter ===
+  * FormatterFlatFileItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:formatterflatfileitemwriter.png?450|}} \\ \\
+  * FormatterFlatFileItemWriter 사용시 대상 XML 설정
+== ==
+<code xml>
+    <bean id="TestJob.TestStep.FormatterFlatFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="resource" value="file:./target/test_output/output.txt" />
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="name,credit" />
+                    </bean>
+                </property>
+                <property name="format" value="%-9s%-6s" />
+            </bean>
+        </property>
+    </bean>
+</code>
+ 
+=== EgovDelimitedFlatFileItemWriter===
+  * EgovDelimitedFlatFileItemWriter선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovdelimitedflatfileitemwriter.png?450|}} \\ \\
+  * EgovDelimitedFlatFileItemWriter사용시 대상 XML 설정
+== ==
+<code xml>
+<bean id="TestJob.TestStep.EgovDelimitedFlatFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="resource" value="file:./target/test_output/output.csv" />
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="egovframework.brte.core.item.file.transform.EgovFieldExtractor">
+                        <property name="names" value="name,credit" />
+                    </bean>
+                </property>
+                <property name="delimiter" value="," />
+            </bean>
+        </property>
+    </bean>
+</code>
+ 
+=== EgovFixedFlatFileItemWriter ===
+  * EgovFixedFlatFileItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovfixedflatfileitemwriter.png?450|}} \\ \\
+  * EgovFixedFlatFileItemWriter 사용시 대상 XML 설정
+== ==
+<code xml>
+    <bean id="TestJob.TestStep.EgovFixedFlatFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="resource" value="file:./target/test_output/output.txt" />
+        <property name="lineAggregator">
+            <bean class="egovframework.brte.core.item.file.transform.EgovFixedLengthLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="egovframework.brte.core.item.file.transform.EgovFieldExtractor">
+                        <property name="names" value="name,credit" />
+                    </bean>
+                </property>
+                <property name="fieldRanges" value="9,6" />
+            </bean>
+        </property>
+    </bean>
+</code>
+ 
+=== DelimitedMultiResourceItemWriter ===
+  * DelimitedMultiResourceItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:delimitedmultiresourceitemwriter.png?450|}} \\ \\
+  * DelimitedMultiResourceItemWriter 사용시 대상 XML 설정
+== ==
+<code xml>
+ <bean id="TestJob.TestStep.delegateWriter" class="org.springframework.batch.item.file.MultiResourceItemWriter" scope="step">
+        <property name="resource" value="file:./target/test_output/*.csv" />
+        <property name="itemCountLimitPerResource" value="10" />
+        <property name="delegate" ref="TestJob.TestStep.delegateWriter" />
+ </bean>
+ <bean id="TestJob.TestStep.delegateWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="name, credit" />
+                    </bean>
+                </property>
+                <property name="delimiter" value="," />
+            </bean>
+        </property>
+    </bean>
+</code>
+ 
+=== FormatterMultiResourceItemWriter ===
+  * FormatterMultiResourceItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:formattermultiresourceitemwriter.png?450|}} \\ \\
+  * FormatterMultiResourceItemWriter 사용시 대상 XML 설정
+== ==
+<code xml>
+ <bean id="TestJob.TestStep.delegateWriter" class="org.springframework.batch.item.file.MultiResourceItemWriter" scope="step">
+        <property name="resource" value="file:./target/test_output/output.txt" />
+        <property name="itemCountLimitPerResource" value="10" />
+        <property name="delegate" ref="TestJob.TestStep.delegateWriter" />
+ </bean>
+ <bean id="TestJob.TestStep.delegateWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+     <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.FormatterLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+                        <property name="names" value="name,credit" />
+                    </bean>
+                </property>
+                <property name="format" value="%-9s%-6s" />
+            </bean>
+        </property>
+    </bean>
+</code>
+ 
+=== EgovDelimitedMultiResourceItemWriter ===
+  * EgovDelimitedMultiResourceItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovdelimitedmultiresourceitemwriter.png?450|}} \\ \\
+  * EgovDelimitedMultiResourceItemWriter 사용시 대상 XML 설정
+== ==
+<code xml>
+ <bean id="TestJob.TestStep.EgovDelimitedMultiResourceItemWriter" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
+        <property name="resource" value="file:./target/test_output/output.csv" />
+        <property name="itemCountLimitPerResource" value="10" />
+        <property name="delegate" ref="TestJob.TestStep.delegateWriter" />
+ </bean>
+ <bean id="TestJob.TestStep.delegateWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="lineAggregator">
+            <bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="egovframework.brte.core.item.file.transform.EgovFieldExtractor">
+                        <property name="names" value="name,credit" />
+                    </bean>
+                </property>
+                <property name="delimiter" value="," />
+            </bean>
+        </property>
+   </bean>
+</code>
+ 
+=== EgovFixedMultiResourceItemWriter ===
+  * EgovFixedMultiResourceItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovfixedmultiresourceitemwriter.png?450|}} \\ \\
+  * EgovFixedMultiResourceItemWriter 사용시 대상 XML 설정
+== ==
+<code xml>
+<bean id="TestJob.TestStep.EgovFixedMultiResourceItemWriter" class="org.springframework.batch.item.file.MultiResourceItemReader" scope="step">
+        <property name="resource" value="file:./target/test_output/output.txt" />
+        <property name="itemCountLimitPerResource" value="10" />
+        <property name="delegate" ref="TestJob.TestStep.delegateWriter" />
+</bean>
+<bean id="TestJob.TestStep.delegateWriter" class="org.springframework.batch.item.file.FlatFileItemWriter" scope="step">
+        <property name="lineAggregator">
+            <bean class="egovframework.brte.core.item.file.transform.EgovFixedLengthLineAggregator">
+                <property name="fieldExtractor">
+                    <bean class="egovframework.brte.core.item.file.transform.EgovFieldExtractor">
+                        <property name="names" value="name,credit" />
+                    </bean>
+                </property>
+                <property name="fieldRanges" value="9,6" />
+            </bean>
+        </property>
+</bean>
+</code>
+ 
+=== CustomizeFileWriter ===
+  * CustomizeFileWriter 선택시 마법사 \\ ✔ 사용자가 만든 File Writer를 사용하고 싶을 경우, Preference에서 사용자가 만든 Writer클래스를 등록하고 여기서 해당 이름을 찾아 적용시킨다.  \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:customizefileawriter.png?450|}} \\ \\ 
+
+==== ====
+=== IbatisBatchItemWriter ===
+  * IbatisBatchItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:ibatisbatchitemwriter.png?450|}} \\ \\
+  * IbatisBatchItemWriter 사용시 대상 XML 설정
+ <code xml>
+<bean id="IbatisBatchItemWriter" class="org.springframework.batch.item.database.IbatisBatchItemWriter">
+	<property name="statementId" value="updateCredit" />
+        <property name="sqlMapClient">
+            <bean class="org.springframework.orm.ibatis.SqlMapClientFactoryBean">
+                <property name="dataSource" ref="dataSource" />
+                <property name="configLocation" value="file:./src/main/resources/egovframework/sqlmap/brte/sql-map-config.xml" />
+            </bean>
+        </property>
+</bean>
+</code>
+=== SqlParameterJdbcBatchItemWriter ===
+  * SqlParameterJdbcBatchItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:sqlparameterjdbcbatchitemwriter.png?450|}} \\ \\ 
+  * SqlParameterJdbcBatchItemWriter 사용시 대상 XML 설정
+ <code xml>
+<bean id="SqlParameterJdbcBatchItemWriter " class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+	<property name="assertUpdates" value="true" />
+	<property name="itemSqlParameterSourceProvider">
+		<bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider" />
+	</property>
+	<property name="sql" value="UPDATE CUSTOMER set credit = :credit where id = :id" />
+	<property name="dataSource" ref="dataSource" />
+</bean>
+</code>
+=== ItemPreparedStatementJdbcBatchItemWriter ===
+  * ItemPreparedStatementJdbcBatchItemWriter 선택시 마법사 \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:itempreparedstatementjdbcbatchitemwriter.png?450|}} \\ \\ 
+  * ItemPreparedStatementJdbcBatchItemWriter 사용시 대상 XML 설정
+<code xml>
+<bean id="ItemPreparedStatementJdbcBatchItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+        <property name="itemPreparedStatementSetter">
+            <bean class="클래스찾기로 찾은 사용자 지정 세터" />
+        </property>
+        <property name="sql" value="INSERT INTO customer (name, credit) VALUES (?,?)" />
+        <property name="dataSource" ref="dataSource" />
+</bean>
+</code> 
+✔ItemPreparedStatementSetter로 지정 된 클래스는 spring의 ItemPreparedStatementSetter나 EgovItemPreparedStatementSetter클래스를 상속받아야 한다.
+
+=== EgovItemPreparedStatementJdbcBatchItemWriter ===
+  * EgovItemPreparedStatementJdbcBatchItemWriter 선택시 마법사\\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovitempreparedstatementjdbcbatchitemwriter.png?450|}} \\ \\
+  * EgovItemPreparedStatementJdbcBatchItemWriter 사용시 대상 XML 설정
+<code xml>
+<bean id="EgovItemPreparedStatementJdbcBatchItemWriter" class="egovframework.brte.core.item.database.EgovJdbcBatchItemWriter">
+        <property name="itemPreparedStatementSetter">
+            <bean class="egovframework.brte.core.item.database.support.EgovMethodMapItemPreparedStatementSetter" />
+        </property>
+        <property name="sql" value="INSERT INTO customer (name, credit) VALUES(?,?)" />
+        <property name="params" value="name,credit" />
+        <property name="dataSource" ref="dataSource" />
+</bean>
+</code>
+=== EgovCustomizedJdbcBatchItemWriter ===
+  * EgovCustomizedJdbcBatchItemWriter 선택시 마법사\\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:egovcustomizedjdbcbatchitemwriter.png?450|}} \\ \\
+  * EgovCustomizedJdbcBatchItemWriter 사용시 대상 XML 설정
+<code xml>
+<bean id="EgovCustomizedJdbcBatchItemWriter" class="org.springframework.batch.item.database.EgovJdbcBatchItemWriter">
+        <property name="itemPreparedStatementSetter">
+            <bean class="클래스찾기로 찾은 사용자 지정 세터" />
+        </property>
+        <property name="sql" value="INSERT INTO customer (name, credit) VALUES (?,?)" />
+        <property name="dataSource" ref="dataSource" />
+</bean>
+</code> 
+ ✔itemPreparedStatementSetter로 지정 된 클래스는 전자정부 표준프레임워크의 EgovItemPreparedStatementSetter 클래스를 상속받아야 한다.
+=== CustomizeDBWriter ===
+  * CustomizeDBWriter 사용시 대상 XML 설정 \\ ✔ 사용자 임의 지정 Writer를 등록하고 싶을 경우 사용하는 항목입니다. \\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:customizedbwriter.png?450|}} \\ \\ 
+
+=== 각 마법사내 입력 항목에 대한 설명 ===
+== ==
+^  구분  ^  항목명  ^  설명  ^
+|File|Resource|출력 대상이 되는 File의 경로와 File명 설정|
+|File|Field Name|구분자, 고정길이 등에 의해 구분되어 Mapping 된 VO의 Field 이름|
+|File|Delimiter|구분자 방식으로 쓰기 위한 구분자 값 설정|
+|File|Field Format|쓰여질 아이템의 포맷|
+|File|Field Range|쓰여질 아이템 길이|
+|File|Max Count per Resource|한개의 파일에 들어갈 수 있는 아이템 최대 라인수|
+|DB|iBatis Statement|사용자가 정의 해놓은 iBatis 설정 파일에서 사용할 쿼리 ID|
+|DB|Configuration File|SqlMapCofig 설정 파일 경로 및 파일명 설정 |
+|DB|Datasource Bean ID| DB연결을 위해 사용할 데이터소스의 빈ID|
+|DB|Sql|DB에 아이템을 쓰기위한 쿼리문|
+|DB|Params|쿼리의 '?' 부분에 들어갈 파라메터 이름|
+|DB|Row Setter|PreparedStatement에 셋팅시키는 아이템을 셋팅시키는 Setter 클래스|
+
+==== 배치 작업 파일 생성시 Job Writer 적용 ====
+  - [[egovframework:dev2:bdev:imp:create_batch_job_wizard#사용법|Batch Job Wizard]]에서 새로운 배치 작업 파일 생성시 Step Add의 Writer 항목 우측 **Add** 버튼을 클릭한다. \\ ✔ Writer를 등록하기 이전이기 때문에 마법사에 Writer를 등록시켜야 한다는 메시지가 마법사 상단에 출력됩니다.\\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjobwizard_addwriter.png?450}} \\ \\
+  - 기 설정된 Job Writer 항목 중 등록할 항목을 선택하고 OK 버튼을 클릭하여 Writer를 추가한다.\\ {{:egovframework:dev2:bdev:imp:create_batch_job_wizard:batchjobwizard_donewriter.png?450|}} \\ \\
+
+==== 참고사항 ====
+
+  * 전자정부 표준프레임워크 배치개발환경에서 제공하는 기본 Job Writer 항목 \\ 
+== ==
+^  구분  ^  항목명  ^  설명  ^  항목의 하위 구성 요소  ^
+| File | [[#DelimitedFlatFileItemWriter|DelimitedFlatFileItemWriter]] | 스프링에서 제공하는 Aggregator 와 Extractor를 사용하여 데이터를 구분자로 구분하여 파일에 쓰는 라이터| org.springframework.batch.item.file.FlatFileItemWriter,\\ org.springframework.batch.item.file.transform.DelimitedLineAggregator,\\ org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor|
+| File | [[#FormatterFlatFileItemWriter|FormatterFlatFileItemWriter]] | 스프링에서 제공하는 Aggregator 와 Extractor를 사용하여 데이터를 정의된 포맷형식으로 파일에 쓰는 라이터| org.springframework.batch.item.file.FlatFileItemWriter,\\ org.springframework.batch.item.file.transform.FormatterLineAggregator,\\ org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor |
+| File | [[#EgovDelimitedFlatFileItemWriter|EgovDelimitedFlatFileItemWriter]] | 스프링에서 제공하는 Aggregator 와 전자정부 표준프레임워크에서 제공하는 Extractor를 사용하여 데이터를 구분자로 구분하여 파일에 쓰는 라이터 | org.springframework.batch.item.file.FlatFileItemWriter,\\ org.springframework.batch.item.file.transform.DelimitedLineAggregator,\\ egovframework.brte.core.item.file.transform.EgovFieldExtractor |
+| File | [[#EgovFixedFlatFileItemWriter|EgovFixedFlatFileItemWriter]] | 전자정부 표준프레임워크 제공하는 Aggregator 와 Extractor를 사용하여 데이터를 정의된 고정길이로 잘라 파일에 쓰는 라이터 | org.springframework.batch.item.file.FlatFileItemWriter,\\ egovframework.brte.core.item.file.transform.EgovFixedLengthLineAggregator,\\ egovframework.brte.core.item.file.transform.EgovFieldExtractor |
+| File | [[#DelimitedMultiResourceItemWriter|DelimitedMultiResourceItemWriter]] | 스프링에서 제공하는 Aggregator 와 Extractor를 사용하여 데이터를 구분자로 구분하여 파일에 쓰는 라이터이며, 한 파일에 정의된 수만큼 데이터를 씀 (한 개 이상의 파일이 생성됨)| org.springframework.batch.item.file.MultiResourceItemReader,\\ org.springframework.batch.item.file.transform.DelimitedLineAggregator,\\ org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor |
+| File | [[#FormatterMultiResourceItemWriter|FormatterMultiResourceItemWriter]] |스프링에서 제공하는 Aggregator 와 Extractor를 사용하여 데이터를 정의된 포맷형식으로 파일에 쓰는 라이터이며, 한 파일에 정의된 수만큼 데이터를 씀 (한 개 이상의 파일이 생성됨)| org.springframework.batch.item.file.MultiResourceItemReader,\\ org.springframework.batch.item.file.transform.FormatterLineAggregator,\\ org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor |
+| File | [[#EgovDelimitedMultiResourceItemWriter|EgovDelimitedMultiResourceItemWriter]] | 스프링에서 제공하는 Aggregator 와 전자정부 표준프레임워크에서 제공하는 Extractor를 사용하여 데이터를 구분자로 구분하여 파일에 쓰는 라이터이며, 한 파일에 정의된 수만큼 데이터를 씀 (한 개 이상의 파일이 생성됨) | org.springframework.batch.item.file.MultiResourceItemReader,\\ org.springframework.batch.item.file.transform.DelimitedLineAggregator,\\ egovframework.brte.core.item.file.transform.EgovFieldExtractor |
+| File | [[#EgovFixedMultiResourceItemWriter|EgovFixedMultiResourceItemWriter]] |전자정부 표준프레임워크 제공하는 Aggregator 와 Extractor를 사용하여 데이터를 정의된 고정길이로 잘라 파일에 쓰는 라이터이며, 한 파일에 정의된 수만큼 데이터를 씀 (한 개 이상의 파일이 생성됨)| org.springframework.batch.item.file.MultiResourceItemReader,\\ egovframework.brte.core.item.file.transform.EgovFixedLengthLineAggregator,\\ egovframework.brte.core.item.file.transform.EgovFieldExtractor |
+| File | [[#CustomizeFileWriter|CustomizeFileWriter]] | 사용자가 등록한 파일 라이터 | 사용자 정의 |
+| DB | [[#IbatisBatchItemWriter|IbatisBatchItemWriter]] |스프링에서 제공하는 SqlMapClient를 사용하여 데이터를 Ibatis방식으로 DB에 쓰는 라이터 | org.springframework.batch.item.database.IbatisBatchItemWriter,\\ org.springframework.orm.ibatis.SqlMapClientFactoryBean |
+| DB | [[#SqlParameterJdbcBatchItemWriter|SqlParameterJdbcBatchItemWriter]] | 스프링에서 제공하는 SqlProvider를 사용하여 데이터를 Jdbc방식으로 DB에 쓰는 라이터 | org.springframework.batch.item.database.JdbcBatchItemWriter,\\ org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider |
+| DB | [[#ItemPreparedStatementJdbcBatchItemWriter|ItemPreparedStatementJdbcBatchItemWriter]] | 스프링에서 제공하는 Setter 를 사용하여 데이터를 Jdbc방식으로 DB에 쓰는 라이터 | org.springframework.batch.item.database.JdbcBatchItemWriter, \\ org.springframework.batch.item.database.ItemPreparedStatementSetter |
+| DB | [[#EgovItemPreparedStatementJdbcBatchItemWriter|EgovItemPreparedStatementJdbcBatchItemWriter]] |전자정부 표준프레임워크에서 제공하는 Setter 를 사용하여 데이터를 Jdbc방식으로 DB에 쓰는 라이터| egovframework.brte.core.item.database.EgovJdbcBatchItemWriter,\\ egovframework.brte.core.item.database.EgovItemPreparedStatementSetter |
+| DB | [[#EgovCustomizedJdbcBatchItemWriter|EgovCustomizedJdbcBatchItemWriter]] | 전자정부 표준프레임워크의 Setter를 상속받아 재정의한 Setter를 사용하여 데이터를 Jdbc방식으로 DB에 쓰는 라이터 | egovframework.brte.core.item.database.EgovJdbcBatchItemWriter,\\ EgovItemPreparedStatementSetter나 ItemPreparedStatementSetter 를 상속받아 작성한 클래스 |
+| DB | [[#CustomizeDBWriter|CustomizeDBWriter]] | 사용자가 등록한 DB 라이터 | 사용자 정의 |

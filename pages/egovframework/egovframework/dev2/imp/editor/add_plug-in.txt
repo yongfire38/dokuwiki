@@ -1,0 +1,32 @@
+====== Add Plug-in ======
+
+===== 개요 =====
+ 
+모바일 전자정부 표준프레임워크에서는 모바일 개발환경에 추가기능을 위한 플러그인을 설치 기능을 제공한다.
+
+===== 설명 =====
+
+모바일 개발환경을 사용하는 개발자가 전자정부 표준프레임워크에서 제공하는 기능이 필요할 경우 Add Plug-In 도구를 통해 필요 기능을 선택적으로 설치하여 사용할 수 있다. \\
+모바일 개발환경에서 사용할 수 있는 전자정부 표준프레임워크의 기능은 다음과 같다.
+
+** 추가 플러그인 **
+  * eGovFrame Mobile IDE
+  * eGovFrame AmaterasERD
+  * eGovFrame AmaterasUML
+  * eGovFrame CodeGen
+  * eGovFrame CodeGen Templates
+  * eGovFrame EclEmma
+  * eGovFrame Help
+  * eGovFrame DBIO
+  * eGovFrame RTE Distribution Tool
+  * eGovFrame TestCase Generator Feature
+  * eGovFrame TestCase Templates Feature
+  * eGovFrame Mobile KW3C
+  * Spring IDE Web Flow Extension(optional)
+
+===== 사용법 =====
+
+  - eGovFrame 통합 메뉴에서 Configuration>Add Plug-In 메뉴를 선택한다. \\ {{:egovframework:dev2:imp:editor:addplugin.png?200|}}\\ \\
+  - Install Wizard에서 필요 기능을 선택하고 Next 버튼을 눌러 설치를 완료한다. \\ {{:egovframework:dev2:imp:editor:addpluginlist.png?500|}}
+✔ eGovFrame CodeGen은 eGovFrame AmaterasUML과 dependency가 존재하므로 eGovFrame AmaterasUML 설치 후 eGovFrame CodeGen을 설치한다.\\
+✔ 설치 완료된 항목은 동일 소프트웨어의 중복 설치를 방지하기 위해 Install Wizard에서 숨김 기능을 제공하며, 새로운 버전이 존재할 경우 Install Wizard에서 선택하여 설치할 수 있다.

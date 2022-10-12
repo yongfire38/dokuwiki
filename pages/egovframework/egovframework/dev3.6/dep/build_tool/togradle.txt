@@ -1,0 +1,80 @@
+===== 표준프레임워크 Sample 프로젝트를 Gradle로 빌드환경 전환 =====
+
+==== 빌드 환경 전환 ====
+  - Eclipse Gradle Plugin 설치
+       * Buildship : [[http://www.egovframe.go.kr/wiki/doku.php?id=egovframework:dev2:dep:build_tool:gradle:buildship:%EA%B5%AC%ED%98%84%EB%8F%84%EA%B5%AC_%ED%94%8C%EB%9F%AC%EA%B7%B8%EC%9D%B8_buildship|설치가이드]]       
+  - Sample 프로젝트 생성
+       * 개발환경 > eGovFrame > New Web Project > [프로젝트 정보 입력-Next] > Generate Example 체크 [Finish] (또는) \\
+       * 개발환경 > file > New > eGovfroame Web Project > [프로젝트 정보 입력-Next] > Generate Example 체크 [Finish] \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.01.png|생성 프로젝트 선택}} \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.02.png|프로젝트 정보 입력}} {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.03.png|게시판 컨텐츠 자동생성 체크}}\\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.04.png|메이븐 프로젝트 속성 확인}} \\ 
+  - build.gradle 파일 추가
+       * [[http://www.egovframe.go.kr/wiki/doku.php?id=egovframework:dev3.6:dep:build_tool:togradle#build.gradle_파일|build.gradle]] \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.05.png|파일생성}} \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.06.png|파일명입력}}
+  - 기존 Maven Nature 삭제
+       * Mavne > Disable Maven Nature \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.07.png|Maven Nature 삭제}} {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.08.png|Compile 오류}} \\ 
+  - Gradle Nature 추가
+       * Configure > Add Gradle Nature \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.09.png|Gradle Nature 추가}} {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.10.png|Compile 오류 정리}} \\
+  - pom.xml 삭제
+  - Gradle 설정 확인 
+       * Gradle > Refresh Gradle Project \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.11.png|Task 재구성}} \\
+  - Gradle Tasks View 열기
+       * Window > Show View > Gradle > Gradle Tasks \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.install14.png|}} \\
+  - Gradle Tasks View에 표시된 프로젝트 Build
+    * 프로젝트에 구성된 Task를 시작메뉴를 이용하여 빌드실행 \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.12.png|기본 Task 실행}} \\ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradle.sample.13.png|Task 실행결과}} \\ 
+  - Gradle 프로젝트 실행
+    * Run As > Run On Server
+ {{:egovframework:dev3.6:dep:build_tool:gradle:buildship:gradleprjrun.png|}}
+
+==== build.gradle 파일 ====
+ <code script>
+apply plugin: 'java'
+apply plugin: 'war'
+
+// JDK version source compatibility
+sourceCompatibility = 1.7
+
+// project version
+version = '1.0'
+
+// War file name
+war.baseName = 'sample'
+
+// Web directory, this overrides the default value "webapp"
+project.webAppDirName = 'src/main/webapp'
+project.buildDir = 'target'
+
+
+// Set repository
+repositories {
+    mavenCentral()
+    maven { url "http://www.egovframe.go.kr/maven/" }
+}
+
+// Set source directory
+sourceSets {
+        main {
+            java {
+                srcDir 'src/main/java'
+                srcDir 'src/test/java'
+            }
+	        resources {
+	            srcDir 'src/main/resources'
+	            srcDir 'src/test/resources'
+	        }
+        }
+    }
+
+// dependencies to run on tomcat, are mandatory for tomcat plugin
+dependencies {
+    compile(group: 'egovframework.rte', name: 'egovframework.rte.ptl.mvc', version:'3.5.0') {
+exclude(module: 'commons-logging')
+    }
+    compile group: 'egovframework.rte', name: 'egovframework.rte.psl.dataaccess', version:'3.5.0'
+    compile group: 'egovframework.rte', name: 'egovframework.rte.fdl.idgnr', version:'3.5.0'
+    compile group: 'egovframework.rte', name: 'egovframework.rte.fdl.property', version:'3.5.0'
+    compile group: 'javax.servlet', name: 'jstl', version:'1.2'
+    compile group: 'taglibs', name: 'standard', version:'1.1.2'
+    compile group: 'org.antlr', name: 'antlr', version:'3.5'
+    compile group: 'org.hsqldb', name: 'hsqldb', version:'2.3.2'
+    providedCompile group: 'javax.servlet', name: 'servlet-api', version:'2.5'
+}
+</code>
+

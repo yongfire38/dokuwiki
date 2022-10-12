@@ -1,0 +1,66 @@
+<code:java>
+@Repository("noticeDao")
+public class NoticeDao extends SqlMapClientDaoSupport {
+
+    /**
+     * iBatis SqlMap 정보를 읽기 위한 sqlMapClient 세팅
+     * @param sqlMapClient - 설정파일로부터 읽어온 정보 
+    */
+    @Resource(name = "sqlMapClient")
+    public void setSuperSqlMapClient(SqlMapClient sqlMapClient) {
+        super.setSqlMapClient(sqlMapClient);
+    }
+    
+	/**
+	 * 등록된 글의 수를 조회한다.
+	 * @return	등록된 글의 수
+	*/
+	public int selectCount() {
+		return (Integer) getSqlMapClientTemplate().queryForObject("selectCount");
+	}
+	
+	/**
+	 * id 에 해당하는 글을 조회한다.
+	 * @param id - 등록된 글의 아이디
+	 * @return 등록된 글의 정보가 담긴 NoticeVo
+	*/
+	public NoticeVo select(int id) {
+		return (NoticeVo) getSqlMapClientTemplate().queryForObject("select", id);
+	}
+	
+	/**
+	 * 등록된 모든 글을 조회한다.
+	 * @return	등록된 글의 목록을 담고 있는 NoticeVo 의 리스트
+	*/
+	@SuppressWarnings("unchecked")
+	public List<NoticeVo> selectList() {
+		return getSqlMapClientTemplate().queryForList("selectList", new NoticeVo());
+	}
+	
+	/**
+	 * 조회 조건에 해당하는 글을 조회한다.
+	 * @param   searchNoticeVo  조회 조건을 담고 있는 NoticeVo 
+	 * @return	등록된 글의 목록을 담고 있는 NoticeVo 의 리스트
+	*/
+	@SuppressWarnings("unchecked")
+	public List<NoticeVo> selectList(NoticeVo searchNoticeVo) {
+		return getSqlMapClientTemplate().queryForList("selectList", searchNoticeVo);
+	}
+	
+	/**
+	 * 글을 등록한다.
+	 * @param 등록할 글의 정보를 담고 있는 noticeVo
+	*/
+	public void insert(NoticeVo noticeVo) {
+		getSqlMapClientTemplate().insert("insert", noticeVo);
+	}
+
+	/**
+	 * 글을 삭제한다.
+	 * @param id - 등록된 글의 아이디
+	*/
+	public int delete(int id) {
+		return getSqlMapClientTemplate().delete("delete", id);
+	}
+}
+</code>

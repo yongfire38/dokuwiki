@@ -1,0 +1,21 @@
+===== 개요 =====
+HSQLDB를 연결하는 방법을 설명한다.
+
+===== 설명 =====
+전자정부 웹 프로젝트 생성 후 HSQLDB를 연결하고자 할 때 본 가이드를 참고한다.
+
+
+===== 사용방법 =====
+  - 생성한 프로젝트의 디렉토리에 있는 DATABASE > db 폴더에 있는 runHsqlDB.cmd 파일을 실행시킨다. \\ {{:egovframework:dev3.5:imp:dbio_editor:hsql_01_d3.2.png|}} \\ \\
+  - runHsqlDB.cmd 파일이 실행되었음을 확인한다. \\ {{:egovframework:dev3.5:imp:dbio_editor:hsql_02_d3.2.png|}} \\ \\
+  - eclipse의 Data Source Explorer 에 있는 Database Connections 폴더를 우클릭하여 New... 메뉴를 클릭한다.
+  - 나타나는 New Connection Profile 창에서 HSQLDB 를 선택하고 Next 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:hsql_03.png|}} \\ \\
+  - Drivers 항목의 우측에 있는 아이콘{{:egovframework:dev2:imp:editor:hsql_04-00.png|}}(New Driver Definition)을 클릭한다. \\ {{:egovframework:dev2:imp:editor:hsql_04.png|}} \\ \\
+  - Name/Type 탭에서 HSQLDB JDBC Driver 를 클릭한다. \\ {{:egovframework:dev2:imp:editor:hsql_05.png|}} \\ \\
+  - JAR List 탭에서 기존에 존재하던 jar 파일을 선택 후 Remove JAR/Zip 버튼을 클릭하여 삭제한다. \\ {{:egovframework:dev2:imp:editor:hsql_06.png|}} \\ \\
+  - jar 파일 삭제 확인 후 Add JAR/Zip 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:hsql_07.png|}} \\ \\
+  - 해당 프로젝트의 DATABASE > db 폴더에 있는 hsqldb-1.8.0.10.jar 파일을 선택 후 열기(O) 버튼을 클릭한다. \\ {{:egovframework:dev3.5:imp:dbio_editor:hsql_08_d3.2.png|}} \\ \\
+  - Database: SAMPLE, Database location: MyDB, User name: sa 정보 확인 후 Test Connection 버튼을 눌러 성공 메시지(Ping succeeded!)를 확인 후 Finish 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:hsql_09.png|}} \\ \\
+  - Database Connections 하위폴더에 New HSQLDB가 생성되었다. \\ {{:egovframework:dev2:imp:editor:hsql_10.png|}} \\ \\
+
+

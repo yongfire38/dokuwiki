@@ -1,0 +1,107 @@
+===== JNDI 사용 샘플 코드 =====
+Spring Test의 JNDI Mock을 사용한 샘플의 전체 코드이다.
+
+==== Test Class ====
+<code:java>
+package egovframework.guideprogram.test.testcase.mock;
+
+import static org.junit.Assert.assertNotNull;
+
+import java.sql.Connection;
+
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import junit.framework.Assert;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.springframework.mock.jndi.SimpleNamingContextBuilder;
+
+import egovframework.guideprogram.test.target.mock.JNDIObject;
+
+public class JNDIMockTest {
+
+    /** name */
+    private static final String name = "java:comp/env/jdbc/myDS";
+
+    /**
+     * Binding 하고자 하는 객체를 얻어와 주어진 이름으로 바인딩을 하는 테스트 초기 셋업 메소드
+     */
+    @BeforeClass
+    public static void setUp() throws Exception {
+        Object objectToBind = new JNDIObject().getObjectToBind();
+
+        SimpleNamingContextBuilder.emptyActivatedContextBuilder().bind(name, objectToBind);
+    }
+
+    /**
+     * Binding 한 객체에 대한 lookup 이 제대로 실행되는지 확인하는 테스트
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testBindedObjectIsNull() throws Exception {
+        DataSource dataSource;
+
+        dataSource = (DataSource) new InitialContext().lookup(name);
+        Assert.assertNotNull("Binded object is dataSource.", dataSource);
+    }
+
+    /**
+     * lookup 된 객체가 순수 기능을 수행할 수 있는 정상적인 객체인지 확인하는 테스트
+     */
+    @Ignore
+    @Test
+    public void testBindedObjectIsAvailable() throws Exception {
+        DataSource dataSource;
+        Connection connection;
+
+        dataSource = (DataSource) new InitialContext().lookup(name);
+        connection = dataSource.getConnection();
+
+        assertNotNull("Binded object dataSource can return connection.",
+                connection);
+    }
+
+    /**
+     * Binding 시킨 객체를 clear 함
+     */
+    @AfterClass
+    public static void teardown() throws Exception {
+        SimpleNamingContextBuilder.emptyActivatedContextBuilder().clear();
+    }
+}
+</code>
+
+<code:java>
+package egovframework.guideprogram.test.target.mock;
+
+import javax.sql.DataSource;
+
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+
+public class JNDIObject {
+
+    Object objectToBind;
+
+    public JNDIObject() {
+        objectToBind = createDataSource();
+    }
+
+    public DataSource createDataSource() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName("org.hsqldb.jdbcDriver");
+        dataSource.setUrl("jdbc:hsqldb:sampledb");
+        dataSource.setUsername("sa");
+
+        return dataSource;
+    }
+
+    public Object getObjectToBind() {
+        return objectToBind;
+    }
+}
+</code>

@@ -1,0 +1,11 @@
+===== 개요 =====
+Mobile용 JSP Template을 적용한다.
+
+===== 설명 =====
+모바일 전자정부 표준 프레임워크에서는 모바일 표준 JSP 템플릿({{:egovframework:dev2:imp:editor:jsptemplate.zip|jsptemplate.zip}})을 제공하여 개발의 편의성을 높여준다. 
+
+===== 사용방법 =====
+  - 이클립스 Perspective 에서 Windows > Preference > Web > JSP Files > Editor > Templates 페이지를 연다. \\ {{:egovframework:dev2:imp:editor:mobile_jsp_template_add.png?650|}}
+  - New 버튼을 눌러 새로운 템플릿을 추가한다. \\ {{:egovframework:dev2:imp:editor:mobile_add_new_template.png?450|}}
+  - 템플릿의 내용은 JSP의 내용을 사용하면 된다.
+  - 템플릿을 추가한다. \\ {{:egovframework:dev2:imp:editor:mobile_add_complate.png?650|}}

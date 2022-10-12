@@ -1,0 +1,140 @@
+====== 설치 ======
+
+===== 개요 =====
+Change Management는 Java 5.X 이상에서 실행되며, JDK 다운로드는 [[http://www.java.com/download|http://www.java.com/download]]를 이용하면 된다.\\
+Change Management의 설치는 WAR file을 프로젝트 환경에 맞춰 설정파일을 변경하고, 프로젝트에 설치되어 있는 WAS 서버에 deploy를 하면 된다.\\
+
+===== 설명 =====
+=== 설치순서 ===
+== WAR File을 deploy ==
+  - WAR File을 다운로드 받는다. {{WAR File Upload 할 것|}}
+  - [[##DBMS 설정파일 수정 | DBMS 설정파일 수정]] : WAR File을 압축을 해제하고, DBMS별로 어플리케이션의 설정파일을 수정한다.
+  - WAR File을 WAS 서버에 deploy 한다.
+== 테이블 생성 ==
+  - 테이블 생성 스크립트를 다운로드 받는다. 
+    * My SQL : {{:egovframework:dev:isu:issue_mysql.script.zip|issue_mysql.script}}
+    * Oracle : {{:egovframework:dev:isu:issue_oracle.script.zip|issue_oracle.script}}
+    * Altibase : {{:egovframework:dev:isu:issue_altibase.script.zip|issue_altibase.script}}
+    * Tibero : {{:egovframework:dev:isu:issue_tibero.script.zip|issue_tibero.script}}
+  - 스크립트를 실행하여 테이블을 생성한다.
+== 설치 완료 후 테스트 ==
+  - web-browser에서 'http://~~~~~~'를 연다.
+  - 아이디 : "admin", 비밀번호 : "admin123"으로 로그인 하여 설치를 확인한다.
+== 환경설정을 수정 ==
+  - Change Management의 [설정관리 > 메일설정] 메뉴에서 메일발송 환경을 설정한다.
+  - Change Management의 [설정관리 > SMS설정] 메뉴에서 SMS발송 환경을 설정한다.
+  - Change Management의 [설정관리 > 환경설정] 메뉴에서 파일 업로드 경로와, 인덱스 생성결과 경로를 설정한다.
+
+===== 환경설정 =====
+
+
+
+
+==== DBMS 설정파일 수정 ====
+
+
+=== [ My SQL DBMS ] ===
+== 1. context-hibernate.xml ==
+경로 : /egovframework-dev-isu/src/main/webapp/WEB-INF/config/spring/context-hibernate.xml
+  <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+
+== 2. context-datasource.xml ==
+경로 : /egovframework-dev-isu/src/main/webapp/WEB-INF/config/spring/context-datasource.xml \\
+url을 프로젝트 내 url에 맞게 변경한다.
+  <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+  <property name="url" value="jdbc:mysql://192.168.200.24:1621/dev"/>
+	
+== 3. jtrac.hbm.xml ==
+경로 : /egovframework-dev-isu/src/main/resources/hibernate/jtrac.hbm.xml \\
+아래 file을 다운로드 하여 My SQL 버전으로 교체 \\
+{{:egovframework:dev:isu:jtrac.hbm.xml_mysql.zip|jtrac.hbm.xml}}
+\\
+\\
+== 4. issue_mysql.script ==
+아래 file을 다운로드 받아 오라클 DDL(issue_mysql.script)로 테이블 생성 \\
+{{:egovframework:dev:isu:issue_mysql.script.zip|issue_mysql.script}}
+\\
+\\
+\\
+✔ **My SQL의 경우 default로 설정되어 있어 1,2,3번 내용은 수정하지 않아도 적용 된다.**
+\\
+\\
+\\
+
+
+
+=== [ Oracle DBMS ] ===
+== 1. context-hibernate.xml ==
+경로 : /egovframework-dev-isu/src/main/webapp/WEB-INF/config/spring/context-hibernate.xml
+  <prop key="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</prop> 
+
+== 2. context-datasource.xml ==
+경로 : /egovframework-dev-isu/src/main/webapp/WEB-INF/config/spring/context-datasource.xml \\
+url을 프로젝트 내 url에 맞게 변경한다.
+  <property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+  <property name="url" value="jdbc:oracle:thin:@192.168.200.22:1521/egovfrm"/>
+	
+== 3. jtrac.hbm.xml ==
+경로 : /egovframework-dev-isu/src/main/resources/hibernate/jtrac.hbm.xml \\
+아래 file을 다운로드 하여 Oracle 버전으로 교체 \\
+{{:egovframework:dev:isu:jtrac.hbm.xml_oracle.zip|jtrac.hbm.xml}}
+\\
+\\
+== 4. issue_oracle.script ==
+아래 file을 다운로드 받아 Oracle DDL(issue_oracle.script)로 테이블 생성 \\
+{{:egovframework:dev:isu:issue_oracle.script.zip|issue_oracle.script}}
+\\
+\\
+\\
+
+
+
+
+=== [ Altibase DBMS ] ===
+== 1. context-hibernate.xml ==
+경로 : /egovframework-dev-isu/src/main/webapp/WEB-INF/config/spring/context-hibernate.xml
+  <prop key="hibernate.dialect">org.hibernate.dialect.AltibaseDialect</prop>
+  
+== 2. context-datasource.xml ==
+경로 : /egovframework-dev-isu/src/main/webapp/WEB-INF/config/spring/context-datasource.xml \\
+url을 프로젝트 내 url에 맞게 변경한다.
+  <property name="driverClassName" value="Altibase.jdbc.driver.AltibaseDriver"/>
+  <property name="url" value="jdbc:Altibase://192.168.200.22:1721/dev" />
+	
+== 3. jtrac.hbm.xml ==
+경로 : /egovframework-dev-isu/src/main/resources/hibernate/jtrac.hbm.xml \\
+아래 file을 다운로드 하여 Altibase 버전으로 교체 \\
+{{:egovframework:dev:isu:jtrac.hbm.xml_altibase.zip|jtrac.hbm.xml}}
+\\
+\\
+== 4. issue_altibase.script ==
+아래 file을 다운로드 받아 Altibase DDL(issue_altibase.script)로 테이블 생성 \\
+{{:egovframework:dev:isu:issue_altibase.script.zip|issue_altibase.script}}
+\\
+\\
+\\
+
+
+
+
+=== [ Tibero DBMS ] ===
+== 1. context-hibernate.xml ==
+경로 : /egovframework-dev-isu/src/main/webapp/WEB-INF/config/spring/context-hibernate.xml
+  <prop key="hibernate.dialect">org.hibernate.dialect.Oracle9Dialect</prop>
+  
+== 2. context-datasource.xml ==
+경로 : /egovframework-dev-isu/src/main/webapp/WEB-INF/config/spring/context-datasource.xml \\
+url을 프로젝트 내 url에 맞게 변경한다.
+  <property name="driverClassName" value="com.tmax.tibero.jdbc.TbDriver"/>
+  <property name="url" value="jdbc:tibero:thin:@192.168.200.22:1821:egovfrm" />
+\\	
+== 3. jtrac.hbm.xml ==
+경로 : /egovframework-dev-isu/src/main/resources/hibernate/jtrac.hbm.xml \\
+아래 file을 다운로드 받아 Tibero 버전으로 교체 \\
+{{:egovframework:dev:isu:jtrac.hbm.xml_tibero.zip|jtrac.hbm.xml}}
+\\
+\\
+== 4. issue_tibero.script ==
+아래 file을 다운로드 받아 Tibero DDL(issue_tibero.script)로 테이블 생성 \\
+{{:egovframework:dev:isu:issue_tibero.script.zip|issue_tibero.script}}
+

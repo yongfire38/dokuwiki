@@ -1,0 +1,33 @@
+<code:xml>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<dataset>
+    <NOTICE NOTICE_ID="101"
+            NOTICE_TITLE="101번 공지"
+            NOTICE_CONTENTS="테스트용으로 자동 입력된 공지사항 101번입니다."
+            NOTICE_REGISTRATION_DATE="2009-03-18"
+            NOTICE_LAST_MODIFIER="OracleDataSetTest.xml"
+            NOTICE_LAST_MODIFIED_DATE="2009-03-17"
+            NOTICE_FILE_CNT="0"
+            NOTICE_RETRIEVED_CNT="0"
+    />
+    <NOTICE NOTICE_ID="102"
+            NOTICE_TITLE="102번 공지"
+            NOTICE_CONTENTS="테스트용으로 자동 입력된 공지사항 102번입니다."
+            NOTICE_REGISTRATION_DATE="2009-03-18"
+            NOTICE_LAST_MODIFIER="OracleDataSetTest.xml"
+            NOTICE_LAST_MODIFIED_DATE="2009-03-17"
+            NOTICE_FILE_CNT="0"
+            NOTICE_RETRIEVED_CNT="0"
+    />
+    <NOTICE NOTICE_ID="103"
+            NOTICE_TITLE="103번 공지"  
+            NOTICE_CONTENTS="테스트용으로 자동 입력된 공지사항 103번입니다."
+            NOTICE_REGISTRATION_DATE="2009-03-18"
+            NOTICE_LAST_MODIFIER="OracleDataSetTest.xml"
+            NOTICE_LAST_MODIFIED_DATE="2009-03-17"
+            NOTICE_FILE_CNT="0"
+            NOTICE_RETRIEVED_CNT="0"
+    />
+</dataset>
+</code>

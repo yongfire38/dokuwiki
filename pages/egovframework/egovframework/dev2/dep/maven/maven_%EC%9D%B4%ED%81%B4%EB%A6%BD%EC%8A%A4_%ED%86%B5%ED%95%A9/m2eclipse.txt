@@ -1,0 +1,105 @@
+===== 개요 =====
+전자정부 개발 프레임워크의 개발환경 IDE에서는 메이븐 통합 플러그인으로 m2eclipse을 사용하고 있으며  \\
+m2eclipse를 통한 보다 효율적인 Maven 프로젝트 개발 편의성을 제공하고 있다.
+
+===== 설명 =====
+==== m2eclipse의 특징 ==== 
+  - 이클립스에서의 maven build 실행
+  - pom.xml에 기반한 이클립스 빌드 패스의 의존성(dependency) 관리
+  - 리모트 리포지토리로부터 pom.xml에서 선언한 dependency의 자동 다운로드 
+  - Maven 프로젝트 생성 위자드(wizards) 제공
+  - Maven 리포트 리포지토리 연동을 통한 dependency quick search 기능 제공
+
+===== 환경 설정 =====
+전자정부 개발 프레임워크의 개발환경 IDE에 메이븐 통합 플러그인인 m2eclipse가 설치되어 있다. \\
+구현 도구의 IDE 참조: [[egovframework:dev2:imp:editor:ide|IDE]]
+
+1. Maven 설정 파일 세팅 
+  전자정부 표준 프레임워크 개발 환경에서 제공하는 Maven 설정 파일인 settings.xml 파일을 지정된 위치에 옮겨 놓는다. 
+   - 기본 디렉터리 위치: C:\Documents and Settings\Administrator\.m2
+
+2. 이클립스 Preferences의 Maven 항목에서 settings.xml 파일의 위치를 설정한다. \\
+{{:egovframework:dev2:dep:build:mvn-install-config.gif|}} \\
+
+3. 전자정부 표준 프레임워크 Archetype 설정 파일 세팅
+  전자정부 표준 프레임워크 개발 환경에서 제공하는 Maven Archetype 설정 파일인 archetype-catalog.xml 파일을 지정된 위치에 옮겨 놓는다. 
+   - 기본 디렉터리 위치: C:\Documents and Settings\Administrator\.m2
+
+4. 이클립스 Preferences의 Maven 항목을 클릭 후  Archetype 메뉴에서 전자정부 표준프레임워크 Archetype을 추가한다. 
+   전자정부 표준 프레임워크의 archetype-catalog.xml파일의 위치를 추가한다.
+{{:egovframework:dev2:dep:build:mvn-archetype-catalog.gif|}}
+
+===== 사용법 =====
+
+==== 메이븐 프로젝트 생성 ==== 
+  전자정부 표준 프레임워크 개발환경에서는 Maven 프로젝트를 생성하기 위한 2가지 방법을 제공하고 있으며 eGovFramework perspective에서 
+  제공하는 프로젝트 생성 방법은 개발 환경 구현도구 메뉴얼에서 확인할 수 있다. 여기서는 Maven Archetype을 하용한 Maven 프로젝트 생성 방법을 가이드 한다. 
+* Maven 프로젝트 생성 마법사: [[egovframework:dev2:imp:editor:ide|구현도구 - IDE]] \\ \\
+
+1. 웹 어플리케이션을 만들기 위해 메뉴에서 New -> Maven Project 를 선택한다. \\
+{{:egovframework:dev2:dep:build:mvn_new_archetype.gif|}} \\ \\
+2. 웹 프로젝트 생성 화면에서 Project name 입력 필드에 groupId 및 artifactId를 설정한다. \\
+{{:egovframework:dev2:dep:build:mvn_create_sample_project.gif|}} \\ \\
+4. 생성한 메이븐 웹 프로젝트의 디렉터리 구조를 확인한다. \\
+{{:egovframework:dev2:dep:build:egov_new_webapp_cmpl.gif|}}
+
+==== M2Eclipse 메이븐 명령 ==== 
+
+생성한 메이븐 프로젝트에서 오른쪽 마우스 클릭 후 maven 메뉴를 선택하면 m2eclipse에서 제공하는 기본적인 메이븐 명령어들을 수행할 수 있습니다. 
+
+{{:egovframework:dev2:dep:build:eclipse_available-features.gif|}}
+
+=== m2eclipse 메뉴에서 제공하는 기능 ===
+  1. dependency 및 메이븐 플러그인 추가 
+     - pom.xml 에디터 제공
+  2. dependency, snapshots, 소스 폴더 업데이트
+  3. 메이븐 모듈 생성 
+     - module 프로젝트 생성 마법사 기능 제공
+  4. 소스 코드 다운로드 
+     - 리모트 리포지토리에서 artifact 소스 코드를 다운로드 할 수 있다. 디버깅 시에 효과적으로 이용할 수 있다. 
+  5. pom.xml에서 설정한 프로젝트 웹 페이지, CI 서버 등의 URL을 기반으로 웹 페이지 open
+  6. 이클립스 workspace resolution 기능 제어
+     - workspace에 등록된 메이븐 프로젝트 들간의 연동에 대해 제어할 수 있다. disable 시킬 경우 로컬 리포지토리에 연동하고자 
+       하는 프로젝트를 install하고 dependency 선언을 통해 참조하여야 한다. 
+
+* **사용팁** \\
+1. 'Update Dependencies' 명령을 선택하면 pom.xml에서 선언한 의존성 관련 설정들을 update한다. \\
+2. SCM에서 메이븐 프로젝트를 check out 받은 후 Maven -> Update Project Configuration 명령을 통해 check out 받은 \\
+ 메이븐 프로젝트의 환경 및 dependencies를 로컬 환경에 맞게 업데이트 시켜준다.  \\ \\
+
+
+==== 메이븐 빌드 실행 ==== 
+
+메이븐의 빌드 명령어를 Run As 또는 debug as 메뉴에서 실행할 수 있으며 'Maven build...' 명령어 선택을 통해 직접 빌드의 Goal을 정의할 수 있다.
+
+{{:egovframework:dev2:dep:build:eclipse_run-menu.gif }}
+{{:egovframework:dev2:dep:build:mvn_cmmd.gif|}}
+
+
+==== 메이븐 프로젝트 실행 ==== 
+
+Run AS -> clean install 명령으로 메이븐 웹 프로젝트를 빌드한 후에 Run On Server 명령으로 웹 프로젝트를 실행한다.\\
+{{:egovframework:dev2:dep:build:mvn_run.prj.gif|}}
+
+
+==== 메이븐 가이드 프로그램 실행 ====
+개발 환경에서는 가이드 프로그램으로 egovframework.guideprogram.basicsmaple 프로젝트를 제공하고 있다. 
+
+=== 1. 샘플 DB 기동 ===
+   임베디드 DB인 HSQL DB를 제공하고 있으며 runHsqlDB.bat 파일을 실행
+{{:egovframework:dev2:dep:build:db_dir.gif|}}
+   DB 기동    
+{{:egovframework:dev2:dep:build:hsqldb.gif|}} \\
+
+=== 2. 가이드 프로그램 basic sample ===
+  2.1 basic sample 기본 디렉터리 구조
+       이클립스에서 import project로 basic sample 프로젝트를 가져온 후 m2 maven -> update project configuration 실행한다. 
+      Run As -> clean / Run As -> install 명령을 실행시켜 basic sample 프로젝트 빌드 작업 및 패키징 작업을 수행한다. 
+      /target 디렉토리 밑에서 Maven 빌드 산출물들을 확인할 수 있다. 
+{{:egovframework:dev2:dep:build:basicsample_dir.gif|}}
+  2.2 basic smaple 기동 
+       Run As -> Run On Server 명령으로 basic sample를 실행한다.
+{{:egovframework:dev2:dep:build:basicsample.gif|}}
+
+
+===== 참고 자료 =====

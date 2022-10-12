@@ -1,0 +1,57 @@
+====== Mobile Code Verification ======
+
+===== 개요 =====
+ 
+eGovFrame기반으로 생성한 소스 코드의 웹 표준 준수 여부 검증기능을 제공한다.
+
+
+===== 설명 =====
+
+eGovFrame기반의 모바일 환경에서 소스코드의 웹 표준을 검증하는 도구를 추가하였으며 그에 대한 상세 내용은 아래과 같다.
+
+== W3C 방식 검증 지원 ==
+eGovFrame기반으로 생성한 모바일 프로젝트의 소스 코드를 국제적으로 통용되는 W3C 방식 중 사이트 URL, 파일 Upload, input 단위로 검증하는 기능을 지원한다.
+
+== MobileOK 방식 검증 지원 ==
+eGovFrame기반으로 생성한 모바일 프로젝트의 소스 코드를 한국형 모바일 검증인 MobileOK 에서 Page 단위, Site 단위, 파일 단위, FTP 단위로 검증하는 기능을 지원한다.
+
+== KW3C 방식 검증 지원 ==
+eGovFrame기반으로 생성한 모바일 프로젝트의 소스 코드를 한국정보화진흥원(NIA)에서 제공하는 웹표준 진단 프로그램을 사용하여 검증하는 기능을 제공한다.
+
+===== 사용법 =====
+
+
+
+==== 모바일 소스 코드 검증 ====
+=== W3C 방식 검증 지원 ===
+  * Page URL 단위
+    * eGovFrame 메뉴 > Implementation > Mobile Web Verification(W3C) > by Page URL 을 선택한다. \\ {{:egovframework:dev2:imp:editor:mver_w3c_byurl_menu.png|}}
+    * 아래와 같은 창이 뜨면 검증을 원하는 URL을 넣고 Check 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:w3c_byuri.png|}}
+    * 검증 결과를 확인한다. \\ {{:egovframework:dev2:imp:editor:w3c_byuri_02.png|}} \\ \\
+  * 파일 업로드 단위
+    * eGovFrame 메뉴 > Implementation > Mobile Web Verification(W3C) > by File Upload 를 선택한다. \\ {{:egovframework:dev2:imp:editor:mver_w3c_byfile_menu.png|}}
+    * 아래와 같은 창이 뜨면 찾아보기 버튼을 이용하여 검증을 원하는 파일을 선택하고 Check 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:w3c_byfile01.png|}}
+    * 검증 결과를 확인한다. \\ {{:egovframework:dev2:imp:editor:w3c_byfile02.png|}} \\ \\
+  * Direct Input(소스코드 직접 입력) 단위
+    * eGovFrame 메뉴 > Implementation > Mobile Web Verification(W3C) > by Direct Input 을 선택한다. \\ {{:egovframework:dev2:imp:editor:mver_w3c_byinput_menu.png|}}
+    * 아래와 같은 창이 뜨면 검증을 원하는 소스코드를 직접 입력하고 Check 버튼을 클릭한다. \\ {{:egovframework:dev2:imp:editor:w3c_byinput01.png|}}
+    * 검증 결과를 확인한다. \\ {{:egovframework:dev2:imp:editor:w3c_byinput02.png|}} \\ \\
+
+=== MobileOK 방식 검증 지원 ===
+✔ 주의: “MobileOK”의 경우 접속이 원활하지 않은 경우가 있다.
+  * Page URL 단위
+    * eGovFrame 메뉴 > Implementation > Mobile Web Verification(MobileOK) > by Page URL 을 선택한다. \\ {{:egovframework:dev2:imp:editor:mver_mobileok_bypageurl_menu.png|}} \\ \\
+  * Site URL 단위
+    * eGovFrame 메뉴 > Implementation > Mobile Web Verification(MobileOK) > by Site URL 을 선택한다. \\ {{:egovframework:dev2:imp:editor:mver_mobileok_bysiteurl_menu.png|}} \\ \\
+  * 파일 업로드 단위
+    * eGovFrame 메뉴 > Implementation > Mobile Web Verification(MobileOK) > by File Upload 를 선택한다. \\ {{:egovframework:dev2:imp:editor:mver_mobileok_byfileupload_menu.png|}} \\ \\
+  * FTP 단위 단위
+    * eGovFrame 메뉴 > Implementation > Mobile Web Verification(MobileOK) > by FTP 를 선택한다. \\ {{:egovframework:dev2:imp:editor:mver_mobileok_byftp_menu.png|}} \\ \\
+
+=== KW3C 방식 검증 지원 ===
+  * 다음의 링크를 참조한다.\\
+    * [[eGovframework:DEV2:IMP:editor:Web Standard Verification(KW3C)]] \\ \\
+
+===== 참고자료 =====
+|W3C|http://validator.w3.org/|
+|W3C mobile checker |http://validator.w3.org/mobile|
