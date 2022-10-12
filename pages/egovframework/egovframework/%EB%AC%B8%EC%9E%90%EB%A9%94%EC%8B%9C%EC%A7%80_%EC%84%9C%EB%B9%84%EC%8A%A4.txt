@@ -1,0 +1,198 @@
+====== 협업 - 문자메시지서비스 ======
+
+===== 개요 =====
+문자메시지서비스는 전자정부 SMS 서비스(모바일 전자정부 M-Gov)를 이용하기 위한 문자메시지 전송 인터페이스를 제공하며 별도의 M-Gov 신청을 통해 사용할 수 있다.
+
+{{:egovframework:com:cop:smsoutline.jpg|문자메시지서비스 업무흐름}}
+
+전자정부 표준프레임워크 등의 프레임워크를 사용하지 않는 경우는 **[[SMS 서비스]]**를 참조하여 적용한다.
+
+===== 전제조건 =====
+문자메시지서비스를 사용하기 위해서는 별도로 전자정부 SMS 서비스(모바일 전자정부 M-Gov)를 신청하여야 하며, 이는 행정안전부 정보통합전산센터에서 주관하고 있다. 
+
+서비스 신청 절차는 다음과 같다.
+
+① 서비스이용신청 : 서비스 종류에 따라 별지 1호 내지 3호 서식(해당 사이트 이용규정 참조)의 이용신청서를 센터에 제출 \\
+② 이용통보 : 검토 결과를 접수일로부터 15일 이내에 이용신청기관에게 서면으로 통보 \\
+③ 서비스준비 : 이용신청기관은 센터에서 제공하는 "M-Gov 연동 API"를 사용하여 연동 \\
+④ 서비스개통 : 이용신청기관은 승인 후 60일 이내에 서비스 개통을 하지 않을 경우 센터는 이용통보를 취소할 수 있음 \\
+
+
+기타 자세한 정보 확인 및 문의는 모바일 전자정부 M-gov(http://www.mgov.go.kr)를 참고한다.
+
+
+===== 설명 =====
+공통컴포넌트에서 제공하는 문자메시지서비스는 "M-Gov 연동 API"를 통해 SMS서비스를 제공할 뿐만 아니라 전송에 대한 이력 관리를 제공한다.
+(이력 관리가 필요없는 경우를 위해 별도의 메소드를 제공하고 있으나 송신 결과에 대한 내용을 확인할 수 없음)
+
+== 관련소스 ==
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.sms.web.EgovSmsInfoController.java|문자메시지서비스를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.sms.service.EgovBBSSmsInfoService.java|문자메시지서비스를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.sms.service.impl.EgovBBSSmsInfoServiceImpl.java|문자메시지서비스를 위한 서비스 구현 클래스|
+|ServiceImpl|egovframework.com.cop.sms.service.impl.EgovSmsInfoSender.java|문자메시지 연동 처리를 위한 클래스|
+|ServiceImpl|egovframework.com.cop.sms.service.impl.EgovSmsInfoReceiver.java|문자메시지 연동 결과 수신 처리를 위한 클래스|
+|VO|egovframework.com.cop.sms.service.Sms.java|문자메시지서비스를 위한 모델 클래스|
+|VO|egovframework.com.cop.sms.service.SmsVO.java|문자메시지서비스를 위한 VO 클래스|
+|VO|egovframework.com.cop.sms.service.SmsConnection.java|문자메시지서비스를 위한 모델 클래스 (연결정보)|
+|VO|egovframework.com.cop.sms.service.SmsRecptn.java|문자메시지서비스를 위한 모델 클래스 (수신정보)|
+|DAO|egovframework.com.cop.sms.service.impl.SmsDAO.java|문자메시지서비스를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/sms/EgovSmsInfoList.jsp|문자메시지서비스를 위한 목록조회 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/sms/EgovSmsInfoRegist.jsp|문자메시지서비스를 위한 등록 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/sms/EgovSmsInfoDetail.jsp|문자메시지서비스를 위한 상세조회 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/sms/EgovSms_SQL.xml|문자메시지서비스를 위한 Query 파일|
+
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|문자메시지|COMTNSMS|문자메시지 전송 정보를 관리|
+|문자메시지수신|COMTNSMSRECPTN|문자메시지 수신 정보를 관리|
+
+
+
+
+===== 환경설정 =====
+
+본 문자메시지서비스를 사용하기 위해서는 "M-Gov 연동 API"에서 제공하는 "SMEConfig.properties" 파일을 지정되어야 한다.
+
+이를 지정하기 위해서는 globals.properties 속성 파일에 추가 속성을 설정하여야 한다.
+
+globals.properties에 관련된 내용은 [[요소기술 프로퍼티 및 명령어 쉘스크립트]] 부분을 참조한다.
+
+==== 관련 설정 사항 ====
+
+  * Globals.SMEConfigPath 추가
+
+<code>
+...
+# 2단계 게시판 추가 기능 (댓글, 만족도조사, 스크랩)
+Globals.SMEConfigPath = /product/jeus/egovProps/conf/SMEConfig.properties
+...
+</code>
+
+참고로 SMEConfig.properties는 모바일 전자정부 M-Gov에서 제공하는 파일로 M-Gov 센터 정보 및 계정정보 등을 포함한다.
+
+
+  * ID Generation Service에서 사용할 테이블 및 필드 생성
+
+    *   ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 BBS_ID 항목을 추가해야 한다. 테이블이 생성되어 있는 경우라면 인서트 구문만을 수행한다.
+
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('SMS_ID','0');
+ </code>
+
+
+  * ID Generation Service의 경우 context-idgen.xml(예시)에 다음과 같은 설정을 추가한다.
+
+	<bean name="egovSmsIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="smsStrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="SMS_ID"/>
+	</bean>
+	<bean name="smsStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="SMS_" />
+		<property name="cipers" value="16" />
+		<property name="fillChar" value="0" />
+	</bean>	
+</code>
+
+==== 전송결과 수신 scheduler 등록 ====
+
+전송에 대한 결과는 별도의 스케쥴러를 통해 반영된다. 해당 스케쥴러를 등록하기 위해서는 .../spring/context-scheduling.xml(예시)에 다음과 같은 스케쥴러를 등록한다.
+
+<code>
+	<!-- SMS 전송 결과 수신 처리 -->
+	<bean id="smsInfoReceiver"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="EgovSmsInfoReceiver" />
+		<property name="targetMethod" value="execute" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<bean id="smsInfoReceiverTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="smsInfoReceiver" />
+		<!-- 시작하고 1분후에 실행한다. (milisecond) -->
+		<property name="startDelay" value="60000" />
+		<!-- 매 60초마다 실행한다. (milisecond) 데몬 형식으로 계속 기동 중 -->
+		<property name="repeatInterval" value="60000" />
+	</bean>
+	
+	<bean id="smsInfoReceiverScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<list>
+				<ref bean="smsInfoReceiverTrigger" />
+			</list>
+		</property>
+	</bean>
+</code>
+
+===== 사용방법 =====
+
+
+==== 문자메시지 목록조회 ====
+
+문자메시지 목록화면은 현재 사용자가 전송한 문자메시지에 대한 목록을 제공한다.
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/cop/sms/selectSmsList.do|EgovSmsInfoController|selectSmsList|.../cop/sms/EgovSmsInfoList.jsp|
+
+
+
+문자메시지 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+페이지당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:cop:smslist.jpg|문자메시지 목록조회}}
+
+
+----
+
+
+==== 문자메시지 상세조회 ====
+
+문자메시지 상세조회는 발신정보, 수신 및 전송결과 정보를 제공한다.
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|상세조회|/cop/sms/selectSms.do|EgovSmsInfoController|selectSms|.../cop/sms/EgovSmsInfoDetail.jsp|
+
+
+{{:egovframework:com:cop:smsdetail.jpg|문자메시지 상세조회}}
+
+
+----
+
+
+==== 문자메시지 전송 ====
+
+문자메시지 전송은 발신전화번호를 수신전화번호 등을 입력한다. 수신전화번호는 기본적으로 5개까지 입력가능하다.
+
+^기능^URL^Controller^method^화면(JSP)^
+|등록|/cop/sms/insertSms.do|EgovSmsInfoController|insertSms|.../cop/sms/EgovSmsInfoRegist.jsp|
+
+
+{{:egovframework:com:cop:smsregist.jpg|문자메시지 전송}}
+
+
+----
+
+
+
+
+===== 참고자료 =====
+
+  * 배포 및 테스트 관련 : [[common_component_system|Common Component System]] 및 [[배포_패키지_구성안|배포 패키지 구성안]]
+
+
+

@@ -1,0 +1,192 @@
+====== 사용자지원 - 팝업창관리======
+
+===== 개요 =====
+관리자가 초기화면에서 나타날 팝업창을 등록하고 사용자가 접속하면 나타나게 하는 기능을 제공함.
+
+===== 설명 =====
+팝업창관리기능은 크게 **팝업창관리 목록조회**, **팝업창관리 상세조회**, **팝업창관리 내용등록**, **팝업창관리 내용수정**, **팝업창 미리보기** ,**현재 팝업창 목록** 기능으로 구성되어 있다.(관련기능 부분참조)
+==  팝업창관리 콤포넌트 구성도 == 
+{{:egovframework:com:uss:ion:pwm:컴포넌트_구성도3.jpg|팝업창관리 컴포넌트 구성도}}
+
+== 팝업창관리 기능 흐름도 == 
+{{:egovframework:com:uss:ion:pwm:팝업창관리_기능흐름도1.jpg|팝업창관리 기능흐름도}}
+
+== 클래스 다이어그램 == 
+{{:egovframework:com:uss:ion:pwm:classdiagram.png|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.pwm.web.EgovPopupManageController.java|팝업창관리 Controller Class|
+|Service|egovframework.com.uss.ion.pwm.service.EgovPopupManageService.java|팝업창관리 Service Class|
+|VO|egovframework.com.uss.ion.pwm.service.PopupManageVO.java|팝업창관리  VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.uss.ion.pwm.service.impl.EgovPopupManageServiceImpl.java|팝업창관리 ServiceImpl Class|
+|DAO|egovframework.com.uss.ion.pwm.service.impl.PopupManageDao.java|팝업창관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/pwm/EgovPopupManageList.jsp|팝업창관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/pwm/EgovPopupManageRegist.jsp|팝업창관리 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/pwm/EgovPopupManageModify.jsp|팝업창관리 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/pwm/EgovPopupManageDetail.jsp|팝업창관리 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/pwm/EgovPopupMainList.jsp|팝업창 메인 리스트|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/pwn/EgovPopupSample.jsp|팝업창 셈플 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/ion/pwm/EgovPopupManage.xml|팝업창관리 QUERY XML| 
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/ion/pwm/EgovPopupManage.xml|팝업창관리 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|팝업창관리 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|팝업창관리 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 SRCHWRD_ID 항목을 추가해야 한다. 
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('POPUP_ID','0');
+ </code>
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|팝업창관리|COMTNPOPUPMANAGE  |팝업창정보를 관리 한다.|
+
+===== 관련기능 =====
+팝업창관리기능은 크게 **팝업창관리 목록조회**, **팝업창관리 상세조회**, **팝업창관리 내용등록**, **팝업창관리 내용수정**, **팝업창 미리보기**,**현재 팝업창 목록** 기능으로 구성되어 있다.
+
+==== 팝업창관리 목록조회 ====
+
+=== 비즈니스 규칙 ===
+관리자가 기(記) 등록된 팝업창관리 정보를 리스트 형태로 조회할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/uss/ion/pwm/registPopupManage|EgovPopupManageRegist|PopupManage.selectPopupManage|
+|목록(제목)|/uss/ion/pwm/detailPopupManage.do|EgovPopupManageDetail|PopupManage.selectPopupManageDetail|
+
+{{:egovframework:com:uss:ion:pwm:팝업창관리_목록.jpg|팝업창관리 목록}}
+
+등록: 등록하기 위해서는 상단의 등록 버튼을 통해서 **팝업창관리 등록** 화면으로 이동한다. \\
+목록(제목): **팝업창명관리 상세조회** 화면으로 이동한다. \\
+미리보기: 작성한 팝업창을 미리보기 할수있는 기능(자바스크립트를 실행하여 새창 형태로 미리보기 되는 기능을 제공한다.) \\
+
+----
+
+==== 팝업창관리 상세조회 ====
+
+=== 비즈니스 규칙 ===
+팝업창관리 목록에서 목록 클릭 시 이동되는 화면으로 팝업창관리에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|삭제|/uss/ion/pwm/detailPopupManage.do|EgovPopupManageDetail|PopupManage.selectPopupManageDetail|
+|목록|/uss/ion/pwm/listPopupManage.do|EgovPopupManageList|PopupManage.selectPopupManage|
+|목록|/uss/ion/pwm/listPopupManage.do|EgovPopupManageList|PopupManage.selectPopupManageCnt|
+|수정|/uss/ion/pwm/updtPopupManage.do|EgovPopupManageModify|PopupManage.selectPopupManageDetail|
+
+{{:egovframework:com:uss:ion:pwm:팝업창관리_상세보기.jpg|팝업창관리 상세보기}}
+
+삭제: 삭제버튼 클릭시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다.\\
+목록: **팝업창관리 목록** 화면으로 이동한다. \\
+수정: 수정버튼 클릭시 **팝업창관리 수정** 화면으로 이동한다. \\
+
+
+----
+
+==== 팝업창관리 등록 ====
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 반드시 입력해야할 항목을 표시한다. \\
+
+- 저장처리시 POPUP_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 
+Primary Key => POPUP_(20자리) : POPUP_(6자리) + 일련번호(14자리)로 자동생성 부여된다.\\
+
+	<!-- IdGnrService... START-->			
+	<bean name="egovPopupManageIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="egovPopupManageIdMsgtrategy" />
+		<property name="blockSize" 	value="1"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="POPUP_ID"/>
+	</bean>
+	<bean name="egovPopupManageIdMsgtrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="POPUP_" />
+		<property name="cipers" value="14" />
+		<property name="fillChar" value="0" />
+	</bean>
+	<!-- IdGnrService... END-->	
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/ion/pwm/listPopupManage.do|EgovPopupManageList|PopupManage.selectPopupManage|
+|목록|/uss/ion/pwm/listPopupManage.do|EgovPopupManageList|PopupManage.selectPopupManageCnt|
+|저장|/uss/ion/pwm/registPopupManage.do|EgovPopupManageRegist|PopupManage.insertPopupManage|
+
+팝업창관리에 관한 기본정보를 입력 저장처리한다.
+
+{{:egovframework:com:uss:ion:pwm:팝업창관리_등록.jpg|팝업창관리 등록}}
+
+목록: **팝업창관리 목록** 화면으로 이동한다. \\
+저장: 입력한 팝업창관리 정보들이 저장 처리된다. \\
+----
+
+==== 팝업창관리 수정 ====
+
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/ion/pwm/EgovPopupManageList.do|EgovPopupManageList|PopupManage.selectPopupManage|
+|목록|/uss/ion/pwm/EgovPopupManageList.do|EgovPopupManageList|PopupManage.selectPopupManageCnt|
+|저장|/uss/ion/pwm/updtPopupManage.do|EgovPopupManageModify|PopupManage.updatePopupManage|
+
+{{:egovframework:com:uss:ion:pwm:팝업창관리_수정.jpg|팝업창관리 수정}}
+
+저장: 수정된 정보들이 저장 처리된다.  \\ 
+목록: **팝업창관리 목록** 화면으로 이동한다. \\ 
+
+----
+
+==== 현재 팝업창 목록 ====
+
+=== 비즈니스 규칙 ===
+- 팝업창관리에서 등록한 게시물 중 오늘 날짜의 팝업창을 새창 형태로 미리보기 할수 있는 기능을 제공한다. \\
+- 현재 페이지를 모듈을 응용하여 실제 메인 페이지에 실행이 가능하다. \\
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|현재페이지|/uss/ion/pwm/listMainPopup.do|EgovPopupManageMainList|PopupManage.selectPopupMainList|
+
+{{:egovframework:com:uss:ion:pwm:핸재팝업창목록.jpg|핸재 팝업창 목록}}
+
+다음부터 이창을 열지 않음: 현대 팝업창이 닫히고 이후 현재페이지 접속시 팝업창이 열리지 않음. \\ 
+
+----
+
+===== 참고자료 =====
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 배포 및 테스트 관련 : [[common_component_system|Common Component System]] 및 [[배포_패키지_구성안|배포 패키지 구성안]]

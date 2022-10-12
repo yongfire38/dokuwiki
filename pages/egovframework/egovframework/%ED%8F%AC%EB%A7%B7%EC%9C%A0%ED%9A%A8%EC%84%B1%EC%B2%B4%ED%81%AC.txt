@@ -1,0 +1,69 @@
+====== 요소기술 - 포맷유효성체크 ======
+
+===== 개요 =====
+주어진 전화번호, 휴대폰번호, 이메일의 유효성을 체크하여 TRUE, FALSE 를 반환한다.
+
+===== 설명 =====
+
+입력에 전화번호, 휴대폰번호, 이메일을 입력받는다. 각 입력마다 구분입력과,  하나의 입력의 두가지 방식을 지원한다.
+
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovFormatCheckUtil.java|Date 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovFormatCheckUtilController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovFormatCheck.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|boolean|checkFormatTell(String tell1, String tell2, String tell3)|전화번호 유효성체크|입력된 전화번호 앞, 중간, 뒤 문자열을 받아서 유효한 전화번호인지 체크하는 기능|
+|boolean|checkFormatTell(String tellNumber)|전화번호 유효성체크|입력된 전화번호 "-"를 제외한 하나의 문자열을 받아서 유효한 전화번호인지 체크하는 기능|
+|boolean|checkFormatCell(String cell1, String cell2, String cell3)|휴대폰번호 유효성체크|입력된 휴대폰번호 앞 , 중간, 뒤 문자열을 받아서 유효한 휴대폰번호인지 체크하는 기능|
+|boolean|checkFormatCell(String cellNumber)|휴대폰번호 유효성체크|입력된 휴대폰번호 "-"를 제외한 하나의 문자열을 받아서 유효한 휴대폰번호인지 체크하는 기능|
+|boolean|checkFormatMail(String mail1, String mail2)|이메일 유효성체크|입력된 이메일의 앞 , 뒤 문자열을 받아서 유효한 이메일인지 체크하는 기능|
+|boolean|checkFormatMail(String mail)|이메일 유효성체크|입력된 이메일 "@"를 포함한 하나의 문자열을 받아서 유효한 이메일인지 체크하는 기능|
+
+== Input ==
+  * 해당하는 입력란의 String 형태의 번호(전화번호, 휴대폰번호 포맷유효성체크)
+  * 해당하는 입력란의 String 형태의 이메일주소(이메일 포맷유효성체크)
+
+== Output ==
+  * Boolean
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovFormatCheckUtil;
+
+...
+String	tell1   = "053";
+String	tell2   = "953";
+String	tell3   = "4444";
+String	tell   = "0539534444";
+
+Boolche check1  = EgovFormatCheckUtil.checkFormatTell(tell1, tell2, tell3);
+Boolche check2  = EgovFormatCheckUtil.checkFormatTell(tell);
+
+...
+String	cell1   = "010";
+String	cell2   = "9956";
+String	cell3   = "4587";
+String	cell   = "0109956487";
+
+Boolche check1  = EgovFormatCheckUtil.checkFormatCell(cell1, cell2, cell3);
+Boolche check2  = EgovFormatCheckUtil.checkFormatCell(cell);
+
+...
+String	mail1   = "lahu";
+String	mail2   = "nate.com";
+String	mail   = "lahu@nate.com";
+
+Boolche check1  = EgovFormatCheckUtil.checkFormatMail(mail1, mail2, mail3);
+Boolche check2  = EgovFormatCheckUtil.checkFormatMail(mail);
+
+...
+
+
+</code>

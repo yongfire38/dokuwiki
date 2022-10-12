@@ -1,0 +1,41 @@
+====== 요소기술 - 랜덤날짜 구하기 ======
+
+===== 개요 =====
+주어진 시작일자, 종료일자 사이의 임의 일자를 생성한다.
+
+===== 설명 =====
+입력일자, 종료일자 사이의 임의 일자를 생성하는 기능을 제공한다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovDateUtil.java|Date 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovDateUtilController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovDeRndmCreate.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|getRandomDate(String sDate1, String sDate2)|입력받은 일자 사이의 임의의 일자를 반환|
+
+
+== Input ==
+  * 시작일자 : String 타입의 날짜 (예, 20090501)
+  * 종료일자 : String 타입의 날짜 (예, 20090601)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * String
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovDateUtil;
+
+...
+String	startDate = "20080820";
+String	endDate   = "20080825";
+String resultStr  = EgovDateUtil.getRandomDate(startDate,endDate);
+
+...
+
+</code>

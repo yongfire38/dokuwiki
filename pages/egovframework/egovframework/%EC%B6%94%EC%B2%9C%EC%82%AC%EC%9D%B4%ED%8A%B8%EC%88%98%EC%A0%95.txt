@@ -1,0 +1,31 @@
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+
+ N/A
+
+
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 4. 추천사이트수정 ==
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/ion/rec/RecomendSiteUpdt.do|updateRecomendSiteInfo|"RecomendSiteManageDAO.updateRecomendSiteInfo"|
+|목록|/uss/ion/rec/RecomendSiteListInqire.do|selectRecomendSiteList|"RecomendSiteManageDAO.selectRecomendSiteList"|
+
+입력한 추천사이트들을 저장 처리한다.
+
+{{:egovframework:com:uss:ion:rec:RecomendSiteUpdt.gif|}}
+
+승인일자 옆의 달력이미지를 클릭하면 날짜를 선택할 수 있는 화면이 활성화 된다.
+
+{{:egovframework:com:uss:ion:rec:Calendar.gif|}}
+
+
+수정: 수정 입력한 추천사이트정보들이 저장 처리된다. \\
+목록: **추천사이트목록조회** 화면으로 이동한다. \\
+----

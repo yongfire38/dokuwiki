@@ -1,0 +1,53 @@
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 반드시 입력해야할 항목을 표시한다. \\
+
+- 저장처리 시 NEWS_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 \\
+  Primary Key => NEWS_ID(20자리) : NEWS_(4자리) + 일련번호(16자리)로 자동생성 부여된다.
+
+	<bean name="egovNewsManageIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy"   ref="newsManageStrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="NEWS_ID"/>
+	</bean>
+
+	<bean name="newsManageStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="NEWS_" />
+		<property name="cipers" value="15" />
+		<property name="fillChar" value="0" />
+	</bean>		
+
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 3. 뉴스정보등록 ==
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/ion/nws/NewsInfoListInqire.do|selectNewsList|"NewsManageDAO.selectNewsList"|
+|저장|/uss/ion/nws/NewsInfoRegist.do|insertNewsInfo|"NewsManageDAO.insertNewsInfo"|
+
+뉴스정보에 관한 기본정보를 입력 저장처리한다.
+
+{{:egovframework:com:uss:ion:nws:NewsInfoRegist.gif|}}
+
+게시일자 옆의 달력 아이콘을 클릭 시 아래와 같은 달력 팝업이 활성화 된다.
+
+{{:egovframework:com:uss:ion:nws:Calendar.gif|}}
+
+파일첨부 시 찾아보기를 클릭하여 파일을 첨부할 수 있다(최대 3개 가능 - 설정가능)
+
+{{:egovframework:com:uss:ion:nws:AtchFile2.gif|}}
+
+
+저장: 입력한 뉴스정보정보들이 저장 처리된다. \\
+목록: **뉴스정보목록조회** 화면으로 이동한다. \\
+----

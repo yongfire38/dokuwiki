@@ -1,0 +1,267 @@
+
+====== 협업 - 부서일정관리======
+
+===== 개요 =====
+**부서일정관리** 서비스는 부서원들의 세미나/강의/교육/회의/기타 일정에 대한 계획을 쉽고 편리하게 관리 할수 있는 서비스로서 \\
+일별 및 주간별로 일정을 조회하고 관리할 수 있다. \\
+부서일정을 등록할 경우에는 지정된 기간에 대해 각각의 일정이 모두 생성되며, 일정을 삭제할 경우에는 기간에 관계없이 해당 일정이 모두 삭제된다. \\
+
+부서일정 등록 시에는 Validator Rule을 통해 필수항목에 대한 조건을 검사하며, \\
+Validator Rule은 **Valator-rules.xml**과 미리 정의된 컴포넌트 Validator xml을 통해 적용된다. \\
+
+**부서일정관리** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+또한 공통으로 지원하고 있는 jAlert와 날짜/시간을 위한 datebox가 사용되고 있으며, 아래와 같은 js 파일에 정의되어 있다.
+  * **EgovMobile.js**
+  * **jquery.mobile.datebox.js**
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능흐름도 ====
+{{egovframework:mcom:부서일정관리_기능흐름도.jpg?740|}}
+
+
+===== 설명 =====
+부서일정관리기능은 크게 **부서일정관리 목록조회**, **부서일정관리 상세조회**, **부서일정관리 내용등록**, **부서일정관리 내용수정** 기능으로 구성되어 있다.
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:mcom:CLD_부서일정관리.JPG?740|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.cop.smt.sdm.web.EgovDeptSchdulManageController.java|부서일정관리관리 Controller Class|
+|Controller|egovframework.mbl.com.cop.smt.sdm.web.EgovMblDeptSchdulManageController.java|부서일정관리관리 모바일 Controller Class|
+|Service|egovframework.com.cop.smt.sdm.service.EgovDeptSchdulManageService.java|부서일정관리관리 Service Class|
+|VO|egovframework.com.cop.smt.sdm.service.DeptSchdulManageVO.java|부서일정관리관리  VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.cop.smt.sdm.service.impl.EgovDeptSchdulManageServiceImpl.java|부서일정관리관리 ServiceImpl Class|
+|DAO|egovframework.com.cop.smt.sdm.service.impl.DeptSchdulManageDao.java|부서일정관리관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/smt/sdm/EgovDeptSchdulManageList.jsp|부서일정관리관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/smt/sdm/EgovDeptSchdulManageRegist.jsp|부서일정관리관리 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/smt/sdm/EgovDeptSchdulManageModify.jsp|부서일정관리관리 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/smt/sdm/EgovDeptSchdulManageDetail.jsp|부서일정관리관리 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/smt/sdm/EgovDeptSchdulManageList.jsp|부서일정관리관리 목록조회 모바일 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/smt/sdm/EgovDeptSchdulManageRegist.jsp|부서일정관리관리 등록 모바일 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/smt/sdm/EgovDeptSchdulManageModify.jsp|부서일정관리관리 수정 모바일 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/smt/sdm/EgovDeptSchdulManageDetail.jsp|부서일정관리관리 상세조회 모바일 페이지|
+|QUERY XML|/egovframework/sqlmap/com/cop/smt/sdm/EgovDeptSchdulManage.xml|부서일정관리관리 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/cop/smt/sdm/EgovDeptSchdulManage.xml|부서일정관리관리 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|부서일정관리관리 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|부서일정관리관리 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 SCHDUL_ID 항목을 추가해야 한다. 
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('SCHDUL_ID','0');
+ </code>
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|일정관리|COMTNSCHDULINFO|일정관리를 관리 한다.|	
+
+===== 관련기능 =====
+
+==== 부서일정관리 주간별목록 ====
+
+=== 비즈니스 규칙 ===
+사전에 등록된 부서일정관리 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할 수 있다. \\
+검색 조건을 선택하고 이전, 다음 버튼을 클릭하여 일정정보를 조회할 수 있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|주간일정 조회|/cop/smt/sdm/EgovDeptSchdulManageWeekList.mdo|EgovDeptSchdulManageWeekList|"DeptSchdulManage.selectDeptSchdulManageRetrieve"|
+|일정관리 등록|/cop/smt/sdm/EgovDeptSchdulManageRegist.mdo|DeptSchdulManageRegist| |
+|일정관리 상세조회|/cop/smt/sim/EgovIndvdlSchdulManageDetail.mdo|EgovIndvdlSchdulManageDetail|"IndvdlSchdulManage.selectIndvdlSchdulManageDetail"|
+
+{{:egovframework:mcom:EgovDeptSchdulManageWeekList_1.jpg|}}
+{{:egovframework:mcom:EgovDeptSchdulManageWeekList_2.jpg|}}
+
+초기 화면은 금주의 **회의** 일정을 보여준다. \\
+검색조건의 선택을 통해 **회의**, **세미나**, **강의**, **교육**, **기타** 일정을 조회할 수 있다.
+
+홈: 홈 화면으로 이동한다. \\
+등록: 일정을 등록하기 위한 **부서일정관리 등록** 화면으로 이동한다. \\
+검색조건선택: 선택된 검색조건과 지정된 날짜에 해당하는 일정을 보여준다. \\
+이전: 이전 주의 일정을 조회한다. \\
+다음: 다음 주의 일정을 조회한다. \\
+일정클릭: **부서일정관리 상세조회** 화면으로 이동한다.
+
+----
+
+==== 부서일정관리 일별목록 ====
+
+
+=== 비즈니스 규칙 ===
+사전에 등록된 부서일정관리 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할 수 있다. \\
+검색 조건을 선택하고 해당 일자를 지정하여 부서일정정보를 조회할 수 있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|일일일정 조회|/cop/smt/sdm/EgovDeptSchdulManageDailyList.mdo|EgovDeptSchdulManageDailyList|"IndvdlSchdulManage.selectIndvdlSchdulManageRetrieve"|
+|일정관리 등록|/cop/smt/sim/EgovIndvdlSchdulManageRegist.mdo|IndvdlSchdulManageRegist| |
+|일정관리 상세조회|/cop/smt/sim/EgovIndvdlSchdulManageDetail.mdo|EgovIndvdlSchdulManageDetail|"IndvdlSchdulManage.selectIndvdlSchdulManageDetail"|
+
+{{:egovframework:mcom:EgovDeptSchdulManageDailyList.jpg|}}
+
+초기 화면은 금일의 **회의** 일정을 보여준다. \\
+검색조건의 선택을 통해 **회의**, **세미나**, **강의**, **교육**, **기타** 일정을 조회할 수 있다.
+
+홈: 홈 화면으로 이동한다. \\
+등록: 일정을 등록하기 위한 **부서일정관리 등록** 화면으로 이동한다. \\
+검색조건선택: 선택된 검색조건과 지정된 날짜에 해당하는 일정을 보여준다. \\
+날짜지정: 지정된 날짜와 선택된 검색조건에 해당하는 일정을 보여준다. \\
+일정클릭: **부서일정관리 상세조회** 화면으로 이동한다.
+
+----
+
+==== 부서일정관리 상세조회 ====
+
+=== 비즈니스 규칙 ===
+부서일정관리 목록 화면 또는 전체일정 목록 화면에서 일정 클릭시 이동되는 화면으로서 부서일정에 대한 상세정보를 보여준다. \\
+일정의 수정, 삭제, 목록조회 처리와 함께 일지관리 목록조회 화면으로 이동할 수 있다.
+
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/cop/smt/sdm/EgovDeptSchdulManageDailyView.mdo|EgovDeptSchdulManageDailyView| |
+| |/cop/smt/sdm/EgovDeptSchdulManageWeekView.mdo|EgovDeptSchdulManageWeekView| |
+|삭제|/cop/smt/sdm/EgovDeptSchdulManageDelete.mdo|EgovDeptSchdulManageDelete|"DeptSchdulManage.deleteDiaryManage"|
+| | | |"DeptSchdulManage.deleteDeptSchdulManage"|
+|수정|/cop/smt/sdm/EgovDeptSchdulManageModifyView.mdo|DeptSchdulManageModifyView| |
+
+{{:egovframework:mcom:EgovDeptSchdulManageDetail.jpg|}}
+
+뒤로: 부서일정관리 목록 화면 또는 전체일정 목록 화면으로 이동한다. \\
+일지관리: [[모바일일지관리|일지관리]] 목록으로 이동한다. \\
+수정: 수정하기 위해서는 하단의 수정 버튼을 통해서 **부서일정관리 수정** 화면으로 이동한다. \\
+삭제: 삭제하기 위해서는 하단의 삭제 버튼을 통해서 삭제할 수 있다. \\
+목록: **부서일정관리 목록** 화면으로 이동한다. \\
+
+----
+
+==== 부서일정관리 등록 ====
+
+=== 비즈니스 규칙 ===
+부서일정관리에 관한 기본정보를 입력 저장처리한다. 등록 시에 입력하는 부서와 담당자 정보는 **부서목록조회팝업(Dialog)**과 **담당자목록조회팝업(Dialog)**을 통하여 검색 후 선택할 수 있다.\\
+
+저장처리 시 SCHDUL_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 Primary Key => SCHDUL_ID(20자리) : SCHDUL_(7자리) + 일련번호(13자리)로 자동생성 부여된다.
+
+	<!-- IdGnrService... START-->			
+	<bean name="diaryManageIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="DeptSchdulManageInfotrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="SCHDUL_ID"/>
+	</bean>
+	<bean name="DeptSchdulManageInfotrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="DIARY_" />
+		<property name="cipers" value="14" />
+		<property name="fillChar" value="0" />
+	</bean>
+	<!-- IdGnrService... END-->		
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/cop/smt/sdm/EgovDeptSchdulManageDailyView.mdo|EgovDeptSchdulManageDailyView| |
+| |/cop/smt/sdm/EgovDeptSchdulManageWeekView.mdo|EgovDeptSchdulManageWeekView| |
+|저장|/cop/smt/sdm/EgovDeptSchdulManageRegistActor.mdo|DeptSchdulManageRegistActor|"DeptSchdulManage.insertDeptSchdulManage"|
+|팝업|/uss/olp/mgt/EgovMeetingManageLisAuthorGroupPopupView.mdo|EgovMeetingManageLisAuthorGroupPopupView| |
+| |/uss/olp/mgt/EgovMeetingManageLisEmpLyrPopupView.mdo|EgovMeetingManageLisEmpLyrPopupView| |
+
+{{:egovframework:mcom:EgovDeptSchdulManageRegist_1.jpg|}}
+{{:egovframework:mcom:EgovDeptSchdulManageRegist_2.jpg|}}
+
+뒤로: **부서일정관리 목록** 화면으로 이동한다. \\
+저장: 입력한 부서일정관리 정보들이 저장 처리된다. \\
+목록: **부서일정관리 목록** 화면으로 이동한다. \\
+
+----
+
+==== 부서일정관리 수정 ==== 
+
+
+=== 비즈니스 규칙 ===
+수정된 부서일정관리 정보를 저장 처리한다.  수정 시에 입력하는 부서와 담당자 정보는 **부서목록조회팝업(Dialog)**과 **담당자목록조회팝업(Dialog)**을 통하여 검색 후 선택할 수 있다.\\
+
+
+=== 관련코드  ===
+N/A
+
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/cop/smt/sdm/EgovDeptSchdulManageDailyView.mdo|EgovDeptSchdulManageDailyView| |
+| |/cop/smt/sdm/EgovDeptSchdulManageWeekView.mdo|EgovDeptSchdulManageWeekView| |
+|저장|/cop/smt/sdm/EgovDeptSchdulManageModifyActor.mdo|DeptSchdulManageModifyActor|"DeptSchdulManage.updateDeptSchdulManage"|
+|팝업|/uss/olp/mgt/EgovMeetingManageLisAuthorGroupPopupView.mdo|EgovMeetingManageLisAuthorGroupPopupView| |
+| |/uss/olp/mgt/EgovMeetingManageLisEmpLyrPopupView.mdo|EgovMeetingManageLisEmpLyrPopupView| |
+
+{{:egovframework:mcom:EgovDeptSchdulManageModify_1.jpg|}}
+{{:egovframework:mcom:EgovDeptSchdulManageModify_2.jpg|}}
+
+뒤로: **부서일정관리 상세조회** 화면으로 이동한다. \\
+수정: 해당 부서일정을 수정 처리한다.  \\ 
+목록: **부서일정관리 목록** 화면으로 이동한다. \\ 
+
+----
+
+
+
+===== 참고자료 =====
+
+  * 부서일정관리 참조(기존 웹 버전) : [[부서일정관리]]
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

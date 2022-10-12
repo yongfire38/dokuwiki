@@ -1,0 +1,22 @@
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 4. 용어사전 수정 ==
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/olh/wor/WordDicaryUpdt.do|updateWordDicary|"wordDicaryDAO.updateWordDicary_S"|
+|목록|/uss/olh/wor/WordDicaryListInqire.do|selectWordDicaryList|"WordDicaryDAO.selectWordDicaryList_D"|
+
+{{:egovframework:com:uss:olh:wor:WordDicaryUpdt.gif|}}
+
+수정: 수정 입력한 용어사전항목들이 저장 처리된다. \\
+목록: **용어사전목록조회** 화면으로 이동한다. \\
+----

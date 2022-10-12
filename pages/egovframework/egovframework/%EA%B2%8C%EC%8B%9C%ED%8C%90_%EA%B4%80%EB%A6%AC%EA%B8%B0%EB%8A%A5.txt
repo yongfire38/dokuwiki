@@ -1,0 +1,139 @@
+====== 게시판 관리기능 ======
+게시판을 등록하고 등록된 게시판의 목록을 조회하고 게시판의 속성을 수정할 수 있는 기능을 제공한다.
+----
+==== 관련 소스 (주 기능)====
+
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.cop.bbs.EgovBBSAttributeManageController.java|게시판 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.bbs.service.EgovBBSAttributeManageService.java|게시판 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovBBSAttributeManageServiceImpl.java|게시판 관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.cop.bbs.service.BoardMaster.java|게시판 관리를 위한 모델 클래스|
+| |egovframework.com.cop.bbs.service.BoardMasterVO.java|게시판 관리를 위한 VO 클래스|
+|DAO|egovframework.com.cop.bbs.service.impl.EgovBBSAttributeManageDAO.java|게시판 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBoardMstrRegist.jsp|게시판 생성을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBoardMstrUpdt.jsp|생성된 게시판 수정을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBoardMstrList.jsp|생성된 게시판 조회를 위한 jsp페이지|
+| | | |
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBdMstrRegistByTrget.jsp|동호회/커뮤니티의 게시판 생성을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBdMstrUpdtByTrget.jsp|동호회/커뮤니티의 생성된 게시판 수정을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBBSListByTrget.jsp|동호회/커뮤니티의 생성된 게시판 조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/com/EgovTemplateInqirePopup.jsp|게시판 템플릿 정보 조회를 위한 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL.xml|게시판 템플릿 정보 조회를 위한 jsp페이지|
+
+ 
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|게시판속성|COMTNBBSMASTER|게시판의 속성정보를 관리|
+|게시판이용정보|COMTNBBSUSE|게시판의 이용정보를 관리|
+|코드정보|COMTCCMMNDETAILCODE|코드 정보를 관리|
+
+
+=== ERD ===
+
+ERD 추가
+
+
+
+----
+
+
+==== 비즈니스 규칙 ====
+
+게시판을 생성할 수 있는 위치는 크게 두 군데(시스템, 동호회/커뮤니티)로 나뉘며 시스템에서 게시판을 생성한 경우
+해당 게시판은 SYSTEM_DEFAULT_BOARD의 속성으로 게시판 이용정보(COMTNBBSUSE) 테이블에 등록되며, 
+이렇게 등록된 게시판은 시스템의 모든 사용자가 활용할 수 있는 게시판이 된다.
+동호회/커뮤니티에서 생성된 게시판은 해당 동호회/커뮤니티에서 사용 가능한 속성으로 등록되며 이때 해당 동호회/커뮤니티의 
+소속 사용자가 사용할 수 있도록 게시판 이용정보에 등록되게 된다.
+
+
+=== 코드 속성 ===
+
+게시판에서 사용되는 코드 및 그에 따른 설정 값의 반영사항은 다음과 같다.
+
+^코드분류^코드분류명^코드ID^코드명^설정반영사항^
+|COM004|게시판유형|BBST01|일반게시판|일반적인 형태의 게시판|
+|COM004|게시판유형|BBST02|익명게시판|작성자의 이름이 나오지 않는 익명게시판|
+|COM004|게시판유형|BBST03|공지게시판|공지사항을 입력가능한 게시판|
+|COM004|게시판유형|BBST04|방명록|방명록 게시판|
+|COM009|게시판속성|BBSA01|유효게시판|게시 시작/종료일을 지정할 수 있는 게시판|
+|COM009|게시판속성|BBSA02|갤러리|첨부된 이미지 파일을 본문에 보여줄 수 있는 게시판|
+|COM009|게시판속성|BBSA03|일반게시판|일반적인 형태의 게시판|
+
+
+
+----
+
+==== 관련화면 및 수행매뉴얼 ====
+
+
+=== 게시판 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/cop/bbs/SelectBBSMasterInfs.do|selectBBSMasterInfs|"BBSAttributeManageDAO.selectBBSMasterInfs",|
+| | | |”BBSAttributeManageDAO.selectBBSMasterInfsCnt”|
+|등록|/cop/bbs/addBBSMaster.do|addBBSMaster|"CmmUseDAO.selectCmmCodeDetail"|
+|조회(커뮤니티,동호회)|/cop/bbs/selectBdMstrListByTrget.do|selectBdMstrListByTrget|"BBSAttributeManageDAO.selectBdMstrListByTrget”,|
+| | | |”BBSAttributeManageDAO.selectBdMstrListCntByTrget”|
+|등록(커뮤니티,동호회)|/cop/bbs/addBBSMasterByTrget.do|addBBSMasterByTrget|"CmmUseDAO.selectCmmCodeDetail"|
+
+게시판 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 게시판명, 게시판유형에 대해서 수행된다. 페이지 당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:cop:bdmstr1.gif|}}
+
+신규 게시판을 생성하기 위해서는 상단의 등록 버튼을 통해서 **게시판 생성** 화면으로 이동하고 기존 게시판의 속성정보를 수정하고자 하는 경우
+해당 게시판 명을 클릭하여 상세 조회 및 수정기능을 제공하는 **게시판 수정** 화면으로 이동한다.
+
+----
+
+=== 게시판 생성 ===
+
+^Action^URL^Controller method^QueryID^
+|등롣|/cop/bbs/insertBBSMasterInf.do|insertBBSMasterInf|"BBSAttributeManageDAO.insertBBSMasterInf"|
+|목록|/cop/bbs/SelectBBSMasterInfs.do|selectBBSMasterInfs|"BBSAttributeManageDAO.selectBBSMasterInfs”|
+| | | |”BBSAttributeManageDAO.selectBBSMasterInfsCnt”|
+|등록(커뮤니티,동호회)|/cop/bbs/insertBdMstrByTrget.do|insertBdMstrByTrget|"BBSAttributeManageDAO.insertBBSMasterInf"|
+|목록(커뮤니티,동호회)|/cop/bbs/selectBdMstrListByTrget.do|selectBdMstrListByTrget|"BBSAttributeManageDAO.selectBdMstrListByTrget”|
+| | | |”BBSAttributeManageDAO.selectBdMstrListCntByTrget”|
+
+
+게시판의 속성정보를 입력한 뒤 게시판을 생성한다. 생성이 성공적으로 종료되면 **2.2.1 게시판 목록조회** 화면으로 이동한다.
+
+{{:egovframework:bdmstr2.gif|}}
+
+게시판을 생성함에 있어서 파일첨부가 불가능하다고 선택한 경우에도 첨부가능 파일 숫자를 세팅이 가능한데 이는 실제 공통서비스 기능을 사용할 곳에서
+관련 비즈니스 규칙에 따라서 화면의 제어를 하는 것을 권장하고 있기 때문이다. 실제 공통서비스의 기능에서 입력오류등을 내는 부분이 아닌 경우에
+대해서 까지 강제적인 제어를 하는 부분은 드물게 구성되어있다.
+
+----
+
+=== 게시판 수정 ====
+
+^Action^URL^Controller method^QueryID^
+|수정|/cop/bbs/UpdateBBSMasterInf.do|updateBBSMasterInf|"BBSAttributeManageDAO.updateBBSMasterInf"|
+|삭제|/cop/bbs/DeleteBBSMasterInf.do|deleteBBSMasterInf|"BBSAttributeManageDAO.deleteBBSMasterInf"|
+|목록|/cop/bbs/SelectBBSMasterInfs.do|selectBBSMasterInfs|"BBSAttributeManageDAO.selectBBSMasterInfs”|
+| | | |”BBSAttributeManageDAO.selectBBSMasterInfsCnt”|
+|수정(커뮤니티,동호회)|/cop/bbs/UpdateBBSMasterInfByTrget.do|updateBBSMasterInfByTrget|"BBSAttributeManageDAO.updateBBSMasterInf"|
+|삭제(커뮤니티,동호회)|/cop/bbs/DeleteBBSMasterInfByTrget.do|deleteBBSMasterInfByTrget|"BBSAttributeManageDAO.deleteBBSMasterInf"|
+|목록(커뮤니티,동호회)|/cop/bbs/selectBdMstrListByTrget.do|selectBdMstrListByTrget|"BBSAttributeManageDAO.selectBdMstrListByTrget”|
+| | | |”BBSAttributeManageDAO.selectBdMstrListCntByTrget"|
+
+{{:egovframework:bdmstr3.gif|}}
+
+게시판의 속성정보중 변경이 가능한 정보를 입력한 뒤 수정 버튼을 누르면 게시판의 속성정보를 변경하며 변경이 성공적으로 종료되면 **게시판 목록조회** 화면으로 이동한다.
+삭제버튼을 누르는 경우 해당 게시판은 더 이상 활용이 불가능한 상태가 되며(물리적인 삭제는 되지 않음) 삭제작업이 성공적으로 종료되면 **게시판 목록조회** 화면으로 이동한다.
+
+
+----
+
+=== 템플릿 조회 팝업 ===
+해당 게시판에서 활용할 템플릿 정보를 조회하여 선택한다. 
+
+{{:egovframework:bdmstr4.gif|}}
+
+게시판 템플릿의 변경을 통해서 달라지는 부분은 게시판 관련 css의 변경이 있다.
+

@@ -1,0 +1,395 @@
+====== JFile ======
+
+===== 개요 =====
+
+  * jfile 업/다운로드 컴포넌트는 AJAX 기반의 업그레이드 된 기술로 개발자들이 쉽게 파일 업로드 컴포넌트를 다룰 수 있도록 해 준다. SI 프로젝트에서 빈번히 요구하는 보안 지침 사항, 또는 사용자 편의성에 의거하여 다양한 요구사항이 나올 때 여러분들이 클래스 수정없이 단순한 설정 값 변경만으로 반영 할 수 있도록 도와준다. 아래 내용은 공공 프로젝트의 요구사항으로 jfile 컴포넌트는 아래의 요구사항을 쉽게 적용 할 수 있도록 도와 준다. 예를 들어 보안 지침사항 1)번과 사용자편의성 7)번 만 적용 하고자 할 경우 클래스 수정 없이 설정값 변경으로 쉽게 반영 할 수 있다. 
+
+  * 본 공통컴포넌트는 표준프레임워크 오픈커뮤니티 슈퍼개발자K(2012년 개최) 우승 프로젝트인 "대용량 파일 업다운로드/암호화 프로젝트"(정호열 커미터)를 표준프레임워크 공통컴포넌트로 적용하여 제공한다.
+ 
+  * 참조 : https://open.egovframe.go.kr/cop/bbs/selectProjectArticle.do?projId=8&projTyCode=PROJ02
+
+=== <보안지침사항> ===
+
+  - 회원이 업로드한 파일 위치가 DMZ 영역에 있을 경우에는 파일자체를 암호화 해야함
+   - 파일 암호화 알고리즘은 고객사가 신뢰 할 수 있는 알고리즘으로 쉽게 변경 가능해야 함
+   - 파일이 관리되는 각각의 고객사 폴더별로 암호화 알고리즘을 변경 해야 할 시에도 조치 가능해야 함
+   - 파일명을 암호화 해야 함
+
+=== <사용자편의성> ===
+
+  - 크로스 부라우징을 지원해야 함
+   - ajax 기반으로 동작해야 함
+   - 파일 선택시 다중 선택이 가능해야 함
+   - 파일이 업로드 될 때 progressbar 의 움직임으로 업로드 진행상황을 확인 할 수 있어야 함
+   - 이미지파일인 경우 파일을 다운받기 전에 미리보기(preview) 가능해야 함
+   - 다운받을 파일이 복수개 일 경우 한번에 압축하여 다운로드 받을 수 있어야 함
+   - 해당업무별로 파일저장 경로를 다르게 관리 할 수 있어야 함
+
+=== <고객 접근 통계> ===
+
+  - 다운로드 시 다운로드 건수 이력을 남겨야 함
+
+=== <이슈 사항> ===
+
+  - 회원수 증가로 인해 월별로 생성해 놓은 디렉터리가 파일 30만건 이상 일 경우 더 이상 파일을 업로드 할수 없음
+   - 서버에 파일이 저장되는 root 폴더의 위치를 업무마다 다르게 저장하고 해야함. 예) 행정시스템 : /app/s001, 대민시스템 : /app/k001, 내부시스템 : /app/w001
+  - 시스템구성환경이 복수개의 WebServer(아파치, Webtobe...) 와 복수개의 WAS(웹로직,웹스피어...) 로 구성 되어 있을경우 파일업로드 완료 시점에 ftp 또는 sftp 를 통해 웹서버로 전송되야 함 (이미지는 웹서버에서 <img src="이미지 URL"/> 형태로 사용하기 때문이며, 이미지를 웹서버로 전송하지 않고 WAS 에서 byte[] 형태로 서비스 할 수 있게 해주는 방법으로 구현했다가 로드러너로 부하테스트 시 CPU, Memory 과다 부하가 발생할 수 있음. 즉 파일 완료시점에 사용자가 핸들링 할 수 있는 User 이벤트를 제공해야 함) 
+
+
+
+===== 시작하기  =====
+
+=== <관련 설정 > ===
+  - 테이블 생성
+
+== Script (altibase, oracle, tibero 등) ==
+<code sql>
+CREATE TABLE J_ATTACHFILE 
+(
+	FILE_ID VARCHAR2(13) NOT NULL,
+	FILE_SEQ INTEGER NOT NULL,
+	FILE_NAME VARCHAR2(100) NOT NULL,
+	FILE_SIZE INTEGER,
+	FILE_MASK VARCHAR2(100),
+	DOWNLOAD_COUNT INTEGER,
+	DOWNLOAD_EXPIRE_DATE VARCHAR2(8),
+	DOWNLOAD_LIMIT_COUNT INTEGER,
+	REG_DATE DATE,
+	DELETE_YN VARCHAR2(1),
+CONSTRAINT  J_ATTACHFILE_PK PRIMARY KEY (FILE_ID, FILE_SEQ)
+);
+</code>
+
+== Script (cubrid 등) ==
+<code sql>
+CREATE TABLE J_ATTACHFILE 
+(
+	FILE_ID VARCHAR(13) NOT NULL,
+	FILE_SEQ INTEGER NOT NULL,
+	FILE_NAME VARCHAR(100) NOT NULL,
+	FILE_SIZE INTEGER,
+	FILE_MASK VARCHAR(100),
+	DOWNLOAD_COUNT INTEGER,
+	DOWNLOAD_EXPIRE_DATE VARCHAR(8),
+	DOWNLOAD_LIMIT_COUNT INTEGER,
+	REG_DATE DATETIME,
+	DELETE_YN VARCHAR(1),
+CONSTRAINT  J_ATTACHFILE_PK PRIMARY KEY (FILE_ID, FILE_SEQ)
+);
+</code>
+
+== Script (mysql등) ==
+<code sql>
+CREATE TABLE J_ATTACHFILE 
+(
+	FILE_ID VARCHAR(13) NOT NULL,
+	FILE_SEQ INT NOT NULL,
+	FILE_NAME VARCHAR(100) NOT NULL,
+	FILE_SIZE INT,
+	FILE_MASK VARCHAR(100),
+	DOWNLOAD_COUNT INT,
+	DOWNLOAD_EXPIRE_DATE VARCHAR(8),
+	DOWNLOAD_LIMIT_COUNT INT,
+	REG_DATE DATETIME,
+	DELETE_YN VARCHAR(1),
+PRIMARY KEY (FILE_ID, FILE_SEQ)
+);
+
+CREATE UNIQUE INDEX J_ATTACHFILE_PK ON J_ATTACHFILE
+(
+	FILE_ID, FILE_SEQ
+);
+</code>
+
+   - AJAX 처리를 위하여 BeanNameViewResolver 등록이 필요 (WEB-INF/config/egovframework/springmvc/egov-com-serlvet.xml 참조) 
+
+== BeanNameViewResolver ==
+<code xml>
+<bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/> 
+</code>
+
+
+
+===== API =====
+  * JFile API는 개발자가 직접 JFileController에 메서드를 추가해야 하거나 변경해야 할 경우 JFileService API를 사용해야 한다. 
+아래의 내용은 JFile V1.0 버전에서 제공하는 JFileService API 목록이다.
+
+<code java>
+/* 
+ * 파일을 업로드 한다.
+ * @param fileId 파일 아이디.
+ * @param multipartFile 멀티파트 파일.
+ * @param uploadPath 업로드 경로.
+ * @param fileSeqs 파일 시퀀스 목록.
+ */
+public void upload(String fileId, MultipartFile multipartFile, String uploadPath, Object[] fileSeqs) ;
+
+/*
+ * 파일을 업로드 한다.
+ * @param fileId 파일 아이디.
+ * @param multipartFile 멀티파트 파일.
+ * @param uploadPath 업로드 경로.
+ */
+public void upload(String fileId, MultipartFile multipartFile, String uploadPath) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param fileId 파일아이디.
+ * @param multipartFile 멀티파트 파일.
+ * @param fileSeqs 파일 시퀀스 목록.
+ */
+public void upload(String fileId, MultipartFile multipartFile, Object[] fileSeqs) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param fileId 파일아이디.
+ * @param multipartFile 멀티파트 파일.
+ */
+public void upload(String fileId, MultipartFile multipartFile) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param fileId 파일 아이디.
+ * @param multipartFiles 멀티파트 파일.
+ * @param uploadPath 업로드 경로.
+ * @param fileSeqs 파일 시퀀스 목록.
+ */
+public void upload(String fileId, Collection<MultipartFile> multipartFiles, String uploadPath, Object[] fileSeqs) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param fileId 파일 아이디.
+ * @param multipartFiles 멀티파트 파일.
+ * @param uploadPath 업로드 경로.
+ */
+public void upload(String fileId, Collection<MultipartFile> multipartFiles, String uploadPath) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param fileId 파일 아이디.
+ * @param multipartFiles 멀티파트 파일.
+ * @param fileSeqs 파일 시퀀스 목록.
+ */
+public void upload(String fileId, Collection<MultipartFile> multipartFiles, Object[] fileSeqs) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param fileId 파일 아이디.
+ * @param multipartFiles 멀티파트 파일.
+ */
+public void upload(String fileId, Collection<MultipartFile>) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param multipartFile 멀티파트 파일.
+ * @param uploadPath 업로드 경로.
+ */
+public void upload(MultipartFile multipartFile, String uploadPath) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param multipartFile 멀티파트 파일.
+ */
+public void upload(MultipartFile multipartFile) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param multipartFiles 멀티파트 파일.
+ * @param uploadPath 업로드 경로.
+ */
+public void upload(Collection<MultipartFile> multipartFiles, String uploadPath) ;
+
+
+/*
+ * 파일을 업로드 한다.
+ * @param multipartFiles 멀티파트 파일.
+ */
+public void upload(Collection<MultipartFile> multipartFiles) ;
+
+
+/*
+ * 파일 아이디를 조회한다.
+ * @param fileId 파일아이디.
+ * @param fileSeqs 파일 시퀀스 목록.
+ * @return String 파일 아이디.
+ */
+public String getFileId(String fileId, Object[] fileSeqs);
+
+
+/*
+ * 파일 아이디를 조회한다.
+ * @param fileId 파일아이디.
+ * @return String 파일 아이디.
+ */
+public String getFileId(String fileId);
+
+
+/*
+ * 파일 아이디를 조회한다.
+ * @return String 파일 아이디.
+ */
+public String getFileId();
+
+
+/*
+ * 파일업로드가 완료된 후 처리 작업을 수행한다.
+ * @param fileId 파일아이디.
+ * @param uploadPath 업로드 경로.
+ */
+public void executeAfterUploadCompleted(String fileId, String uploadPath);
+
+
+/*
+ * 파일업로드가 완료된 후 처리 작업을 수행한다.
+ * @param fileId 파일아이디.
+ */
+public void executeAfterUploadCompleted(String fileId);
+
+
+/*
+ * 첨부파일 객체.
+ * @param filePullPath 디렉터리를 포함한 전체 경로.
+ * @return File 파일 객체.
+ */
+public File getFile(String filePullPath);
+
+
+/*
+ * 첨부파일 객체.
+ * @param fileId 파일 아이디.
+ * @return File 파일 객체.
+ */
+public File getFileBySequence(String fileId);
+
+
+/*
+ * 첨부파일 객체.
+ * @param fileId 파일 아이디.
+ * @param fileSeq 파일 시퀀스 목록.
+ * @return File 파일 객체.
+ */
+public File getFileBySequence(String fileId);
+
+
+/*
+ * 첨부파일 객체.
+ * @param fileId 파일 아이디.
+ * @param fileSeq 파일 시퀀스 목록.
+ * @param filePath 파일 경로.
+ * @return File 파일 객체.
+ */
+public File getFileBySequence(String fileId, String fileSeq, String filePath);
+
+
+/*
+ * JFile 객체.
+ * @param fileId 파일 아이디.
+ * @return JFile[] 암호화 정보 및 마스킹 파일명을 포함하고 있는 파일 객체.
+ */
+public JFile[] getFiles(String fileId);
+
+
+/*
+ * JFile 객체.
+ * @param fileId 파일 아이디.
+ * @param uploadPath 파일 경로
+* @return JFile[] 암호화 정보 및 마스킹 파일명을 포함하고 있는 파일 객체.
+ */
+public JFile[] getFiles(String fileId, String uploadPath);
+
+</code>
+
+
+===== Options =====
+
+  * jfile 업/다운로드 컴포넌트는 태그 라이브러리를 활용하여 개발자 들이 쉽고 빠르게 개발 할 수 있도록 유도한다.
+
+==== option 설명 ====
+
+  * •Jsp 페이지 상단에 <%@ taglib uri="http://www.egovframe.go.kr/tags/ext/jfile/jsp" prefix="jwork"%> 태그를 추가
+
+== JSP 태그 라이브러리 부분 ==
+
+<code xml>
+① <jwork:fileuploader
+ ② objectId="fileUploadObj1"
+ ③ uploadCompletedEvent="uploadCompleted1"
+ ④ beanId="jfileService"
+ ⑤ fileType="image"
+ ⑥ maxFileSize="100"
+ ⑦ maxFileCount="30"
+ ⑧ usePreview="true"
+ ⑨ useSecurity="false"
+ ⑩ uploadMode="db"
+ /> 
+</code>
+
+== script 부분 ==
+
+<code javascript>
+<script>
+ // 전송 버튼 클릭 시
+function send1(){ 
+	fileUploadObj1.startUpload();
+ }
+
+ // 태그라이브러리 에서 등록한 업로드 완료 이벤트 함수 명
+function uploadCompleted1(){
+ fileUploadObj1.refresh();
+ }
+ </script> 
+</code>
+
+  * ① jwork:fileuploader jfile 태그라이브러리의 접두어 입니다. 
+  * ② objectId="fileUploadObj1" jfile 컴포넌트를 식별 할 수 있는 유일키 오브젝트 아이디 입니다.
+  * ③ uploadCompletedEvent="uploadCompleted1" jfile 컴포넌트가 파일 업로드를 완료 했을 때 발생하는 이벤트 함수명을 등록합니다.
+  * ④ beanId="jfileService" 는 [프로젝트루트폴더]/src/main/resources/egovframework/spring/com/context-jfile.xml 등록 되어 있는 beanId 입니다.
+  * ⑤ fileType="image" 업로드 할 파일 유형 입니다.
+  * ⑥ maxFileSize="100" 최대로 업로드 할 수 있는 파일사이즈 입니다.
+  * ⑦ maxFileCount="30" 최대로 업로드 할 수 있는 파일 갯 수 입니다.
+  * ⑧ usePreview="true" 미리 보기 기능을 show/hide 할 수 있습니다.
+  * ⑨ useSecurity="false" 파일을 암호화 할지 여부를 지정 할 수 있습니다.
+  * ⑩ uploadMode="db" 'db', 'file' 모두 두 가지가 있으면 'db' 모드 일 경우에만 파일업로드 완료후 fileId 값을 생성 해 줍니다
+
+
+===== Configuration =====
+
+  * Spring 컨테이너가 jfile 에서 서비스 하는 bean 들을 읽어 들일 수 있도록 xml 파일을 설정하는 부분이다. 
+아래의 경우와 같이 고객사에서 요구하는 상황이 발생 했을시 개발자는 클래스 수정 없이 xml 설정 파일[context-jfile.xml]정보와 Jsp파일의 태그라이브러리에서 beanId 값의 변경 만으로 아래의 상황을 처리 할 수 있다.
+
+  - 기본적인 파일 업로드를 제공하는 서비스 설정 형태
+
+== /src/main/resources/egovframework/spring/com/context-jfile.xml ==
+
+<code xml>
+ ① <aop:aspectj-autoproxy proxy-target-class="false" / >
+ ② <bean class="egovframework.com.ext.jfile.aspect.MultipartResolverDisablingAspect" />
+ ③ <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
+ ④ <bean id="download" class="egovframework.com.ext.jfile.view.DownloadView" />
+ ⑤ <bean id="jsonView" class="egovframework.com.ext.jfile.view.JSonView" />
+ ⑥ <bean id="cipherService" class="egovframework.com.ext.jfile.security.service.CipherServiceImpl" >
+        <property name="jcrypto" >
+           <bean class="egovframework.com.ext.jfile.security.GenericJCrypto"/ >
+        </property >
+     </bean>
+</code>
+
+①, ② 번은 멀티플 파일 업로드시 동일한 이름의 여러개 파일을 올리는 것을 지원하도록 해주는 방법이다.
+ 
+③ 번은 Spring 에서 지원하는 멀티파트 리졸버 이다.
+
+④ 번은 파일 다운로드를 처리하는 View 이다. 
+
+⑤ 번은 JSONObject 형태의 데이타를 주고 받을 때 사용되는 view 이다. 
+
+⑥ 번은 파일 암호화를 지원하기 위한 서비스이다. JFile 태그라이브러리에서 useSecurity='true' 일 때만 동작한다. 
+

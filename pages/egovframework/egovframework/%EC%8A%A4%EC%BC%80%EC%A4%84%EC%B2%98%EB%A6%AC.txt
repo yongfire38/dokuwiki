@@ -1,0 +1,103 @@
+====== 시스템관리 - 스케줄처리 ======
+===== 개요 =====
+
+**배치스케줄처리**는 배치작업을 실행하기위한 배치스케줄을 등록하는 기능을 제공한다.
+===== 설명 =====
+
+  * **배치스케줄처리**는 배치스케줄을 등록하기 위한 목적으로 배치스케줄의 등록, 수정, 삭제, 조회, 목록조회의 기능을 수반한다.
+
+    ① 배치스케줄목록조회 : 배치스케줄으로 정의된 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 배치스케줄등록 : 배치스케줄정보를 등록하고, 등록 결과를 조회한다.
+    ③ 배치스케줄수정 : 기 등록된 배치스케줄정보의 항목들을 수정한다.
+    ④ 배치스케줄삭제 : 기 등록된 배치스케줄정보를 삭제한다.
+    ⑤ 배치스케줄조회 : 등록된 배치스케줄정보를 조회한다. 
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.sym.bat.web.EgovBatchSchdulController.java|배치스케줄 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.sym.bat.service.EgovBatchSchdulService.java|배치스케줄 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.sym.bat.service.impl.EgovBatchSchdulServiceImpl.java|배치스케줄 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.sym.bat.service.impl.BatchSchdulDAO.java|배치스케줄 관리를 위한 데이터처리 클래스|
+|Model|egovframework.com.sym.bat.service.BatchSchdul.java|배치스케줄 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/sym/bat/EgovBatchSchdulList.jsp|배치스케줄 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/sym/bat/EgovBatchSchdulRegist.jsp|배치스케줄 등록를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/sym/bat/EgovBatchSchdulUpdt.jsp|배치스케줄 수정를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/sym/bat/EgovBatchSchdulDetail.jsp|등록된 배치스케줄를 조회하기 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/sym/bat/EgovBatchSchdul_SQL_*.xml|배치스케줄관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:sym:bat:배치스케줄_클래스.png?740|}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|배치스케줄|COMTNBATCHSCHDUL|배치스케줄정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+|배치스케줄요일|COMTNBATCHSCHDULDFK|배치스케줄요일정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **BATCH_SCHDUL_ID** 항목을 추가한다. 
+
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('BATCH_SCHDUL_ID','0');
+ </code>
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 배치스케줄 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/sym/bat/getBatchSchdulList.do|selectBatchSchdulList|"BatchSchdulDAO.selectBatchSchdulList"|
+|조회|/sym/bat/getBatchSchdulList.do|selectBatchSchdulList|"BatchSchdulDAO.selectBatchSchdulListCnt"|
+
+배치스케줄 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 배치작업명,배치프로그램에 대해서 수행된다.
+
+{{:egovframework:com:sym:bat:배치스케줄목록조회.png|}}
+
+조회 : 기 등록된 배치스케줄의 목록을 조회한다.\\
+등록 : 신규 배치스케줄를 등록하기 위해서는 상단의 등록 버튼을 통해서 **배치스케줄 등록** 화면으로 이동한다.\\
+----
+
+=== 배치스케줄 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/sym/bat/addBatchSchdul.do|insertBatchSchdul|"BatchSchdulDAO.insertBatchSchdul"|
+
+배치스케줄의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:sym:bat:배치스케줄등록.png|}}
+
+저장 : 신규 배치스케줄를 등록하기 위해서는 배치스케줄 속성을 입력한 뒤 상단의 **저장 버튼**을 통해서 배치스케줄를 등록한다.\\
+목록 : 배치스케줄 목록조회 화면으로 이동한다.\\
+----
+
+=== 배치스케줄 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/sym/bat/updateBatchSchdul|updateBatchSchdul|"BatchSchdulDAO.updateBatchSchdul"|
+
+배치스케줄의 속성정보를 변경한 후 저장한다. 
+
+{{:egovframework:com:sym:bat:배치스케줄수정.png|}}
+
+저장 : 기 등록된 배치스케줄 속성을 수정한 뒤 상단의 **저장 버튼**을 통해서 배치스케줄정보를 수정한다.\\
+목록 : 배치스케줄 목록조회 화면으로 이동한다.\\
+----
+
+=== 배치스케줄 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/sym/bat/getBatchSchdul.do|selectBatchSchdul|"BatchSchdulDAO.selectBatchSchdul"|
+|삭제|/sym/bat/deleteBatchSchdul.do|deleteBatchSchdul|"BatchSchdulDAO.deleteBatchSchdul"|
+
+배치스케줄의 속성정보를 조회한다.
+
+{{:egovframework:com:sym:bat:배치스케줄상세조회.png|}}
+
+수정 : 기 등록된 배치스케줄 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 배치스케줄수정화면으로 이동한다.\\
+삭제 : 기 등록된 배치스케줄정보를 삭제한다.\\
+목록 : 배치스케줄 목록조회 화면으로 이동한다.\\
+----

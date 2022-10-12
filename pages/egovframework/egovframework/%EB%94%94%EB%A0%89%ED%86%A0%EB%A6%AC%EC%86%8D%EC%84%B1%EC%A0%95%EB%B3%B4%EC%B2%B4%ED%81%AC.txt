@@ -1,0 +1,88 @@
+====== 디렉토리 속성정보 체크 ======
+
+===== 개요 =====
+디렉토리 속성정보인 디렉토리명, 생성일자(최종수정일자), 소유계정, 읽기권한, 쓰기권한, 접근권한, 사이즈 정보를 확인한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 디렉토리명을 확인하는 기능
+    ② 디렉토리 최종수정일자를 확인하는 기능
+    ③ 디렉토리의 소유계정을 확인하는 기능
+    ④ 디렉토리의 읽기권한을 확인하는 기능
+    ⑤ 디렉토리의 쓰기권한을 확인하는 기능
+    ⑥ 디렉토리의 접근권한을 확인하는 기능
+    ⑦ 디렉토리의 사이즈를 확인하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovDrctryInfoCeck.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|String|getName(String targetDirPath)|디렉토리명 조회|디렉토리명을 조회한다. 성공시 디렉토리명, 실패시 블랭크를 리턴|
+|String|getLastModifiedDateFromFile(String targetDirPath)|디렉토리 수정일자 조회|디렉토리 최종수정일자를 조회한다. 성공시 년월일의 8자리 문자열, 실패시 블랭크 리턴|
+|String|getOwner(String targetDirPath)|디렉토리 소유자 조회|디렉토리의 소유자계정명을 조회한다. 성공시 소유계정명, 실패시 블랭크를 리턴한다.|
+|boolean|canRead(String targetDirPath)|디렉토리 읽기권한 조회|디렉토리의 읽기권한을 조회한다. 읽기 권한 있으면 true, 없으면 false 리턴|
+|boolean|canWrite(String targetDirPath)|디렉토리의 쓰기권한 조회|디렉토리의 쓰기권한을 조회한다. 쓰기 권한 있으면 true, 없으면 false 리턴|
+|String|getAccess(String targetDirPath)|디렉토리 접근권한 조회|디렉토리의 접근권한을 조회한다. 성공시 사용자,그룹,기타유저의 읽기쓰기실행권에 대한 문자열을 리턴, 실패시 블랭크를 리턴|
+|long|getDirectorySize(String targetDirPath)|디렉토리 용량조회|디렉토리의 용량을 조회한다. 디렉토리내의 파일과 하위디렉토리들의 파일 사이즈 합계수치를 조회한다. byte단위 사이즈수치를 리턴|
+
+== Input == 
+  * targetDirPath: String 타입의 절대경로를 포함하는 확인대상 디렉토리경로(예, /product/jeus/egovProps/tmp/dir1)
+
+== Output ==
+  * String 타입 : 항목별로 확인된 속성정보
+  * boolean 타입 : 권한유무 true / false 
+  * long 타입 : 사이즈정보(byte단위)
+
+
+===== 환경설정 =====
+
+getOwner, getAccess 메소드는 쉘스크립트의 실행결과를 활용하여 정보를 확인한다. 호출시 활용되는 쉘스크립트의 정보는 globals.properties에 등록한다.
+
+
+  * globals.properties
+
+<code>
+#1. getOwner 메소드에 해당되는 쉘 스크립트
+SHELL.UNIX.getDrctryOwner = /product/jeus/egovProps/prg/getDrctryOwner.sh
+#2. getAccess 메소드에 해당되는 쉘 스크립트
+SHELL.UNIX.getMoryInfo = /product/jeus/egovProps/prg/getDrctryAccess.sh
+</code>
+
+
+  * getDrctryOwner.sh (유닉스용 디렉토리 소유자 조회 스크립트)
+
+<code>
+ls -alF $1 | grep $2  | awk -F" " '{print $3}'
+</code>
+
+  * getDrctryAccess.sh (유닉스용 디렉토리 접근권한 조회 스크립트)
+
+<code>
+ls -alF $1 | grep $2 | awk -F" " '{print $1}'
+</code>
+
+===== 사용방법 =====
+
+<code java>
+    import egovframework.com.utl.sim.service.EgovFileTool;
+
+    String targetDirPath1    = "user/com/jeus";
+    String directoryName1    = EgovFileTool.getName(targetDirPath1);
+    String lastModifiedDate1 = EgovFileTool.getLastModifiedDateFromFile(targetDirPath1);
+    String owner1            = EgovFileTool.getOwner(targetDirPath1);
+    boolean canRead1         = EgovFileTool.canRead(targetDirPath1);
+    boolean canWrite1        = EgovFileTool.canWrite(targetDirPath1);
+    String roleStr           = EgovFileTool.getAccess(targetDirPath1);
+    long dirSize1            = EgovFileTool.getDirectorySize(targetDirPath1);
+
+</code>
+
+===== 참고자료 =====
+N/A

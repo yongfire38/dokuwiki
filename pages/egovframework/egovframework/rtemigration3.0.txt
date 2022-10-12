@@ -1,0 +1,378 @@
+====== 실행환경 Migration 가이드 (2.X -> 3.0) ======
+
+표준프레임워크 3.0은 기존 표준프레임워크 2.X과의 호환성을 염두해두고 실행환경의 버전 업그레이드를 진행하였으나, 전체 오픈소스SW 업그레이드에 따라 일부 변경이 필요합니다. 또한, 각 프로젝트의 상황 및 환경에 따라서 버전 업그레이드에 따른 충돌, 버그, 불안정성이 발생할 수도 있으니 충분한 테스트 후 진행하시기 바라겠습니다.
+
+===== 업그레이드 개요 =====
+표준프레임워크 3.0은 JDK 1.6이 필요합니다. 이에 따라 우선 관련된 WAS 등 적용되어 있는 SW 등이 JDK 1.6을 지원하는지 확인 및 JDK 업그레이드를 수행하십시오. 
+
+다음으로 다음과 같은 절차가 필요합니다.
+
+  1. 실행환경 library 변경 (maven dependency 수정)
+  2. Generics 적용에 따른  casting 적용 (EgovAbstractDAO 상속 부분 등)
+  3. Spring Security 업그레이드 반영
+  4. 명명규칙 변경 (AbstractServiceImpl -> EgovAbstractServiceImpl)
+  5. MultiPart 관련 API 변경
+  6. Excel Service interface 변경
+  7. 로그서비스 방식 변경
+  8. HandlerMapping 정의클래스 변경
+  9. CommandMap(controller에서 request값을 Map으로 받는 방법) 사용 변경
+  10. quartz 관련 TriggerBean 변경
+
+===== 업그레이드 방법 =====
+
+==== 1. 실행환경 library 변경 ====
+
+=== 1. Maven을 사용하는 경우 === 
+
+Maven을 사용하는 경우 프로젝트에서 사용하는 pom.xml 파일을 수정하여 업그레이드를 진행할 수 있습니다. 기본적으로 표준프레임워크 실행환경에서 사용되는 오픈소스 라이브러리들만을 업그레이드 하고자 하는 경우 pom.xml 파일에서 egovframework.rte 패키지 아래에 있는 라이브러리들의 버전만 3.0.0으로 업그레이드 해주면 됩니다.
+
+변경 전 (예)
+<code xml>
+<dependency>
+     <groupId>egovframework.rte</groupId>
+     <artifactId>egovframework.rte.psl.dataaccess</artifactId>
+     <version>2.7.0</version>
+</dependency>
+</code>
+
+변경 후 (예)
+<code xml>
+<dependency>
+     <groupId>egovframework.rte</groupId>
+     <artifactId>egovframework.rte.psl.dataaccess</artifactId>
+     <version>3.0.0</version>
+</dependency>
+</code>
+만약 표준프레임워크의 버전을 property를 사용하여 일괄적으로 관리하는 경우 property를 3.0.0으로 변경합니다. property의 이름은 프로젝트에 따라 다를 수 있습니다.
+
+변경 전 (예)
+<code xml>
+<properties>
+     <egovframework.rte.version>2.7.0</spring.maven.artifact.version>
+</properties>
+</code>
+변경 후 (예)
+<code xml>
+<properties>
+     <egovframework.rte.version>3.0.0</spring.maven.artifact.version>
+</properties>
+</code>
+표준프레임워크 실행환경은 각각의 실행환경들이 별도의 오픈소스 라이브러리와 dependency가 걸려있으므로, 모든 실행환경의 버전을 일괄적으로 업그레이드하는 것을 권장합니다. 특정 실행환경 서비스의 업그레이드만 진행하여 2.X 버전과 3.0 버전을 혼재하여 사용할 경우의 충돌이나 버그에 대해서는 테스트가 이루어지지 않았습니다.
+
+
+=== 2. Maven을 사용하지 않는 경우 === 
+
+다운로드 메뉴에서 실행환경 라이브러리를 직접 다운로드 하여 사용합니다. 단, 이 경우 각각의 실행환경 서비스가 의존성을 가지고 있는 오픈소스 라이브러리를 자동으로 다운로드 받지 않으므로 수작업으로 필요한 라이브러리를 다운로드 받아야 합니다. 별도로 배포되는 pom.xml 파일을 참고하여 의존성을 가지는 라이브러리들을 버전을 맞추어 다운로드 받으시기 바라겠습니다.
+
+
+
+==== 2. Generics 적용에 따른  casting 적용 (EgovAbstractDAO 상속 부분 등) ====
+
+표준프레임워크 3.0은 코드 표준화를 위하여 Generics를 적용하였습니다. 특히 iBatis 사용에 대한 EgovAbstractDAO 클래스를 사용하는 경우, 다음과 같은 casting 추가가 필요합니다.
+
+변경 전 (예)
+<code java>
+	public List<SynchrnServerVO> selectSynchrnServerList(SynchrnServerVO synchrnServerVO) throws Exception {
+		return list("synchrnServerDAO.selectSynchrnServerList", synchrnServerVO);
+	}
+</code>
+
+변경 후 (예)
+<code java>
+	public List<SynchrnServerVO> selectSynchrnServerList(SynchrnServerVO synchrnServerVO) throws Exception {
+		return (List<SynchrnServerVO>) list("synchrnServerDAO.selectSynchrnServerList", synchrnServerVO);
+	}
+</code>
+
+casting 추가는 개발환경 eclipse에서 제공하는 Quick Fix 기능을 활용하면 쉽게 변경할 수 있습니다.
+(오류 라인을 선택하면 현재 오류를 수정할 수 있는 몇 개의 조치가 나오며, 그 중 "Add Cast to .." 메뉴를 선택)
+
+
+==== 3. Spring Security 업그레이드 반영 ====
+
+다음 별도로 제공되는 가이드를 참조합니다.
+
+  * [[egovframework:rte3:fdl:server_security:upgrade|Server Security 업그레이드]] 
+
+
+==== 4. 명명규칙 변경 ====
+
+명명 규칙 준수에 따라 기존 AbtractrServiceImpl 클래스가 EgovAbstractServiceImpl로 변경되었습니다.
+
+이에 따라 다음과 같이 코드를 변경하셔야 합니다. (해당 사항은 필수가 아니면, @Deprecated 처리로 향후 AbtractrServiceImpl 클래스는 삭제 예정)
+
+변경 전 (예)
+<code java>
+@Service("egovServerService")
+public class EgovServerServiceImpl extends AbstractServiceImpl implements EgovServerService {
+</code>
+
+변경 후 (예)
+<code java>
+@Service("egovServerService")
+public class EgovServerServiceImpl extends EgovAbstractServiceImpl implements EgovServerService {
+</code>
+
+또한 기존 AbstractServiceImpl 상에 protected로 정의된 log 멤버 변수명도 egovLogger로 변경됨에 따라 다른과 같은 수정이 필요합니다.
+
+변경 전 (예)
+<code java>
+    public void insertStplatCn(StplatManageVO vo) throws Exception {
+    	log.debug(vo.toString());
+    	    	
+		String	useStplatId = idgenService.getNextStringId();
+
+		vo.setUseStplatId(useStplatId);
+		
+    	stplatManageDAO.insertStplatCn(vo);    	
+    }
+</code>
+
+변경 후 (예)
+<code java>
+    public void insertStplatCn(StplatManageVO vo) throws Exception {
+    	egovLogger.debug(vo.toString());
+    	    	
+		String	useStplatId = idgenService.getNextStringId();
+
+		vo.setUseStplatId(useStplatId);
+		
+    	stplatManageDAO.insertStplatCn(vo);    	
+    }
+</code>
+
+그러나, egovLogger를 상속하여 사용하는 것은 로그 정책 설정에 어려움이 있어서 사용을 권장하진 않습니다. 자체적으로 Logger를 정의하셔서 사용하셔야 패키지에 따른 로그 정책을 지정하실 수 있습니다.
+
+로그 사용 부분은 로그 표준화 적용 부분을 참조하십시오.
+
+
+==== 5. Multipart 관련 API 변경 ====
+
+Multipart 관련 MultipartParsingResult의 생성자 변경에 따라 다음과 같은 코드 변경이 필요합니다.
+
+
+변경 전 (예)
+<code java>
+    return new MultipartParsingResult(multipartFiles, multipartParameters);
+</code>
+
+변경 후 (예)
+<code java>
+    return new MultipartParsingResult(multipartFiles, multipartParameters, null);
+</code>
+
+세번째 파라미터의 경우 contentType에 대한 지정으로 null로 지정하시면 됩니다.
+
+
+==== 6. Excel Service Interface 변경 ====
+
+Excel Service 인터페이스가 XLSX 지원 등을 위하여 변경되었습니다. 그에 따라 다음과 같이 EgovExcelService 변경이 필요합니다.
+
+
+  * EgovExcelService Casting 적용
+
+변경 전 (예) 
+<code java>
+    @Resource(name = "excelZipService")
+    private EgovExcelService excelZipService;
+
+    //...
+
+    HSSFWorkbook hssfWB = excelZipService.loadWorkbook(inputStream);
+</code>
+
+변경 후 (예)
+<code java>
+    @Resource(name = "excelZipService")
+    private EgovExcelService excelZipService;
+
+    //...
+
+    HSSFWorkbook hssfWB = (HSSFWorkbook) excelZipService.loadWorkbook(inputStream);
+</code>
+
+추가적으로 EgovExcelMapping 인터페이스도 변경이 되었습니다.
+
+변경 전
+<code java>
+public abstract class EgovExcelMapping {
+
+    public abstract Object mappingColumn(HSSFRow row) throws Exception;
+}
+</code>
+
+변경 후
+<code java>
+public abstract class EgovExcelMapping {
+
+    public abstract Object mappingColumn(Row row) throws Exception;
+}
+</code>
+
+이에 따라 ExcelZipMapping 구현체의 변경이 다음과 같이 필요합니다.
+
+* ExcelZipMapping.mappingColumn() 파라미터 변경 적용
+
+변경 전 (예)
+<code java>
+public class EgovCcmExcelZipMapping extends EgovExcelMapping {
+
+	public Object mappingColumn(HSSFRow row) {
+            \\ ..
+       }
+}
+</code>
+
+변경 후 (예)
+<code java>
+public class EgovCcmExcelZipMapping extends EgovExcelMapping {
+	public Object mappingColumn(Row row) {
+		HSSFCell cell0 = (HSSFCell) row.getCell((int) 0);
+               // ..
+        }
+}
+</code>
+
+Row로 변경에 따라 추가적으로 Casting이 필요한 경우도 있습니다.
+
+
+==== 7. 로그서비스 방식 변경 ====
+
+표준프레임워크 3.0은 로그 방식을 "SLF4J + log4j 2"를 표준으로 변경하였습니다. 
+
+해당 부분은 다음 가이드를 참조하시면 됩니다.
+
+* [[egovframework:rte3:fdl:logging|Logging 서비스]]
+
+그러나 전체 소스를 위와 같은 방식으로 변경하기에는 어려움이 있기 때문에,
+"SLF4J + log4j 1.X" 방식으로 적용하므로써 소스 및 설정의 변경 없이 표준프레임워크 3.0을 오류 없이 반영할 수 있습니다.
+
+pom.xml dependency 추가
+<code xml>
+        <!-- 로그 방식 (SLF4J + log4j  1.X 적용) -->
+        <!-- SLF4J -->
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-api</artifactId>
+		<version>1.7.5</version>
+	</dependency>
+	<!-- SLF4J Logj4 1.x Bridge -->  
+	<dependency>
+		<groupId>org.slf4j</groupId> 
+		<artifactId>slf4j-log4j12</artifactId> 
+		<version>1.7.5</version>
+	</dependency>
+</code>
+
+이후 추가 일정에 따라 "SLF4J + log4j 2" 방식으로 변경하시면 됩니다.
+
+==== 8. HandlerMapping 정의클래스 변경 ====
+
+ Spring 3.2부터 DefaultAnnotationHandlerMapping, AnnotationMethodHandlerAdapter은 deprecated되었으며 대신 거의 동일한 기능의 RequestMappingHandlerMapping, RequestMappingHandlerAdapter로 대체되었습니다. \\ 기본 RequestMappingHandlerMapping과 RequestMappingHandlerAdapter를 쓰기 위해서는 아래와 같은 방법으로 변경해야 합니다.\\
+(wiki의 HandlerMapping 가이드 참고)
+
+=== <mvc:annotation-driven/>을 선언하는 방법 ===
+
+@MVC사용 시 필요한 빈들을 등록해주는 <mvc:annotation-driven/>을 설정하면 내부에서 \\ 
+  * org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping 
+  * org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter \\
+이 구성됩니다.
+
+<code xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ... 생략>
+  <mvc:annotation-driven/>
+  <!-- 생략 -->
+</beans>
+</code>
+
+단, CommandMap을 사용할 경우 <mvc:annotation-driven>을 선언하면 안되며 EogvRequestMappingHandlerAdapter와 RequestMappingHandlerMapping을 직접 선언해주어야한다.
+
+=== RequestMappingHandlerMapping, RequestMappingHandlerAdapter을 선언하는 방법 ===
+
+<code xml>
+<beans ... 생략>
+   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+   </bean>
+   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+   </bean>
+...
+</code>
+
+==== 9. CommandMap(controller에서 request값을 Map으로 받는 방법) 사용 변경 ====
+
+기존에 Controller의 request값을 Map으로 받기 위해서는 egovframe에서 제공하는 CommandMapArgumentResolver를 등록하여 CommandMap을 사용하였습니다. \\
+egovFrame 3.1부터는 CommandMap 대신에 @RequestParam으로 변경하였습니다.
+
+=== 기존 CommandMap 사용 ===
+
+- xml 설정
+<code xml>
+   <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+        <property name="customArgumentResolvers">
+            <list>
+                <bean class="egovframework.rte.ptl.mvc.bind.CommandMapArgumentResolver"/>
+            </list>
+        </property>
+    </bean>
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+</code>
+
+-controller 코드
+<code java>
+   @RequestMapping("/cmm/selectList.do")
+   public String selectList(Map<String, Object> commandMap, ModelMap model) {
+      ... 생략
+   }
+</code>
+
+=== 변경된 설정 방법 ===
+기존 xml 설정 삭제
+
+-controller 코드
+<code java>
+   import org.springframework.web.bind.annotation.RequestParam;
+   ...
+
+   @RequestMapping("/cmm/selectList.do")
+   public String selectList(@RequestParam Map<String, Object> commandMap, ModelMap model) {
+      ... 생략
+   }
+</code>
+
+
+==== 10. quartz 관련 TriggerBean 변경 ====
+
+Quartz 스케줄러를 사용하는 경우 다음과 같은 오류가 발생할 수 있습니다.
+
+- 오류 내용
+<code java>
+   class org.springframework.scheduling.quartz.SimpleTriggerBean has interface org.quartz.SimpleTrigger as super class
+</code>
+
+이 경우 다음과 같은 TriggerBean 클래스 변경이 필요합니다.
+
+- 기존 설정
+<code xml>
+	<bean id="trsmrcvMntrngTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="trsmrcvMntrng" />
+		<property name="startDelay" value="60000" />
+		<property name="repeatInterval" value="600000" />
+	</bean>
+</code>
+
+- 변경 설정
+<code xml>
+   	<bean id="trsmrcvMntrngTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
+		<property name="jobDetail" ref="trsmrcvMntrng" />
+		<property name="startDelay" value="60000" />
+		<property name="repeatInterval" value="600000" />
+	</bean>
+</code>
+
+
+CronTriggerBean의 경우도 CronTriggerFactoryBean 변경이 필요합니다.
+
+===== 기타 알 수 없는 충돌이 발생하는 경우 =====
+
+프로젝트에 따라서 기존에 사용하던 라이브러리, 코드, WAS, DB 등과의 충돌이 발생할 수 있습니다. 알 수 없는 충돌이 발생하고 해결이 어려운 경우 표준프레임워크센터에 프로젝트의 환경 및 에러메시지를 포함하여 문의를 주시기 바라겠습니다.

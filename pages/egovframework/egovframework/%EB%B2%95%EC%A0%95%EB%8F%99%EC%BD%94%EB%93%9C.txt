@@ -1,0 +1,161 @@
+====== 시스템관리 - 공통코드관리 - 기관코드수신 - 법정동코드 ======
+
+===== 설명 =====
+**법정동코드수신**은 **법정동코드**의 변경정보를 시스템에서 주기적으로 수신 반영하고 변경사항을 관리하는 기능으로 구성되어 있다.
+
+== 클래스 다이어그램 ==
+{{:egovframework:com:sym:ccm:cdd_법정동코드수신.png|법정동코드수신 클래스 다이어그램}}
+
+== 관련소스 ==
+^유형^대상소스명^비고^
+|Controller|egovframework.com.sym.ccm.acr.web.EgovAdministCodeRecptnController.java|법정동코드수신 관리를 위한 컨트롤러 클래스|
+|Model|egovframework.com.sym.ccm.acr.service.AdministCodeRecptn.java|법정동코드수신 정보 Model 클래스|
+|VO|egovframework.com.sym.ccm.acr.service.AdministCodeRecptnVO.java|법정동코드수신 관리를 위한 VO 클래스|
+|Service|egovframework.com.sym.ccm.acr.service.EgovAdministCodeRecptnService.java|법정동코드수신 관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.sym.ccm.acr.service.impl.EgovAdministCodeRecptnServiceImpl.java|법정동코드수신 관리를 위한  서비스구현 클래스|
+|DAO|egovframework.com.sym.ccm.acr.service.impl.AdministCodeRecptnDAO.java|법정동코드수신 정보 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/sym/ccm/acr/EgovAdministCodeRecptnList.jsp|법정동코드수신 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/sym/ccm/acr/EgovAdministCodeDetail.jsp|기관코드 상세조회 페이지|
+
+== 관련테이블 ==
+^테이블명^테이블명(영문)^비고^
+|법정동코드|COMTCADMINISTCODE|법정동코드에 대한 정보|
+|법정동코드수신로그|COMTCADMINISTCODERECPTNLOG|법정동코드수신로그에 대한 정보|
+
+===== 환경설정 =====
+
+법정동코드수신을 사용하기 위해서는 EDI 모듈을 실행시 필요한 정보를 설정하여야 한다.
+
+이를 지정하기 위해서는 globals.properties 속성 파일에 추가 속성을 설정하여야 한다.
+
+globals.properties에 관련된 내용은 [[요소기술 프로퍼티 및 명령어 쉘스크립트]] 부분을 참조한다.
+
+==== 관련 설정 사항 ====
+
+<code>
+...
+
+# 법정동코드수신용
+CNTC.ADMINISTCODE.DIR.rcv       = /home/gccedi/rcv/   
+CNTC.ADMINISTCODE.DIR.rcvold    = /home/gccedi/rcvold/
+CNTC.ADMINISTCODE.DIR.bin       = /home/gccedi/bin/   
+
+CNTC.ADMINISTCODE.CMD.edircv    = gcc_edircv          
+CNTC.ADMINISTCODE.CMD.edircvmsg = gcc_edircvmsg       
+
+CNTC.ADMINISTCODE.INFO.userid   = 서버인증서아이디
+CNTC.ADMINISTCODE.INFO.userpw   = 서버인증서패스워드
+
+...
+</code>
+
+  * EDI 모듈에 따라 cmd file 이 **실행바이너리** 파일이거나 **쉘스크립트** 파일이 올 수 있음.
+
+  * ID Generation Service에서 사용할 테이블 및 필드 생성
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 ADMIN_CODE_OPERT 항목을 추가해야 한다. 테이블이 생성되어 있는 경우라면 인서트 구문만을 수행한다.
+
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL,
+           next_id DECIMAL(30) NOT NULL,
+           PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('ADMIN_CODE_OPERT','0');
+ </code>
+
+==== 법정동코드수신 scheduler 등록 ====
+
+법정동코드수신 및 반영은 스케쥴러를 통해 반영된다. 해당 스케쥴러를 등록하기 위해서는 .../spring/context-scheduling.xml(예시)에 다음과 같은 스케쥴러를 등록한다.
+
+<code>
+    <!-- 법정동코드수신 처리 -->
+    <bean id="administCodeReceiver"
+        class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="AdministCodeRecptnService" />
+        <property name="targetMethod" value="insertAdministCodeRecptn" />
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <bean id="administCodeReceiverTrigger"
+        class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+        <property name="jobDetail" ref="administCodeReceiver" />
+        <!-- 시작하고 1분후에 실행한다. (milisecond) -->
+        <property name="startDelay" value="60000" />
+        <!-- 매 60초마다 실행한다. (milisecond) 데몬 형식으로 계속 기동 중 -->
+        <property name="repeatInterval" value="60000" />
+    </bean>
+
+    <bean id="administCodeReceiverScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="administCodeReceiverTrigger" />
+            </list>
+        </property>
+    </bean>
+</code>
+
+===== 사용방법 =====
+== 법정동코드수신 ===
+
+법정동코드수신 연계시 연계항목에 따라 DB, Model, ServiceImpl...등 연계항목 관련사항을 수정하여야 한다.
+
+ServiceImpl 예시)
+
+<code>
+    ...
+
+    // 실제 연계 항목 Mapping 작업
+    administCodeRecptn.setChangeSeCode          (strTmp       );    // 명령                 :: 변경구분코드
+    administCodeRecptn.setOccrrDe               (tokenData[ 1]);    // 날짜                 :: 발생일자
+    administCodeRecptn.setAdministZoneCode      (tokenData[ 2]);    // 행정구역코드         :: 행정구역코드
+    administCodeRecptn.setAdministZoneNm        (tokenData[ 7]);    // 행정구역명           :: 행정구역명
+    administCodeRecptn.setLowestAdministZoneNm  (tokenData[ 8]);    // 최하위행정구역명     :: 최하위행정구역명
+    administCodeRecptn.setCtprvnCode            (tokenData[ 3]);    // 시도코드             :: 시도코드
+    administCodeRecptn.setSignguCode            (tokenData[ 4]);    // 시군구코드           :: 시군구코드
+    administCodeRecptn.setEmdCode               (tokenData[ 5]);    // 읍면동코드           :: 읍면동코드
+    administCodeRecptn.setLiCode                (tokenData[ 6]);    // 리코드               :: 리코드
+    administCodeRecptn.setCreatDe               (tokenData[ 9]);    // 생성일자             :: 생성일자
+    administCodeRecptn.setAblDe                 (tokenData[10]);    // 폐지일자             :: 폐지일자
+    administCodeRecptn.setAblEnnc               (tokenData[11]);    // 폐지유무             :: 폐지유무
+    administCodeRecptn.setUseAt                 (tokenData[11]);    // 폐지유무             :: 사용여부
+
+    ...
+</code>
+
+----
+
+== 법정동코드수신 목록 ===
+
+법정동코드수신 목록 조회를 할 수 있는 목록조회 화면으로 URL은 다음과 같다.
+
+<code>
+/sym/ccm/acr/getAdministCodeRecptnList.do
+</code>
+
+^기능^URL^Controller^method^화면(URL)^
+|목록조회|/sym/ccm/acr/getAdministCodeRecptnList.do|EgovAdministCodeRecptnController|selectAdministCodeRecptnList|/sym/ccm/acr/EgovAdministCodeRecptnList|
+
+법정동코드수신 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다.\\
+검색조건은 법정동코드수신명에 대해서 수행된다.\\
+페이지 당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:sym:ccm:acr:법정동코드수신목록.png|법정동코드수신목록 화면}}
+
+----
+
+== 법정동코드 상세 조회 ===
+
+법정동코드 상세 조회 할 수 있는 상세 조회 화면으로 URL은 다음과 같다.
+
+<code>
+/sym/ccm/acr/getAdministCodeDetail.do
+</code>
+
+^기능^URL^Controller^method^화면(URL)^
+|상세조회|/sym/ccm/acr/getAdministCodeDetail.do|EgovAdministCodeRecptnController|selectAdministCodeDetail|/sym/ccm/acr/EgovAdministCodeDetail|
+
+상세조회에는 삭제 처리가 포함되어 있고 삭제가 성공하면 **[[#법정동코드수신 목록]]** 화면으로 이동한다.
+
+{{:egovframework:com:sym:ccm:acr:법정동코드상세.png|법정동코드상세 화면}}
+
+

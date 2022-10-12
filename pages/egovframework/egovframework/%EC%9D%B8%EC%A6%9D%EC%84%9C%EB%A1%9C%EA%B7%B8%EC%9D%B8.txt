@@ -1,0 +1,114 @@
+====== 공통서비스 - 인증서로그인 ======
+
+===== 개요 =====
+인증서로그인은 기존 **[[GPKI 인증서 로그인]]**가 동일한 기능을 제공한다. 
+다만, GPKI 인증서 로그인의 경우 전자정부 표준프레임워크에 종속적으로 기능이 제공되기 때문에 
+전자정보 표준프레임워크가 도입되지 않는 경우는 적용하기가 어렵다.
+현재 인증서로그인은 프레임워크에 비종속적으로 적용될 수 있도록 구성되어 제공된다.
+
+구체적인 사항은 GPKI 인증서 로그인 서비스의 [[GPKI 인증서 로그인#개요]] 또는 [[GPKI 인증서 로그인#전제조건]] 등을 참조한다.
+
+
+===== 설명 =====
+인증서로그인를 행정전자서명 인증관리센터(www.gpki.go.kr)에서 제공하는 GPKISecureWeb 모듈을 통해 인증서로그인 기능을 제공한다. (NPKI 및 GPKI 지원)
+
+
+== 관련소스 ==
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.utl.sec.web.EgovCertLoginController.java|인증서로그인 테스트를 위한 컨트롤러 클래스|
+|Util|egovframework.com.utl.sec.service.EgovCertInfoUtil.java|인증서로그인 서비스를 지원을 위한 유틸 클래스|
+|VO|egovframework.com.utl.sec.service.CertInfoVO.java|인증서로그인에 대한 인증서 정보 보관을 위한 VO 클래스|
+|Filter|egovframework.com.utl.sec.filter.CertProcessFilter.java|인증서로그인 지원을 위한 servlet filter|
+|RequestWrapper|egovframework.com.utl.sec.filter.CertProcessRequestWrapper.java|인증서로그인 지원을 위한 request wrapper|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertGPKIError.jsp|인증서로그인 오류 페이지를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertGpkisecureweb.jsp|인증서로그인 인증처리를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertInstall.jsp|인증서로그인 설치처리를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertSetup.jsp|인증서로그인 설치정보처리를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertVar.jsp|인증서로그인 관련 정보를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertInfoPopup.jsp|인증서로그인 정보 등록을 위한 팝업 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertLogin.jsp|인증서로그인 페이지를 위한 테스트 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertLoginConfirm.jsp|인증서로그인 인증정보 확인을 위한 테스트 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cmm/utl/sec/EgovCertLoginInfo.jsp|인증서로그인 등록을 위한 테스트 jsp페이지|
+
+위의 클래스 중 Controller의 경우는 전자정부 표준프레임워크에서의 테스트 수행을 위한 컨트롤러 클래스로서 실제 적용시에는 
+해당 기능들을 적용 Web MVC 프레임워크 기반으로 전환하면 된다.
+혹 MVC 프레임워크가 적용되어 있지 않더라고 servlet 기반 또는 해당되는 JSP로 쉽게 전환할 수 있다.
+
+CertProcessFilter 및 CertProcessRequestWrapper의 경우는 전자정부 표준프레임워크의 HTMLTagFilter(egovframework.rte.ptl.mvc.filter.HTMLTagFilter)를 사용할 경우 다음과 같이 web.xml에 같이 추가를 해주어야 한다.
+HTMLTagFilter는 request 파라미터들에 대하여 자동으로 tag를 변환하는데 인증서로그인 처리 부분은 이 부분이 제외되어야 하기 때문이다.
+
+<code xml>
+    <filter>
+        <filter-name>HTMLTagFilter</filter-name>
+        <filter-class>
+            egovframework.rte.ptl.mvc.filter.HTMLTagFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>HTMLTagFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
+    </filter-mapping>
+
+    <!-- Restoration from HTMLTagFilter's action (certification login) -->
+    <filter>
+        <filter-name>CertProcessFilter</filter-name>
+        <filter-class>
+            egovframework.com.utl.sec.filter.CertProcessFilter
+        </filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CertProcessFilter</filter-name>
+        <url-pattern>/utl/sec/certLogin.do</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CertProcessFilter</filter-name>
+        <url-pattern>/utl/sec/certInfoPopup.do</url-pattern>
+    </filter-mapping>
+</code>
+
+위에서 HTMLTagFilter filter가 적용되지 않은 경우는 위 CertProcessFilter filter도 적용할 필요는 없다.
+ 
+== 관련테이블 ==
+
+해당없음
+
+
+
+===== 환경설정 =====
+우선 행정안전부로부터 제공받은 GPKISecureWeb 모듈을 다음 경로상에 위치시킨다. 
+<code>
+/src/main/webapp/resource/gpkisecureweb
+</code>
+
+GPKI와 관련된 설정은 행정전자서명 인증관리센터(www.gpki.go.kr)에 문의한다.
+
+
+
+===== 관련화면  =====
+
+로그인인증서 제공 기능은 테스트화면을 포함하여 다음과 같다.
+
+^URL^Controller^method^화면(JSP)^GPKISecureWeb 해당 페이지^
+|/utl/sec/certVar.do|EgovCertLoginController|var|.../cmm/utl/sec/EgovCertVar.jsp|var.js|
+|/utl/sec/certInstall.do|EgovCertLoginController|certInstall|.../cmm/utl/sec/EgovCertInstall.jsp|install.html|
+|/utl/sec/certSetup.do|EgovCertLoginController|certSetup|.../cmm/utl/sec/EgovCertSetup.jsp|setup.conf|
+|/utl/sec/certGPKIError.do|EgovCertLoginController|certGPKIError|.../cmm/utl/sec/EgovCertGPKIError.jsp| |
+|/utl/sec/certInfoPopup.do|EgovCertLoginController|certInfoPopup|.../cmm/utl/sec/EgovCertInfoPopup.jsp| |
+|/utl/sec/certLogin.do(get)|EgovCertLoginController|certLogin|.../cmm/utl/sec/EgovCertLogin.jsp| |
+|/utl/sec/certLogin.do(post)|EgovCertLoginController|certLoginConfirm|.../cmm/utl/sec/EgovCertLoginConfirm.jsp| |
+|/utl/sec/certLoginInfo.do|EgovCertLoginController|certLoginPopup|.../cmm/utl/sec/EgovCertLoginInfo.jsp| |
+※ 위에서 /utl/sec/certSetup.do (EgovCertSetup.jsp) 부분은 인코딩 문제로 인하여 사용하지 않고 setup.conf를 사용한다.
+
+
+
+----
+
+
+
+
+===== 참고자료 =====
+
+  * 배포 및 테스트 관련 : [[common_component_system|Common Component System]] 및 [[배포_패키지_구성안|배포 패키지 구성안]]
+
+

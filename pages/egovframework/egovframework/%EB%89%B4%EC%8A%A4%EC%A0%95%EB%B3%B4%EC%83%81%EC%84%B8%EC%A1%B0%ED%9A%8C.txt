@@ -1,0 +1,25 @@
+=== 비즈니스 규칙 ===
+뉴스정보목록조회에서 목록 클릭 시 이동되는 화면으로 뉴스정보에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 2. 뉴스정보상세조회 ==
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/ion/nws/NewsInfoUpdtView.do|updateNewsInfoView||
+|삭제|/uss/ion/nws/NewsInfoDelete.do|deleteNewsInfo|"NewsManageDAO.deleteNewsInfo"|
+|목록|/uss/ion/nws/NewsInfoListInqire.do|selectNewsInfoList|"NewsManageDAO.selectNewsList"|
+
+뉴스정보 상세조회화면은 뉴스정보수정, 뉴스정보삭제, 뉴스정보목록조회를 할 수 있다.
+
+{{:egovframework:com:uss:ion:nws:NewsInfoDetailInqire.gif|}}
+
+수정: 수정버튼 클릭 시 뉴스정보를 수정할 수 있는 화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **뉴스정보목록조회** 화면으로 이동한다.
+----

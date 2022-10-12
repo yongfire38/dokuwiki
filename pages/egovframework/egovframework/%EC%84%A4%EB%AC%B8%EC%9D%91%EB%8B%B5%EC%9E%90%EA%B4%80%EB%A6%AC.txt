@@ -1,0 +1,62 @@
+====== 응답자정보 ======
+
+===== 개요 =====
+설문관리 시스템 구축시 사용되는 응답자정보 기능을 제공하며, 설문참여자 가 설문참여시 응답자정보를 기본으로 입력하게 되어 있다.
+
+본 기능은 전자정부 표준프레임워크 실행환경의 **ID Generation** 기능을 활용하여 구성되어있다.
+**ID Generation**을 활용하기 위한 기본 설정이 필요하며 해당 설정은 [[egovframework:rte:fdl:id_generation]] 문서를 통해서 확인이 가능하다.
+
+===== 설명 =====
+  * 응답자정보는 설문지를 관리하기 위한 목적으로 **등록**, **수정**, **삭제**, **조회**, **목록조회**의 기능을 수반한다.
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:com:uss:olp:qrm:설문응답자관리diagramclass.gif|}}
+
+== 관련소스 ==
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.olp.qrm.web.EgovQustnrRespondManageController.java|응답자정보 Controller Class|
+|Service|egovframework.com.uss.olp.qrm.service.EgovQustnrRespondManageService.java|응답자정보 Service Class|
+|VO|egovframework.com.uss.olp.qrm.service.QustnrRespondManageVO.java|응답자정보  VO Class|
+| |egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.uss.olp.qrm.service.impl.EgovQustnrRespondManageServiceImpl.java|응답자정보 ServiceImpl Class|
+|DAO|egovframework.com.uss.olp.qrm.service.impl.QustnrRespondManageDao.java|응답자정보 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qrm/EgovQustnrRespondManageList.jsp|응답자정보 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qrm/EgovQustnrRespondManageRegist.jsp|응답자정보 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qrm/EgovQustnrRespondManageModify.jsp|응답자정보 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qrm/EgovQustnrRespondManageDetail.jsp|응답자정보 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/olp/qrm/EgovQustnrRespondManage.xml|응답자정보 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olp/qrm/EgovQustnrRespondManage.xml|응답자정보 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|응답자정보 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|응답자정보 Id생성 Idgen XML|
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|설문관리|COMTNQESTNRINFO|설문관리를(을) 조회 한다.|
+|설문응답자정보|COMTNQUSTNRRESPONDINFO|설문응답자정보를(을) 관리 한다.|
+
+== 관련코드 ==
+응답자정보에서 사용되는 코드 및 그에 따른 설정 값의 반영사항은 다음과 같다.
+
+^코드분류^코드분류명^코드ID^코드명^
+|COM014|성별코드|M|기능설명|
+|COM014|성별코드|F|절차설명|
+|COM034|작업유형코드|1|학생|
+|COM034|작업유형코드|2|대학생|
+|COM034|작업유형코드|3|군인|
+|COM034|작업유형코드|4|교사|
+|COM034|작업유형코드|5|기타|
+
+
+===== 사용방법 =====
+응답자정보 세부적인 기능 사용방법은 다음을 참조한다.
+
+  - [[응답자정보 목록]]
+  - [[응답자정보 등록]]
+  - [[응답자정보 수정]]
+  - [[응답자정보 상세조회]]
+  
+===== 참고자료 =====
+N/A 

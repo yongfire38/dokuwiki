@@ -1,0 +1,58 @@
+====== 설문관리 ======
+
+===== 개요 =====
+설문관리 시스템 구축시 사용되는 설문지관리 기능을 제공하며 설문조사 참여자가 설문 참여시 설문 기본정보를 제공한다.
+
+본 기능은 전자정부 표준프레임워크 실행환경의 **ID Generation** 기능을 활용하여 구성되어있다.
+**ID Generation**을 활용하기 위한 기본 설정이 필요하며 해당 설정은 [[egovframework:rte:fdl:id_generation]] 문서를 통해서 확인이 가능하다.
+
+===== 설명 =====
+  * 설문관리는 설문지를 관리하기 위한 목적으로 **등록**, **수정**, **삭제**, **조회**, **목록조회**의 기능을 수반한다.
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:com:uss:olp:qmc:설문관리diagramclass.gif|}}
+
+== 관련소스 ==
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.olp.qmc.web.EgovQustnrManageController.java|설문관리 Controller Class|
+|Service|egovframework.com.uss.olp.qmc.service.EgovQustnrManageService.java|설문관리 Service Class|
+|VO|egovframework.com.uss.olp.qmc.service.QustnrManageVO.java|설문관리  VO Class|
+| |egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.uss.olp.qmc.service.impl.EgovQustnrManageServiceImpl.java|설문관리 ServiceImpl Class|
+|DAO|egovframework.com.uss.olp.qmc.service.impl.QustnrManageDao.java|설문관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qmc/EgovQustnrManageList.jsp|설문관리 목록조회 페이지|
+| |/WEB-INF/jsp/egovframework/uss/olp/qmc/EgovQustnrManageRegist.jsp|설문관리 등록 페이지|
+| |/WEB-INF/jsp/egovframework/uss/olp/qmc/EgovQustnrManageModify.jsp|설문관리 수정 페이지|
+| |/WEB-INF/jsp/egovframework/uss/olp/qmc/EgovQustnrManageDetail.jsp|설문관리 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/olp/qmc/EgovQustnrManage.xml|설문관리 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olp/qmc/EgovQustnrManage.xml|설문관리 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|설문관리 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|설문관리 Id생성 Idgen XML|
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|설문관리|COMTNQESTNRINFO|설문지를 관리 한다.|
+
+== 관련코드==
+설문관리에서 사용되는 코드 및 그에 따른 설정 값의 반영사항은 다음과 같다.
+
+^코드분류^코드분류명^코드ID^코드명^
+|COM034|작업유형코드|1|학생|
+|COM034|작업유형코드|2|대학생|
+|COM034|작업유형코드|3|군인|
+|COM034|작업유형코드|4|교사|
+|COM034|작업유형코드|5|기타|
+
+===== 사용방법 =====
+설문관리 세부적인 기능 사용방법은 다음을 참조한다.
+
+  - [[설문관리 목록]]
+  - [[설문관리 등록]]
+  - [[설문관리 수정]]
+  - [[설문관리 상세조회]]
+  
+===== 참고자료 =====
+N/A

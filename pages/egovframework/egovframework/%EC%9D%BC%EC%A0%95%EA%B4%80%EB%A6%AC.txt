@@ -1,0 +1,215 @@
+====== 공통서비스 - 일정관리======
+
+===== 개요 =====
+사용자의 /세미나/강의/교육/회의/기타 일정에 대한 계획을 쉽고 편하게 관리 할수 있는 서비스로 월별일정보기, 주간별일정보기, 일별일정보기 기능을 제공한다.
+
+===== 설명 =====
+일정관리관리기능은 크게 **일정관리 목록조회**, **일정관리 상세조회**, **일정관리 내용등록**, **일정관리 내용수정** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:com:cop:smt:sim:일정관리diagramclass.gif|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.cop.smt.sim.web.EgovIndvdlSchdulManageController.java|일정관리관리 Controller Class|
+|Service|egovframework.com.cop.smt.sim.service.EgovIndvdlSchdulManageService.java|일정관리관리 Service Class|
+|VO|egovframework.com.cop.smt.sim.service.IndvdlSchdulManageVO.java|일정관리관리  VO Class|
+| |egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.cop.smt.sim.service.impl.EgovIndvdlSchdulManageServiceImpl.java|일정관리관리 ServiceImpl Class|
+|DAO|egovframework.com.cop.smt.sim.service.impl.IndvdlSchdulManageDao.java|일정관리관리 Dao Class|
+| |/WEB-INF/jsp/egovframework/cop/smt/sim/EgovIndvdlSchdulManageList.jsp|일정관리관리 목록조회 페이지|
+| |/WEB-INF/jsp/egovframework/cop/smt/sim/EgovIndvdlSchdulManageRegist.jsp|일정관리관리 등록 페이지|
+| |/WEB-INF/jsp/egovframework/cop/smt/sim/EgovIndvdlSchdulManageModify.jsp|일정관리관리 수정 페이지|
+| |/WEB-INF/jsp/egovframework/cop/smt/sim/EgovIndvdlSchdulManageDetail.jsp|일정관리관리 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/com/cop/smt/sim/EgovIndvdlSchdulManage.xml|일정관리관리 QUERY XML| 
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/cop/smt/sim/EgovIndvdlSchdulManage.xml|일정관리관리 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|일정관리관리 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|일정관리관리 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 SCHDUL_ID 항목을 추가해야 한다. 
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('SCHDUL_ID','0');
+ </code>
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|일정관리관리|COMTNMTGINFO|일정관리를 관리 한다.|	
+
+===== 관련기능 =====
+일정관리관리기능은 크게 **일정관리 목록조회**, **일정관리 상세조회**, **일정관리 내용등록**, **일정관리 내용수정**기능으로 구성되어 있다.
+
+==== 일정관리 월별목록 ====
+
+=== 비즈니스 규칙 ===
+관리자가 기(記) 등록된 일정관리 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|일정관리  등록|/cop/smt/sim/EgovIndvdlSchdulManageList|EgovIndvdlSchdulManageList| |
+|일정관리  상세조회|/cop/smt/sim/EgovIndvdlSchdulManageDetail.do|EgovIndvdlSchdulManageDetail|IndvdlSchdulManage.selectIndvdlSchdulManageDetail|
+
+{{:egovframework:com:cop:smt:sim:egovindvdlschdulmanagemonthlist.jpg|}}
+
+날짜클릭: 등록하기 위해서는 상단의 등록 버튼을 통해서 **일정관리 등록** 화면으로 이동한다. \\
+일정클릭: **일정관리 상세조회** 화면으로 이동한다.
+
+----
+
+==== 일정관리 주간별목록 ====
+
+=== 비즈니스 규칙 ===
+관리자가 기(記) 등록된 일정관리 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|일정관리  등록|/cop/smt/sim/EgovIndvdlSchdulManageList|EgovIndvdlSchdulManageList| |
+|일정관리  상세조회|/cop/smt/sim/EgovIndvdlSchdulManageDetail.do|EgovIndvdlSchdulManageDetail|IndvdlSchdulManage.selectIndvdlSchdulManageDetail|
+
+{{:egovframework:com:cop:smt:sim:egovindvdlschdulmanageweeklist.jpg|}}
+
+날짜클릭: 등록하기 위해서는 상단의 등록 버튼을 통해서 **일정관리 등록** 화면으로 이동한다. \\
+일정클릭: **일정관리 상세조회** 화면으로 이동한다
+
+----
+
+==== 일정관리 일별목록 ====
+
+=== 비즈니스 규칙 ===
+관리자가 기(記) 등록된 일정관리 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|일정관리  등록|/cop/smt/sim/EgovIndvdlSchdulManageList|EgovIndvdlSchdulManageList| |
+|일정관리  상세조회|/cop/smt/sim/EgovIndvdlSchdulManageDetail.do|EgovIndvdlSchdulManageDetail|IndvdlSchdulManage.selectIndvdlSchdulManageDetail|
+
+{{:egovframework:com:cop:smt:sim:egovindvdlschdulmanagedailylist.jpg|}}
+
+날짜클릭: 등록하기 위해서는 상단의 등록 버튼을 통해서 **일정관리 등록** 화면으로 이동한다. \\
+일정클릭: **일정관리 상세조회** 화면으로 이동한다
+
+----
+
+==== 일정관리 상세조회 ====
+
+=== 비즈니스 규칙 ===
+관리자가 기(記) 등록된 일정관리 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/cop/smt/sim/EgovIndvdlSchdulManageList.do|EgovIndvdlSchdulManageList|IndvdlSchdulManage.selectIndvdlSchdulManage|
+| | | |IndvdlSchdulManage.selectIndvdlSchdulManageCnt|
+|등록|/cop/smt/sim/EgovIndvdlSchdulManageList|EgovIndvdlSchdulManageList| |
+|목록클릭|/cop/smt/sim/EgovIndvdlSchdulManageDetail.do|EgovIndvdlSchdulManageDetail|IndvdlSchdulManage.selectIndvdlSchdulManageDetail|
+
+일정관리 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 등록자, 외부인사명에 대해서 수행된다.\\ 페이지 당 검색 범위를 변경하고자 하는 경우 \\
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:cop:smt:sim:egovindvdlschdulmanagedetail.jpg|}}
+
+조회: 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색문자를 입력 후 조회 버튼을 클릭한다.\\
+등록: 등록하기 위해서는 상단의 등록 버튼을 통해서 **일정관리 등록** 화면으로 이동한다. \\
+목록클릭: **일정관리 상세조회** 화면으로 이동한다.
+
+----
+
+==== 일정관리 등록 ====
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 반드시 입력해야할 항목을 표시한다. \\
+
+- 저장처리 시 SCHDUL_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 \\
+  Primary Key => SCHDUL_ID(20자리) : SCHDUL_(7자리) + 일련번호(13자리)로 자동생성 부여된다.
+
+	<!-- IdGnrService... START-->			
+	<bean name="diaryManageIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="IndvdlSchdulManageInfotrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="SCHDUL_ID"/>
+	</bean>
+	<bean name="IndvdlSchdulManageInfotrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="DIARY_" />
+		<property name="cipers" value="14" />
+		<property name="fillChar" value="0" />
+	</bean>
+	<!-- IdGnrService... END-->	
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/cop/smt/sim/EgovIndvdlSchdulManageList.do|EgovIndvdlSchdulManageList|IndvdlSchdulManage.selectIndvdlSchdulManage|
+| | | |IndvdlSchdulManage.selectIndvdlSchdulManageCnt|
+|저장|/cop/smt/sim/EgovIndvdlSchdulManageRegist.do|EgovIndvdlSchdulManageRegist|IndvdlSchdulManage.insertIndvdlSchdulManage|
+
+일정관리에 관한 기본정보를 입력 저장처리한다.
+
+{{:egovframework:com:cop:smt:sim:egovindvdlschdulmanageregist.jpg|}}
+
+목록: **일정관리 목록** 화면으로 이동한다. \\
+저장: 입력한 일정관리 정보들이 저장 처리된다. \\
+* 회의관리[egovframework-meetmanagement-1.0.0.zip] import 시 부서찾기, 담당자찾기 팝업을 이용할수있습니다.
+----
+
+==== 일정관리 수정 ====
+
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+N/A
+
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/cop/smt/sim/EgovIndvdlSchdulManageList.do|EgovIndvdlSchdulManageList|IndvdlSchdulManage.selectIndvdlSchdulManage|
+| | | |IndvdlSchdulManage.selectIndvdlSchdulManageCnt|
+|저장|/cop/smt/sim/EgovIndvdlSchdulManageModify.do|EgovIndvdlSchdulManageModify|IndvdlSchdulManage.updateIndvdlSchdulManage|
+
+입력한 일정관리 정보를(을) 저장 처리한다.
+
+{{:egovframework:com:cop:smt:sim:egovindvdlschdulmanagemodify.jpg|}}
+
+수정: 수정된 정보들이 저장 처리된다.  \\ 
+목록: **일정관리 목록** 화면으로 이동한다. \\ 
+* 회의관리[egovframework-meetmanagement-1.0.0.zip] import 시 부서찾기, 담당자찾기 팝업을 이용할수있습니다.
+
+----
+
+===== 참고자료 =====
+N/A

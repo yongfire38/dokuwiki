@@ -1,0 +1,150 @@
+====== 협업 - 만족도조사 ======
+
+===== 개요 =====
+게시판에 등록된 글에 대하여 만족도를 작성할 수 있는 기능을 제공한다. 만족도조사는 **[[게시판관리]]** 기능을 기반으로 운영된다.
+
+{{:egovframework:com:cop:satisfactionoutline.jpg|만족도조사 업무흐름}}
+
+게시판관리 기능에서 게시판 생성시 [[#환경설정|게시판 추가기능]]을 활성화시킨 경우는 [[댓글 관리]], 만족도조사, [[스크랩 기능]]을 추가로 사용할 수 있다.
+
+===== 설명 =====
+만족도조사가 가능한 게시판을 사용하기 위해서는 게시판관리를 통해 생성된 게시판에 추가 선택사항을 지정하여야 한다.
+
+추가 선택사항은 [[댓글 관리]] 및 만족도조사가 선택가능하며, 한번 지정이 되면 수정 할 수 없다. 다만, 미설정된 기존 게시판의 경우 처음 설정은 가능하다.
+
+추가 선택사항을 사용하기 위해서는 기존 [[게시판관리기능]] 및 [[게시판사용기능]]의 기능 수정이 선행되어야 한다.
+
+== 변경소스 (게시판관리기능) ==
+
+^유형^대상소스^설명^비고^
+|Controller|egovframework.com.cop.bbs.EgovBBSAttributeManageController.java|게시판 관리를 위한 컨트롤러 클래스|변경|
+|Service|egovframework.com.cop.bbs.service.EgovBBSAttributeManageService.java|게시판 관리를 위한  서비스 인터페이스|변경없음|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovBBSAttributeManageServiceImpl.java|게시판 관리를 위한 서비스 구현 클래스|변경|
+|VO|egovframework.com.cop.bbs.service.BoardMaster.java|게시판 관리를 위한 모델 클래스|변경|
+|VO|egovframework.com.cop.bbs.service.BoardMasterVO.java|게시판 관리를 위한 VO 클래스|변경없음|
+|DAO|egovframework.com.cop.bbs.service.impl.BBSAttributeManageDAO.java|게시판 관리를 위한 데이터처리 클래스|변경없음|
+|DAO|egovframework.com.cop.bbs.service.impl.BBSAddedOptionsDAO.java|추가 기능 관리를 위한 데이터처리 클래스|추가|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBoardMstrRegist.jsp|게시판 생성을 위한 jsp페이지|변경|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBoardMstrUpdt.jsp|생성된 게시판 수정을 위한 jsp페이지|변경|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBoardMstrList.jsp|생성된 게시판 조회를 위한 jsp페이지|변경없음|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBdMstrRegistByTrget.jsp|동호회/커뮤니티의 게시판 생성을 위한 jsp페이지|변경|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBdMstrUpdtByTrget.jsp|동호회/커뮤니티의 생성된 게시판 수정을 위한 jsp페이지|변경|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBBSListByTrget.jsp|동호회/커뮤니티의 생성된 게시판 조회를 위한 jsp페이지|변경없음|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/com/EgovTemplateInqirePopup.jsp|게시판 템플릿 정보 조회를 위한 jsp페이지|변경없음|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL.xml|게시판 관리를 위한 Query|변경없음|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSAddedOptions_SQL.xml|추가 기능 관리를 위한 Query|추가|
+
+== 변경소스 (게시판관리기능) ==
+
+^유형^대상소스^설명^비고^
+|Controller|egovframework.com.cop.bbs.EgovBBSManageController.java|게시글 관리를 위한 컨트롤러 클래스|변경|
+|Service|egovframework.com.cop.bbs.service.EgovBBSManageService.java|게시글 관리를 위한  서비스 인터페이스|변경없음|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovBBSManageServiceImpl.java|게시글 관리를 위한 서비스 구현 클래스|변경없음|
+|VO|egovframework.com.cop.bbs.service.Board.java|게시글 관리를 위한 모델 클래스|변경없음|
+|VO|egovframework.com.cop.bbs.service.BoardVO.java|게시글 관리를 위한 VO 클래스|변경|
+|DAO|egovframework.com.cop.bbs.service.impl.EgovBBSManageDAO.java|게시글 관리를 위한 데이터처리 클래스|변경없음|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeRegist.jsp|게시글 생성을 위한 jsp페이지|변경없음|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeUpdt.jsp|생성된 게시글 수정을 위한 jsp페이지|변경없음|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeList.jsp|생성된 게시글 조회를 위한 jsp페이지|변경없음|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeInqire.jsp|생성된 게시글 상세 조회를 위한 jsp페이지|변경|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeReply.jsp.jsp|생성된 게시글에 대한 답변을 등록하기 위한 jsp페이지|변경없음|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovGuestList.jsp|방명록 등록/조회를 위한 jsp페이지|변경없음|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBoard_SQL.xml|게시판 관리를 위한 Query|변경없음|
+
+
+== 관련소스 ==
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.bbs.web.EgovBBSSatisfactionController.java|만족도조사를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.bbs.service.EgovBBSSatisfactionService.java|만족도조사를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovBBSSatisfactionServiceImpl.java|만족도조사를 위한 서비스 구현 클래스|
+|VO|egovframework.com.cop.bbs.service.Satisfaction.java|만족도조사를 위한 모델 클래스|
+|VO|egovframework.com.cop.bbs.service.SatisfactionVO.java|만족도조사를 위한 VO 클래스|
+|DAO|egovframework.com.cop.bbs.service.impl.BBSSatisfactionDAO.java|만족도조사를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovSatisfactionList.jsp|만족도조사를 위한 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSSatisfaction_SQL.xml|만족도조사를 Query 파일|
+
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|게시판마스터옵션|COMTNBBSMASTEROPTN|게시판 추가 기능 관리|
+|만족도|COMTNSTSFDG|만족도조사 정보를 관리|
+
+
+
+
+===== 환경설정 =====
+
+
+본 만족도조사 기능을 포함 [[댓글 관리]] 및 [[스크랩 기능]]을 사용하기 위해서는 globals.properties 속성 파일에 추가 속성을 설정하여야 한다.
+
+globals.properties에 관련된 내용은 [[요소기술 프로퍼티 및 명령어 쉘스크립트]] 부분을 참조한다.
+
+
+==== 관련 설정 사항 ====
+
+  * Globals.addedOptions 추가
+
+<code>
+...
+# 2단계 게시판 추가 기능 (댓글, 만족도조사, 스크랩)
+Globals.addedOptions = true
+...
+</code>
+
+참고로 위 설정이 없는 경우도 운영에 문제가 되지 않도록 구축되어 있다.
+
+위와 같이 설정이 추가되면 기존 게시판 관리의 게시판 생성 및 수정시에 다음과 같은 추가 선택사항이 나타난다.
+
+{{:egovframework:com:cop:bbsaddedoptions.jpg|게시판 생성}}
+
+
+
+===== 사용방법 =====
+
+
+
+
+
+==== 댓글 목록조회 ====
+만족도조사가 설정된 게시판의 게시글을 보면 만족도를 등록, 수정 및 삭제할 수 있는 기능 버튼을 제공합니다.
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/cop/bbs/selectSatisfactionList.do|EgovBBSSatisfactionController|selectSatisfactionList|.../cop/bbs/EgovSatisfactionList.jsp|
+
+
+
+만족도 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+페이지당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:cop:satisfactionlist.jpg|만족도조사 목록조회}}
+
+만족도에 대한 전체 평균은 상단에 표시가 된다. (tooltip으로 평균값 표시)
+
+수정화면은 다음과 같다.
+
+{{:egovframework:com:cop:satisfactionupdt.jpg|만족도조사 수정}}
+
+
+----
+
+
+
+
+
+===== 참고자료 =====
+
+  * 게시판관리 참조 :   
+    * [[게시판관리]]
+      * [[게시판관리기능|게시판 관리기능]]
+      * [[게시판사용기능|게시판 사용기능]]
+      * [[게시판템플릿|게시판 템플릿]]
+      * [[게시판익명처리|게시판 익명처리]] 
+
+  * 배포 및 테스트 관련 : [[common_component_system|Common Component System]] 및 [[배포_패키지_구성안|배포 패키지 구성안]]
+
+
+

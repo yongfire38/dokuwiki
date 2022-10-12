@@ -1,0 +1,49 @@
+====== 디스크 유효용량 체크 ======
+
+===== 개요 =====
+시스템 내 디스크의 유효용량을 확인한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 디스크 유효용량을 확인하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovSysInfo.java|파일관리 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovDiskCpcty.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|ArrayList|getDiskCapacity()|디스크유효용량 조회|디스크 유효용량을 조회한다. 전체사이즈, 사용가능사이즈, 사용%, 마운트위치 정보를 문자열로 LIST에 담아서 리턴|
+
+== Input == 
+N/A
+  
+== Output ==
+  * ArrayList 타입 : 유효용량정보 목록 {"2000000","1000000","50%","/user"}
+
+===== 환경설정 =====
+
+getDiskCpcty.sh 메소드는 쉘스크립트의 실행결과를 활용하여 정보를 확인한다. 호출시 활용되는 쉘스크립트의 정보는 globals.properties에 등록한다.
+
+  * globals.properties
+
+<code>
+#getOwner 메소드에 해당되는 쉘 스크립트
+SHELL.UNIX.getDrctryOwner = /product/jeus/egovProps/prg/getDiskCpcty.sh
+</code>
+
+===== 사용방법 =====
+
+<code java>
+    import egovframework.com.utl.sim.service.EgovSysInfo;
+
+    ArrayList result = EgovSysInfo.getDiskCapacity();
+</code>
+
+===== 참고자료 =====
+N/A

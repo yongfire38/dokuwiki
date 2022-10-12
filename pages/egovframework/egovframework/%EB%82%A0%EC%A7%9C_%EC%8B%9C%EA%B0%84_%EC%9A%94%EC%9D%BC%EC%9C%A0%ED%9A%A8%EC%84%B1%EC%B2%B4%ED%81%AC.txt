@@ -1,0 +1,51 @@
+====== 요소기술 - 날짜/시간/요일 유효성체크 ======
+
+===== 개요 =====
+주어진 일자, 시간, 요일이 유효한지 확인한다.
+
+===== 설명 =====
+입력일자, 시간, 요일이 유효한지 확인하는 기능을 제공한다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovDateUtil.java|Date 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovDateUtilController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovDateValidCeck.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|boolean|validDate(String sDate)|입력일자가 유효한 일자인지 확인|
+|boolean|validTime(String sTime)|입력시간이 유효한 시간인지 확인|
+|boolean|validDate(String sDate, int sWeek)|입력일자의 요일이 입력된 요일인지 확인|
+
+== Input ==
+  * 일자 : String 타입의 날짜 (예, 20090501)
+  * 시간 : String 타입의 시간 (예, 2035)
+  * 요일 : int 타입의 요일[1,2,3,4,5,6,7] (예, 1)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * boolean
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovDateUtil;
+
+...
+String	sDate      = "20080820";
+boolean resultDate = EgovDateUtil.validDate(sDate);
+
+...
+String	sTime      = "2030";
+boolean resultTime = EgovDateUtil.validTime(sTime);
+
+...
+String	sDate   = "20080820";
+int     iWeek   = 1; // 1~7(일요일~토요일)
+boolean resultWeek = EgovDateUtil.validDate(sDate, iWeek);
+
+...
+
+</code>

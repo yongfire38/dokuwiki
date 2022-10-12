@@ -1,0 +1,20 @@
+=== 비즈니스 규칙 ===
+설문참여에서 선택한 설문지별 통계를 보여준다.
+
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 설문참여 통계==
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olp/qnn/EgovQustnrRespondInfoManageList.do|EgovQustnrRespondInfoManageList|QustnrRespondInfoManage.selectQustnrRespondInfoManage|
+| | | |QustnrRespondInfoManage.selectQustnrRespondInfoManageCnt|
+
+{{:egovframework:com:uss:olp:qnn:egovqustnrrespondinfomanagestatistics.jpg|}}
+
+목록: **설문참여 목록** 화면으로 이동한다.
+----

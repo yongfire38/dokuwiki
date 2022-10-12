@@ -1,0 +1,29 @@
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 4. FAQ수정 ==
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/olh/faq/FaqCnUpdt.do|updateFaqCn|"FaqManageDAO.updateFaqCn"|
+|목록|/uss/olh/faq/FaqListInqire.do|selectFaqList|"FaqManageDAO.selectFaqList"|
+
+입력한 FAQ정보들을 저장 처리한다.
+
+{{:egovframework:com:uss:olh:faq:FaqCnUpdt.gif|}}
+
+파일첨부 시 찾아보기를 클릭하여 파일을 첨부할 수 있다(최대 3개 가능 - 설정가능)
+
+{{:egovframework:com:uss:olh:faq:AtchFile2.gif|}}
+
+
+수정: 수정 입력한 FAQ정보들이 저장 처리된다. \\
+목록: **FAQ목록조회** 화면으로 이동한다. \\
+----

@@ -1,0 +1,104 @@
+====== 디지털자산관리 - 개인지식관리 ======
+===== 개요 =====
+
+**개인지식관리**는 개인의 노하우 등 지식을 수집하고 체계적으로 활용할 수 있는 기능을 제공한다.
+===== 설명 =====
+
+  * **개인지식관리**는 개인의 노하우 등 지식을 수집하고 활용하기 위한 목적으로 개인지식의 등록, 수정, 삭제, 상세조회, 목록조회의 기능을 수반한다.
+
+    ① 개인지식목록조회 : 개인지식 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 개인지식등록 : 개인지식 정보를 등록하고, 등록 결과를 조회한다.
+    ③ 개인지식수정 : 기 등록된 개인지식정보의 항목들을 수정한다.
+    ④ 개인지식삭제 : 기 등록된 개인지식정보를 삭제한다.
+    ⑤ 개인지식상세조회 : 등록된 개인지식정보를 상세 조회한다. 
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.dam.per.web.EgovKnoPersonalController.java|개인지식 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.dam.per.service.EgovKnoPersonalService.java|개인지식 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.dam.per.service.impl.EgovKnoPersonalServiceImpl.java|개인지식 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.dam.per.service.impl.KnoPersonalDAO.java|개인지식 관리를 위한 데이터처리 클래스|
+|Model|egovframework.com.dam.per.service.KnoPersonal.java|개인지식 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/dam/per/EgovComDamPersonalList.jsp|개인지식 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/dam/per/EgovComDamPersonalRegist.jsp|개인지식 등록를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/dam/per/EgovComDamPersonalModify.jsp|개인지식 수정를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/dam/per/EgovComDamPersonalDetail.jsp|등록된 개인지식을 조회하기 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/dam/per/EgovComDamPersonal_SQL_*.xml|개인지식관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:dam:per:Personal_class.png?740|}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|지식정보|COMTNDAMKNOIFM|개인지식정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **DAM_ID** 항목을 추가한다. 
+
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('DAM_ID','0');
+ </code>
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 개인지식 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/dam/per/EgovComDamPersonalList.do|selectKnoPersonalList|"KnoPersonalDAO.selectKnoPersonalList"|
+|상세조회|/dam/per/EgovComDamPersonal.do|selectKnoPersonal|"KnoPersonalDAO.selectKnoPersonal"|
+
+개인지식관리 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 소속조직, 지식유형에 대해서 수행된다.
+
+{{:egovframework:com:dam:per:EgovComDamPersonalList.png|}}
+
+조회 : 기 등록된 개인지식의 목록을 조회한다.\\
+등록 : 신규 개인지식을 등록하기 위해서는 상단의 등록 버튼을 통해서 **개인지식관리 등록** 화면으로 이동한다.\\
+상세조회 : 목록중 지식명을 클릭하여 **개인지식관리 상세조회** 화면으로 이동한다.\\
+----
+
+=== 개인지식등록 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/dam/per/EgovComDamPersonalRegist.do|insertKnoPersonal|"KnoPersonalDAO.insertKnoPersonal"|
+
+개인지식의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:dam:per:EgovComDamPersonalRegist.png|}}
+
+저장 : 신규 개인지식을 등록하기 위해서는 개인지식 속성을 입력한 뒤 상단의 **저장 버튼**을 통해서 개인지식을 등록한다.\\
+목록 : 개인지식 목록조회 화면으로 이동한다.\\
+비지니스규칙 : 공개여부가 공개일 경우 해당지식유형의 **전문가**에 의해 **평가**가 진행 된다.\\
+----
+
+=== 개인지식 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/dam/per/EgovComDamPersonalModify.do|updateKnoPersonal|"KnoPersonalDAO.updateKnoPersonal"|
+
+개인지식의 속성정보를 변경한 후 저장한다. 
+
+{{:egovframework:com:dam:per:EgovComDamPersonalModify.png|}}
+
+저장 : 기 등록된 개인지식 속성을 수정한 뒤 상단의 **저장 버튼**을 통해서 개인지식정보를 수정한다.\\
+목록 : 개인지식 목록조회 화면으로 이동한다.\\
+----
+
+=== 개인지식 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/dam/per/EgovComDamPersonal.do|selectKnoPersonal|"KnoPersonalDAO.selectKnoPersonal"|
+|삭제|/dam/per/EgovComDamPersonalRemove.do|deleteKnoPersonal|"KnoPersonalDAO.deleteKnoPersonal"|
+
+개인지식의 속성정보를 조회한다. 
+
+{{:egovframework:com:dam:per:EgovComDamPersonalDetail.png|}}
+
+수정 : 기 등록된 개인지식 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 개인지식관리수정화면으로 이동한다.\\
+삭제 : 기 등록된 개인지식정보를 삭제한다.\\
+목록 : 개인지식관리 목록조회 화면으로 이동한다.\\
+----

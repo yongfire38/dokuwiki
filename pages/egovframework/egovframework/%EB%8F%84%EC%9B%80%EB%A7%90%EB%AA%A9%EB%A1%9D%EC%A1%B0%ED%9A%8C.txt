@@ -1,0 +1,31 @@
+=== 비즈니스 규칙 ===
+일반사용자가 아닌 관리자가 사용하는 화면으로 조회조건으로 목록조회를 할 수 있고, 등록버튼을 클릭하여 도움말등록 화면으로 \\
+이동하여 도움말를 등록 처리 할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 1. 도움말목록조회 ==
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/olh/hpc/HpcmListInqire.do|selectHpcmList|"HpcmManageDAO.selectHpcmList"|
+| |/uss/olh/hpc/HpcmListInqire.do|selectHpcmListTotCnt|"HpcmManageDAO.selectHpcmListTotCnt"|
+|등록|/uss/olh/hpc/HpcmRegistView.do|insertHpcmCnView||
+| |/uss/olh/hpc/HpcmRegist.do|insertHpcmCn|"HpcmManageDAO.insertHpcmCn"|
+|목록클릭|/uss/olh/hpc/HpcmDetailInqire.do|selectHpcmDetail|"HpcmManageDAO.selectHpcmDetail"|
+
+도움말 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 용어명, 영문명에 대해서 수행된다.\\ 페이지 당 검색 범위를 변경하고자 하는 경우 \\
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:uss:olh:hpc:HpcmListInqire.gif|}}
+
+조회: 도움말를 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색문자를 입력 후 조회 버튼을 클릭한다.\\
+등록: 도움말를 등록하기 위해서는 상단의 등록 버튼을 통해서 **도움말등록** 화면으로 이동한다. \\
+목록클릭: **도움말상세조회** 화면으로 이동한다.
+----

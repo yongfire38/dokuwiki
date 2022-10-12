@@ -1,0 +1,104 @@
+====== 디지털자산관리 - 지식요청제공관리 ======
+===== 개요 =====
+
+**지식요청제공관리**는 사용자가 특정지식의 습득을 필요로 하는 경우에 해당지식의 전문가를 통하여 최적의 정보를 제공받을 수 있는 기능을 제공한다.
+===== 설명 =====
+
+  * **지식요청제공관리**는 사용자가 특정지식의 습득을 필요로 하는 경우에 최적의 정보를 제공받기 위한 목적으로 지식요청제공의 등록, 수정, 삭제, 상세조회, 목록조회의 기능을 수반한다.
+
+    ① 지식요청제공목록조회 : 지식요청제공 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 지식요청제공등록 : 지식요청제공 정보를 등록하고, 등록 결과를 조회한다.
+    ③ 지식요청제공수정 : 기 등록된 지식요청제공정보의 항목들을 수정한다.
+    ④ 지식요청제공삭제 : 기 등록된 지식요청제공정보를 삭제한다.
+    ⑤ 지식요청제공상세조회 : 등록된 지식요청제공정보를 상세 조회한다. 
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.dam.spe.req.web.EgovRequestOfferController.java|지식요청제공 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.dam.spe.req.service.EgovRequestOfferService.java|지식요청제공 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.dam.spe.req.service.impl.EgovRequestOfferServiceImpl.java|지식요청제공 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.dam.spe.req.service.impl.RequestOfferDAO.java|지식요청제공 관리를 위한 데이터처리 클래스|
+|Model|egovframework.com.dam.spe.req.service.RequestOffer.java|지식요청제공 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/dam/spe/req/EgovComDamRequestOfferList.jsp|지식요청제공 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/dam/spe/req/EgovComDamRequestOfferRegist.jsp|지식요청제공 등록를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/dam/spe/req/EgovComDamRequestOfferModify.jsp|지식요청제공 수정를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/dam/spe/req/EgovComDamRequestOfferDetail.jsp|등록된 지식요청제공을 조회하기 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/dam/spe/req/EgovComDamRequestOffer_SQL_*.xml|지식요청제공관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:dam:spe:req:requestOffer_class.png?740|}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|지식정보요청제공|COMTNDAMCALRES|지식요청제공정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **KNO_ID** 항목을 추가한다. 
+
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('KNO_ID','0');
+ </code>
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 지식요청제공 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/dam/spe/req/EgovComDamRequestOfferList.do|selectRequestOfferList|"RequestOfferDAO.selectRequestOfferList"|
+|상세조회|/dam/spe/req/EgovComDamRequestOffer.do|selectRequestOffer|"RequestOfferDAO.selectRequestOffer"|
+
+지식요청제공관리 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 소속조직, 지식유형에 대해서 수행된다.
+
+{{:egovframework:com:dam:spe:req:EgovComDamRequestOfferList.png|}}
+
+조회 : 기 등록된 지식요청제공의 목록을 조회한다.\\
+등록 : 신규 지식요청제공을 등록하기 위해서는 상단의 등록 버튼을 통해서 **지식요청제공관리 등록** 화면으로 이동한다.\\
+상세조회 : 목록중 지식명을 클릭하여 **지식요청제공 상세조회** 화면으로 이동한다.\\
+----
+
+=== 지식요청제공등록 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/dam/spe/req/EgovComDamRequestOfferRegist.do|insertRequestOffer|"RequestOfferDAO.insertRequestOffer"|
+
+지식요청제공의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:dam:spe:req:EgovComDamRequestOfferRegist.png|}}
+
+저장 : 신규 지식요청제공을 등록하기 위해서는 지식요청제공 속성을 입력한 뒤 상단의 **저장 버튼**을 통해서 지식요청제공을 등록한다.\\
+목록 : 지식요청제공 목록조회 화면으로 이동한다.\\
+----
+
+=== 지식요청제공 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/dam/spe/req/EgovComDamRequestOfferModify.do|updateRequestOffer|"RequestOfferDAO.updateRequestOffer"|
+
+지식요청제공의 속성정보를 변경한 후 저장한다. 
+
+{{:egovframework:com:dam:spe:req:EgovComDamRequestOfferModify.png|}}
+
+저장 : 기 등록된 지식요청제공 속성을 수정한 뒤 상단의 **저장 버튼**을 통해서 지식요청제공정보를 수정한다.\\
+목록 : 지식요청제공 목록조회 화면으로 이동한다.\\
+----
+
+=== 지식요청제공 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/dam/spe/req/EgovComDamRequestOffer.do|selectRequestOffer|"RequestOfferDAO.selectRequestOffer"|
+|삭제|/dam/spe/req/EgovComDamRequestOfferRemove.do|deleteRequestOffer|"RequestOfferDAO.deleteRequestOffer"|
+
+지식요청제공의 속성정보를 조회한다. 
+
+{{:egovframework:com:dam:spe:req:EgovComDamRequestOfferDetail.png|}}
+
+수정 : 기 등록된 지식요청제공 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 지식요청제공관리수정화면으로 이동한다.\\
+삭제 : 기 등록된 지식요청제공정보를 삭제한다.\\
+답변 : 지식요청제공관리 답변등록 화면으로 이동한다.\\
+목록 : 지식요청제공관리 목록조회 화면으로 이동한다.\\
+----

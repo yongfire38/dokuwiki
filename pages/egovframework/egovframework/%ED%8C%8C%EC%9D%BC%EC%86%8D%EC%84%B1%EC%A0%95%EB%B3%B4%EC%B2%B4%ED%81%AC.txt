@@ -1,0 +1,94 @@
+====== 파일속성정보 체크 ======
+
+===== 개요 =====
+파일 고유의 속성정보를 가지고 오는 기능이다. 파일이 가지고 있는 속성정보인 디스크명, 디렉토리명, 파일명, 수정일자, 생성자(Owner), 파일접근권한(Write, Read), 파일사이즈, 파일 포맷 등의 정보를 가지고 온다. 이 서비스 컴포넌트는 서버(Server) 및 클라이언트(Client) 응용어플리케이션에서 파일 속정 정보를 확인 시 활용할 수 있다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+  ① 파일이 위치하는 디스크명을 가지고 오는 기능
+  ② 파일이 위치하는 디렉토리를 가지고 오는 기능
+  ③ 파일이 존재하는지 체크하고 파일명을 가지고 오는 기능
+  ④ 파일의 수정일자를 가지고 오는 기능
+  ⑤ 파일의 생성자(Owner)를 가지고 오는 기능
+  ⑥ 파일의 접근권한을 가지고 오는 기능
+  ⑦ 파일 사이즈를 가지고 오는 기능
+  ⑧ 파일 포맷을 가지고 오는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovFileInfo.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|String|getMountLc(String file)|디스크명조회|파일(디렉토리)가 존재하는 파일시스템(마운트된 위치)을 조회|
+|String|getDrctryName(String file)|디렉토리명조회|파일(디렉토리)가 존재하는 디렉토리(Parent)를 조회|
+|String|getFileName(String file)|파일명조회|파일(디렉토리)가 존재하는 파일명을 조회|
+|String|getUpdtDate(String file)|수정일자조회|파일(디렉토리)의 최종수정일자를 조회|
+|String|getOwner(String file)|생성자조회|파일(디렉토리)의 생성자를 조회|
+|String|getAccess(String file)|접근권한조회|파일(디렉토리)의 접근권한을 조회|
+|long|getSize(String file)|사이즈조회|파일(디렉토리)의 사이즈를 조회|
+|String|getFormat(String file)|포맷조회|파일(디렉토리)의 포맷을 조회|
+
+== Input ==
+  * 파일: String 타입의 절대경로를 포함한 파일명 (예, /product/jeus/test/samples/common.xml)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+
+== Output ==
+  * String 타입 디스크명 (예, /product)
+  * String 타입 디렉토리 (예, /product/jeus/test/samples)
+  * String 타입 파일명 (예, /product/jeus/test/samples/common.xml)
+  * String 타입 최종수정일 (예, 20090422)
+  * String 타입 생성자 (예, jeus)
+  * String 타입 접근권한 (예, -rw-r--r--)
+  * String 타입 사이즈 (예, 1198)
+  * String 타입 포맷 (예, application/xml)
+
+===== 환경설정 =====
+  * format.properties
+<code>
+# 확장자별 포맷 정의
+avi=video/x-msvideo
+css=text/css
+gif=image/gif
+jar=application/java-archive
+java=text/plain
+jpg=image/jpeg
+mpeg=video/mpeg
+xml=application/xml
+
+...(생략)...
+</code>
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovFileTool;   
+
+	String file = request.getParameter("file");
+	if (file != null && file.length() > 0) {
+		// 1. 디스크명
+		disk = EgovFileTool.getMountLc(file);
+		// 2. 디렉토리명
+		drctry = EgovFileTool.getDrctryName(file);
+		// 3. 파일명
+		name = EgovFileTool.getFileName(file);
+		// 4. 수정일자
+		date = EgovFileTool.getUpdtDate(file);
+		// 5. 생성자
+		owner = EgovFileTool.getOwner(file);
+		// 6. 접근권한
+		access = EgovFileTool.getAccess(file);
+		// 7. 사이즈
+		size = EgovFileTool.getSize(file);
+		// 8. 포맷
+		format = EgovFileTool.getFormat(file);
+	}
+</code>
+
+===== 참고자료 =====
+N/A

@@ -1,0 +1,50 @@
+====== 요소기술 - 인코딩&디코딩 ======
+
+===== 개요 =====
+문자열을 다양한 문자셋(EUC‐KR, UTF‐8,..)을 사용하여 인코딩 및 디코딩 하는 기능을 제공한다.
+
+===== 설명 =====
+특정문자열의 문자셋을 변환하기 전 문자형태와 변환하고자 하는 문자 형태로 변환하는 기능으로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovNumStringUtil.java|String 관련 유틸리티| |
+|Controller|egovframework.com.cmm.web.EgovComUtlController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovEncdDcd.jsp|인코딩&디코딩 테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|getEncdDcd(String srcString, String srcCharsetNm, String cnvrCharsetNm )|인코딩&디코딩|문자셋을 인코딩 및 디코딩변환 기능|
+
+
+===== 환경설정 =====
+
+**해당없음**
+
+===== 사용방법 =====
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovStringUtil;
+...
+
+// 인코딩(원래문자열, 기존 문자열형태, 인코딩 문자열형태)
+String srcString = safeGetParameter(request,"srcString");
+String srcCharset = safeGetParameter(request,"srcCharset");
+String EncdType = safeGetParameter(request,"EncdType");
+
+String	resultEncd = EgovStringUtil.getEncdDcd( srcString, srcCharset, EncdType);
+
+// 디코딩(원래문자열, 기존 문자열형태, 디코딩 문자열형태)
+String srcString 	= safeGetParameter(request,"srcString");
+String srcCharset 	= safeGetParameter(request,"srcCharset");
+String DcdType 		= safeGetParameter(request,"DcdType");
+
+String	resultDcd  = EgovStringUtil.getEncdDcd( srcString, srcCharset, DcdType);
+
+</code>
+
+
+===== 참고자료 =====
+
+ N/A

@@ -1,0 +1,172 @@
+====== 디스크 속성정보 체크 ======
+
+===== 개요 =====
+시스템에 존재하는 DISK, CD, USB에 대한 정보를 확인한다. 
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 디스크 속성정보를 확인하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovSysInfo.java|시스템 정보 확인 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovDiskAttrb.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|ArrayList|getDiskAttribute()|디스크속성정보 조회|DISK, CD, USB에 대한 정보를 조회한다. 디스크명, 디스크속성, 디스크종류, 전체사이즈, 사용사이즈, 잔여사이즈 정보를 문자열정보로 LIST에 담아서 리턴|
+
+== Input == 
+N/A
+  
+== Output ==
+  * ArrayList 타입 : 속성정보 목록 {"hdisk1","disk_001","disk","2000000","1000000","1000000"}
+
+
+===== 환경설정 =====
+
+getDiskAttribute 메소드는 쉘스크립트의 실행결과를 활용하여 정보를 확인한다. 호출시 활용되는 쉘스크립트의 정보는 globals.properties에 등록한다.
+
+  * globals.properties
+
+<code>
+getDiskAttribute 메소드에 해당되는 쉘 스크립트
+SHELL.UNIX.getDiskAttrb= /product/jeus/egovProps/prg/getDiskAttrb.sh
+</code>
+
+
+  * getDiskAttrb.sh (유닉스용 디스크속성 조회 스크립트)
+
+<code>
+#$A = lspv | awk '{print $1}'
+
+#### DISK CHECK ####
+#for A in `lspv | awk '{print $1}' ` 
+for A in `lsdev -Cc disk | awk '{print $1}'`
+do 
+    # NAME
+    echo $A
+    # ATTRIBUTE
+    echo `lscfg -l $A  | awk -F $A '{print $2}'`
+    # TYPE
+    echo "disk"
+    # AUTHORITY
+
+    # SIZE
+    isEq="FALSE"
+    for B in `lspv | awk '{print $1}' `
+    do
+        if [ $A = $B ]
+        then
+            isEq="TRUE"
+        fi
+    done
+
+    if [ $isEq = "TRUE" ]
+    then
+        # TOTAL SIZE 
+        lspv $A | grep "TOTAL PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+        # USED SIZE 
+        lspv $A | grep "USED PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+        # FREE SIZE 
+        lspv $A | grep "FREE PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+    else
+        echo ""
+        echo ""
+        echo ""
+    fi 
+
+done
+
+#### USB CHECK ####
+for A in `lsdev -Cc usb | awk '{print $1}'`
+do
+# NAME
+echo $A
+# ATTRIBUTE
+echo `lscfg -l $A  | awk -F $A '{print $2}'`
+# TYPE
+echo "usb"
+# AUTHORITY
+
+# SIZE
+    isEq="FALSE"
+    for B in `lspv | awk '{print $1}' `
+    do
+        if [ $A = $B ]
+        then
+            isEq="TRUE"
+        fi
+    done
+
+    if [ $isEq = "TRUE" ]
+    then
+        # TOTAL SIZE 
+        lspv $A | grep "TOTAL PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+        # USED SIZE 
+        lspv $A | grep "USED PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+        # FREE SIZE 
+        lspv $A | grep "FREE PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+    else
+        echo ""
+        echo ""
+        echo ""
+    fi 
+
+done
+
+
+#### CDROM CHECK ####
+for A in `lsdev -Cc cdrom | awk '{print $1}'`
+do
+# NAME
+echo $A
+# ATTRIBUTE
+echo `lscfg -l $A  | awk -F $A '{print $2}'`
+# TYPE
+echo "cdrom"
+# AUTHORITY
+
+# SIZE
+    isEq="FALSE"
+    for B in `lspv | awk '{print $1}' `
+    do
+        if [ $A = $B ]
+        then
+            isEq="TRUE"
+        fi
+    done
+
+    if [ $isEq = "TRUE" ]
+    then
+        # TOTAL SIZE 
+        lspv $A | grep "TOTAL PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+        # USED SIZE 
+        lspv $A | grep "USED PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+        # FREE SIZE 
+        lspv $A | grep "FREE PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+    else
+        echo ""
+        echo ""
+        echo ""
+    fi 
+
+done
+</code>
+
+===== 사용방법 =====
+
+<code java>
+     import egovframework.com.utl.sim.service.EgovSysInfo;
+
+     //디스크명, 디스크속성, 디스크종류, 전체사이즈, 사용사이즈, 잔여사이즈 항목이 순차적으로 등록됨
+     ArrayList result = EgovSysInfo.getDiskAttribute();
+    
+</code>
+
+===== 참고자료 =====
+N/A

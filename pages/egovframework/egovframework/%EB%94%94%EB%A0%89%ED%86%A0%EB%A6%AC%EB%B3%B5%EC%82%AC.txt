@@ -1,0 +1,66 @@
+====== 디렉토리 복사 ======
+
+===== 개요 =====
+비즈니스 로직을 처리하면서 필요시 디렉토리를 복사할 수 있는 공통 기능을 제공한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 원본 디렉토리를 타겟 디렉토리로 복사하는 기능 
+    ② 원본 디렉토리를 최종수정일자가 특정구간내에 포함되는 경우에 한해서 타겟 디렉토리로 복사하는 기능
+    ③ 원본 디렉토리가 특정 소유자인 경우에 한해서 타겟 디렉토리로 복사하는 기능(WINDOWS 시스템에서는 지원하지 않음)
+  
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 툴 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovDrctryCopy.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean |copyDirectory(String dirOriginalPath, String dirTargetPath)|디렉토리 복사|원본디렉토리경로(dirOriginalPath)를 입력받아 타겟디렉토리(dirTargetPath)로 복사한다. 성공시 TRUE, 실패시 FALSE 리턴|
+|boolean |copyDirectory(String dirOriginalPath, String dirTargetPath, String fromDate, String toDate)|디렉토리 복사|원본디렉토리경로(dirOriginalPath)를 입력받아 생성일자가 조건구간(fromDate과 toDate사이)내에 포함되는 경우 타겟디렉토리(dirTargetPath)로 복사한다. 성공시 TRUE, 실패시 FALSE 리턴|
+|boolean |copyDirectory(String dirOriginalPath, String dirTargetPath, String owner)|디렉토리 복사|원본디렉토리경로(dirOriginalPath)를 입력받아 디렉토리 소유자조건에 일치하면 타겟디렉토리(dirTargetPath)로 복사한다. 성공시 TRUE, 실패시 FALSE 리턴|
+
+== Input == 
+  * dirOriginalPath : String 타입의 절대경로를 포함하는 원본디렉토리경로(예, /product/jeus/egovProps/tmp/dir1)
+  * dirTargetPath : String 타입의 절대경로를 포함하는 타겟디렉토리경로(예, /product/jeus/egovProps/tmp/copy1) 
+  * fromDate : String 타입의 날짜정보 (예, 20090101)
+  * toDate : String 타입의 날짜정보 (예, 20090731)
+  * owner : String 타입의 사용자계정명 (예, jeus)
+
+== Output ==
+  * boolean 타입 true / false 
+
+* 메소드의 입력항목 중에서 fromDate, toDate항목은 Validation 체크가 적용됨([[egovframework:요소기술_validation_체크]] 참조)
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+
+    import egovframework.com.utl.sim.service.EgovFileTool;
+
+    String dirOriginalPath1 = "/user/com/dir1";
+    String dirTargetPath1   = "/user/com/copy2";
+    boolean result1         = EgovFileTool.copyDirectory(dirOriginalPath1, dirTargetPath1);
+
+    String dirOriginalPath2 = "/user/com/dir2";
+    String dirTargetPath2   = "/user/com/copy2";
+    String dirTargetPath2   = "20080101";
+    String dirTargetPath2   = "20080130";
+    boolean result2 = EgovFileTool.copyDirectory(dirOriginalPath2, dirTargetPath2, fromDate2, toDate2);
+
+    String dirOriginalPath3 = "/user/com/dir3";
+    String dirTargetPath3   = "/user/com/copy3";
+    String owner3           = "com";
+    boolean result3         = EgovFileTool.copyDirectory(dirOriginalPath3, dirTargetPath3, owner3);
+
+</code>
+
+===== 참고자료 =====
+N/A

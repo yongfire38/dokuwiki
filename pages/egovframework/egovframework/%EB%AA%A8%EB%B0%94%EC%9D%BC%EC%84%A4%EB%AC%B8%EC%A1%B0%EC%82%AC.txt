@@ -1,0 +1,223 @@
+====== 사용자 지원 - 설문조사 ======
+
+===== 개요 =====
+**설문조사** 서비스는 설문조사 참여자가 설문에 참여하기 위한 설문참여 목록 조회기능, 객관식/주관식 질문에 대한 답변 등록기능과\\
+설문결과 및 설문통계 정보를 확인하기 위한 설문통계 기능을 제공한다. \\
+
+**설문조사** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+또한 공통으로 지원하고 있는 jAlert와 날짜/시간을 위한 datebox가 사용되고 있으며, 아래와 같은 js 파일에 정의되어 있다.
+  * **EgovMobile.js**
+  * **jquery.mobile.datebox.js**
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능 흐름도 ====
+{{:egovframework:mcom:설문관리_기능흐름도.jpg?740|}} \\
+
+=== 1. 설문템플릿등록  ===
+    설문템플릿 기본정보 입력후 등록한다. / 설문참여 양식 결정 
+=== 2. 설문지등록(설문등록) ===  
+    설문템플릿선택하고 설문지 기본정보 입력후 등록한다.  
+=== 3. 설문문항등록 ===
+    설문지정보를 선택하고 설문문항 기본정보 입력후 등록한다.  
+=== 4. 설문항목등록 ===
+    설문지정보, 설문문항정보 선택하고 설문항목 입력후 등록한다.  
+=== 5. 설문참여 ===
+    설문참여 등록에서 설문조사에 응한다.   
+    설문참여 통계를 이용하여 설문참여결과를 확인한다.  
+=== 6. 설문조사(응답결과) 확인 === 
+   설문참여 응답 결과를 확인한다.  
+=== 7. 설문응답자관리 결과 확인 === 
+    설문참여 설문응답자 결과를 확인한다. 
+
+===== 설명 =====
+설문조사 기능은 크게 **설문참여 목록조회**, **설문참여 등록**, **설문통계** 기능으로 구성되어 있다.
+
+== 클래스 다이어그램 ==
+
+{{:egovframework:mcom:CLD_설문조사참여.JPG?740|}}
+
+== 관련소스 ==
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.olp.qri.web.EgovQustnrRespondInfoController.java|설문참여 Controller Class|
+|Controller|egovframework.mbl.com.uss.olp.qri.web.EgovMblQustnrRespondInfoController.java|설문참여 모바일 Controller Class|
+|Service|egovframework.com.uss.olp.qri.service.EgovQustnrRespondInfoService.java|설문참여 Service Class|
+|VO|egovframework.com.uss.olp.qri.service.QustnrRespondInfoVO.java|설문참여 VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.uss.olp.qri.service.impl.EgovQustnrRespondInfoServiceImpl.java|설문참여 ServiceImpl Class|
+|DAO|egovframework.com.uss.olp.qri.service.impl.QustnrRespondInfoDao.java|설문참여 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/qnn/EgovQustnrRespondInfoList.jsp|설문참여 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/qnn/EgovQustnrRespondInfoRegist.jsp|설문참여 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/qnn/EgovQustnrRespondInfoManageStatistics.jsp|설문참여 통계 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olp/qnn/EgovQustnrRespondInfoManageList.jsp|설문참여 목록조회 모바일 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olp/qnn/EgovQustnrRespondInfoManageRegist.jsp|설문참여 등록 모바일 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olp/qnn/EgovQustnrRespondInfoManageStatistics.jsp|설문참여 통계 모바일 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/olp/qri/EgovQustnrRespondInfo.xml|설문참여 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olp/qri/EgovQustnrRespondInfo.xml|설문참여 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|설문참여 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|설문참여 Id생성 Idgen XML|
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|설문템플릿|COMTNQUSTNRTMPLAT|설문템플릿를(을) 조회한다.|
+|설문관리|COMTNQESTNRINFO|설문관리를(을) 조회한다.|
+|설문문항|COMTNQUSTNRQESITM|설문문항를(을) 조회한다.|
+|설문항목|COMTNQUSTNRIEM|설문항목를(을) 조회한다.|
+|설문응답결과|COMTNQUSTNRRSPNSRESULT|설문응답결과를 관리한다.|
+
+== 관련코드 == 
+^코드분류^코드분류명^코드ID^코드명^
+|COM014|성별코드|M|남자|
+|COM014|성별코드|F|여자|
+|COM034|작업유형코드|1|학생|
+|COM034|작업유형코드|2|대학생|
+|COM034|작업유형코드|3|군인|
+|COM034|작업유형코드|4|교사|
+|COM034|작업유형코드|5|기타|
+
+== Validator ==
+
+ Validator Rule을 적용하지 않고, Script로 Validation을 사용하고 있다.
+
+===== 사용방법 =====
+
+==== 설문참여 목록조회 ====
+=== 비즈니스 규칙 ===
+설문참여자가 이미 등록된 설문참여정보를 리스트 형태로 조회할 수 있다. \\
+목록을 클릭하여 설문참여등록 화면으로, 우측의 조회 이미지를 클릭하여 설문통계 화면으로 이동할 수 있다. \\
+설문제목을 검색조건으로 사용한다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/olp/qnn/EgovQustnrRespondInfoManageList.mdo|EgovQustnrRespondInfoManageList|"QustnrRespondInfoManage.selectQustnrRespondInfoManage"|
+|목록클릭|/uss/olp/qnn/EgovQustnrRespondInfoManageRegist.mdo|EgovQustnrRespondInfoManageRegist| |
+| |/uss/olp/qri/template/template.mdo|EgovQustnrRespondInfoManageTemplate| |
+|통계|/uss/olp/qnn/EgovQustnrRespondInfoManageStatistics.mdo|EgovQustnrRespondInfoManageStatistics| |
+
+설문조사 참여 목록은 페이지 당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. 
+
+{{:egovframework:mcom:EgovQustnrRespondInfoManageList_1.jpg|}}
+{{:egovframework:mcom:EgovQustnrRespondInfoManageList_2.jpg|}}
+
+홈: 홈 화면으로 이동한다. \\
+검색: 설문참여 목록을 조회하기 위해서는 상단의 검색조건을 선택하고 해당하는 검색문자를 입력 후 검색 버튼을 클릭한다. \\
+목록 클릭: **설문참여 등록** 화면으로 이동한다. \\
+조회 이미지: **설문참여 통계** 화면으로 이동한다.
+
+----
+
+==== 설문참여 등록 ====
+=== 비즈니스 규칙 ===
+설문참여자에 대한 기본정보 및 설문에 대한 답변정보를 등록하며, 등록이 성공적으로 처리되면 설문참여 목록조회 화면으로 이동된다. \\
+
+설문참여 등록 화면은 관리자가 설문 목록 등록시, 선택한 Template 파일을 이용한다. (파일은 /WEB-INF/jsp/egovframework/mbl/com/uss/olp/qri/ 에 위치한다.) \\
+** Template 파일 등록 ** 시, 템플릿 파일 경로는 **/egovframework/com/해당 URL** 로 등록한다. (Contoroller에서 **/egovframework/mbl/com/해당 URL** 로 변환하여 템플릿 파일을 찾는다.) \\
+ - 예시) /egovframework/com/uss/olp/qri/template/template
+
+저장처리 시 QESRSPNS_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 Primary Key => QESRSPNS_ID(20자리) : QRSPNS_(7자리) + 일련번호(13자리)로 자동생성 부여된다.
+
+	<!-- IdGnrService... START-->			
+	<bean name="qustnrRespondInfoIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="QustnrRespondInfotrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="QESRSPNS_ID"/>
+	</bean>
+	<bean name="QustnrRespondInfotrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="QRSPNS_" />
+		<property name="cipers" value="13" />
+		<property name="fillChar" value="0" />
+	</bean>
+	<!-- IdGnrService... END-->	
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olp/qnn/EgovQustnrRespondInfoManageListView.mdo|EgovQustnrRespondInfoManageListView| |
+|저장|/uss/olp/qnn/EgovQustnrRespondInfoManageRegistActor.mdo|EgovQustnrRespondInfoManageRegistActor|"QustnrRespondInfoManage.insertQustnrRespondInfo"|
+
+{{:egovframework:mcom:EgovQustnrRespondInfoManageRegist_1.jpg|}}
+{{:egovframework:mcom:EgovQustnrRespondInfoManageRegist_2.jpg|}}
+
+뒤로: **설문참여 목록조회** 화면으로 이동한다. \\
+등록: 입력한 설문참여 정보들이 저장 처리된다. \\
+목록: **설문참여 목록조회** 화면으로 이동한다. \\ 
+
+----
+
+==== 설문통계 ====
+
+=== 비즈니스 규칙 ===
+설문에 대한 각 항목별로 응답결과정보와 그래프 형태의 통계정보를 보여준다.
+
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+== 설문참여 통계==
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olp/qnn/EgovQustnrRespondInfoManageStatistics.mdo|EgovQustnrRespondInfoManageStatistics|"QustnrRespondInfo.selectQustnrTmplatManages"|
+| | | |"QustnrRespondInfo.selectQustnrRespondInfoManageComtnqestnrinfo"|
+| | | |"QustnrRespondInfo.selectQustnrRespondInfoManageComtnqustnrqesitm"|
+| | | |"QustnrRespondInfo.selectQustnrRespondInfoManageComtnqustnriem"|
+| | | |"QustnrRespondInfo.selectQustnrRespondInfoManageStatistics1"|
+| | | |"QustnrRespondInfo.selectQustnrRespondInfoManageStatistics2"|
+
+{{:egovframework:mcom:EgovQustnrRespondInfoManageStatistics_1.jpg|}}
+{{:egovframework:mcom:EgovQustnrRespondInfoManageStatistics_2.jpg|}}
+
+뒤로: **설문참여 목록조회** 화면으로 이동한다. \\ 
+목록: **설문참여 목록조회** 화면으로 이동한다. \\ 
+
+
+
+===== 참고자료 =====
+
+  * 설문템플릿관리 참조(기존 웹 버전) : [[설문템플릿관리]]
+  * 설문 관리 참조(기존 웹 버전) : [[설문 관리]]
+  * 설문문항관리 참조(기존 웹 버전) : [[설문문항관리]]
+  * 설문항목관리 참조(기존 웹 버전) : [[설문항목관리]]
+  * 설문응답자관리 참조(기존 웹 버전) : [[설문응답자관리]]
+  * 설문조사(응답결과)관리 참조(기존 웹 버전) : [[설문조사(응답결과)관리]]
+  * 설문참여 참조(기존 웹 버전) : [[설문참여]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

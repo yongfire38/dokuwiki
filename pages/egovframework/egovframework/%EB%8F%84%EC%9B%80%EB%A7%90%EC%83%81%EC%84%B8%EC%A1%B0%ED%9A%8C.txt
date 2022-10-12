@@ -1,0 +1,26 @@
+=== 비즈니스 규칙 ===
+일반사용자가 아닌 관리자가 사용하는 화면으로 도움말목록조회에서 목록 클릭 시 이동되는 화면으로 도움말에 대한 상세정보를 \\
+보여준다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 2. 도움말상세조회 ==
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/olh/hpc/HpcmUpdtView.do|updateHpcmCnView||
+|삭제|/uss/olh/hpc/HpcmDelete.do|deleteHpcmCn|"HpcmManageDAO.deleteHpcmCn"|
+|목록|/uss/olh/hpc/HpcmListInqire.do|selectHpcmList|"HpcmManageDAO.selectHpcmList"|
+
+도움말 상세조회화면은 도움말수정, 도움말삭제, 도움말목록조회를 할 수 있다.
+
+{{:egovframework:com:uss:olh:hpc:HpcmDetailInqire2.gif|}}
+
+수정: 수정버튼 클릭 시 도움말를 수정할 수 있는 화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **도움말목록조회** 화면으로 이동한다.
+----

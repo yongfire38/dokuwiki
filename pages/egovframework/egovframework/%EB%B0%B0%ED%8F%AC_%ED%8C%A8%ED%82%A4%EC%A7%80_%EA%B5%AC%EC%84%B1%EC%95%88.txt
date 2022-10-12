@@ -1,0 +1,107 @@
+====== 배포 패키지 구성 ======
+
+===== 구현 패키지별 배포 패키지 매핑 =====
+
+**1차 공통컴포넌트**
+^구현패키지명^설명^배포패키지명^공용여부^
+|egovframework.com.*|공통컴포넌트 전체 실행 배포파일로써 개발된 모든 공통컴포넌트가 하나의 테스트 사이트로 구성되어 있음|egovframework-com-1.0.war| |
+|egovframework.com.sec.rnc|공통컴포넌트_보안_실명확인|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.sec.ram|공통컴포넌트_보안_역할/권한관리|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.uss.umt|공통컴포넌트_사용자지원_사용자관리|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.uat.uia|공통컴포넌트_사용자인증_사용자통합인증|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.sym.ccm.adc|공통컴포넌트_시스템관리_공통코드관리_행정코드관리|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.sym.ccm.cca|공통컴포넌트_시스템관리_공통코드관리_공통코드관리|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.sym.ccm.ccc|공통컴포넌트_시스템관리_공통코드관리_공통분류코드관리|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.sym.ccm.cde|공통컴포넌트_시스템관리_공통코드관리_공통상세코드관리|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.sym.ccm.zip|공통컴포넌트_시스템관리_공통코드관리_우편번호관리|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.sym.cal|공통컴포넌트_시스템관리_달력|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.ems|공통컴포넌트_전자우편|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.utl|공통컴포넌트_요소기술(유틸리티)|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.uss.sam.stp|공통컴포넌트_사용자지원_약관 및 정책관리_약관관리|egovframework-stipulationmanagement-1.0.0.zip| |
+|egovframework.com.uss.sam.cpy|공통컴포넌트_사용자지원_약관 및 정책관리_저작권보호정책|egovframework-rightmanagement-1.0.0.zip| |
+|egovframework.com.uss.olp.cns|공통컴포넌트_사용자지원_온라인 참여_상담관리|egovframework-onlineconsultation.0.0.zip| |
+|egovframework.com.uss.olp.qmc|공통컴포넌트_사용자지원_온라인 참여_설문관리|egovframework-onlineparticipation-1.0.0.zip| |
+|egovframework.com.uss.olp.qri|공통컴포넌트_사용자지원_온라인 참여_설문조사|egovframework-onlineparticipation-1.0.0.zip| |
+|egovframework.com.uss.olp.qtm|공통컴포넌트_사용자지원_온라인 참여_설문템플릿관리|egovframework-onlineparticipation-1.0.0.zip| |
+|egovframework.com.uss.olp.qrm|공통컴포넌트_사용자지원_온라인 참여_설문응답자관리|egovframework-onlineparticipation-1.0.0.zip| |
+|egovframework.com.uss.olp.qqm|공통컴포넌트_사용자지원_온라인 참여_설문질문관리|egovframework-onlineparticipation-1.0.0.zip| |
+|egovframework.com.uss.olp.qim|공통컴포넌트_사용자지원_온라인 참여_설문항목관리|egovframework-onlineparticipation-1.0.0.zip| |
+|egovframework.com.uss.olp.mgt|공통컴포넌트_사용자지원_온라인 참여_회의관리|egovframework-meetmanagement.0.0.zip| |
+|egovframework.com.uss.olh.hpc|공통컴포넌트_사용자지원_온라인 핼프_도움말|egovframework-onlinehelp-1.0.0.zip| |
+|egovframework.com.uss.olh.wor|공통컴포넌트_사용자지원_온라인 핼프_용어사전|egovframework-wordbook-1.0.0.zip| |
+|egovframework.com.uss.olh.faq|공통컴포넌트_사용자지원_온라인 핼프_FAQ관리|egovframework-FAQ-1.0.0.zip| |
+|egovframework.com.uss.olh.qna|공통컴포넌트_사용자지원_온라인 핼프_Q&A관리|egovframework-QNA-1.0.0.zip| |
+|egovframework.com.uss.ion.nws|공통컴포넌트_사용자지원_정보제공/알림_뉴스관리|egovframework-news-1.0.0.zip| |
+|egovframework.com.uss.ion.sit|공통컴포넌트_사용자지원_정보제공/알림_사이트관리|egovframework-sitemanagement-1.0.0.zip| |
+|egovframework.com.uss.ion.rec|공통컴포넌트_사용자지원_정보제공/알림_추천사이트관리|egovframework-recommendedsitemanagement-1.0.0.zip| |
+|egovframework.com.uss.ion.ecc|공통컴포넌트_사용자지원_정보제공/알림_행사/이벤트/캠페인|egovframework-infomationoffer-1.0.0.zip| |
+|egovframework.com.sym.mpm|공통컴포넌트_시스템관리_메뉴 및 프로그램 관리|egovframework-menumanagement-1.0.0.zip| |
+|egovframework.com.sym.log|공통컴포넌트_시스템관리_로그관리|egovframework-statisticreport-1.0.0.zip| |
+|egovframework.com.cop.bbs|공통컴포넌트_협업_게시판|egovframework-bbsmanagement-1.0.0.zip| | 
+|egovframework.com.cop.cmy|공통컴포넌트_협업_커뮤니티|egovframework-community-1.0.0.zip| | 
+|egovframework.com.cop.clb|공통컴포넌트_협업_동호회|egovframework-clubmanagement-1.0.0.zip| |
+|egovframework.com.cop.com|공통컴포넌트_협업_공통기능|협업의 각 배포패키지에 동일하게 포함함| |
+|egovframework.com.cop.ncm|공통컴포넌트_협업_명함관리|egovframework-namecardlistmanagement-1.0.0.zip| |
+|egovframework.com.cop.smt.sdm|공통컴포넌트_협업_일정관리_부서일정관리|egovframework-schedulemanagement-1.0.0.zip| | 
+|egovframework.com.cop.smt.sim|공통컴포넌트_협업_일정관리_개인일정관리|egovframework-schedulemanagement-1.0.0.zip| | 
+|egovframework.com.cop.smt.sam|공통컴포넌트_협업_일정관리_전체일정|egovframework-schedulemanagement-1.0.0.zip| |
+|egovframework.com.cop.smt.dsm|공통컴포넌트_협업_일정관리_일지관리|egovframework-schedulemanagement-1.0.0.zip| |
+|egovframework.com.sts|공통컴포넌트_통계/리포팅|egovframework-statisticreport-1.0.0.zip| |
+
+**2차 공통컴포넌트**
+
+^구현패키지명^설명^배포패키지명^공용여부^
+|egovframework.com.uss.ivp|공통컴포넌트_마이페이지|egovframework-mypage-1.0.0.zip| |
+|egovframework.com.olp|공통컴포넌트_온라인poll관리|egovframework-onlinepoll-1.0.0.zip| |
+|egovframework.com.uss.ion.pwm|공통컴포넌트_팝업창관리|egovframework-popupwindow-1.0.0.zip| |
+|egovframework.com.uss.ion.noi|공통컴포넌트_정보알림이|egovframework-notification-1.0.0.zip| |
+|egovframework.com.uss.ion.bnr|공통컴포넌트_배너관리|egovframework-banner-1.0.0.zip| |
+|egovframework.com.ion.isi|공통컴포넌트_로그인화면이미지관리|egovframework-loginimage-1.0.0.zip| |
+|egovframework.com.uss.ion.rsm|공통컴포넌트_최근검색어조회|egovframework-currentsearchword-1.0.0.zip| |
+|egovframework.com.uss.ion.msi|공통컴포넌트_메인이미지관리|egovframework-mainimage-1.0.0.zip| |
+|egovframework.com.uss.ion.ulm|공통컴포넌트_통합링크관리|egovframework-totallink-1.0.0.zip| |
+|egovframework.com.uss.ion.uas|공통컴포넌트_사용자부재관리|egovframework-userabsence-1.0.0.zip| |
+|egovframework.com.uss.ion.isg|공통컴포넌트_인터넷서비스안내 및 관리|egovframework-serviceguide-1.0.0.zip| |
+|egovframework.com.cop.adb|공통컴포넌트_주소록관리|egovframework-adressbook-1.0.0.zip| |
+|egovframework.com.uss.olh.awm|공통컴포넌트_행정전문용어사전관리|egovframework-administrationdic-1.0.0.zip| |
+|egovframework.com.uss.olh.omm|공통컴포넌트_온라인매뉴얼|egovframework-onlinemanual-1.0.0.zip| |
+|egovframework.com.uss.sam.ipm|공통컴포넌트_개인정보보호정책확인|egovframework-privacypolicy-1.0.0.zip| |
+|egovframework.com.cop.bbs|공통컴포넌트_댓글관리|egovframework-replymanagement-1.0.0.zip| |
+|egovframework.com.cop.bbs|공통컴포넌트_스크랩기능|egovframework-scrapmanagement-1.0.0.zip| |
+|egovframework.com.cop.bbs|공통컴포넌트_만족도조사|egovframework-satisfaction-1.0.0.zip| |
+|egovframework.com.cop.sms|공통컴포넌트_문자메시지서비스|egovframework-shortmessageservice-1.0.0.zip| |
+|egovframework.com.uat.uia|공통컴포넌트_로그인정책관리|egovframework-loginpolicy-1.0.0.zip|Y|
+|egovframework.com.sym.ccm.icr|공통컴포넌트_기관코드수신|egovframework-organcodereceive-1.0.0.zip| |
+|egovframework.com.sym.mpm|공통컴포넌트_바로가기메뉴관리|egovframework-quickmenu-1.0.0.zip| |
+|egovframework.com.sec.pki|공통컴포넌트_암호화/복호화|egovframework-criptodecripto-1.0.0.zip| |
+|egovframework.com.sts|공통컴포넌트_보고서통계|egovframework-reportstatistic-1.0.0.zip| |
+|egovframework.com.ssi.syi.sim|공통컴포넌트_시스템연계관리|egovframework-interfacemanagement-1.0.0.zip| |
+|egovframework.com.ssi.syi.ist|공통컴포넌트_연계현황관리|egovframework-interfacestate-1.0.0.zip| |
+|egovframework.com.ssi.syi.ims|공통컴포넌트_연계메시지관리|egovframework-interfacemessage-1.0.0.zip| |
+|egovframework.com.ssi.syi.iis|공통컴포넌트_연계기관관리|egovframework-interfaceorgan-1.0.0.zip| |
+|egovframework.com.utl.fcc|공통컴포넌트_번호유효성체크|egovframework-common-1.0.0.zip|Y|
+|egovframework.com.utl.fcc|공통컴포넌트_포맷유효성체크|egovframework-common-1.0.0.zip|Y|
+
+
+
+===== 배포 패키지별 참조 관계 =====
+
+^기능^배포패키지명^참조패키지명^설명^
+|공통컴포넌트_통계/리포팅|egovframework-statisticreport-1.0.0.zip|egovframework-menumanagement-1.0.0.zip, egovframework-bbsmanagement-1.0.0.zip|화면통계와 게시물통계 기능을 위하여 메뉴 및 프로그램관리 기능과 게시판 기능이 필수임|
+
+
+===== 공통환경 설정파일 =====
+
+^구분^경로 및 파일명^설명^
+|maven config|/pom.xml|maven project config|
+|Web Application config|/WEB-INF/web.xml|Web Application 단위 config 설정|
+|servlet context config|/WEB-INF/config/egovframework/springmvc/egov-com-servlet.xml|DispatcherServlet application context 설정|
+|context bean 정의|/resources/egovframework/spring/context-*.xml|bean 정의|
+|범용 properties 정의|/resources/egovframework/egovProp/globals.properties|global 상수 정의|
+|message properties 정의|/resources/egovframework/message/*.properties|message 정의|
+|gpki 인증에 필요한 요소|/WEB-INF/conf/*.properties|GPKI 인증서 로그인에 필요한 설정|
+|요소기술 환경설정|/resources/egovframework/egovProp/conf/*.properties|요소기술에 필요한 환경설정|
+|요소기술 프로그램 설정|/resources/egovframework/egovProp/prg/*.sh(*.bat)|요소기술에 필요한 실행 스크립트|
+|sql config 파일|/resources/egovframework/sqlmap/com/*.xml|sql map config 정의|
+|validator rule 파일|/resources/egovframework/validator/validator-rules.xml|validator를 이용할 시 rule을 정의|
+|log 설정|/resources/log4j.xml|log 관련 설정|

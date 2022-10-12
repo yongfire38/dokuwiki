@@ -1,0 +1,99 @@
+====== 메뉴생성관리 기능 ======
+
+메뉴생성관리는 시스템 관리자가 메뉴목록에 정의된 메뉴를 사용자의 각 권한에 따른 메뉴사용 여부를 정의하는 화면한다. 
+
+메뉴를 생성한 후 메뉴생성에 맞는 메뉴 사이트맵을 생성 할 수 있다. 사이트맵 생성은 jsp페이지로 만들어진다.
+
+
+----
+
+===== 관련 리소스 =====
+
+=== 클래스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.sym.mpm.web.EgovMenuManageController.java|메뉴목록관리, 메뉴일괄생성, 메뉴리스트, 메뉴생성처리, 사이트맵 생성을 위한 컨트롤러 클래스|
+|Service|egovframework.com.sym.mpm.service.EgovMenuManageService.java|메뉴목록관리, 메뉴일괄생성, 메뉴리스트, 메뉴생성처리, 사이트맵 생성을 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.sym.mpm.service.impl.EgovMenuManageServiceImpl.java|메뉴목록관리, 메뉴일괄생성, 메뉴리스트, 메뉴생성처리, 사이트맵 생성을 위한 서비스 구현 클래스|
+|VO|egovframework.com.sym.mpm.service.MenuManageVO.java|메뉴목록관리를 위한 VO 클래스|
+| |egovframework.com.sym.mpm.service.MenuCreatVO.java|메뉴생성관리를 위한 VO 클래스|
+| |egovframework.com.sym.mpm.service.MenuSiteMapVO.java|메뉴사이트맵 생성을 위한 VO 클래스|
+|DAO|egovframework.com.sym.mpm.service.impl.MenuManageDAO.java|메뉴목록관리, 메뉴일괄생성, 메뉴리스트, 메뉴생성처리, 사이트맵 생성을 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/cmm/sym/mpm/| |
+| |EgovMenuCreatManage.jsp|메뉴생성을 관리 하기 위한 페이지|
+| |EgovMenuCreat.jsp|메뉴생성을 위한 페이지|
+| |EgovMenuCreatSiteMap.jsp|메뉴 사이트맵 생성을 위한 팝업 페이지|
+
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:sym:mpm:egovmenu.gif|}}
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|메뉴생성내역|COMTNAUTHORINFO|메뉴생성 정보을 관리|
+|사이트맵|COMTNMENUCREATDTLS|사이트맵 생성 정보을 관리|
+
+===== 관련화면 및 수행메뉴얼 =====
+
+
+=== 메뉴생성 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/sym/mpm/EgovMenuCreatManageSelect.do|selectMenuCreatManagList|"menuManageDAO.selectMenuCreatManagList"|
+| | | |"progrmManageDAO.selectMenuCreatManagTotCnt"|
+
+메뉴생성 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 권한코드에 대하여 수행된다.
+
+{{:egovframework:com:sym:mpm:egovmenucreatmanage.jpg|}}
+
+신규 메뉴를 생성하기 위해서는 조회된 권한별 메뉴생성 버튼을 통해서 ** 메뉴생성 ** 화면으로 이동한다. 
+
+조회된 메뉴생성관리 화면의 리스트중 메뉴생성여부를 통하여 권한별 메뉴 생성여부(Y,N)를 확인 할 수 있다.
+
+생성된 메뉴는 ** 메뉴생성 ** 화면으로 이동 후 다시 생성 할 수 있다.
+
+보안설정대상ID에 사용자ID를 입력 후 조회시 해당 사용자ID의 권한코드가 조회된다.  
+
+----
+
+=== 메뉴생성 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/sym/mpm/EgovMenuCreatSelect.do|selectMenuCreatList|"menuManageDAO.selectMenuCreatList"|
+|등록|/sym/mpm/EgovMenuCreatInsert.do|insertMenuCreatList|"menuManageDAO.insertMenuCreat"|
+
+메뉴생성화면에서 해당 권한에 필요한 메뉴를 선택한 후 메뉴생성 버튼을 클릭하여 메뉴를 생성한다.
+
+{{:egovframework:com:sym:mpm:egovmenucreat.jpg|}}
+
+메뉴생성 : 체크박스에 선택된메뉴를 해당 권한의 메뉴로 생성된다.\\
+사이트맵생성 : 사이트맵 생성 팝업 화면을 호출한다.\\
+
+
+----
+
+=== 사이트맵 생성 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/sym/mpm/EgovMenuCreatSiteMapSelect.do|selectMenuCreatSiteMapList|"menuManageDAO.selectMenuCreatSiteMapList"|
+|등록|/sym/mpm/EgovMenuCreatSiteMapInsert.do|creatSiteMap|"menuManageDAO.updateMenuCreat"|
+| | |"menuManageDAO.creatSiteMap"|
+
+메뉴생성화면에서 생성된 메뉴를 바탕으로 사이트 맵이 생성되므로 반드시 메뉴가 생성되어 있어야 한다.\\
+webapp의 절대path를 지정해야 한다. 변경대상 소스(/sym/mpm/EgovMenuCreatSiteMap.jsp)에서 수정해야한다.\\
+<code>
+/*절대 path 사이트맵이 저장될 장소의  절대 패스*/
+var vRootPath    = "D:/egovframework/workspace/com/src/main/webapp";   // Window webapp 위치
+var vRootPath    = "/product/jeus/webhome/was_com/egovframework-com-1_0/egovframework-com-1_0_war___"; // Unix webapp 위치
+/* 절대 path내  사이트맵 jsp를 저장할 장소 지정 */
+var vSiteMapPath = "/html/egovframework/uss/umt/";
+</code>
+
+사이트맵생성 버튼 클릭시 사이트맵 생성화면에서 조회된 사이트맵이 jsp파일로 /webapp/html/egovframework/sym/mpm/ 디렉토리에 '해당권한코드_SiteMap.jsp'파일이 생성된다.
+
+{{:egovframework:com:sym:mpm:egovmenucreatsitemap.jpg|}}
+
+----

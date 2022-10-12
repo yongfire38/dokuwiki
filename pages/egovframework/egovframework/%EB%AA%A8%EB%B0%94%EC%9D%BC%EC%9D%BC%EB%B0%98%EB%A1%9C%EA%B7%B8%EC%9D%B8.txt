@@ -1,0 +1,159 @@
+====== 사용자 인증 - 일반 로그인 ======
+
+
+===== 개요 =====
+
+**일반로그인** 서비스는 가입시에 작성한 아이디와 비밀번호를 이용하여 사용자에 대한 인증을 처리하며, 사용자의 분류(일반 회원, 기업 회원, 업무 사용자)를 선택하여 로그인할 수 있다.\\
+
+**일반로그인** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+
+==== 기능 흐름도 ====
+{{egovframework:mcom:일반로그인_기능흐름도.jpg?740|}}
+
+===== 설명 =====
+시스템 사용자의 접근을 허락하고 보안상의 목적으로 시스템 또는 응용프로그램에 접속을 시도하는 사용자에 대한 정보의 확보를 지원하기 위한 서비스 컴포넌트로, \\
+로그인한 사용자의 로그인 정보(아이디/비밀번호)를 입력받아 기존에 저장된 사용자 정보를 조회하여 사용자의 인증을 처리하는 방식이다.
+
+
+=== 클래스다이어그램 ===
+
+{{:egovframework:mcom:CLD_일반로그인.JPG?740|}}
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uat.uia.web.EgovLoginController.java|로그인을 위한 컨트롤러 클래스|
+|Controller|egovframework.mbl.com.uat.uia.web.EgovMblLoginController.java|모바일 로그인을 위한 컨트롤러 클래스|
+|Service|egovframework.com.uat.uia.service.EgovLoginService.java|로그인을 위한 서비스 인터페이스|
+|Service|egovframework.com.sym.log.service.EgovLogManageService.java|로그인 로그생성을 위한 서비스 인터페이스|
+|Service|egovframework.com.sym.mpm.service.EgovMenuManageService.java|로그인 후 메뉴조회를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uat.uia.service.impl.EgovLoginServiceImpl.java|로그인을 위한 서비스 구현 클래스|
+|VO|egovframework.com.uat.uia.service.LoginVO.java|로그인을 위한 VO 클래스|
+|DAO|egovframework.com.uat.uia.service.impl.LoginDAO.java|로그인을 위한 데이터 처리 클래스|
+|Query XML|resources/egovframework/sqlmap/com/uat/uia/EgovLoginUsr_SQL.xml|로그인을 위한 Query XML|
+|JSP|WEB_INF/jsp/egovframework/cmm/uat/uia/EgovLoginUsr.jsp|로그인 페이지|
+|JSP|WEB_INF/jsp/egovframework/mbl/com/uat/uia/EgovLoginUsr.jsp|모바일 로그인 페이지|
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|업무사용자|COMTNEMPLYRINFO|업무사용자 정보를 관리|
+|기업회원|COMTNENTRPRSMBER|기업회원 정보를 관리|
+|일반회원|COMTNGNRLMBER|일반회원 정보를 관리|
+|로그인로그|COMTNLOGINLOG|로그인로그 정보를 관리|
+|메뉴|COMTNMENUINFO|메뉴 정보를 관리|
+
+===== 환경설정 =====
+
+로그인 시 필요한 Security 인증은 환경 설정을 통해 변경 시킬 수 있다.
+
+== src/main/java/resources/egovframework/spring/com/context-egovuserdetailshelper.xml ==
+
+<code xml>
+    <!--인증된 유저의 LoginVO, 권한, 인증 여부를 확인 할 수있는 서비스 클래스-->
+    <bean id="egovUserDetailsHelper" class="egovframework.com.cmm.util.EgovUserDetailsHelper">
+        <property name="egovUserDetailsService">
+            <ref bean="egovUserDetailsSecurityService" />
+        </property> 
+    </bean>
+
+    <!-- 시큐리티를 이용한 인증을 사용할 빈 -->
+    <bean id="egovUserDetailsSecurityService" class="egovframework.com.sec.ram.service.impl.EgovUserDetailsSecurityServiceImpl"/>
+</code>
+
+== web.xml ==
+
+<code xml>
+    <!-- 2. 스프링 시큐리티 설정-->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <listener>
+        <listener-class>org.springframework.security.ui.session.HttpSessionEventPublisher</listener-class>
+    </listener>
+    <!-- security 끝 -->
+
+    <!-- 4. Spring Security 로그아웃 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLogoutFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLogoutFilter</filter-name>
+    	<url-pattern>/uat/uia/actionLogout.do</url-pattern>
+    </filter-mapping>
+
+    <!-- 4. Spring Security 로그인 설정을 위한 필터 설정 -->
+    <filter>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<filter-class>egovframework.com.sec.security.filter.EgovSpringSecurityLoginFilter</filter-class>
+    </filter>
+    <filter-mapping>
+    	<filter-name>EgovSpringSecurityLoginFilter</filter-name>
+    	<url-pattern>*.do</url-pattern>
+    </filter-mapping>
+</code>
+
+web.xml에 위 내용과 같은 Spring Security 관련 필터를 추가 하여야 한다.
+
+===== 관련기능 =====
+
+=== 비즈니스 규칙 ===
+
+- 일반 로그인은 아이디와 비밀번호를 가지고 사용자 구분별 사용자정보를 조회한다. \\
+- 조회된 사용자 정보를 통해 로그인 로그를 생성하며, Spring Security를 호출하여 권한 인증 및 세션 설정을 한다. \\
+- 메뉴 정보를 조회하여 메인화면을 구성한다. \\ 
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|모바일 로그인화면|/uat/uia/egovLoginUsr.mdo|loginUsrView| |
+|로그인|/uat/uia/actionLogin.mdo|actionLogin|"loginDAO.actionLogin"|
+
+{{:egovframework:mcom:egovloginusr.jpg|}}
+
+업무구분 선택: 사용자 업무구분을 선택한다. \\
+아이디 입력: 아이디를 입력한다. \\
+비밀번호 입력: 비밀번호를 입력한다. \\
+로그인: 아이디와 비밀번호를 통해 사용자 로그인 인증 작업을 수행한다. \\
+
+===== 참고자료 =====
+
+  * 일반로그인 참조(기존 웹 버전) : [[일반_로그인|일반로그인]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

@@ -1,0 +1,108 @@
+====== 사용자지원 - 행정전문용어사전======
+
+===== 개요 =====
+서비스 사용자가 행정전문용어사전 검색 조회 할수 있는 기능을 제공한다.
+
+===== 설명 =====
+모바일 행정전문용어사전기능은 크게 **행정전문용어사전 목록조회**, **행정전문용어사전 상세조회** 기능으로 구성되어 있다. (관련기능 부분참조)
+
+== 행정전문용어사전 콤포넌트 구성도 == 
+{{:egovframework:com:uss:olh:awm:행정전문용어사전_컴포넌트_구성도.jpg|행정전문용어사전 컴포넌트 구성도}}
+
+== 행정전문용어사전 기능 흐름도 == 
+{{:egovframework:com:uss:olh:awm:기능흐름도.jpg|행정전문용어사전 기능 흐름도}}
+
+
+== 클래스 다이어그램 == 
+{{:egovframework:com:uss:olh:awm:classdiagram.png?900|행정전문용어사전 클래스 다이어그램 }}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.olh.awm.web.EgovAdministrationWordManageController.java|행정전문용어사전 Controller Class|
+|Controller|egovframework.mbl.com.uss.olh.awm.web.EgovMblAdministrationWordManageController.java|행정전문용어사전 모바일 Controller Class|
+|Service|egovframework.com.uss.olh.awm.service.EgovAdministrationWordManageService.java|행정전문용어사전 Service Class|
+|VO|egovframework.com.uss.olh.awm.service.AdministrationWordManageVO.java|행정전문용어사전  VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.uss.olh.awm.service.impl.EgovAdministrationWordManageServiceImpl.java|행정전문용어사전 ServiceImpl Class|
+|DAO|egovframework.com.uss.olh.awm.service.impl.AdministrationWordManageDao.java|행정전문용어사전 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/uss/olh/awm/EgovAdministrationWordManageList.jsp|행정전문용어사전관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olh/awm/EgovAdministrationWordManageRegist.jsp|행정전문용어사전관리 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olh/awm/EgovAdministrationWordManageModify.jsp|행정전문용어사전관리 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olh/awm/EgovAdministrationWordManageDetail.jsp|행정전문용어사전관리 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olh/awa/EgovAdministrationWordList.jsp|행정전문용어사전 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olh/awa/EgovAdministrationWordDetail.jsp|행정전문용어사전 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olh/awa/EgovAdministrationWordList.jsp|행정전문용어사전 모바일 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olh/awa/EgovAdministrationWordDetaill.jsp|행정전문용어사전 모바일 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/olh/awm/EgovAdministrationWordManage.xml|행정전문용어사전 QUERY XML| 
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olh/awm/EgovAdministrationWordManage.xml|행정전문용어사전 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|행정전문용어사전 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|행정전문용어사전 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 SRCHWRD_ID 항목을 추가해야 한다. 
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('ADMINIST_WORD_ID','0');
+ </code>
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|행정전문용어사전|COMTNADMINISTRATIONWORD |행정전문용어사전을 관리 한다.|	
+
+===== 관련기능 =====
+행정전문용어사전기능은 크게 **행정전문용어사전 목록조회**, **행정전문용어사전 상세조회** 기능으로 구성되어 있다.
+
+==== 행정전문용어사전 목록조회 ====
+
+=== 비즈니스 규칙 ===
+사이트 회원이 기(記) 등록된 행정전문용어사전 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/olh/awa/listAdministrationWordActor.mdo|egovAdministrationWordManageList|"AdministrationWordManage.selectAdministrationWordManageList"|
+|목록클릭|/uss/olh/awa/detailAdministrationWord.mdo|egovAdministrationWordDetail|"AdministrationWord.selectAdministrationWordDetail"|
+
+{{:egovframework:mcom:EgovAdministrationWordList_1.jpg|}}
+{{:egovframework:mcom:EgovAdministrationWordList_2.jpg|}}
+
+검색 : 조건으로 검색할 수 있다.
+목록 클릭: **행정전문용어사전 상세조회** 화면으로 이동한다
+
+----
+
+==== 행정전문용어사전 상세조회 ====
+
+=== 비즈니스 규칙 ===
+행정전문용어사전 목록에서 목록 클릭시 이동되는 화면으로 행정전문용어사전에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olh/awa/listAdministrationWord.mdo|mainAdministrationWordList| |
+|조회|/uss/olh/awa/listAdministrationWordActor.mdo|egovAdministrationWordManageList|"AdministrationWordManage.selectAdministrationWordManageList"|
+| | | |"AdministrationWordManage.selectAdministrationWordManageListCnt"|
+
+{{:egovframework:mcom:EgovAdministrationWordDetail_1.jpg|}}
+{{:egovframework:mcom:EgovAdministrationWordDetail_2.jpg|}}
+
+목록: **행정전문용어사전 목록** 화면으로 이동한다. \\
+뒤로: 바로 전 화면으로 이동한다.
+----
+
+===== 참고자료 =====
+ * 행정전문용어사전 : [[행정전문용어사전관리]]

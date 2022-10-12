@@ -1,0 +1,71 @@
+====== 사용자지원 - RSS서비스 ======
+===== 개요 =====
+
+**RSS서비스**는 관리자가 등록한 RSS태그관리 정보를 사용자가 이용할수 RSS2.0 스펙 기준의 XML형식으로 조회 가능한 서비스를 제공한다.
+
+
+===== 설명 =====
+
+  * **RSS서비스**는 RSS를 조회 위한 목적으로 RSS서비스 조회, 목록조회의 기능을 수반한다.
+
+    ① RSS서비스 목록조회 : RSS태그관리 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② RSS서비스 : 선택된 RSS태그관리 정보를 기반으로 XML 형식의 데이터를 조회 한다.
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.rsn.web.EgovRssController.java|RSS서비스를 위한 컨트롤러 클래스|
+|Service|egovframework.com.uss.ion.rsn.service.EgovRssServiceService.java|RSS서비스를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.ion.rsn.service.impl.EgovRssServiceImpl.java|RSS서비스를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.uss.ion.rsn.service.impl.RssServiceDao.java|RSS서비스를 위한 데이터처리 클래스||
+|Model|egovframework.com.uss.ion.rsn.service.RssInfo.java|RSS태그 정보를 관리 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/rsn/EgovRssTagServiceList.jsp|RSS서비스 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/rsn/EgovRssTagService.jsp|RSS서비스 jsp 페이지|
+|XML|/egovframework/sqlmap/com/uss/ion/rsn/EgovRssTagService_SQL_*.xml|RSS서비스 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:uss:ion:rsn:rss태그서비스.jpg |}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|RSS관리|COMTNRSS|RSS태그관리 정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **RSS_ID** 항목을 추가한다. 
+
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('RSS_ID','0');
+ </code>
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== RSS서비스 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|목록조회|/uss/ion/rsn/listRssTagService.do|EgovRssTagServiceList|"RssTagService.selectRssTagService"|
+| | | |"RssTagManage.selectRssTagManageCnt"|
+
+RSS서비스 목록조회는 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+
+{{:egovframework:com:uss:ion:rsn:rss서비스_목록조회.jpg|}}
+
+
+조회 : 기 등록된 RSS태그 정보의 목록을 조회한다.\\
+목록 대상서비스명/대상테이블명 클릭 :  **RSS서비스* 화면으로 이동한다.\\
+
+----
+
+=== RSS서비스  ===
+
+^Action^URL^Controller method^QueryID^
+|RSS서비스|/uss/ion/rsn/detailRssTagService.do|EgovRssTagServiceDetail|"RssTagService.selectRssTagServiceDetail"|
+| | |"RssTagService.selectRssTagServiceDetail"|
+
+ RSS서비스 목록조회에서 선택된 RSS태그 정보를 RSS2.0 스펙 기준의 XML의 데이터를 출력하면 RSS서비스 사용자의 PC브라우져 RSS리더에서 목록 형식으로 표시된다.
+
+{{:egovframework:com:uss:ion:rsn:rss서비스.jpg |}}
+
+----

@@ -1,0 +1,44 @@
+====== Manual - Draft ======
+
+==== 검증시스템 ====
+
+=== 다운로드 ===
+  * [[eGovframework:adt:실행환경]]
+  * [[eGovframework:adt:개발환경]]
+  * [[eGovframework:adt:공통컴포넌트]]
+
+=== 자료실 ===
+  * [[eGovframework:adt:샘플]]
+  * [[eGovframework:adt:교육 교재]]
+  * [[eGovframework:adt:적용 사례]]
+  * [[eGovframework:adt:IT 동향]]
+  * [[eGovframework:adt:관련사이트]]
+
+=== 묻고답하기 ===
+  * [[eGovframework:adt:공지사항]]
+  * [[eGovframework:adt:행사]]
+  * [[eGovframework:adt:FAQ]]
+  * [[eGovframework:adt:Q&A]]
+
+=== 포럼 ===
+  * [[eGovframework:adt:포럼조회]]
+  * [[eGovframework:adt:표준관리]]
+
+=== 사용자인증 ===
+  * [[eGovframework:adt:로그인]]
+  * [[eGovframework:adt:GPKI 인증서 로그인]]
+  * [[eGovframework:adt:회원가입]]
+  * [[eGovframework:adt:아이디/비밀번호 찾기]]
+
+=== 사용자 지원 ===
+  * [[eGovframework:adt:설문참여]]
+  * [[eGovframework:adt:용어사전]]
+  * [[eGovframework:adt:My Page]]
+
+=== 관리환경 ===
+  * [[eGovframework:mgt:프로젝트 신청]]
+  * [[eGovframework:mgt:프로젝트 소속신청]]
+  * [[eGovframework:mgt:SR 목록]]
+  * [[eGovframework:mgt:SR 요청]]
+  * [[eGovframework:mgt:공지사항 조회]]
+  * [[eGovframework:mgt:KDB 검색]]

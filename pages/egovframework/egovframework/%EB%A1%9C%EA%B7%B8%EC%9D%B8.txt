@@ -1,0 +1,107 @@
+=== 로그인 페이지 예시 ===
+<code html>
+<form name="loginForm" action ="<c:url value='/uat/uia/actionLogin.do'/>" method="post">
+<table border="0" cellpadding="0" cellspacing="0" style="width:250px;margin-left:20px;">
+<tr>
+  <td>
+    <table width="250" border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td class="required_text" nowrap>아이디&nbsp;&nbsp;</td>
+        <td><input type="text" name="id" tabindex="1" maxlength="10"/></td>
+        <td/>
+      </tr>
+      <tr>
+        <td class="required_text" nowrap>비밀번호&nbsp;&nbsp;</td>
+        <td><input type="password" name="password" onKeyDown="javascript:if (event.keyCode == 13) { actionLogin(); }"/></td>
+        <td class="title"><input type="checkbox" name="checkId" class="check2" onClick="javascript:fnSetCookieId();"/>ID저장</td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+  <td>
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><img src="/images/egovframework/cmm/uat/uia/bu2_left.gif" width="8" height="20"></td>
+        <td background="/images/egovframework/cmm/uat/uia/bu2_bg.gif" class="text_left" nowrap><center><a href="javascript:actionLogin();">로그인</a></center></td>
+        <td><img src="/images/egovframework/cmm/uat/uia/bu2_right.gif" width="8" height="20"></td>
+      </tr>
+    </table>
+  </td>
+<tr>
+</table>
+</form>
+</code>
+일반 로그인 처리 컨트롤러(/uat/uia/actionLogin.do) 메소드를 호출한다.
+
+=== 컨트롤러 ===
+<code java>
+// 로그인을 처리하는 메소드
+@RequestMapping(value="/uat/uia/actionLogin.do")
+public String actionLogin(@ModelAttribute("loginVO") LoginVO loginVO,    		                  
+	HttpServletRequest request,
+	ModelMap model)
+    throws Exception {
+
+	// 접속IP
+	String userIp = EgovClntInfo.getClntIP(request);
+
+	// 1. 일반 로그인 처리
+	LoginVO resultVO = loginService.actionLogin(loginVO);
+
+	if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+		
+	    // 2. 로그인로그 생성
+	     LoginLog loginLog = new LoginLog();
+	    loginLog.setLoginId(resultVO.getId());
+	    loginLog.setLoginIp(userIp);
+	    loginLog.setLoginMthd("POST");
+	    loginLog.setErrOccrrAt("N");
+	    loginLog.setErrorCode("");
+	    logManageService.logInsertLoginLog(loginLog);
+	    
+	    // 3. spring security 연동 (사용자 권한에 대해 springframework security를 활용)
+	    return "redirect:/j_spring_security_check?j_username=" + resultVO.getUserSe() + resultVO.getId()
+                   + "&j_password=" + resultVO.getUniqId();
+		
+	} else {
+		
+	    model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    return "cmm/uat/uia/EgovLoginUsr";
+	}
+}
+
+// 로그인 처리 후 메인화면 이동 메소드
+@RequestMapping(value="/uat/uia/actionMain.do")
+public String actionMain(ModelMap model) 
+		throws Exception {
+
+	// 1. Spring Security 사용자권한 처리
+	Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+	if(!isAuthenticated) {
+	    model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+	    return "cmm/uat/uia/EgovLoginUsr";
+	}
+
+	LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+
+	// 2. 메뉴조회
+	MenuManageVO menuManageVO = new MenuManageVO();
+	menuManageVO.setTmp_Id(user.getId());
+	menuManageVO.setTmp_UserSe(user.getUserSe());
+	menuManageVO.setTmp_Name(user.getName());
+	menuManageVO.setTmp_Email(user.getEmail());
+	menuManageVO.setTmp_OrgnztId(user.getOrgnztId());
+	menuManageVO.setTmp_UniqId(user.getUniqId());
+	List list_headmenu = menuManageService.selectMainMenuHead(menuManageVO);
+	model.addAttribute("list_headmenu", list_headmenu);
+		
+	// 3. 메인 페이지 이동
+	if (user.getUserSe().equals("USR")) {
+	    return "EgovMainView";
+	} else {
+	    return "EgovMainViewG";
+	}
+}
+</code>
+입력한 아이디와 비밀번호를 가지고 사용자 테이블에서 정보를 조회한다. 조회된 사용자 정보를 가지고 로그인로그를 생성하며 메인화면으로 들어가기전에 사용자 권한을 체크한다. 사용자 권한 및 세션정보를 설정하고 해당 권한에 맞는 메뉴정보를 조회하여 메인화면으로 이동한다.

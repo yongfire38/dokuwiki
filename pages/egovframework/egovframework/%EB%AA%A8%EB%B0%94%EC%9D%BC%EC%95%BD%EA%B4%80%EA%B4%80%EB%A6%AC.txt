@@ -1,0 +1,153 @@
+====== 공통서비스 - 약관관리======
+
+===== 개요 =====
+**약관관리** 서비스는 회원가입 시의 회원약관과 정보공유 동의여부를 확인하기 위해 제공되는 약관정보 및 정보공유내용을 검색 및 조회 할 수 있는 기능과 해당 약관에 대한 동의기능을 제공한다. \\
+
+**약관관리** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+또한 공통으로 지원하고 있는 jAlert가 사용되고 있으며, 아래와 같은 js 파일에 정의되어 있다.
+  * **EgovMobile.js**
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능 흐름도 ====
+
+{{egovframework:mcom:약관관리_기능흐름도.jpg?740|}}
+
+===== 설명 =====
+약관관리기능은 크게 **약관목록조회**, **약관상세조회**, **약관확인** 기능으로 구성되어 있다.
+
+==클래스다이어그램==
+
+{{:egovframework:mcom:CLD_약관.JPG?740|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.sam.stp.web.EgovStplatManageController.java|약관관리를 위한 컨트롤러 클래스|
+|Controller|egovframework.mbl.com.uss.sam.stp.web.EgovMblStplatManageController.java|약관관리를 위한 모바일 컨트롤러 클래스|
+|Service|egovframework.com.uss.sam.stp.service.EgovStplatManageService.java|약관관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.sam.stp.service.impl.EgovStplatManageServiceImpl.java|약관관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.uss.sam.stp.service.StplatManageVO.java|약관관리를 위한 VO 클래스|
+|VO|egovframework.com.uss.sam.stp.service.StplatManageDefaultVO.java|약관관리를 위한 SearchVO 클래스|
+|DAO|egovframework.com.uss.sam.stp.service.imp.StplatManageDAO.java|약관 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/uss/sam/stp/EgovStplatListInqire.jsp|약관관리를 위한 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/sam/stp/EgovStplatDetailInqire.jsp|약관관리를 위한 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/sam/stp/EgovStplatCnRegist.jsp|약관관리를 위한 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/sam/stp/EgovStplatCnUpdt.jsp|약관관리를 위한 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/sam/stp/EgovStplatListInqire.jsp|모바일약관을 위한 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/sam/stp/EgovStplatDetailInqire.jsp|모바일약관을 위한 상세조회 페이지|
+|Query XML|resources/egovframework/sqlmap/com/uss/sam/stp/EgovStplatManage_SQL.xml|약관관리(조회,등록,수정,삭제)를 위한 Query XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/sam/stp/EgovStplatManage_SQL.xml|약관관리를 위한 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|약관관리를 위한 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|약관등록을 위한 Id생성 Idgen XML|
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|약관정보|COMTNSTPLATINFO|회원가입에 따른 이용약관 및 개인정보제공동의내용을 관리|	
+
+===== 관련기능 =====
+
+==== 약관목록조회 ====
+
+=== 비즈니스 규칙 ===
+약관 목록조회 화면은 사용자에게 제공되는 약관의 목록을 보여주며 약관확인 버튼을 클릭하면 약관확인 화면으로 이동할 수 있다.
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/sam/stp/StplatListInqire.mdo|selectStplatList|"StplatManageDAO.selectStplatList"|
+| | |selectStplatListTotCnt|"StplatManageDAO.selectStplatListTotCnt"|
+|약관확인|/uss/umt/EgovStplatCnfirmMber.mdo|sbscrbEntrprsMber|"mberManageDAO.selectStplat_S"|
+|목록클릭|/uss/sam/stp/StplatDetailInqire.mdo|selectStplatDetail|"StplatManageDAO.selectStplatDetail"|
+
+약관 목록은 페이지 당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. 
+
+{{:egovframework:mcom:EgovStplatListInqire.jpg|}}
+
+홈: 홈 화면으로 이동한다.\\
+약관확인: **약관확인** 화면으로 이동한다. \\
+검색: 약관을 조회하기 위해서는 상단의 검색조건을 선택하고 해당하는 검색문자를 입력 후 검색 버튼을 클릭한다.\\
+목록 클릭: **약관상세조회** 화면으로 이동한다.
+
+----
+
+==== 약관상세조회 ====
+
+=== 비즈니스 규칙 ===
+약관목록조회 화면에서 목록 클릭 시 이동되는 화면으로 약관에 대한 상세정보를 보여준다. \\
+약관상세조회 화면에서는 목록버튼을 클릭하여 약관에 대한 목록을 조회 할 수 있다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/sam/stp/StplatListInqire.mdo|selectStplatList|"StplatManageDAO.selectStplatList"|
+
+{{:egovframework:mcom:EgovStplatDetailInqire.jpg|}}
+
+뒤로: **약관목록조회** 화면으로 이동한다. \\
+목록: **약관목록조회** 화면으로 이동한다.
+
+----
+
+==== 약관 확인 ====
+
+=== 비즈니스 규칙 ===
+회원가입을 위한 가입신청절차가 시작 될 때 기본적으로 약관정보에 동의한 후 회원가입을 진행하도록 하기 위한 화면이다. \\
+약관내용에 동의 할 경우에만 회원가입의 다음 단계로 진행되도록 처리할 수 있다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|동의|/uss/sam/stp/StplatListInqire.mdo|mainBoard| |
+
+{{:egovframework:mcom:EgovStplatCnfirm.jpg|}}
+
+뒤로: **약관목록조회** 화면으로 이동한다. \\
+동의 : 약관동의 완료 메시지를 보여주고 **약관목록조회** 화면으로 이동한다. \\
+비동의: **약관목록조회** 화면으로 이동한다.
+
+----
+
+
+
+===== 참고자료 =====
+
+  * 약관관리참조(기존 웹 버전) : [[약관관리]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

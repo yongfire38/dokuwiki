@@ -1,0 +1,44 @@
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 반드시 입력해야할 항목을 표시한다. \\
+
+- 저장처리 시 QESRSPNS_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 \\
+  Primary Key => QESRSPNS_ID(20자리) : QRSPNS_(7자리) + 일련번호(13자리)로 자동생성 부여된다.
+
+	<!-- IdGnrService... START-->			
+	<bean name="qustnrRespondInfoIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="QustnrRespondInfotrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="QESRSPNS_ID"/>
+	</bean>
+	<bean name="QustnrRespondInfotrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="QRSPNS_" />
+		<property name="cipers" value="13" />
+		<property name="fillChar" value="0" />
+	</bean>
+	<!-- IdGnrService... END-->	
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 설문참여 등록 ==
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olp/qnn/EgovQustnrRespondInfoManageList.do|EgovQustnrRespondInfoManageList|QustnrRespondInfoManage.selectQustnrRespondInfoManage|
+| | | |QustnrRespondInfoManage.selectQustnrRespondInfoManageCnt|
+|저장|/uss/olp/qnn/EgovQustnrRespondInfoManageRegist.do|EgovQustnrRespondInfoManageRegist|QustnrRespondInfoManage.insertQustnrRespondInfo|
+
+설문참여에 관한 기본정보를 입력 저장처리한다.
+
+{{:egovframework:com:uss:olp:qnn:egovqustnrrespondinfomanageregist.jpg|}}
+
+목록: **설문참여 목록** 화면으로 이동한다. \\
+저장: 입력한 설문참여 정보들이 저장 처리된다. \\
+----

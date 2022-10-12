@@ -1,0 +1,47 @@
+====== 요소기술 - 랜덤문자열구하기 ======
+
+===== 개요 =====
+랜덤 문자열을 구하는 기능을 제공한다.
+
+===== 설명 =====
+문자열 사이의 랜덤문자열을 구하는 기능으로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.cas.service.EgovStringUtil.java|String 관련 유틸리티| |
+|Controller|egovframework.com.cmm.web.EgovComUtlController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovRandomStr.jsp|랜덤문자열 테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|getRandomStr(char startChr, char endChr)|랜덤문자열 구하기|문자열 A에서 Z사이의 랜덤 문자열을 구하는 기능|
+
+===== 환경설정 =====
+
+**해당없음**
+
+===== 사용방법 =====
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovStringUtil;
+...
+
+String startStr = safeGetParameter(request,"startStr");
+String endStr   = safeGetParameter(request,"endStr");
+
+// 입력 문자열 중 첫 문자 추출
+char	startChr = startStr.charAt(0);
+char	endChr   = endStr.charAt(0);
+
+String resultStr = EgovStringUtil.getRandomStr(startChr, endChr);
+
+</code>
+
+
+===== 참고자료 =====
+
+ N/A
+
+
+

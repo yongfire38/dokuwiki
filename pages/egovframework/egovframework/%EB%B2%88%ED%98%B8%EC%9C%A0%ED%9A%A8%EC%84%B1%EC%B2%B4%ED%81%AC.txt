@@ -1,0 +1,77 @@
+====== 요소기술 - 번호유효성체크 ======
+
+===== 개요 =====
+주어진 주민등록번호, 법인번호, 사업자등록번호, 외국인등록번호의 유효성을 체크하여 TRUE, FALSE 를 반환한다.
+
+===== 설명 =====
+
+입력에 주민등록번호, 법인번호, 사업자등록번호, 외국인등록번호를 입력받는다. 각 번호마다 "-" 포함된 구분입력과, "-"이 배제된 하나의 입력의 두가지 방식을 지원한다.
+
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovNumberCheckUtil.java|Date 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovNumberCheckUtilController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovNumberCheck.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|boolean|checkJuminNumber(String jumin1, String jumin2)|주민등록번호 유효성체크|입력된 주민등록번호 앞 뒤 문자열을 받아서 유효한 주민등록번호인지 체크하는 기능|
+|boolean|checkJuminNumber(String jumin)|주민등록번호 유효성체크|입력된 주민등록번호 "-"를 제외한 하나의 문자열을 받아서 유효한 주민등록번호인지 체크하는 기능|
+|boolean|checkBubinNumber(String bubin1, String bubin2)|법인번호 유효성체크|입력된 법인번호 앞 , 뒤 문자열을 받아서 유효한 법인번호인지 체크하는 기능|
+|boolean|checkBubinNumber(String bubin)|법인번호 유효성체크|입력된 법인번호"-"를 제외한 하나의 문자열을 받아서 유효한 법인번호인지 체크하는 기능|
+|boolean|checkCompNumber(String comp1, String comp2, String comp3)|사업자번호 유효성체크|입력된 사업자번호 앞  중간 뒤 문자열을 받아서 유효한 사업자번호인지 체크하는 기능|
+|boolean|checkCompNumber(String comp)|사업자번호 유효성체크|입력된 사업자번호 "-"를 제외한 하나의 문자열을 받아서 유효한 사업자번호인지 체크하는 기능|
+|boolean|checkforeignNumber(String foreign1, String foreign2)|외국인등록번호 유효성체크|입력된 외국인등록번호 앞 뒤 문자열을 받아서 유효한 외국인등록번호인지 체크하는 기능|
+|boolean|checkforeignNumber(String foreign)|외국인등록번호 유효성체크|입력된 외국인등록번호 "-"를 제외한 하나의 문자열을 받아서 유효한 외국인등록번호인지 체크하는 기능|
+
+== Input ==
+  * 해당하는 입력란의 String 형태의 번호
+
+== Output ==
+  * Boolean
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovNumberCheckUtil;
+
+...
+String	Jumin1   = "831231";
+String	Jumin2   = "265948";
+String	Jumin   = "831231265948";
+
+Boolche check1  = EgovNumberCheckUtil.checkJuminNumber(Jumin1, Jumin2);
+Boolche check2  = EgovNumberCheckUtil.checkJuminNumber(Jumin);
+
+...
+String	bubmin1   = "134153";
+String	bubmin1   = "4433453";
+String	bubmin   = "1341534433453";
+
+Boolche check1  = EgovNumberCheckUtil.checkBubinNumber(bubin1, bubin2);
+Boolche check2  = EgovNumberCheckUtil.checkBubinNumber(bubin);
+
+...
+String	comp1   = "324";
+String	comp2   = "12";
+String	comp3   = "43222";
+String	comp   = "3241243222";
+
+Boolche check1  = EgovNumberCheckUtil.checkCompNumber(comp1, comp2, comp3);
+Boolche check2  = EgovNumberCheckUtil.checkCompNumber(comp);
+
+...
+String	foreign1 = "831231";
+String	foreign2 = "576545";
+String	foreign = "831231576545";
+
+Boolche check1  = EgovNumberCheckUtil.checkforeignNumber(foreign1 , foreign2 );
+Boolche check2  = EgovNumberCheckUtil.checkforeignNumber(foreign );
+
+...
+
+
+</code>

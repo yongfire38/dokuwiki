@@ -1,0 +1,133 @@
+====== 사용자 지원 - 뉴스 ======
+
+===== 개요 =====
+
+**뉴스** 서비스는 사용자에게 새로운 소식이나 정보를 게시판 형태로 제공하며, 항목은 뉴스제목, 뉴스내용, 뉴스출처, 게시일자, 등록일자로 구성되어 있다.\\
+
+**뉴스** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이며, \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능 흐름도 ====
+{{:egovframework:mcom:nws_기능흐름도.jpg|}} 
+
+
+===== 설명 =====
+뉴스 기능은 크게 **뉴스정보목록조회**, **뉴스정보상세조회** 기능으로 구성되어 있다.
+
+==클래스다이어그램==
+
+{{:egovframework:mcom:CLD_뉴스.jpg?740|}}
+
+
+
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.nws.web.EgovNewsManageController.java|뉴스관리를 위한 컨트롤러 클래스|
+|Controller|egovframework.mbl.com.uss.ion.nws.web.EgovMblNewsManageController.java|뉴스관리를 위한 모바일 컨트롤러 클래스|
+|Service|egovframework.com.uss.ion.nws.service.EgovNewsManageService.java|뉴스관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.ion.nws.service.impl.EgovNewsManageServiceImpl.java|뉴스관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.uss.ion.nws.service.NewsManageVO.java|뉴스관리를 위한 VO 클래스|
+|VO|egovframework.com.uss.ion.nws.service.NewsManageDefaultVO.java|뉴스관리를 위한 SearchVO 클래스|
+|DAO|egovframework.com.uss.ion.nws.service.imp.NewsManageDAO.java|뉴스 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/nws/EgovNewsInfoListInqire.jsp|뉴스관리를 위한 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/nws/EgovNewsInfoDetailInqire.jsp|뉴스관리를 위한 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/nws/EgovNewsInfoRegist.jsp|뉴스관리를 위한 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/nws/EgovNewsInfoUpdt.jsp|뉴스관리를 위한 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/ion/nws/EgovNewsInfoListInqire.jsp|뉴스관리를 위한 모바일 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/ion/nws/EgovNewsInfoDetailInqire.jsp|뉴스관리를 위한 모바일 상세조회 페이지|
+|Query XML|resources/egovframework/sqlmap/com/uss/ion/nws/EgovNewsManage_SQL.xml|뉴스관리(조회,등록,수정,삭제)를 위한 Query XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/ion/nws/EgovNewsManage_SQL.xml|뉴스관리를 위한 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|뉴스관리를 위한 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|뉴스등록을 위한 Id생성 Idgen XML|
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|뉴스정보|COMTNNEWSINFO|뉴스에 대한 제목, 설명을 관리|	
+
+===== 관련기능 =====
+
+==== 뉴스정보목록조회 ====
+
+=== 비즈니스 규칙 ===
+뉴스제목, 뉴스출처, 게시일자로 구성된 뉴스 정보를 일반사용자가 리스트 형태로 조회 할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/ion/nws/NewsInfoListInqire.mdo|selectNewsList|"NewsManageDAO.selectNewsList"|
+| |/uss/ion/nws/NewsInfoListInqire.mdo|selectNewsListTotCnt|"NewsManageDAO.selectNewsListTotCnt"|
+|목록클릭|/uss/ion/nws/NewsInfoDetailInqire.mdo|selectNewsDetail|"NewsManageDAO.selectNewsDetail"|
+
+
+뉴스정보 목록은 페이지 당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. \\
+검색조건은 뉴스제목, 뉴스출처, 게시일자를 사용한다.\\ 
+
+
+{{:egovframework:mcom:egovnewsinfolistinqire1.jpg|}}{{:egovframework:mcom:egovnewsinfolistinqire2.jpg|}} \\
+
+홈: 홈 화면으로 이동한다.\\
+검색: 뉴스정보를 조회하기 위해서는 상단의 검색조건을 선택하고 해당하는 검색문자를 입력 후 검색 버튼을 클릭한다.\\
+목록클릭: 뉴스제목을 클릭하면 **뉴스정보상세조회** 화면으로 이동한다.
+----
+
+==== 뉴스정보상세조회 ====
+
+=== 비즈니스 규칙 ===
+뉴스정보목록조회 화면에서 목록 클릭 시 이동되는 화면으로 뉴스에 대한 상세정보를 보여준다. \\
+뉴스상세조회 화면에서는 목록버튼을 클릭하여 뉴스에 대한 목록을 조회 할 수 있다. 
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/ion/nws/NewsInfoListInqire.mdo|selectNewsInfoList|"NewsManageDAO.selectNewsList"|
+
+{{:egovframework:mcom:egovnewsinfodetailinqire.jpg|}}
+
+뒤로: **뉴스정보목록조회** 화면으로 이동한다.\\
+목록: **뉴스정보목록조회** 화면으로 이동한다.
+----
+
+
+
+===== 참고자료 =====
+  * 뉴스관리 참조(기존 웹 버전) : [[뉴스관리]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

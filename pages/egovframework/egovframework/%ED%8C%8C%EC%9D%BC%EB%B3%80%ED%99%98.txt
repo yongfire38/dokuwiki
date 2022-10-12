@@ -1,0 +1,89 @@
+====== 파일변환 ======
+
+===== 개요 =====
+
+Web 서비스를 통해 doc,xls,ppt 파일을 pdf파일로 변환한다.
+
+파일변환는 OpenOffice를 통해 변환서비스가 이루어진다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① Doc 파일 Pdf로 변환 여부 확인 (True/False)
+    ② xls 파일 Pdf로 변환 여부 확인 (True/False)
+    ③ ppt 파일 Pdf로 변환 여부 확인 (True/False)
+
+파일변환는 openSoures인 JodConveter 라이브러리를 통해 서버 구동되고 있는 OpenOffice를 활용하여 PDF파일로 변환이 이루어진다.
+
+본 서비스는 서버의 정해진 디렉토리에 파일을 업로드 후 업로더된 파일을 PDF파일로 변환한다. 
+
+업로더된 파일은 삭제 처리되어 PDF파일만 디렉토리에 존재하게 된다.
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovPdfCnvr.java|파일변환 요소기술 클래스| DOC,XLS,PPT => PDF파일 변환 |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovPdfCnvr.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean|getPDF(String targetPdf, HttpServletRequest request, HttpServletResponse response)|파일변환|파일변환여부 True/False 리턴|
+
+String 타입의 절대경로를 포함한 디렉토리 (예, /user/com/test/file1.txt)
+
+
+== Input ==
+  * 원본 file : String 타입의 절대경로를 포함한 디렉토리. XLS, PPT, DOC만 허용됨 (예, /user/com/test/test.xls)
+  * 변경 file : String 타입. 절대경로와 확장자를 제외한 파일명만 입력 (예, testfile)\\
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * Boolean 타입 true / false
+
+===== 환경설정 =====
+기본 환경은 OpenOffice가 해당 시스템에 설치되어 있는 상태에서 아래 환경에 따른 포트에 서비스를 올려놓아야 한다.
+
+단 OpenOffice는 현재 windows 버전과, 솔라리스 버전, 리눅스 버전만 사용 가능함. 다른 OS로 점차 지원될것으로 예상됨.
+
+  * UNIX 환경
+<code>
+$ unset DISPLAY
+$ soffice -headless -accept="socket,host=127.0.0.1,port=8100;urp;" -nofirststartwizard
+</code>
+  * window 환경
+<code>
+"C:\Program Files\OpenOffice.org 3\program\soffice.exe" -headless -accept=socket,port=8100;urp;
+</code>
+
+java 컴파일시 해당 라이브러리를 참조하도록 해야한다.
+
+{{:egovframework:com:cmm:sim:utl:pdfconverter.jpg|}}
+
+===== 사용방법 =====
+
+"SocketOpenOfficeConnection(8100)"부분은  환경설정에서 지정해준 port "port=8100"에 맞춰야 한다.
+
+혹시 사용중인 포트일 경우 환경설정 포트를 변경하고 해당 Connection 포트를 그에 맞춰 지정해 준다.
+
+<code java>
+import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConverter;
+import com.artofsolving.jodconverter.openoffice.connection.SocketOpenOfficeConnection;
+import com.artofsolving.jodconverter.DocumentConverter;
+
+// connect to an OpenOffice.org instance running on port 8100
+SocketOpenOfficeConnection connection = new SocketOpenOfficeConnection(8100);
+connection.connect();
+//원본 디렉토리에 targetPdf 명칭지정
+String valueFile = null; 
+valueFile  = inputFile.getParent().replace('\\', FILE_SEPARATOR).replace('/', FILE_SEPARATOR);
+File outputFile = new File(valueFile+"/"+targetPdf+".pdf");
+// convert
+DocumentConverter converter = new OpenOfficeDocumentConverter(connection);
+converter.convert(inputFile, outputFile);
+// close the connection
+connection.disconnect();
+</code>
+
+===== 참고자료 =====
+N/A

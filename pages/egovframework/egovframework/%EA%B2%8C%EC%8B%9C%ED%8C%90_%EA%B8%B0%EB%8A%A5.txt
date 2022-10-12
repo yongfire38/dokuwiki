@@ -1,0 +1,94 @@
+====== 게시판 기능 ======
+
+게시물을 등록하고 등록된 게시물의 목록을 조회할 수 있는 기능을 제공한다.
+
+==== 관련 소스 (주 기능)====
+
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.cop.bbs.EgovBBSManageController.java|게시글 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.bbs.service.EgovBBSManageService.java|게시글 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovBBSManageServiceImpl.java|게시글 관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.cop.bbs.service.Board.java|게시글 관리를 위한 모델 클래스|
+| |egovframework.com.cop.bbs.service.BoardVO.java|게시글 관리를 위한 VO 클래스|
+|DAO|egovframework.com.cop.bbs.service.impl.EgovBBSManageDAO.java|게시글 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeRegist.jsp|게시글 생성을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeUpdt.jsp|생성된 게시글 수정을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeList.jsp|생성된 게시글 조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovNoticeInqire.jsp|생성된 게시글 상세 조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovGuestList.jsp|방명록 등록/조회를 위한 jsp페이지|
+
+
+ 
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|게시판정보|COMTNBBS|게시물 정보를 관리|
+|파일속성정보|COMTNFILE|파일의 속성정보를 관리|
+|파일속성정보상세|COMTNFILEDETAIL|첨부파일의 상세 정보를 관리|
+
+=== ERD ===
+
+ERD 추가
+
+
+----
+
+
+==== 비즈니스 규칙 ====
+
+생성된 게시판은 게시판 속성관리에 따라서 지정된 유형 및 속성에 따라서 실제 게시판은 다른 형태로 보여지게 된다.
+각 게시판은 글 생성 및 조회, 수정, 삭제가 가능하며 수정 및 삭제의 경우 글을 게시한 당사자만이 수정, 삭제가 가능하다.
+
+익명 게시판의 경우 작성자의 이름이 나오지 않으며, 갤러리 형태의 게시판의 경우 글 생성시 
+첨부된 이미지 파일(BMP,JPG,GIF,PNG 포맷에 한함)을 본문에 같이 보여주는 기능을 제공한다.
+
+
+
+----
+
+==== 관련화면 및 수행매뉴얼 ====
+
+
+=== 게시물 목록조회 ===
+
+{{:egovframework:noticelist.gif|}}
+
+----
+
+=== 게시물 생성 ===
+
+{{:egovframework:noticeregist.gif|}}
+
+----
+
+=== 게시물 상세조회 ===
+
+{{:egovframework:noticeinqire.gif|}}
+
+----
+
+=== 게시물 수정/삭제 ===
+
+{{:egovframework:noticeupdt.gif|}}
+
+
+----
+
+=== 답글 작성 ===
+
+
+----
+
+=== 방명록 등록/수정 ===
+
+{{:egovframework:guestlist.gif|}}
+
+
+
+{{:egovframework:guestlistupdt.gif|}}
+
+
+----
+
+

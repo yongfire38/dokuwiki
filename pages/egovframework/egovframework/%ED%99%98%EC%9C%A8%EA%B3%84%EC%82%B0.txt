@@ -1,0 +1,81 @@
+====== 요소기술 - 환율계산 ======
+
+===== 개요 =====
+외환은행에서 제공되는 환율표를 토대로 환율을 계산하는 기능
+
+===== 설명 =====
+대한민국(KRW), 미국(USD), 유럽연합(EUR), 일본(JPY), 중국원화(CNY) 사이의 환율을 계산하는 기능으로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovEhgtCalcUtil.java|환율 유틸리티| |
+|Controller|egovframework.com.cmm.web.EgovComUtlController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovEhgtCalc.jsp|환율 테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|getEhgtCalc(String srcType, long srcAmount, String cnvrType)|환율계산|환율표를 토대로 환율계산기능 제공|
+
+== Input ==
+  * 특정숫자: long 타입의 숫자
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * String
+
+===== 환경설정 =====
+
+**해당없음**
+
+===== 사용방법 =====
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovEhgtCalcUtil;
+...
+
+<td>		
+	<select name="BeforeCondition" class="select">
+   		<option selected value='K'>대한민국(KRW)</option>
+   		<option value='K'>대한민국(KRW)</option>
+   		<option value='U'>미국(USD)</option>
+   		<option value='E'>유럽연합EUR)</option>
+   		<option value='J'>일본(JPY)</option>
+   		<option value='C'>중국연합(CNY)</option>		   		
+	</select>
+</td>		
+<td>
+    원금액:<input type = "text" name="srcAmount"  size=10 >을(를) ->
+</td>
+<td>		
+	<select name="AfterCondition" class="select">
+   		<option selected value='K'>대한민국(KRW)</option>
+   		<option value='K'>대한민국(KRW)</option>
+   		<option value='U'>미국(USD)</option>
+   		<option value='E'>유럽연합EUR)</option>
+   		<option value='J'>일본(JPY)</option>
+   		<option value='C'>중국연합(CNY)</option>		   		
+	</select>
+</td>				
+
+
+// 현 환율대상 국가
+String srcType = safeGetParameter(request,"BeforeCondition");
+// 변환하고자 하는 금액
+Long srcAmount  = Long.parseLong(safeGetParameter(request,"srcAmount"));
+// 변환 환율대상 국가
+String cnvrType = safeGetParameter(request,"AfterCondition");
+
+String	resultStr = EgovEhgtCalcUtil.getEhgtCalc(srcType, srcAmount, cnvrType);
+
+</code>
+
+\\ 환율테스트화면
+
+{{:egovframework:com:utl:EhgtCalc.gif|}}
+
+{{:egovframework:com:utl:EhgtCalcResult.gif?740|}}
+
+
+===== 참고자료 =====
+
+ N/A

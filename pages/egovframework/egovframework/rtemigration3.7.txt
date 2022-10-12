@@ -1,0 +1,266 @@
+====== 실행환경 Migration 가이드 (3.6 -> 3.7) ======
+
+표준프레임워크 3.7는 기존 표준프레임워크 3.X와의 호환성을 염두해두고 실행환경의 버전 업그레이드를 진행하였으나,  \\
+전체 오픈소스SW 업그레이드에 따라 일부 변경이 필요합니다. 또한, 각 프로젝트의 상황 및 환경에 따라서 버전 업그레이드에 따른  \\
+충돌, 버그, 불안정성이 발생할 수도 있으니 충분한 테스트 후 진행하시기 바랍니다.
+
+===== 업그레이드 개요 =====
+표준프레임워크 3.7는 JDK 1.7이 필요합니다. \\
+이에 따라 우선 관련된 WAS 등 적용되어 있는 SW 등이 JDK 1.7을 지원하는지 확인 및 JDK 업그레이드를 수행하십시오. 
+
+다음으로 다음과 같은 절차가 필요합니다.
+
+  1. 실행환경 library 변경 (maven dependency 수정)
+  2. spring security 변경 (spring security 사용 시)
+  3. spring batch 변경 (spring batch 사용 시)
+===== 업그레이드 방법 =====
+
+==== 1. 실행환경 library 변경 ====
+
+=== 1-1. Maven을 사용하는 경우 === 
+
+Maven을 사용하는 경우 프로젝트에서 사용하는 pom.xml 파일을 수정하여 업그레이드를 진행할 수 있습니다. \\
+기본적으로 표준프레임워크 실행환경에서 사용되는 오픈소스 라이브러리들만을 업그레이드 하고자 하는 경우  \\
+pom.xml 파일에서 egovframework.rte 패키지 아래에 있는 라이브러리들의 버전만 3.7.0으로 업그레이드 해주면 됩니다.
+<code xml>
+변경 전 (예)
+<dependency>
+     <groupId>egovframework.rte</groupId>
+     <artifactId>egovframework.rte.psl.dataaccess</artifactId>
+     <version>3.6.0</version>
+</dependency>
+변경 후 (예)
+<dependency>
+     <groupId>egovframework.rte</groupId>
+     <artifactId>egovframework.rte.psl.dataaccess</artifactId>
+     <version>3.7.0</version>
+</dependency>
+</code>
+만약 표준프레임워크의 버전을 property를 사용하여 일괄적으로 관리하는 경우 property를 3.7.0으로 변경합니다. \\
+property의 이름은 프로젝트에 따라 다를 수 있습니다.
+<code xml>
+변경 전 (예)
+<properties>
+     <spring.maven.artifact.version>4.1.2.RELEASE</spring.maven.artifact.version>
+     <egovframework.rte.version>3.6.0</spring.maven.artifact.version>
+</properties>
+변경 후 (예)
+<properties>
+     <spring.maven.artifact.version>4.2.4.RELEASE</spring.maven.artifact.version>
+     <egovframework.rte.version>3.7.0</spring.maven.artifact.version>
+</properties>
+</code>
+표준프레임워크 실행환경은 각각의 실행환경들이 별도의 오픈소스 라이브러리와 dependency가 걸려있으므로, \\
+모든 실행환경의 버전을 일괄적으로 업그레이드하는 것을 권장합니다. \\
+특정 실행환경 서비스의 업그레이드만 진행하여 3.X 버전과 3.7 버전을 혼재하여 사용할 경우의 충돌이나 버그에 대해서는 테스트가 이루어지지 않았습니다.\\
+단, spring batch 사용시 properties는 아래와 같이 변경 됩니다.
+<code xml>
+변경 전 (예)
+<properties>
+	<spring.maven.artifact.version>3.2.9.RELEASE</spring.maven.artifact.version>
+	<batch.maven.artifact.version>2.1.9.RELEASE</batch.maven.artifact.version>
+        <egovframework.rte.version>3.1.0</egovframework.rte.version
+</properties>
+변경 후 (예)
+<properties>
+     <spring.maven.artifact.version>4.2.4.RELEASE</spring.maven.artifact.version>
+     <batch.maven.artifact.version>3.0.6.RELEASE</batch.maven.artifact.version>
+     <egovframework.rte.version>3.7.0</egovframework.rte.version>
+</properties>
+</code>
+
+
+=== 1-2. Maven을 사용하지 않는 경우 === 
+
+다운로드 메뉴에서 실행환경 라이브러리를 직접 다운로드 하여 사용합니다. \\
+단, 이 경우 각각의 실행환경 서비스가 의존성을 가지고 있는 오픈소스 라이브러리를 자동으로 다운로드 받지 않으므로 수작업으로 필요한 라이브러리를 다운로드 받아야 합니다. \\
+별도로 배포되는 pom.xml 파일을 참고하여 의존성을 가지는 라이브러리들을 버전을 맞추어 다운로드 받으시기 바랍니다. \\ 
+
+==== 2. spring security 변경 (spring security 사용 시) ====
+
+
+===== 2-1. context-security.xml 설정 =====
+spring security 사용 시 xsd 변경 및 보안 옵션 추가
+
+변경 전 (예)
+
+<code xml>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:egov-security="http://www.egovframe.go.kr/schema/egov-security"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.egovframe.go.kr/schema/egov-security http://www.egovframe.go.kr/schema/egov-security/egov-security-3.0.xsd">
+</code>
+
+변경 후 (예)
+
+<code xml>
+<!-- xsd 변경 -->
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:egov-security="http://www.egovframe.go.kr/schema/egov-security"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.0.xsd
+		http://www.egovframe.go.kr/schema/egov-security http://www.egovframe.go.kr/schema/egov-security/egov-security-3.7.xsd">
+
+
+<!-- 보안 옵션(sniff, xframeOptions, xssProtection, csrf) 추가 -->
+  <egov-security:config id="securityConfig"
+		sniff="true"
+		xframeOptions="SAMEORIGIN" 
+		xssProtection="true" 
+		csrf="false"
+
+</code>
+
+
+===== 2.2 LoginFilter 변경 (filter 방식 사용 시) =====
+spring security 로그인 필터 처리 시 경로 및 파리미터 적용 \\
+  * 기존 :
+<code java>
+Map<String, UsernamePasswordAuthenticationFilter> beans = act.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
+if (beans.size() > 0) {
+	springSecurity = (UsernamePasswordAuthenticationFilter) beans.values().toArray()[0];
+} else {
+	LOGGER.error("No AuthenticationProcessingFilter");
+	throw new IllegalStateException("No AuthenticationProcessingFilter");
+}
+...
+class RequestWrapperForSecurity extends HttpServletRequestWrapper {
+	private String username = null;
+	private String password = null;
+
+	public RequestWrapperForSecurity(HttpServletRequest request, String username, String password) {
+		super(request);
+
+		this.username = username;
+		this.password = password;
+	}
+
+	@Override
+	public String getRequestURI() {
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/j_spring_security_check";
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if (name.equals("j_username")) {
+			return username;
+		}
+
+		if (name.equals("j_password")) {
+			return password;
+		}
+
+		return super.getParameter(name);
+	}
+}
+</code>
+
+  * 변경 :
+<code java>
+Map<String, UsernamePasswordAuthenticationFilter> beans = act.getBeansOfType(UsernamePasswordAuthenticationFilter.class);
+if (beans.size() > 0) {
+	springSecurity = (UsernamePasswordAuthenticationFilter) beans.values().toArray()[0];
+	springSecurity.setUsernameParameter("egov_security_username");
+	springSecurity.setPasswordParameter("egov_security_password");
+	springSecurity.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(request.getServletContext().getContextPath() +"/egov_security_login", "POST"));
+} else {
+	LOGGER.error("No AuthenticationProcessingFilter");
+	throw new IllegalStateException("No AuthenticationProcessingFilter");
+}
+...
+class RequestWrapperForSecurity extends HttpServletRequestWrapper {
+	private String username = null;
+	private String password = null;
+
+	public RequestWrapperForSecurity(HttpServletRequest request, String username, String password) {
+		super(request);
+
+		this.username = username;
+		this.password = password;
+	}
+	
+	@Override
+	public String getServletPath() {
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/egov_security_login";
+	}
+
+	@Override
+	public String getRequestURI() {
+		return ((HttpServletRequest) super.getRequest()).getContextPath() + "/egov_security_login";
+	}
+
+	@Override
+	public String getParameter(String name) {
+		if (name.equals("egov_security_username")) {
+			return username;
+		}
+
+		if (name.equals("egov_security_password")) {
+			return password;
+		}
+
+		return super.getParameter(name);
+	}
+}
+
+</code>
+===== 2-3. LogoutFilter 변경 (filter 방식 사용 시) =====
+spring security 로그아웃 필터 처리시 egov_security_logout 적용 \\
+  * 기존 :
+<code java>
+((HttpServletResponse)response).sendRedirect(((HttpServletRequest)request).getContextPath() + "/j_spring_security_logout");
+</code>
+  * 변경 :
+<code java>
+((HttpServletResponse)response).sendRedirect(((HttpServletRequest)request).getContextPath() + "/egov_security_logout");
+</code>
+
+==== 3. spring batch 변경 (spring batch 사용 시) ====
+
+===== 3-1. 설정관련 xml 파일 xsd 변경 =====
+* 스프링 배치 설정 파일 :  2.1.xsd > 3.0.xsd \\
+* 스프링 관련 설정 파일 :  3.2.xsd > 4.0.xsd
+
+===== 3-2. 데이터베이스 script(구조) 변경 =====
+<code>
+* BATCH_JOB_EXECUTION 테이블 
+    컬럼 속성 변경 : EXIT_CODE VARCHAR(100) > EXIT_CODE VARCHAR(2500)
+* BATCH_JOB_EXECUTION 테이블 
+    컬럼 속성 변경 : EXIT_CODE VARCHAR(100) > EXIT_CODE VARCHAR(2500)
+	컬럼 추가 : JOB_CONFIGURATION_LOCATION VARCHAR(2500) DEFAULT NULL 
+* BATCH_JOB_EXECUTION_PARAMS > BATCH_JOB_EXECUTION_PARAMS 테이블 변경
+	컬럼 추가 : IDENTIFYING CHAR(1) NOT NULL
+</code>
+<code mysql>
+// mysql 기준
+// 방화벽 정책상 [C REATE] 문자를 space 처리 하였습니다. space 문자를 제거 하시면 됩니다.\\
+// 방화벽 정책상 [T ABLE] 문자를 space 처리 하였습니다. space 문자를 제거 하시면 됩니다.\\
+C REATE T ABLE BATCH_JOB_EXECUTION_PARAMS  (
+JOB_EXECUTION_ID NUMBER(19,0) NOT NULL ,
+TYPE_CD VARCHAR2(6) NOT NULL ,
+KEY_NAME VARCHAR2(100) NOT NULL ,
+STRING_VAL VARCHAR2(250) ,
+DATE_VAL TIMESTAMP DEFAULT NULL ,
+LONG_VAL NUMBER(19,0) ,
+DOUBLE_VAL NUMBER ,
+IDENTIFYING CHAR(1) NOT NULL ,
+constraint JOB_EXEC_PARAMS_FK foreign key (JOB_EXECUTION_ID)
+references BATCH_JOB_EXECUTION(JOB_EXECUTION_ID)
+)
+</code>
+
+===== 3-3. 데이터베이스 설정 파일(context-batch-sqlmap.xml) 변경  =====
+<code>
+* SqlMapClientFactoryBean 변경 
+  org.springframework.orm.ibatis.SqlMapClientFactoryBean > egovframework.rte.psl.orm.ibatis.SqlMapClientFactoryBean
+</code>
+
+===== 기타 알 수 없는 충돌이 발생하는 경우 =====
+
+프로젝트에 따라서 기존에 사용하던 라이브러리, 코드, WAS, DB 등과의 충돌이 발생할 수 있습니다. \\
+알 수 없는 충돌이 발생하고 해결이 어려운 경우 표준프레임워크센터에 프로젝트의 환경 및 에러메시지를 포함하여 문의를 주시기 바랍니다.

@@ -1,0 +1,73 @@
+====== 공통서비스 - 게시판 익명처리 ======
+
+===== 개요 =====
+게시판을 사용하기 위해서는 반드시 사용자 인증 및 권한 부여가 필요하지만 익명게시판의 경우는 인증 및 권한이 없더라도 사용 가능하도록 익명 기능을 제공한다.
+
+===== 설명 =====
+
+게시판기능 중에서 익명게시판의 경우는 익명성 보장을 위하여 사용자에 대한 정보를 기록하지 않는다. 추가적으로 사용자 인증, 즉 로그인되지 않더라고 익명게시판에 대한 읽기 및 쓰기 기능을 제공해야 한다. (권한 부여 불필요)
+
+다만, 익명게시판 자체에 사용자 확인 및 권한 확인 등의 로직을 수행하지 않더라고 시스템적으로 수행되는 인증 확인 및 권한확인 등의 로직은 별도로 제외시켜야 한다.
+
+
+== 관련소스 ==
+[[게시판사용기능#관련소스|게시판 사용기능]] 참조 (기존 게시판 사용기능을 그대로 사용)
+
+== 관련테이블 ==
+[[게시판사용기능#관련테이블|게시판 사용기능]] 참조 (기존 게시판 사용기능을 그대로 사용)
+
+
+===== 환경설정 =====
+
+익명게시판과 관련된 URL은 다음과 같다.
+
+  * /cop/bbs/anonymous/selectBoardList.do : 익명게시물 목록조회
+  * /cop/bbs/anonymous/addBoardArticle.do : 익명게시물 등록 페이지 이동
+  * /cop/bbs/anonymous/insertBoardArticle.do : 익명게시물 등록
+  * /cop/bbs/anonymous/selectBoardArticle.do : 익명게시물 상세조회
+  * /cop/bbs/anonymous/deleteBoardArticle.do : 익명게시물 삭제
+  * /cop/bbs/anonymous/forUpdateBoardArticle.do : 익명게시물 수정 페이지 이동
+  * /cop/bbs/anonymous/updateBoardArticle.do : 익명게시물 수정
+  * /cop/bbs/anonymous/addReplyBoardArticle.do : 익명게시물 답변 등록 페이지 이동
+  * /cop/bbs/anonymous/replyBoardArticle.do : 익명게시물 답변 등록
+
+기존 일반게시물에 대한 URL에 "anonymous" 부분만 추가되었다. (나머지 동일)
+
+===== 사용방법 =====
+시스템적으로 수행되는 인증확인 및 권한확인 부분을 제외시키기 위해서는 추가적인 권한설정이 필요하다.
+
+자체적으로 인증확인 및 권한확인을 수행하는 경우는 다음과 같은 URL 패턴은 확인 로직을 수행하지 않도록 조치해야 한다.
+
+<code>
+/cop/bbs/anonymous/*.do
+/validator.do
+</code>
+
+전자정부 표준프레임워크의 공통서비스에서 제공하는 권한관리를 적용한 경우는 다음과 같은 절차에 의해 익명(anonymous)처리를 수행해야 한다.
+
+권한에 대한 자세한 내용은 **[[롤관리|권한 롤 관리]]** 및 **[[권한관리]]** 부분을 참조한다.
+
+① 롤 관리를 통해 익명게시판을 위한 롤을 등록한다. (URL 패턴)
+
+{{:egovframework:com:cop:anonymous1.jpg|롤 등록}}
+
+{{:egovframework:com:cop:anonymous2.jpg|롤 등록(validator.do)}}
+
+/cop/bbs/anonymous/*.do 패턴 및 /validator.do 등록
+
+② ROLE_ANONYMOUS (모든 사용자) 권한 조회 및 해당 롤 정보 조회
+
+{{:egovframework:com:cop:role.jpg|권한 롤 등록}}
+
+"ROLE_ANONYMOUS" 권한을 조회하여 왼쪽 "롤 정보" 조회 아이콘을 클릭하면 해당 권한에 대한 롤 목록이 나타남
+
+새롭게 등록된 2개의 롤을 찾아 왼쪽 등록여부 항목을 "등록"으로 변경
+
+③ 익명게시판 확인
+로그인되지 않은 상태에서 ".../cop/bbs/anonymous/selectBoardList.do?bbsId=익명게시판ID" URL로 접근하여 사용가능한지 확인
+
+
+
+===== 참고자료 =====
+  * 권한관리 참조 : [[권한관리]] 및 하위 [[권한관리 기능]] 및 [[권한관리:권한별 롤관리]] 참조
+  * 롤관리 참조 : [[롤관리]] 참조

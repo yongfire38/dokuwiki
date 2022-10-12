@@ -1,0 +1,99 @@
+====== 공통서비스 - 용어사전 ======
+
+===== 개요 =====
+업무에 활용되는 전문용어를 등록하고 등록된 용어에 검색 기능을 수행할 수 있도록 구성되어 있다.
+
+===== 설명 =====
+모바일 용어사전 기능은 **용어사전목록조회**, **용어사전상세조회** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.olh.wor.web.EgovWordDicaryController.java|용어사전관리를 위한 컨트롤러 클래스|
+|          |egovframework.mbl.com.uss.olh.wor.web.EgovMblWordDicaryController.java|용어사전관리를 위한 모바일 컨트롤러 클래스|
+|Service|egovframework.com.uss.olh.wor.service.EgovWordDicaryService.java|용어사전관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.comuss.olh.wor.service.impl.EgovWordDicaryServiceImpl.java|용어사전관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.uss.olh.wor.service.WordDicaryVO.java|용어사전관리를 위한 VO 클래스|
+|  |egovframework.com.uss.olh.wor.service.WordDicaryDefaultVO.java|용어사전관리를 위한 SearchVO 클래스|
+|DAO|egovframework.com.uss.olh.wor.service.imp.WordDicaryDAO.java|용어사전 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olh/wor/EgovWordDicaryListInqire.jsp|용어사전관리를 위한 목록조회 페이지|
+|   |/WEB-INF/jsp/egovframework/com/uss/olh/wor/EgovWordDicaryDetailInqire.jsp|용어사전관리를 위한 상세조회 페이지|
+|   |/WEB-INF/jsp/egovframework/com/uss/olh/wor/EgovWordDicaryRegist.jsp|용어사전관리를 위한 등록 페이지|
+|   |/WEB-INF/jsp/egovframework/com/uss/olh/wor/EgovWordDicaryUpdt.jsp|용어사전관리를 위한 수정 페이지|
+|   |/WEB-INF/jsp/egovframework/mbl/com/uss/olh/wor/EgovWordDicaryListInqire.jsp|용어사전관리를 위한 모바일 목록조회 페이지|
+|   |/WEB-INF/jsp/egovframework/mbl/com/uss/olh/wor/EgovWordDicaryDetailInqire.jsp|용어사전관리를 위한 모바일 상세조회 페이지|
+|Query XML|resources/egovframework/sqlmap/com/uss/olh/wor/EgovWordDicary_SQL.xml|용어사전관리(조회,등록,수정,삭제)를 위한 Query XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olh/wor/EgovWordDicary_SQL.xml|용어사전관리를 위한 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|용어사전관리를 위한 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|용어사전등록을 위한 Id생성 Idgen XML|
+
+클래스다이어그램
+
+{{:egovframework:com:uss:olh:wor:Word2.gif|}}
+
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|용어사전정보|COMTNWORDDICARYINFO|용어사전정보를 관리|
+
+===== 관련기능 =====
+
+==== 용어사전 목록조회 ====
+
+=== 비즈니스 규칙 ===
+조회조건(용어명, 영문명)으로 목록조회를 할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/olh/wor/WordDicaryListInqireActor.mdo|selectWordDicaryList|"WordDicaryDAO.selectWordDicaryList_D"|
+| | | |"WordDicaryDAO.selectWordDicaryListTotCnt_S"|
+|목록클릭|/uss/olh/wor/WordDicaryDetailInqire.mdo|selectWordDicaryDetail|"WordDicaryDAO.selectWordDicaryDetail_S"|
+
+
+용어사전 목록은 페이지 당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. \\
+위로부터 용어명, 영문명, 작성자, 등록일자가 표시된다.
+
+{{:egovframework:mcom:EgovWordDicaryListInqire_1.jpg|}}
+{{:egovframework:mcom:EgovWordDicaryListInqire_2.jpg|}}
+
+홈  : 기본적인 메뉴 화면으로 돌아간다. \\
+조회: 용어사전을 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색문자를 입력 후 조회 버튼을 클릭한다.\\
+----
+
+==== 용어사전 상세조회 ====
+
+=== 비즈니스 규칙 ===
+일반 사용자가 사용하는 화면으로 용어사전의 상세정보를 볼 수 있다. \\
+용어사전 상세조회화면은 용어사전목록조회에서 목록 클릭 시 목록조회 화면으로 이동된다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olh/wor/WordDicaryListInqire.mdo|selectWordDicaryList| |
+
+
+목록 클릭시 목록조회 화면으로 이동한다. \\
+뒤로 버튼 클릭시 바로 전 화면으로 이동한다.
+
+{{:egovframework:mcom:EgovWordDicaryDetailInqire_1.jpg|}}
+
+목록: **용어사전목록조회** 화면으로 이동한다. \\
+뒤로: 바로 전 화면으로 이동한다.
+----
+
+===== 참고자료 =====
+  * 용어사전 참조 : [[용어사전관리]]

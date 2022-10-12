@@ -1,0 +1,189 @@
+====== 사용자 지원 - 마이페이지======
+
+===== 개요 =====
+**마이페이지** 서비스는 사전에 제공된 컨텐츠를 선택하여 사용자가 즐겨 찾는 정보를 원하는 형태에 따라 구성하는 기능을 제공한다.\\
+관리자가 생성한 모바일 형식의 연계URL(~.mdo)을 가진 컨텐츠에 대해서만 조회 및 구성이 가능하다.\\
+
+**마이페이지** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+또한 공통으로 지원하고 있는 jAlert가 사용되고 있으며, 아래와 같은 js 파일에 정의되어 있다.
+  * **EgovMobile.js**
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능흐름도 ====
+
+ {{:egovframework:mcom:마이페이지_기능흐름도.jpg?740|}}
+
+===== 설명 =====
+마이페이지기능은 크게 **마이페이지 콘텐츠 목록조회**, **마이페이지 콘텐츠 상세조회**, **마이페이지 보기** 기능으로 구성되어 있다.
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:mcom:CLD_마이페이지.JPG?740|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ivp.mpe.web.EgovIndvdlPgeController.java|마이페이지 Controller Class|
+|Controller|egovframework.mbl.com.uss.mpe.web.EgovMblIndvdlPgeController.java|마이페이지 모바일 Controller Class|
+|Service|egovframework.com.uss.ivp.mpe.service.EgovIndvdlPgeService.java|마이페이지 Service Class|
+|ServiceImpl|egovframework.com.uss.ivp.mpe.service.impl.EgovIndvdlPgeServiceImpl.java|마이페이지 ServiceImpl Class|
+|Model|egovframework.com.uss.ivp.mpe.service.IndvdlPge.java|마이페이지  Model Class|
+|VO|egovframework.com.uss.ivp.mpe.service.IndvdlPgeCntntsVO.java|마이페이지 컨텐츠 VO Class|
+|VO|egovframework.com.uss.ivp.mpe.service.IndvdlPgeVO.java|마이페이지 구성 VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|DAO|egovframework.com.uss.ivp.mpe.service.impl.IndvdlPgeDAO.java|마이페이지 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/uss/ivp/mpe/EgovIndvdlpgeCntntsList.jsp|마이페이지 컨텐츠 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ivp/mpe/EgovIndvdlpgeCntntsRegist.jsp|마이페이지 컨텐츠 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ivp/mpe/EgovIndvdlpgeCntntsUpdt.jsp|마이페이지 컨텐츠 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ivp/mpe/EgovIndvdlpgeCntntsDetail.jsp|마이페이지 컨텐츠 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ivp/mpe/EgovIndvdlpgeConfRegist.jsp|마이페이지 환경설정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ivp/mpe/EgovIndvdlpgeList.jsp|마이페이지 컨텐츠 추가 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ivp/mpe/EgovIndvdlpgeDetail.jsp|마이페이지 조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/mbl/com/uss/mpe/EgovIndvdlpgeList.jsp|마이페이지 모바일 컨텐츠 추가 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/mpe/EgovIndvdlpgeDetail.jsp|마이페이지 모바일 조회 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/ivp/mpe/EgovIndvdlPge_SQL_XXX.xml|마이페이지 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/ivp/mpe/EgovIndvdlpge.xml|마이페이지 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|마이페이지 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|마이페이지 컨텐츠 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 CNTNTS_ID (컨텐츠 아이디) 항목을 추가해야 한다. 
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('CNTNTS_ID','0');
+ </code>
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|마이페이지 컨텐츠|COMTNINDVDLPGECNTNTS|마이페이지에 관리자가 등록한 컨텐츠를 조회한다.|	
+|마이페이지 환경설정|COMTNINDVDLPGEESTBS|마이페이지 조회 시 구성될 화면을 설정한다.|	
+|마이페이지에 추가된 컨텐츠|COMTNCNTNTSLIST|마이페이지에 추가된 컨텐츠를 관리한다.|	
+
+
+== 컨텐츠 제공 ==
+
+모바일 형식의 연계 URL(~.mdo)을 가진 컨텐츠만이 마이페이지 컨텐츠 목록조회 화면에서 조회되므로 관리자는 사전에 모바일 형식의 연계 URL(~.mdo)을 지정하여야 한다. \\
+마이페이지 콘텐츠 상세조회, 마이페이지 보기 화면에서 컨텐츠를 미리 확인하기 위해서는 사전에 해당 컨텐츠를 직접 작성하여 제공하여야 한다. (해당 Controller method와 JSP의 작성이 필요) \\
+기본적으로 용어사전, 행정전문용어사전, 추천사이트에 대한 컨텐츠를 사전에 제공한다.
+
+^컨텐츠명^연계 URL^상세 URL^
+|용어사전|/uss/olh/wor/WordDicaryMainList.mdo|/uss/olh/wor/WordDicaryListInqire.mdo|
+|행정전문용어사전|/uss/olh/awa/listAdministrationWord.mdo|/uss/olh/awa/listAdministrationWordMain.mdo|
+|추천사이트|/uss/ion/rec/RecomendSiteMainList.mdo|/uss/ion/rec/RecomendSiteListInqire.mdo|
+
+===== 관련기능 =====
+
+==== 마이페이지 컨텐츠 목록조회 ====
+
+=== 비즈니스 규칙 ===
+사전에 제공된 마이페이지 컨텐츠 정보를 리스트 형태로 조회하는 기능을 제공하며, 지정된 URL이 모바일 형식의 연계URL(~.mdo)인 컨텐츠와 사용유무가“Y”인 컨텐츠만 조회가 가능하다.\\
+마이페이지 보기화면에서 보기를 원하는 컨텐츠를 선택하여 추가하는 기능을 제공한다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행메뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/mpe/EgovIndvdlpgeAddCntntsList.mdo|addIndvdlpgeCntntsListView| |
+| |/uss/mpe/EgovIndvdlpgeAddCntntsListActor.mdo|addIndvdlpgeCntntsList|"IndvdlPgeDAO.addIndvdlpgeCntntsList"|
+|목록상세|/uss/mpe/indvdlCntntsPreview.mdo|indvdlCntntsPreview|"IndvdlPgeDAO.selectIndvdlpgeCntnts"|
+|바로추가|/uss/mpe/EgovIndvdlpgeAddCntnts.mdo|addIndvdlpgeCntnts|"IndvdlPgeDAO.addIndvdlpgeCntnts"|
+
+{{:egovframework:mcom:EgovIndvdlpgeList_1.jpg|}}
+
+뒤로 : **마이페이지 보기** 화면으로 이동한다. \\
+목록 클릭 : **마이페이지 컨텐츠 상세조회** 화면으로 이동한다. \\
++(추가) 이미지 : 컨텐츠를 **마이페이지 보기** 화면에서 조회할 수 있도록 마이페이지에 추가한다. 추가된 컨텐츠는 **마이페이지 컨텐츠 목록조회** 화면에서는 조회되지 않는다.
+
+----
+
+==== 마이페이지 컨텐츠 상세조회 ====
+
+=== 비즈니스 규칙 ===
+마이페이지 컨텐츠 목록조회 화면에서 목록 클릭시 이동되는 화면으로서 컨텐츠에 대한 상세정보를 보여준다. \\
+컨텐츠의 내용을 미리 확인하고 마이페이지 보기화면으로 컨텐츠를 추가하는 기능을 제공한다. \\
+컨텐츠의 내용을 미리 확인하는 기능은 필요할 경우 별도의 페이지를 작성하여 제공하여야만 조회가 가능하다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행메뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|바로추가|/uss/mpe/EgovIndvdlpgeAddCntnts.mdo|addIndvdlpgeCntnts|"IndvdlPgeDAO.addIndvdlpgeCntnts"|
+
+{{:egovframework:mcom:EgovIndvdlpgeList_2.jpg|}}
+
+뒤로 : **마이페이지 컨텐츠 목록조회** 화면으로 이동한다. \\
+미리보기 : 컨텐츠의 내용을 미리 확인하고 바로가기 버튼을 클릭하여 지정된 상세보기 URL로 이동할 수 있다. \\
+바로추가 : 컨텐츠를 **마이페이지 보기** 화면에서 조회할 수 있도록 마이페이지에 추가한다. 추가된 컨텐츠는 **마이페이지 컨텐츠 목록조회** 화면에서는 조회되지 않는다. 
+
+
+----
+
+==== 마이페이지 보기====
+
+=== 비즈니스 규칙 ===
+마이페이지에 추가된 컨텐츠를 확인하는 기능을 제공한다. \\
+추가된 컨텐츠를 마이페이지에서 제외하는 기능, 컨텐츠의 내용을 미리 확인하는 기능, 지정된 상세보기 URL로 이동하는 기능을 제공한다. \\
+컨텐츠의 내용을 미리 확인하는 기능은 필요할 경우 별도의 페이지를 작성하여 제공하여야만 조회가 가능하다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행메뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|컨텐츠등록화면|/uss/mpe/EgovIndvdlpgeAddCntntsList.mdo|addIndvdlpgeCntntsListView| |
+|삭제|/uss/mpe/EgovIndvdlpgeDelCntnts.mdo|deleteIndvdlpgeCntnts|"IndvdlPgeDAO.delIndvdlpgeCntnts"| \\
+|미리보기|/uss/mpe/indvdlCntntsPreview.mdo|indvdlCntntsPreview| |
+
+{{:egovframework:mcom:egovindvdlpgedetail.jpg|}}
+{{:egovframework:mcom:EgovIndvdlpgeDetail_1.jpg|}}
+
+홈 : 홈 화면으로 이동한다. \\
+등록 : **마이페이지 컨텐츠 목록조회** 화면으로 이동한다. \\
+목록 클릭 : 컨텐츠의 내용을 미리 확인하고 바로가기 버튼을 클릭하여 지정된 상세보기 URL로 이동할 수 있다. \\
+X(삭제) 이미지 : 해당 컨텐츠를 **마이페이지 보기** 화면에서 제외시킨다. 제외된 컨텐츠는 **마이페이지 컨텐츠 목록조회** 화면에서 조회하고 추가할 수 있다. \\
+바로가기 : 지정된 상세보기 URL로 이동한다. 
+
+
+----
+
+
+
+===== 참고자료 =====
+  * 마이페이지 참조(기존 웹 버전) : [[마이페이지]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

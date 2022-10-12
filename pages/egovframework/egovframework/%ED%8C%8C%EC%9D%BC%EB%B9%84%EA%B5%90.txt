@@ -1,0 +1,83 @@
+====== 파일비교 ======
+
+===== 개요 =====
+두 개의 파일을 비교하는 기능이다. 두 개의 파일의 사이즈, 수정일자, 내용, 생성자를 비교(Compare)한다. 이 서비스 컴포넌트는 서버(Server) 및 클라이언트(Client) 응용어플리케이션에서 파일 비교 시 활용할 수 있다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+  ① 두 개 파일의 사이즈가 같은지 체크하는 기능
+  ② 두 개 파일의 수정일자가 같은지 체크하는 기능
+  ③ 두 개 파일의 내용이 동일한지 체크 하는 기능
+  ④ 두 개 파일의 생성자가 같은지 체크하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovFileCmpr.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean|cmprFilesBySize(String cmprFile1, String cmprFile2)|사이즈비교|두 파일의 사이즈를 비교|
+|boolean|cmprFilesByUpdtPd(String cmprFile1, String cmprFile2)|수정일자비교|두 파일의 수정일자를 비교|
+|boolean|cmprFilesByContent(String cmprFile1, String cmprFile2)|내용비교|두 파일(TXT파일)의 내용을 비교|
+|boolean|cmprFilesByOwner(String cmprFile1, String cmprFile2)|생성자비교|두 파일의 생성자를 비교|
+
+== Input ==
+  * 파일1: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/file1.txt)
+  * 파일2: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/file2.txt)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+
+== Output ==
+  * Boolean 타입 true / false
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovFileTool;   
+
+	// 1. 사이즈 비교
+	String file1 = request.getParameter("file1");
+	String file2 = request.getParameter("file2");
+	boolean result = false;
+	if (file1 != null && file1.length() > 0
+		&& file2 != null && file2.length() > 0) {
+		result = EgovFileTool.cmprFilesBySize(file1, file2);
+	}
+	
+	// 2. 수정일자 비교
+	String file1 = request.getParameter("file1");
+	String file2 = request.getParameter("file2");
+	boolean result = false;
+	if (file1 != null && file1.length() > 0
+		&& file2 != null && file2.length() > 0) {
+		result = EgovFileTool.cmprFilesByUpdtPd(file1, file2);
+	}
+
+	// 3. 내용 비교
+	String file1 = request.getParameter("file1");
+	String file2 = request.getParameter("file2");
+	boolean result = false;
+	if (file1 != null && file1.length() > 0
+		&& file2 != null && file2.length() > 0) {
+		result = EgovFileTool.cmprFilesByContent(file1, file2);
+	}
+
+	// 4. 생성자 비교
+	String file1 = request.getParameter("file1");
+	String file2 = request.getParameter("file2");
+	boolean result = false;
+	if (file1 != null && file1.length() > 0
+		&& file2 != null && file2.length() > 0) {
+		result = EgovFileTool.cmprFilesByOwner(file1, file2);
+	}
+</code>
+
+===== 참고자료 =====
+N/A

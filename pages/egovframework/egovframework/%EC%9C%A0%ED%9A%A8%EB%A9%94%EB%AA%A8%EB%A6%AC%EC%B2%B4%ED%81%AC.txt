@@ -1,0 +1,45 @@
+====== 유효메모리 체크 ======
+
+===== 개요 =====
+시스템에서 사용 가능한 유효메모리를 체크하다. 새로운 프로그램을 실행하기 전에 시스템의 유효 메모리를 체크하여 프로그램 실행 여부를 판단할 때 활용할 수 있다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 시스템에서 사용 가능한 유효메모리를 체크하는 기능 
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovSysInfo.java|시스템정보 확인 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovSysInfo.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean|checkMoryCpcty(long memory)|유효메모리체크|특정 프로그램을 실행시키기 위해 메모리용량이 충분한지 확인|
+
+== Input ==
+  * 사용할 메모리(MB): Integer 타입의 메모리 사이즈 (예, 300)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * Boolean 타입 true / false
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovSysInfo;
+        
+        // 1. 프로그램 실행을 위한 유효 메모리 체크
+	boolean result = false;
+	long memory = Long.parseLong(request.getParameter("memory")); 
+	result = EgovSysInfo.checkMoryCpcty(memory);
+
+</code>
+
+===== 참고자료 =====
+N/A

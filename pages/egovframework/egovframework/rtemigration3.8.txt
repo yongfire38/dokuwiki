@@ -1,0 +1,158 @@
+====== 실행환경 Migration 가이드 (3.7 -> 3.8) ======
+
+표준프레임워크 3.8는 기존 표준프레임워크 3.X와의 호환성을 염두해두고 실행환경의 버전 업그레이드를 진행하였으나,  \\
+전체 오픈소스SW 업그레이드에 따라 일부 변경이 필요합니다. 또한, 각 프로젝트의 상황 및 환경에 따라서 버전 업그레이드에 따른  \\
+충돌, 버그, 불안정성이 발생할 수도 있으니 충분한 테스트 후 진행하시기 바랍니다.
+
+===== 업그레이드 개요 =====
+표준프레임워크 3.8는 JDK 1.7이 필요합니다. \\
+이에 따라 우선 관련된 WAS 등 적용되어 있는 SW 등이 JDK 1.7을 지원하는지 확인 및 JDK 업그레이드를 수행하십시오. 
+
+다음으로 다음과 같은 절차가 필요합니다.
+
+  1. 실행환경 library 변경 (maven dependency 수정)
+  2. context-security.xml 변경 (xsd 변경)
+  3. context-crypto.xml 변경 (crypto 간소화)
+  4. context-common.xml 변경 (egov.propertyConfigurer 삭제)
+  5. EgovWebEditorImageController.java 변경 (@Resource 변경)
+===== 업그레이드 방법 =====
+
+==== 1. 실행환경 library 변경 ====
+
+=== 1-1. Maven을 사용하는 경우 === 
+
+Maven을 사용하는 경우 프로젝트에서 사용하는 pom.xml 파일을 수정하여 업그레이드를 진행할 수 있습니다. \\
+기본적으로 표준프레임워크 실행환경에서 사용되는 오픈소스 라이브러리들만을 업그레이드 하고자 하는 경우  \\
+pom.xml 파일에서 egovframework.rte 패키지 아래에 있는 라이브러리들의 버전만 3.8.0으로 업그레이드 해주면 됩니다.
+<code xml>
+변경 전 (예)
+<dependency>
+     <groupId>egovframework.rte</groupId>
+     <artifactId>egovframework.rte.psl.dataaccess</artifactId>
+     <version>3.7.0</version>
+</dependency>
+변경 후 (예)
+<dependency>
+     <groupId>egovframework.rte</groupId>
+     <artifactId>egovframework.rte.psl.dataaccess</artifactId>
+     <version>3.8.0</version>
+</dependency>
+</code>
+만약 표준프레임워크의 버전을 property를 사용하여 일괄적으로 관리하는 경우 property를 3.8.0으로 변경합니다. \\
+property의 이름은 프로젝트에 따라 다를 수 있습니다.
+<code xml>
+변경 전 (예)
+<properties>
+     <spring.maven.artifact.version>4.2.4.RELEASE</spring.maven.artifact.version>
+     <egovframework.rte.version>3.7.0</spring.maven.artifact.version>
+</properties>
+변경 후 (예)
+<properties>
+     <spring.maven.artifact.version>4.3.16.RELEASE</spring.maven.artifact.version>
+     <egovframework.rte.version>3.8.0</spring.maven.artifact.version>
+</properties>
+</code>
+//
+dependency 의존성 추가//
+<code xml>
+<dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-core</artifactId>
+         <version>2.8.11</version>
+</dependency>
+</code>
+=== 1-2. Maven을 사용하지 않는 경우 === 
+
+다운로드 메뉴에서 실행환경 라이브러리를 직접 다운로드 하여 사용합니다. \\
+단, 이 경우 각각의 실행환경 서비스가 의존성을 가지고 있는 오픈소스 라이브러리를 자동으로 다운로드 받지 않으므로 수작업으로 필요한 라이브러리를 다운로드 받아야 합니다. \\
+별도로 배포되는 pom.xml 파일을 참고하여 의존성을 가지는 라이브러리들을 버전을 맞추어 다운로드 받으시기 바랍니다. \\ 
+
+==== 2. context-security.xml 변경 (xsd 변경) ====
+* context-security.xml 파일에서 xsd 변경 :  4.0.xsd > 4.2.xsd
+
+
+==== 3. context-crypto.xml 변경 (crypto 간소화) ====
+* crypto 간소화 설정은 아래와 같습니다.  \\
+* **algorithmKey, algorithmKeyHash 키 값은 암/복호화 처리시 사용되는 키 값입니다. crypto 간소화 사용시 [[egovframework:rte2:fdl:crypto_simplify_v3_8|가이드 링크]]에 따라서 필수로 변경 해주세요!**
+
+
+<code xml>
+변경 전 (예)
+<?xml version="1.0" encoding="UTF-8"?> 
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:p="http://www.springframework.org/schema/p"  
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd"> 
+     
+	<bean id="egovPasswordEncoder" class="egovframework.rte.fdl.cryptography.EgovPasswordEncoder">
+		<property name="algorithm" value="SHA-256" />
+		<property name="hashedPassword" value="gdyYs/IZqY86VcWhT8emCYfqY1ahw2vtLG+/FzNqtrQ=" />
+	</bean>
+	
+	<bean id="egovARIACryptoService" class="egovframework.rte.fdl.cryptography.impl.EgovARIACryptoServiceImpl">
+		<property name="passwordEncoder" ref="egovPasswordEncoder" />
+		<property name="blockSize" value="1024" />
+	</bean>
+
+</beans>
+변경 후 (예)
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:egov-crypto="http://www.egovframe.go.kr/schema/egov-crypto"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.egovframe.go.kr/schema/egov-crypto http://www.egovframe.go.kr/schema/egov-crypto/egov-crypto-3.8.xsd">
+    
+	<!-- 
+	initial : globals.properties 연계 Url, UserName, Password 값 로드 여부(설정값 : true, false)
+	crypto : 계정 암호화 여부(설정값 : true, false)
+	algorithm : 계정 암호화 알고리즘
+	algorithmKey : 계정 암호화키 키
+	cryptoBlockSize : 계정 암호화키 블록사이즈
+	-->
+    <egov-crypto:config id="egovCryptoConfig" 
+    	initial="false"
+    	crypto="false"
+    	algorithm="SHA-256"
+    	algorithmKey="egovframe"
+    	algorithmKeyHash="gdyYs/IZqY86VcWhT8emCYfqY1ahw2vtLG+/FzNqtrQ="
+	cryptoBlockSize="1024"
+	/>
+
+</beans>
+</code>
+
+==== 4. context-common.xml 변경 (egov.propertyConfigurer 삭제) ====
+* properties 설정 내역 삭제
+<code xml>
+	<!-- properties 설정 -->
+	<bean id="egov.propertyConfigurer" class="egovframework.rte.fdl.cmmn.config.EgovPropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:/egovframework/egovProps/globals.properties</value>
+                <!-- value>file:/product/jeus/egovProps/globals.properties</value-->
+            </list>
+        </property>
+    </bean>
+</code>
+==== 5. EgovWebEditorImageController.java 변경 (@Resource 변경) ====
+* egovframework.com.utl.wed.web.EgovWebEditorImageController.java 파일에서 @Resource 변경
+<code java>
+변경 전 (예)
+/** 암호화서비스 */
+@Resource(name = "egovARIACryptoService")
+EgovCryptoService cryptoService;
+ 
+@Resource(name = "egovPasswordEncoder")
+EgovPasswordEncoder egovPasswordEncoder;
+변경 후 (예)
+/** 암호화서비스 */
+@Resource(name = "egovEnvARIACryptoService")
+EgovCryptoService cryptoService;
+ 
+@Resource(name = "egovEnvPasswordEncoderService")
+EgovPasswordEncoder egovPasswordEncoder;
+</code>
+
+===== 기타 알 수 없는 충돌이 발생하는 경우 =====
+
+프로젝트에 따라서 기존에 사용하던 라이브러리, 코드, WAS, DB 등과의 충돌이 발생할 수 있습니다. \\
+알 수 없는 충돌이 발생하고 해결이 어려운 경우 표준프레임워크센터에 프로젝트의 환경 및 에러메시지를 포함하여 문의를 주시기 바랍니다.

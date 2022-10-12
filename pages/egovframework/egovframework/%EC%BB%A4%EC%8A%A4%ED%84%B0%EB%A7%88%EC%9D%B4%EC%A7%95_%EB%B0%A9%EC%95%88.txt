@@ -1,0 +1,121 @@
+====== 공통컴포넌트 커스터마이징 방안  ======
+===== 개요 =====
+공통컴포넌트는 일부 공통 요소들에 대하여 공용으로 사용하도록 제공되어 있다.
+이 공통 요소들은 유틸리티 성격의 요소기술뿐만 아니라 
+사용자관리, 사용자통합인증, 역할 및 권한관리 등의 공통컴포넌트를 포함한다.
+
+(보다 자세한 내용은 [[배포 패키지 구성안]]을 참조)
+
+대부분의 요소들은 화면단위 연계이거나 결합의 범위가 작기 때문에 쉽게 커스터마이징 가능하다.
+
+예를 들면 날짜 입력을 위해 공통 요소로 제공되는 시스템관리의 달력은 화면 호출 방식이기 때문에 javascript 변경을 통해 다른 달력으로 전환이 쉽게 가능하다.
+
+
+
+===== 커스터마이징 방안 =====
+
+==== 변경 사항 개요 ====
+
+일반적으로 공통 컴포넌트에 대한 변경 부분은 다음과 같다. 
+
+  - 로그인 정보 처리 부분
+  - 사용자 정보 관련 query 부분
+  - 권한 처리 부분
+
+==== 로그인 정보 처리 부분 ====
+
+대부분의 공통 컴포넌트의 Controller에서는 로그인 사용자 정보를 얻는 부분과 
+로그인되어 있는지 확인하는 부분을 포함한다.
+
+다음은 게시물 관리 부분 처리의 Controller의 등록 예이다.
+
+<code java>
+    @RequestMapping("/cop/bbs/insertBoardArticle.do")
+    public String insertBoardArticle(final MultipartHttpServletRequest multiRequest, @ModelAttribute("searchVO") BoardVO boardVO,
+	    @ModelAttribute("bdMstr") BoardMaster bdMstr, @ModelAttribute("board") Board board, BindingResult bindingResult, SessionStatus status,
+	    ModelMap model) throws Exception {
+
+	LoginVO user = (LoginVO)EgovUserDetailsHelper.getAuthenticatedUser();
+	Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+
+	if (isAuthenticated) {
+	   // ... 
+ 	    
+	    bbsMngService.insertBoardArticle(board);  // 등록
+	}
+
+	return "forward:/cop/bbs/selectBoardList.do";
+    }
+</code>
+
+  * __EgovUserDetailsHelper.getAuthenticatedUser()__는 현재 로그인한 사용자 정보를 얻음
+  * __EgovUserDetailsHelper.isAuthenticated()__는 인증 여부 정보를 얻음
+
+
+공통 컴포넌트의 공통 요소 중 "역할/권한관리"를 사용하지 않을 경우는 위 두 부분을 자체 프로젝트의 권한 로직으로 변경하여 적용한다.
+
+
+==== 사용자 정보 관련 query 부분 ====
+
+사용자정보에 대한 query는 별도의 Database view(COMVNUSERMASTER)를 통해 제공되고 있다.
+
+현재 생성되어 있는 COMVNUSERMASTER view는 다음과 같다.
+
+<code sql>
+
+CREATE OR REPLACE FORCE VIEW COMVNUSERMASTER 
+	(UNIQ_ID,USER_ID,PASSWORD,USER_NM,USER_ZIP,USER_ADRES,USER_EMAIL,GROUP_ID,USER_SE,ORGNZT_ID) 
+AS
+SELECT 
+	UNIQ_ID,MBER_ID,PASSWORD,MBER_NM,ZIP,ADRES,MBER_EMAIL_ADRES, GROUP_ID,USER_SE,ORGNZT_ID
+FROM (
+	SELECT 
+		UNIQ_ID,MBER_ID,PASSWORD,MBER_NM,ZIP,ADRES,MBER_EMAIL_ADRES,'' GROUP_ID,'GNR' AS USER_SE, '' AS ORGNZT_ID
+	FROM COMTNGNRLMBER			
+	UNION ALL		
+	SELECT 
+		UNIQ_ID,EMPLYR_ID,PASSWORD,EMPLYR_NM,ZIP,HOMEADRES,EMAIL_ADRES,GROUP_ID,'USR' AS USER_SE, ORGNZT_ID
+	FROM COMTNEMPLYRINFO	
+	UNION ALL		
+	SELECT UNIQ_ID,ENTRPRSMBER_ID,ENTRPRS_MBER_PASSWORD,CMPNY_NM,ZIP,ADRES,APPLCNT_EMAIL_ADRES,'','ENT' AS USER_SE, '' AS ORGNZT_ID
+	FROM COMTNENTRPRSMBER
+)
+ORDER BY UNIQ_ID;
+</code>
+
+
+현재 정보는 "업무사용자", "일반회원", "기업회원"을 union으로 제공하고 있다.
+
+이 view를 해당 사이트의 사용자 정보로 수정하면 공통 요소 중 "사용자관리"를 사용하지 않아도 된다.
+
+각 컬럼의 의미는 다음과 같다.
+
+^컬럼명^의미^비고^
+|UNIQ_ID|유일 ID|변경되지 않는 별도의 ID로 unique한 ID가 없는 경우 다음의 USER_ID를 활용|
+|USER_ID|사용자 ID|사용자가 입력하는 일반적인 ID|
+|PASSWORD|패스워드|암호화된 패스워드|
+|USER_NM|사용자명|사용자 이름|
+|USER_ZIP|우편번호| '-'를 포함하지 않은 6자리, 일반적으로 불필요|
+|USER_ADRES|전체 주소| 일반적으로 불필요|
+|USER_ADRES|이메일주소| 일반적으로 불필요|
+|GROUP_ID|부서ID| 일반적으로 불필요|
+|USER_SE|사용자구분|업무사용자:GNR, 일반사용자:USR, 기업회원:ENT, 일반적으로 불필요|
+|ORGNZT_ID|기관ID| 일반적으로 불필요|
+
+일반적으로 UNIQ_ID, USER_ID, USER_NM을 제외하고는 사용되지 않는다.. (물론 "사용자 관리"를 사용할 경우에는 모두 사용됨)
+
+==== 권한 처리 부분 ====
+
+권한 부분은 별도로 소스상에 적용된 부분은 없다.
+
+다만, 공통 컴포넌트의 "권한관리"부분을 사용한 경우 Spring Security가 적용되어 있어서..
+AOP 기반으로 적용된다. (AOP의 경우는 소스상에 표현되지 않는다. 관련된 부분은 공통 요소에서 제공되는 "context-security.xml"을 참조한다.)
+
+이 경우 web.xml(Servlet API)의 filter 등을 통해 자동으로 권한을 확인하도록 되어 있다.
+
+이 부분을 제외되는 경우는 별도의 권한을 처리하는 방식을 적용해야 하는데.. 크게 다음과 같은 방안이 가능하다. (프로젝트별 적용)
+
+  - Servlet API의 filter를 활용하여 권한 여부를 확인
+  - 공통 모듈을 통해 Controller의 로직에 처리 
+
+일반적으로 첫번째의 경우가 소스를 수정할 필요가 없기 때문에 간편하지만 세밀한 제어의 어려움이 있다.

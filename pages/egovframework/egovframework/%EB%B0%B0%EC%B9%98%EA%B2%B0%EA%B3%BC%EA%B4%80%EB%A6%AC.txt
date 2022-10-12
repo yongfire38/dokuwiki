@@ -1,0 +1,71 @@
+====== 시스템관리 - 배치결과관리 ======
+===== 개요 =====
+
+**배치결과관리**는 시스템에서 주기적으로 실행하는 배치결과을 등록하는 기능을 제공한다.
+===== 설명 =====
+
+  * **배치결과관리**는 배치결과을 등록하기 위한 목적으로 배치결과의 조회, 삭제, 목록조회의 기능을 수반한다.
+
+    ① 배치결과목록조회 : 배치결과으로 정의된 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ④ 배치결과삭제 : 기 등록된 배치결과정보를 삭제한다.
+    ⑤ 배치결과조회 : 등록된 배치결과정보를 조회한다. 
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.sym.bat.web.EgovBatchResultController.java|배치결과 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.sym.bat.service.EgovBatchResultService.java|배치결과 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.sym.bat.service.impl.EgovBatchResultServiceImpl.java|배치결과 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.sym.bat.service.impl.BatchResultDAO.java|배치결과 관리를 위한 데이터처리 클래스|
+|Model|egovframework.com.sym.bat.service.BatchResult.java|배치결과 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/sym/bat/EgovBatchResultList.jsp|배치결과 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/sym/bat/EgovBatchResultDetail.jsp|등록된 배치결과를 조회하기 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/sym/bat/EgovBatchResult_SQL_*.xml|배치결과관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:sym:bat:배치결과_클래스.png?740|}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|배치결과|COMTNBATCHRESULT|배치결과정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **BATCH_RESULT_ID** 항목을 추가한다. 
+
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('BATCH_RESULT_ID','0');
+ </code>
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 배치결과 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/sym/bat/selectBatchResultList.do|selectBatchResultList|"BatchResultDAO.selectBatchResultList"|
+|조회|/sym/bat/selectBatchResultList.do|selectBatchResultList|"BatchResultDAO.selectBatchResultListCnt"|
+
+배치결과 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 배치작업명,배치스케줄ID에 대해서 수행된다.
+
+{{:egovframework:com:sym:bat:배치결과목록조회.png|}}
+
+조회 : 기 등록된 배치결과의 목록을 조회한다.\\
+
+----
+
+=== 배치결과 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/sym/bat/getBatchResult.do|selectBatchResult|"BatchResultDAO.selectBatchResult"|
+|삭제|/sym/bat/deleteBatchResult.do|deleteBatchResult|"BatchOpertDAO.deleteBatchResult"|
+
+배치결과의 속성정보를 조회한다. 
+
+{{:egovframework:com:sym:bat:배치결과상세조회.png|}}
+
+삭제 : 기 등록된 배치결과정보를 삭제한다.\\
+목록 : 배치작업 목록조회 화면으로 이동한다.\\
+----

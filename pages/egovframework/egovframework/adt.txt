@@ -1,0 +1,40 @@
+====== Manual - Draft ======
+
+==== 표준프레임워크 포털 ====
+
+=== 다운로드 ===
+  * [[eGovframework:adt:실행환경]]
+  * [[eGovframework:adt:개발환경]]
+  * [[eGovframework:adt:운영환경]]
+  * [[eGovframework:adt:공통컴포넌트]]
+
+=== 교육 및 기술지원 ===
+  * [[eGovframework:adt:교육신청]]
+  * [[eGovframework:adt:교육교재|교육자료]]
+  * 기술지원
+    * [[eGovframework:mgt:프로젝트 신청]]
+    * [[eGovframework:mgt:프로젝트 소속신청]]
+    * [[eGovframework:mgt:SR 목록]]
+    * [[eGovframework:mgt:SR 요청]]
+    * [[eGovframework:mgt:공지사항 조회]]
+    * [[eGovframework:mgt:KDB 검색]]
+  * [[eGovframework:adt:FAQ]]
+  * [[eGovframework:adt:Q&A]]
+
+=== 알림마당 ===
+  * [[eGovframework:adt:공지사항]]
+  * [[eGovframework:adt:행사|행사소식]]
+  * [[eGovframework:adt:관련자료|자료실]]
+
+=== 사용자인증 ===
+  * [[eGovframework:adt:로그인]]
+  * [[eGovframework:adt:GPKI 인증서 로그인]]
+  * [[eGovframework:adt:회원가입]]
+  * [[eGovframework:adt:아이디/비밀번호 찾기]]
+
+=== 기타 ===
+  * [[eGovframework:adt:설문참여]]
+  * [[eGovframework:adt:용어사전]]
+  * [[eGovframework:adt:My Page]]
+  * [[eGovframework:adt:공유서비스맵]]
+  * [[eGovframework:adt:동영상교재]]

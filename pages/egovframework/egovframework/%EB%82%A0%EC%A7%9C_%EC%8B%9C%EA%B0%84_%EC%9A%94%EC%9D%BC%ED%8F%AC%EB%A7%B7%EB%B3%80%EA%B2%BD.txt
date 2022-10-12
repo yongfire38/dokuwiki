@@ -1,0 +1,48 @@
+====== 요소기술 - 날짜/시간/요일 포멧변경 ======
+
+===== 개요 =====
+주어진 일자, 시간, 요일의 포멧을 변경한다.
+
+===== 설명 =====
+입력일자, 시간을 입력한 포멧스트링으로 변경하고, 영문요일을 한글요일로 변경하는 기능을 제공한다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovDateUtil.java|Date 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovDateUtilController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovDfkCnvr.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|convertDate(String sDate, String sTime, String sFormatStr)|입력일자/시간을 입력포맷으로 출력|
+|String|convertWeek(String sWeek)|입력받은 요일의 영문명을 국문명의 요일로 반환 |
+
+
+== Input ==
+  * 일자 : String 타입의 날짜 (예, 20090501)
+  * 시간 : String 타입의 시간 (예, 2035)
+  * 포멧스트링 : String 타입의 Date 포멧스트링 (예, yyyy년 MM월 dd일 HH시 mm분 ss초)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * String
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovDateUtil;
+
+...
+String	sDate        = "20080820";
+String	sTime        = "2030";
+String	sFormatStr   = "yyyy년 MM월 dd일 HH시 mm분 ss초";
+String resDate       = EgovDateUtil.convertDate(sDate, sTime, sFormatStr);
+
+...
+String sWeek   = "SUN"; // "SUN" ~ "SAT"
+String resDate = EgovDateUtil.convertWeek(sWeek);
+
+...
+
+</code>

@@ -1,0 +1,57 @@
+====== 요소기술 - 양력/음력 변환 ======
+
+===== 개요 =====
+주어진 양력/음력일자를 음력/양력 일자로 바꾸는 기능을 제공한다.
+
+===== 설명 =====
+양력일자를 음력일자로 음력일자를 양력일자로 바꾸는 기능을 제공한다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovDateUtil.java|Date 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovDateUtilController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovSlrcldLrrCnvr.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|HashMap|toLunar(String sDate)|음력변환|양력일자를 음력일자로 변환하는 기능|
+|String|toSolar(String sDate, int iLeapMonth)|양력변환|음력일자를 양력일자로 변환하는 기능|
+
+== Input ==
+  * 일자 : String 타입의 날짜 (예, 20090501)
+  * 윤달 : int 타입의 윤달구분[0,1] (예, 1)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * HashMap
+  * String
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovDateUtil;
+
+...
+String	sSlrDate = "20080820";
+HashMap hm = EgovDateUtil.toLunar(sSlrDate);
+
+String  retLrrDate   = hm.get("day").toString();
+String  retLeapMonth = hm.get("leap").toString(); 
+
+...
+String  sLrrDate = "20080820";
+int   iLeapMonth = 0; // 평달 : 0, 윤달 : 1
+
+String retSlrDate = EgovDateUtil.toSolar(sLrrDate, iLeapMonth);
+
+...
+
+</code>
+
+
+===== 참고자료 =====
+
+  * ICU Lib 참조 : com.ibm.icu.util.ChineseCalendar
+
+

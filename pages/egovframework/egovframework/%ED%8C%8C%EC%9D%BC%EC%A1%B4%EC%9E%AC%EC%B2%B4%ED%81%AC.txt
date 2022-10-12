@@ -1,0 +1,96 @@
+====== 파일존재체크 ======
+
+===== 개요 =====
+디렉토리에 파일이 존재하는지 체크하는 기능이다. 특정 디렉토리 및 하위 디렉토리까지 포함하여 파일이 존재하는지 체크하는 기능이다. 확장자, 수정기간, 사이즈, 생성자(Owner)별로 파일이 존재하는지 체크한다. 이 서비스 컴포넌트는 서버(Server) 및 클라이언트(Client) 응용어플리케이션에서 파일 존재 체크 시 활용할 수 있다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+  ① 디렉토리에 파일이 존재하는지 체크하는 기능
+  ② 특정 디렉토리 및 하위 디렉토리까지 포함하여 파일이 존재하는지 체크하는 기능
+  ③ 파일 확장자별로 파일이 존재하는지 체크하는 기능
+  ④ 파일 수정기간별로 파일이 존재하는지 체크하는 기능
+  ⑤ 파일 사이즈별로 파일이 존재하는지 체크하는 기능
+  ⑥ 파일 생성자(Owner)별로 파일이 존재하는지 체크하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovFileExst.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean|checkFileExstByName(String dir, String file)|파일존재확인|디렉토리에 파일이 존재하는지 체크|
+|boolean|checkFileExstByExtnt(String dir, String eventn)|확장자별 파일존재확인|확장자별 디렉토리에 파일이 존재하는지 체크|
+|boolean|checkFileExstByOwner(String dir, String owner)|생성자별 파일존재확인|생성자별 디렉토리에 파일이 존재하는지 체크|
+|boolean|checkFileExstByUpdtPd(String dir, String updtFrom, String updtTo)|수정기간별 파일존재확인|수정기간별 디렉토리에 파일이 존재하는지 체크|
+|boolean|checkFileExstBySize(String dir, long sizeFrom, long sizeTo)|사이즈별 파일존재확인|사이즈별 디렉토리에 파일이 존재하는지 체크|
+
+== Input ==
+  * 경로: String 타입의 절대경로를 포함한 디렉토리 (예, /user/com/test)
+  * 파일: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/file1.txt)
+  * 확장자: String 타입의 확장자 (예, txt)
+  * 수정기간From: String 타입의 날짜 (예, 20090501)
+  * 수정기간To: String 타입의 날짜 (예, 20090531)
+  * 사이즈From: Integer 타입의 사이즈 (예, 100)
+  * 사이즈To: Integer 타입의 사이즈 (예, 2000)
+  * 생성자: String 타입의 파일 생성자 (예, com)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+
+== Output ==
+  * Boolean 타입 true / false
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovFileTool;   
+
+	// 1. 파일 존재 확인
+	String drctry = request.getParameter("drctry");
+	String file = request.getParameter("file");
+	boolean result = false;
+	if (drctry != null && drctry.length() > 0
+		&& file != null && file.length() > 0) {
+		result = EgovFileTool.checkFileExstByName(drctry, file);
+	}
+
+	// 2. 확장자별 파일 존재 확인
+	String drctry = request.getParameter("drctry");
+	String eventn = request.getParameter("eventn");
+	boolean result = false;
+	if (drctry != null && drctry.length() > 0
+		&& eventn != null && eventn.length() > 0) {
+		result = EgovFileTool.checkFileExstByExtnt(drctry, eventn);
+	}
+
+	// 3. 수정기간별 파일 존재 확인
+	String drctry = request.getParameter("drctry");
+	String fromDate = request.getParameter("fromDate");
+	String toDate = request.getParameter("toDate");
+	boolean result = false;
+	if (drctry != null && drctry.length() > 0
+		&& fromDate != null && fromDate.length() > 0
+		&& toDate != null && toDate.length() > 0) {
+		result = EgovFileTool.checkFileExstByUpdtPd(drctry, fromDate, toDate);
+	}
+
+	// 4. 사이즈별 파일 존재 확인
+	String drctry = request.getParameter("drctry");
+	String fromSize = request.getParameter("fromSize");
+	String toSize = request.getParameter("toSize");
+	boolean result = false;
+	if (drctry != null && drctry.length() > 0
+		&& fromSize != null && fromSize.length() > 0
+		&& toSize != null && toSize.length() > 0) {
+		result = EgovFileTool.checkFileExstBySize(drctry, Long.parseLong(fromSize), Long.parseLong(toSize));
+	}
+</code>
+
+===== 참고자료 =====
+N/A

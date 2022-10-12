@@ -1,0 +1,39 @@
+====== 요소기술 - timestamp값 구하기 ======
+
+===== 개요 =====
+응용어플리케이션에서 고유값을 사용하기 위해 시스템에서 17자리의 TIMESTAMP값을 구하는 기능으로 구성되어 있다
+
+===== 설명 =====
+TimeStamp 문자열로 변환하기 위한 패턴 설정(년도-월-일 시:분:초:초(자정이후 초))로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovStringUtil.java|String 관련 유틸리티| |
+|Controller|egovframework.com.cmm.web.EgovComUtlController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovTimestamp.jsp|TimeStamp 테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|getTimeStamp()|TimeStamp 구하기|17자리의TIMESTAMP값을 구하는 기능|
+
+
+===== 환경설정 =====
+
+**해당없음**
+
+===== 사용방법 =====
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovStringUtil;
+...
+
+// TimeStamp 처리기능을 호출하여 값을 얻는다.
+String	resultStr = EgovStringUtil.getTimeStamp();
+
+</code>
+
+
+===== 참고자료 =====
+
+ N/A

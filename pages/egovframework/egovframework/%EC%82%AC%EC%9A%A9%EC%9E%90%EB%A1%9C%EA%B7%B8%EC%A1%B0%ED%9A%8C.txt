@@ -1,0 +1,124 @@
+====== 사용자로그조회 ======
+===== 개요 =====
+
+**사용자로그조회**는 사용자가 시스템의 서비스를 이용한 로그를 검색, 조회하는 기능을 제공한다.  
+
+===== 설명 =====
+
+  * **사용자로그조회**는 사용자로그의 **등록, 조회, 목록**의 기능을 수반한다.
+
+    ① 사용자로그등록 : 사용자로그정보를 등록한다. - 실행환경의 Scheduling 기능을 이용
+    ② 사용자로그조회 : 사용자로그정보의 상세내용을 조회한다.
+    ③ 사용자로그목록 : 사용자로그정보의 목록을 검색, 조회한다.
+
+===== 관련 리소스 =====
+
+=== 클래스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.sym.log.web.EgovLogManageController.java|사용자로그 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.sym.log.service.EgovLogManageService.java|사용자로그 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.sym.log.service.impl.EgovLogManageServiceImpl.java|사용자로그 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.sym.log.service.impl.LogManageDAO.java|사용자로그 관리를 위한 데이터처리 클래스|
+|VO|egovframework.com.sym.log.service.UserLogVO.java|사용자로그 관리를 위한 VO 클래스|
+|Scheduler|egovframework.com.sym.log.service.EgovLogManageScheduling.java|사용자로그 삭제, 요약을 위한 Scheduling 클래스|
+|JSP|/WEB-INF/jsp/egovframework/cmm/sym/log/EgovUserLogList.jsp|사용자로그 목록을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cmm/sym/log/EgovUserLogInqire.jsp|사용자로그 조회를 위한 jsp페이지|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:sym:log:cdd_사용자로그관리.gif|}}
+
+=== 테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|사용자로그|COMTNUSERLOG|사용자로그 정보를 관리|
+
+=== Scheduling ===
+== context-scheduling.xml ==
+
+<code xml>
+	<!-- 사용자 로그 생성  -->
+	<bean id="userLogging"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="egovLogManageScheduling" />
+		<property name="targetMethod" value="userLogInsert" />
+		<property name="concurrent" value="false" />
+	</bean>
+	
+	<!-- 사용자 로그 생성  트리거-->
+	<bean id="userLogTrigger"
+		class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="userLogging" />
+		<!-- 시작하고 1분후에 실행한다. (milisecond) -->
+		<property name="startDelay" value="60000" />
+		<!-- 매 1시간마다 실행한다. (milisecond) -->
+		<property name="repeatInterval" value="3600000" />
+	</bean>
+
+  <!-- 스케쥴러 등록-->
+  <bean id="logSummaryScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+      <list>
+        <ref bean="sysLogTrigger" />
+        <ref bean="webLogTrigger" />
+        <ref bean="trsmrcvLogTrigger" />
+        <ref bean="userLogTrigger" />
+      </list>
+    </property>
+  </bean>
+</code>
+
+사용자로그 등록 기능구현을 위하여 [[egovframework:rte:fdl:scheduling|Scheduling]]을 설정한다.
+
+  * 사용자로그 등록 기능구현을 위하여 EgovLogManageScheduling 클래스를 생성한다.
+
+ <code java>
+@Service("egovLogManageScheduling")
+public class EgovLogManageScheduling {
+  
+  @Resource(name="EgovLogManageService")
+  private EgovLogManageService logManageService;
+
+	/**
+	 * 사용자 로그정보를 생성한다.
+	 * 
+	 * @param 
+	 * @return
+	 * @throws Exception 
+	 */
+	public void userLogInsert() throws Exception {
+		logManageService.logInsertUserLog();
+	}
+ </code>
+ 
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 사용자로그 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|목록조회|/cmm/sym/log/SelectUserLogList.do|selectUserLogInf|"LogManageDAO.selectUserLogInf"|
+| | | |"LogManageDAO.selectUserLogInfCnt"|
+
+사용자로그 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 검색조건은 발생일자와 사용자에 대해서 수행된다.
+
+{{:egovframework:com::sym:log:EgovUserLogList.jpg|}}
+
+사용자로그 상세조회 기능을 수행하기 위해서는 **상세보기** 버튼을 클릭한다.
+
+----
+
+=== 사용자로그 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/cmm/sym/log/InqireUserLog.do|selectUserLog|"LogManageDAO.selectUserLog"|
+
+사용자로그 상세조회는 팝업창으로 구성되며, **닫기** 버튼을 클릭하면 창을 닫는다.
+
+{{:egovframework:com::sym:log:EgovUserLogInqire.jpg|}}
+
+----
+
+===== 참고자료 =====
+  * 실행환경 참조 : [[egovframework:rte:fdl:scheduling|Scheduling]]
+

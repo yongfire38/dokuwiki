@@ -1,0 +1,55 @@
+====== 요소기술 - 날짜/시간/요일 변환 ======
+
+===== 개요 =====
+주어진 일자, 시간을 문자열이나 숫자로 변환 제공한다.
+
+===== 설명 =====
+입력일자, 시간을 문자열, 숫자로 변환하는 기능을 제공한다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovDateUtil.java|Date 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovDateUtilController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovDateCnvr.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|convertDate(String sDate, String sTime, String sFormatStr)|날짜/시간 변환|입력일시를 다른포멧 형식으로 변환|
+|int|datetoInt(String sDate)|일자변환|입력일자를 int 형으로 변환|
+|int|timetoInt(String sTime)|시간변환|입력시간을 int 형으로 변환|
+
+== Input ==
+  * 일자 : String 타입의 날짜 (예, 20090501)
+  * 시간 : String 타입의 시간 (예, 2035)
+  * 포멧스트링 : String 타입의 Date 포멧스트링 (예, yyyy년 MM월 dd일 HH시 mm분 ss초)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * String
+  * int
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovDateUtil;
+
+...
+String	sDate   = "20080820";
+String resDate  = EgovDateUtil.convertDate(sDate, "0000", "yyyy-MM-dd");
+
+...
+String	sTime   = "2030";
+String resDate  = EgovDateUtil.convertDate("00000101", sTime, "HH:mm");
+
+...
+String	sDate   = "20080820";
+int resDate     = EgovDateUtil.datetoInt(sDate);
+
+...
+String	sTime   = "2030";
+int resDate     = EgovDateUtil.timetoInt(sTime);
+
+...
+
+</code>

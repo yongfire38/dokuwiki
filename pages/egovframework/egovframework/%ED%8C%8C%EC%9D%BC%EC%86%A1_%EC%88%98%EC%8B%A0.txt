@@ -1,0 +1,99 @@
+====== 파일송/수신 ======
+
+===== 개요 =====
+FTP 프로토콜을 사용하여 파일을 송수신한다. 서버(Server)간에 파일 송수신 및 서버(Server)와 클라이언트(Client)간에 파일 송수신 시 사용할 수 있다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+  ① FTP 클라이언트(Client)에서 서버(Server)로 파일을 전송하기
+  ② FTP 서버(Server)에서 로컬로 파일을 전송하기
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.sim.service.EgovFtpTool.java|파일송수신 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovFtpTool.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean|getFile(String ftp_ip, int ftp_port, String ftp_id, String ftp_pw, String remote)|파일수신|FTP 서버로부터 파일을 다운로드|
+|boolean|getFile(String ftp_ip, int ftp_port, String ftp_id, String ftp_pw, int ftp_mode, String remote)|파일수신|FTP 서버로부터 파일을 다운로드|
+|boolean|getFile(String ftp_ip, int ftp_port, String ftp_id, String ftp_pw, int ftp_mode, String remote, String local)|파일수신|FTP 서버로부터 파일을 다운로드|
+|byte[]|getFileAsByte(String ftp_ip, int ftp_port, String ftp_id, String ftp_pw, int ftp_mode, String remote, String local)|파일읽기|FTP 서버로부터 파일을 읽어 byte[] 로 반환|
+|boolean|sendFile(String ftp_ip, int ftp_port, String ftp_id, String ftp_pw, String local)|파일송신|FTP 서버로 파일을 업로드|
+|boolean|sendFile(String ftp_ip, int ftp_port, String ftp_id, String ftp_pw, int ftp_mode, String local)|파일송신|FTP 서버로 파일을 업로드|
+|boolean|sendFile(String ftp_ip, int ftp_port, String ftp_id, String ftp_pw, int ftp_mode, InputStream data, String remote)|파일쓰기|FTP 서버로 데이터(InputStream)를 업로드|
+|boolean|connect(FTPClient ftpClient, String ftp_ip, int ftp_port, String ftp_id, String ftp_pw, int ftp_mode)|FTP연결|FTP 클라이언트 연결|
+|void|disconnect(FTPClient ftpClient)|FTP연결종료|FTP 클라이언트 연결종료|
+|boolean|changeRemoteDrctry(FTPClient ftpClient, String remote_drctry)|디렉토리이동|FTP 서버의 디렉토리로 이동|
+|String[]|splitPathAndName(String path, String fileSep)|파일명분리|파일명이 포함된 전체경로를 주면 파일경로와 파일명으로 분리|
+
+== Input ==
+  * IP: String 타입의 FTP 접속 아이피 (예, 192.168.200.21)
+  * PORT: String 타입의 FTP 접속 포트 (예, 21)
+  * ID: String 타입의 FTP 접속 아이디 (예, com)
+  * PASSWORD: String 타입의 FTP 접속 비밀번호 (예, com01)
+  * MODE: Integer 타입의 FTP 전송모드 (예, 0)
+  * 수신할 파일: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/file1.txt)
+  * 수신경로: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/ftp/downFile1.txt)
+  * 송신할 파일: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/ftp/downFile1.txt)
+  * 송신경로: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/ftp/upFile1.txt)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+
+== Output ==
+  * Boolean 타입 true / false
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovFtpTool;   
+
+	// 1. FTP 파일 수신
+	String ip = request.getParameter("ip");
+	int port = Integer.parseInt(request.getParameter("port"));
+	String id = request.getParameter("id");
+	String pw = request.getParameter("pw");
+	int mode = Integer.parseInt(request.getParameter("mode"));
+	String remote = request.getParameter("remote");
+	String local = request.getParameter("local");
+
+	boolean result = false;
+	if (ip != null && ip.length() > 0
+		&& port != 0
+		&& id != null && id.length() > 0
+		&& pw != null && pw.length() > 0
+		&& mode != 0
+		&& remote != null && remote.length() > 0
+		&& local != null && local.length() > 0) {
+		result = EgovFtpTool.getFile(ip, port, id, pw, mode, remote, local);
+	}
+
+	// 2. FTP 파일 송신
+	String ip = request.getParameter("ip");
+	int port = Integer.parseInt(request.getParameter("port"));
+	String id = request.getParameter("id");
+	String pw = request.getParameter("pw");
+	int mode = Integer.parseInt(request.getParameter("mode"));
+	String local = request.getParameter("local");
+	String remote = request.getParameter("remote");
+	
+	boolean result = false;
+	if (ip != null && ip.length() > 0
+		&& port != 0
+		&& id != null && id.length() > 0
+		&& pw != null && pw.length() > 0
+		&& mode != 0
+		&& remote != null && remote.length() > 0
+		&& local != null && local.length() > 0) {
+		result = EgovFtpTool.sendFile(ip, port, id, pw, mode, local, remote);
+	}
+</code>
+
+===== 참고자료 =====
+N/A

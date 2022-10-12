@@ -1,0 +1,153 @@
+====== 공통서비스 - 정보알림이 ======
+
+===== 개요 =====
+관리자가 등록한 메시지를 사용자에게 알려주는 알림서비스 기능을 제공한다. 시스템에 대하여 긴급히 알려야 할 경우 사용할 수 있는 기능이다.
+
+{{:egovframework:com:uss:ion:noi:notificationoutline.jpg|정보알림이 업무흐름}}
+
+정보알림이 활용 부분은 메인화면의 메인메뉴 부분 처럼 항상 사용되는 페이지에 정보알림이에서 제공하는 js를 포함함으로써 사용자에게 정보알림이 내용을 제공한다.
+
+
+
+===== 설명 =====
+정보알림이는 관리자가 사용하는 정보알림이 관리 기능과 정보알림이를 사용자에게 제공하는 활용기능으로 제공된다.
+
+
+== 관련소스 ==
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.uss.ion.noi.web.EgovNotificationController.java|정보알림이를 위한 컨트롤러 클래스|
+|Service|egovframework.com.uss.ion.noi.service.EgovNotificationService.java|정보알림이를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.ion.noi.service.impl.EgovNotificationService.java|정보알림이를 위한 서비스 구현 클래스|
+|VO|egovframework.com.uss.ion.noi.service.Notification.java|정보알림이를 위한 모델 클래스|
+|VO|egovframework.com.uss.ion.noi.service.NotificationVO.java|정보알림이를 위한 VO 클래스|
+|DAO|egovframework.com.uss.ion.noi.service.impl.NotificationDAO.java|정보알림이를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/noi/EgovNotificationRegist.jsp|정보알림이 등록을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/noi/EgovNotificationUpdt.jsp|생성된 정보알림이 수정을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/noi/EgovNotificationList.jsp|생성된 정보알림이 조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/noi/EgovNotificationDetail.jsp|정보알림이 상세 조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/ion/noi/EgovNotificationData.jsp|정보알림이 표시를 위한 XML jsp페이지|
+|JS|/js/egovframework/uss/ion/noi/EgovNotification.js|정보알림이 표시(AJAX)를 위한 js페이지|
+|Query XML|resources/egovframework/sqlmap/com/uss/ion/noi/EgovNotification_SQL.xml|정보알림이를 위한 Query 파일|
+
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|정보알림|COMTNNTFCINFO|정보알림이 정보를 관리|
+
+
+
+===== 환경설정 =====
+
+등록된 정보알림이를 사용자에게 알리기 위해서는 다음과 같은 js를 항상 사용되는 페이지(Top 메뉴 표시 부분 등)에 포함시킨다.
+
+<code>
+<script type="text/javascript" language="javaScript" src="<c:url value='/js/egovframework/uss/ion/noi/EgovNotification.js' />"></script>
+</code>
+
+(관리자를 위한 정보알림이 목록조회 화면에도 테스트를 위하여 포함되어 있음)
+
+===== 사용방법 =====
+
+
+
+
+
+==== 정보알림이 목록조회 ====
+등록된 정보알림이 목록조회를 할 수 있는 목록조회 화면으로 URL은 다음과 같다.
+
+<code>
+/uss/ion/selectNotificationList.do
+</code>
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/uss/ion/selectNotificationList.do|EgovNotificationController|selectNotificationList|.../uss/ion/noi/EgovNotificationList.jsp|
+
+
+
+정보알림이 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 알림일자, 제목, 내용에 대해서 수행된다. 페이지 당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통컴포넌트 기능에 영향을 미친다.)
+
+{{:egovframework:com:uss:ion:noi:notificationlist.jpg|정보알림이 목록조회}}
+
+정보알림이를 등록하기 위해서는 등록 버튼을 선택하면 된다.
+
+
+----
+
+==== 정보알림이 등록 ====
+
+정보알림이를 등록하기 위한 화면으올 URL은 다음과 같다.
+
+<code>
+/uss/ion/addNotification.do
+</code>
+
+^기능^URL^Controller^method^화면(JSP)^
+|등록|/uss/ion/addNotification.do|EgovNotificationController|insertNotification|.../uss/ion/noi/EgovNotificationRegist.jsp|
+
+
+정보알림에 대한 제목, 내용, 알림일자, 알림시간 및 사전알림간격을 선택하여 정보알림이를 등록한다. 등록이 성공되면 **[[#정보알림이 목록조회]]** 화면으로 이동한다.
+
+{{:egovframework:com:uss:ion:noi:notificationadd.jpg|정보알림이 등록}}
+
+사전알림간격은 주어진 알림시간 이전 메시지 표시 시각을 나타낸다. 즉 알림시간이 13:00으로 지정된 경우 1분은 12:59, 3분은 12:57 등으로 지정가능하다. (여러 개 선택 가능)
+
+
+----
+
+
+==== 정보알림이 상세조회 ====
+
+^기능^URL^Controller^method^화면(JSP)^
+|상세조회|/uss/ion/selectNotification.do|EgovNotificationController|selectNotification|.../uss/ion/noi/EgovNotificationDetail.jsp|
+
+{{:egovframework:com:uss:ion:noi:notificationdetail.jpg|정보알림이 상세조회}}
+
+정보알림이 대한 정보를 변경하기 위한 수정 및 삭제 기능을 제공한다. (등록한 사용자의 경우 표시됨)
+
+
+----
+
+==== 정보알림이 수정 ====
+
+^기능^URL^Controller^method^화면(JSP)^
+|수정|/uss/ion/forUpdateNotification.do|EgovNotificationController|forUpdateNotificaiton|.../uss/ion/noi/EgovNotificationUpdt.jsp|
+
+{{:egovframework:com:uss:ion:noi:notificationupdt.jpg|}}
+
+알림일자 및 일림시간은 현재 시간 이후가 되어야 한다.
+
+
+----
+
+==== 정보알림이 표시 XML ====
+
+^기능^URL^Controller^method^화면(JSP)^
+|정보표시|/uss/ion/getNotifications.do|EgovNotificationController|getNotifications|.../uss/ion/noi/EgovNotificationData.jsp|
+
+{{:egovframework:com:uss:ion:noi:notificationdata.jpg|}}
+
+AJAX를 통해 처리되는 XML로 사용자에게 표시할 내용이 있는 경우 위와 같은 XML이 제공된다.
+
+이런 경우 제공된 js(EgovNotification.js)를 통해 다음과 같은 alert 내용을 표시한다.
+
+{{:egovframework:com:uss:ion:noi:notificationalert.jpg|정보알림이 표시예}}
+
+참고로 제공된 내용이 없는 경우 다음과 같은 XML이 제공된다.
+
+{{:egovframework:com:uss:ion:noi:notificationnodata.jpg|정보알림이 데이터(정보가 없는 경우)}}
+
+
+----
+
+
+===== 참고자료 =====
+
+  * 배포 및 테스트 관련 : [[common_component_system|Common Component System]] 및 [[배포_패키지_구성안|배포 패키지 구성안]]
+
+
+

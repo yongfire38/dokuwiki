@@ -1,0 +1,55 @@
+====== 디렉토리 일자 체크 ======
+
+===== 개요 =====
+비즈니스 로직을 처리하면서 필요시 디렉토리의 일자를 확인하는 공통 기능을 제공한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 디렉토리를 일자를 확인하는 기능 
+    ② 디렉토리의 생성일자가 특정구간내에 포함되는지 확인하는 기능
+  
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 툴 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovDrctryCreate.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|String|getLastModifiedDateFromFile(String targetDirPath)|디렉토리 일자 확인|대상 디렉토리경로(targetDirPath)를 입력받아 생성일자(최종수정일자)를 확인한다. 성공시 생성된 년월일 8자리 문자열, 실패시 블랭크 리턴|
+|ArrayList|getLastModifiedDateFromFile(String targetDirPath, String fromDate, String toDate)|디렉토리 일자 확인|대상 디렉토리경로(targetDirPath)를 입력받아 생성일자(최종수정일자)가 조건구간내에 포함되는 디렉토리 경로를 확인하여 문자열 정보로 LIST에 담아 리턴|
+
+== Input == 
+  * targetDirPath: String 타입의 절대경로를 포함하는 체크대상 디렉토리경로(예, /product/jeus/egovProps/tmp/dir1)
+  * fromDate : String 타입의 날짜정보 (예, 20090101)
+  * toDate : String 타입의 날짜정보 (예, 20090731)
+
+== Output ==
+  * String 타입 : 확인된 생성일자 (예, 20090422)
+  * ArrayList 타입 : 확인된 생성일자 조건에 해당하는 디렉토리 경로리스트 (예, {"/user/com/dir1","/user/com/dir2"} )
+
+
+* 메소드의 입력항목 중에서 fromDate, toDate항목은 Validation 체크가 적용됨([[egovframework:요소기술_validation_체크]] 참조)
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+    import egovframework.com.utl.sim.service.EgovFileTool;
+
+    String targetDirPath1 = "/user/com/dir1";
+    String result1        = EgovFileTool.getLastModifiedDateFromFile(targetDirPath1);
+    
+    String baseDirPath2   = "user/com/dir2";
+    String fromDate2      = "20090101";
+    String toDate2        = "20090131";
+    ArrayList result2     = EgovFileTool.getLastDirectoryForModifiedDate(baseDirPath2, fromDate2, toDate2);
+</code>
+
+===== 참고자료 =====
+N/A

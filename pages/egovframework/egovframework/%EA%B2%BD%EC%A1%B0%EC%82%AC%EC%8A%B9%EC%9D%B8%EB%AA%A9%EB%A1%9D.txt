@@ -1,0 +1,81 @@
+====== 사용자지원 - 경조사승인관리 ======
+===== 개요 =====
+
+**경조사승인관리**는 시스템에서 임직원 경조사를 관리하는 기능으로 임직원 경조사 정보를 승인관리하는 기능을 제공한다. 
+
+===== 설명 =====
+
+  * **경조승인관리**는 임직원 경조사를 등록하기 위한 목적으로 경조사 등록, 수정, 삭제, 조회, 목록조회, 경조사승인 기능을 수반한다.
+
+    ① 경조관리목록 : 경조관리 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 경조등록 : 경조정보를 등록하고, 등록 결과를 조회한다.
+    ③ 경조수정 : 기 등록된 경조정보의 항목들을 수정한다.
+    ④ 경조삭제 : 기 등록된 경조정보를 삭제한다.
+    ⑤ 경조상세조회 : 등록된 경조 상세정보를 조회한다.
+    ⑥ 경조승인목록 : 승인권한자가 경조관리 정보를 최근 등록 순서대로 조회 그 결과는 목록 화면에 반영한다.
+    ⑦ 경조승인 : 승인권한자가 등록된 경조정보의 승인을 처리한다.
+
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.ctn.web.EgovCtsnnManageController.java|경조 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.uss.ion.ctn.service.EgovCtsnnManageService.java|경조 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.ion.ctn.service.impl.EgovCtsnnManageServiceImpl.java|경조 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.uss.ion.ctn.service.impl.CtsnnManageDAO.java|경조 관리를 위한 데이터처리 클래스|
+|VO|egovframework.com.uss.ion.ctn.service.CtsnnManageVO.java|경조 관리를 위한 VO 클래스|
+|Model|egovframework.com.uss.ion.ctn.service.CtsnnManage.java|경조 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/ctn/EgovCtsnnManageList.jsp|경조 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/ctn/EgovCtsnnRegist.jsp|경조 등록를 위한 jsp페이지| 
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/ctn/EgovCtsnnDetail.jsp|등록된 경조를 상세조회/반영하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/ctn/EgovCtsnnUpdt.jsp|경조 수정를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/ctn/EgovCtsnnConfmList.jsp|경조 승인목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/ctn/EgovCtsnnConfm.jsp|경조 승인처리를 위한 jsp페이지| 
+|XML|/egovframework/sqlmap/com/uss/ion/ctn/EgovCtsnnManage_SQL_*.xml|경조관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:uss:ion:ctn:경조관리클래스이미지.png|클래스다이어그램}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|경조정보|COMTNCTSNNMANAGE|경조정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 경조승인 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/ion/ctn/EgovCtsnnConfmList.do|selectCtsnnManageConfmList|"ctsnnManageDAO.selectCtsnnManageConfmList"|
+|조회|/uss/ion/ctn/EgovCtsnnConfmList.do|selectCtsnnManageConfmList|"ctsnnManageDAO.selectCtsnnManageConfmListTotCnt"|
+
+경조승인 목록은 기 등록된 경조정보의 승인처리를 위한 화면으로 승인권자로 지정된 목록만 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다.\\ 
+검색조건은 경조구분, 신청기간, 신청자, 진행구분에 대해서 수행된다.\\
+
+{{:egovframework:com:uss:ion:ctn:경조승인목록.png}}
+
+조회 : 기 등록된 경조승인의 목록을 조회한다.\\
+승인 : 기 등록된 경조의 승인처리를 위해서는 해당 리스트에 승인처리 버튼을 통해서 **경조 승인** 화면으로 이동한다.\\
+----
+
+=== 경조 승인 ===
+
+^Action^URL^Controller method^QueryID^
+|승인|/uss/ion/ctn/insertCtsnnManage.do|insertCtsnnManage|"ctsnnManageDAO.insertCtsnnManage"|
+|반려|/uss/ion/ctn/insertCtsnnManage.do|insertCtsnnManage|"ctsnnManageDAO.insertCtsnnManage"|
+
+
+기 신청된 경조정보를 승인/반려처리 버튼을 클릭후 승인사유/반려사유를 등록후 승인/반려 처리한다.\\
+
+{{:egovframework:com:uss:ion:ctn:경조승인.png}}
+
+{{:egovframework:com:uss:ion:ctn:승인팝업.png}}
+
+{{:egovframework:com:uss:ion:ctn:반려팝업.png}}
+
+승인 : 기 경조의 승인권자가 승인사유를 등록 후 승인처리 한다.\\
+반려 : 기 경조의 승인권자가 반려사유를 등록 후 반려처리 한다.\\
+목록 : 경조승인 목록조회 화면으로 이동한다.\\
+----

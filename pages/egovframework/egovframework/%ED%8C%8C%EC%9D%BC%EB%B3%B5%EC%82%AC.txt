@@ -1,0 +1,129 @@
+====== 파일복사 ======
+
+===== 개요 =====
+파일을 다른 디렉토리에 복사 하는 기능이다. 여러 개의 파일을 동시에 복사하는 기능 및 확장자, 수정기간, 사이즈, 생성자(Owner)별로 파일을 복사한다. 이 서비스 컴포넌트는 서버(Server) 및 클라이언트(Client) 응용어플리케이션에서 파일 복사 시 활용할 수 있다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+  ① 파일을 다른 디렉토리에 복사하는 기능 
+  ② 여러 개의 파일을 동시에 복사하는 기능
+  ③ 파일 확장자별로 복사하는 기능
+  ④ 파일 수정기간별로 복사하는 기능
+  ⑤ 파일 사이즈별로 복사하는 기능
+  ⑥ 파일 생성자(Owner)별로 복사하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovFileCopy.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean|copyFile(String source, String target)|단일파일복사|단일 파일을 다른 파일에 복사|
+|boolean|copyFiles(String [] source, String target)|다중파일복사|여러 파일을 다른 디렉토리에 복사|
+|boolean|copyFilesByExtnt(String source, String extnt, String target)|확장자별복사|확장자별 파일들을 다른 디렉토리에 복사|
+|boolean|copyFilesByUpdtPd(String source, String updtFrom, String updtTo, String target)|수정기간별복사|수정기간내 파일들을 다른 디렉토리에 복사|
+|boolean|copyFilesBySize(String source, long sizeFrom, long sizeTo, String target)|사이즈별복사|사이즈내 파일들을 다른 디렉토리에 복사|
+|boolean|copyFilesByOwner(String source, String owner, String target)|생성자별복사|생성자별 파일들을 다른 디렉토리에 복사|
+
+== Input ==
+  * 원본: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/file1.txt)
+  * 타겟: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/copyFile1.txt)
+  * 확장자: String 타입의 확장자 (예, txt)
+  * 수정기간From: String 타입의 날짜 (예, 20090501)
+  * 수정기간To: String 타입의 날짜 (예, 20090531)
+  * 사이즈From: Integer 타입의 사이즈 (예, 100)
+  * 사이즈To: Integer 타입의 사이즈 (예, 2000)
+  * 생성자: String 타입의 파일 생성자 (예, com)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+
+== Output ==
+  * Boolean 타입 true / false
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovFileTool;   
+
+	// 1. 단일파일 복사
+	String source = request.getParameter("source");
+	String target = request.getParameter("target");
+	boolean retCopy = false;
+	if (source != null && source.length() > 0
+		&& target != null && target.length() > 0) {
+		retCopy = EgovFileTool.copyFile(source, target);
+	}
+
+
+	// 2. 여러파일 복사
+	String source1 = request.getParameter("source1");
+	String source2 = request.getParameter("source2");
+	String source3 = request.getParameter("source3");
+	String target = request.getParameter("target");
+	boolean retCopy = false;
+	if (source1 != null && source1.length() > 0
+		&& source2 != null && source2.length() > 0
+		&& source3 != null && source3.length() > 0
+		&& target != null && target.length() > 0) {
+		String [] sources = { source1, source2, source3 };
+		retCopy = EgovFileTool.copyFiles(sources, target);
+	}
+
+	// 3. 확장자별 복사
+	String source = request.getParameter("source");
+	String extnt = request.getParameter("extnt");
+	String target = request.getParameter("target");
+	boolean retCopy = false;
+	if (source != null && source.length() > 0
+	&& extnt != null && extnt.length() > 0
+	&& target != null && target.length() > 0) {
+		retCopy = EgovFileTool.copyFilesByExtnt(source, extnt, target);
+	}
+
+	// 4. 수정기간별 복사
+	String source = request.getParameter("source");
+	String updtFrom = request.getParameter("updtFrom");
+	String updtTo = request.getParameter("updtTo");
+	String target = request.getParameter("target");
+	boolean retCopy = false;
+	if (source != null && source.length() > 0
+	&& updtFrom != null && updtFrom.length() > 0
+	&& updtTo != null && updtTo.length() > 0
+	&& target != null && target.length() > 0) {
+		retCopy = EgovFileTool.copyFilesByUpdtPd(source, updtFrom, updtTo, target);
+	}
+
+	// 5. 사이즈별 복사
+	String source = request.getParameter("source");
+	String sizeFrom = request.getParameter("sizeFrom");
+	String sizeTo = request.getParameter("sizeTo");
+	String target = request.getParameter("target");
+	boolean retCopy = false;
+	if (source != null && source.length() > 0
+	&& sizeFrom != null && sizeFrom.length() > 0
+	&& sizeTo != null && sizeTo.length() > 0
+	&& target != null && target.length() > 0) {
+		retCopy = EgovFileTool.copyFilesBySize(source, Long.parseLong(sizeFrom), Long.parseLong(sizeTo), target);
+	}
+
+	// 6. 생성자별 복사
+	String source = request.getParameter("source");
+	String creator = request.getParameter("creator");
+	String target = request.getParameter("target");
+	boolean retCopy = false;
+	if (source != null && source.length() > 0
+	&& creator != null && creator.length() > 0
+	&& target != null && target.length() > 0) {
+		retCopy = EgovFileTool.copyFilesByOwner(source, creator, target);
+	}
+</code>
+
+===== 참고자료 =====
+N/A

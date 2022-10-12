@@ -1,0 +1,178 @@
+====== 협업 - 부서업무함관리 ======
+
+
+===== 개요 =====
+
+**부서업무함관리**는 부서의 업무를 등록하고 업무함에 보관하여 부서업무함을 통해 확인할 수 있는 기능을 제공한다.
+
+
+===== 설명 =====
+
+  * **부서업무함관리**는 부서업무 를 관리하기 위한 목적으로 부서업무함 및 부서업무정보의 등록, 수정, 삭제, 조회, 목록조회의 기능을 수반한다.
+
+    ① 부서업무함목록조회 : 부서업무함으로 정의된 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 부서업무함등록 : 부서업무함정보를 등록하고, 등록 결과를 조회한다.
+    ③ 부서업무함수정 : 기 등록된 부서업무함정보의 항목들을 수정한다.
+    ④ 부서업무함삭제 : 기 등록된 부서업무함정보를 삭제한다.
+    ⑤ 부서업무목록조회 : 부서업무로 정의된 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ⑥ 부서업무등록 : 부서업무를 등록하고, 등록 결과를 조회한다.
+    ⑦ 부서업무수정 : 기 등록된 부서업무의 항목들을 수정한다.
+    ⑧ 부서업무삭제 : 기 등록된 부서업무를 삭제한다.
+    ⑨ 부서업무상세조회 : 등록된 부서업무를 조회한다. 
+
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.cop.smt.djm.web.EgovDeptJobController.java|부서업무함관리를 위한 controller 클래스|
+|Service|egovframework.com.cop.smt.djm.service.EgovDeptJobService.java|부서업무함관리를 위한 Service Interface|
+|ServiceImpl|egovframework.com.cop.smt.djm.service.impl.EgovDeptJobServiceImpl.java|부서업무함관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.cop.smt.djm.service.impl.DeptJobDAO.java|부서업무함관리를 위한 데이터처리 클래스|
+|Model|egovframework.com.cop.smt.djm.service.Charger.java|담당자 관리를 위한 Model 클래스|
+|Model|egovframework.com.cop.smt.djm.service.Dept.java|부서 관리를 위한 Model 클래스|
+|Model|egovframework.com.cop.smt.djm.service.DeptJobBx.java|부서업무함 관리를 위한 Model 클래스|
+|Model|egovframework.com.cop.smt.djm.service.DeptJob.java|부서업무 관리를 위한 Model 클래스|
+|VO|egovframework.com.cop.smt.djm.service.ChargerVO.java|담당자 관리를 위한 VO 클래스|
+|VO|egovframework.com.cop.smt.djm.service.DeptVO.java|부서 관리를 위한 VO 클래스|
+|VO|egovframework.com.cop.smt.djm.service.DeptJobBxVO.java|부서업무함 관리를 위한 VO 클래스|
+|VO|egovframework.com.cop.smt.djm.service.DeptJobVO.java|부서업무 관리를 위한 VO 클래스|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovChargerList.jsp|담당자 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovChargerListPopup.jsp|담당자 팝업 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptList.jsp|부서 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptListPopup.jsp|부서 팝업 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobBxList.jsp|부서업무함 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobBxRegist.jsp|부서업무함 등록를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobBxUpdt.jsp|부서업무함 수정를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobBxListS.jsp|부서업무함 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobBxListPopup.jsp|부서업무함 팝업 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobList.jsp|부서업무정보 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobRegist.jsp|부서업무정보 등록를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobUpdt.jsp|부서업무정보 수정를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobDetail.jsp|등록된 부서업무정보를 조회하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/djm/EgovDeptJobRelateRegist.jsp|등록된 부서업무관계를 등록하기 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/cop/smt/djm/EgovDeptJob_SQL_*.xml|부서업무함관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:cop:smt:djm:cdd_부서업무함관리.png?740|}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|부서업무함|COMTNDEPTJOBBX|부서업무함정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+|부서업무정보|COMTNDEPTJOB|부서업무정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **DEPT_JOB_BX_ID, DEPT_JOB_ID** 항목을 추가한다. 
+
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('DEPT_JOB_BX_ID','0');
+  INSERT INTO COMTECOPSEQ VALUES('DEPT_JOB_ID','0');
+ </code>
+ 
+
+ 
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 부서업무함 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/cop/smt/djm/selectDeptJobBxList.do|selectDeptJobBxList|"DeptJobDAO.selectDeptJobBxList"|
+| | | |"DeptJobDAO.selectDeptJobBxListCnt"|
+
+부서업무함 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 부서명, 부서업무함명에 대해서 수행된다.
+
+{{:egovframework:com:cop:smt:djm:7.부서업무함목록.png|}}
+
+조회 : 기 등록된 부서업무함의 목록을 조회한다.\\
+등록 : 신규 부서업무함을 등록하기 위해서는 상단의 등록 버튼을 통해서 **부서업무함 등록** 화면으로 이동한다.\\
+부서업무함명클릭 : 해당 **부서업무함 상세조회** 화면으로 이동한다.\\
+▼▲ : 라디오박스를 체크 후 해당 버튼을 클릭시 해당조직(동일 부서명)내에서 순서를 변경한다.\\
+----
+
+=== 부서업무함 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/cop/smt/djm/addDeptJobBx.do|insertDeptJobBx|"DeptJobDAO.insertDeptJobBx"|
+
+부서업무함의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:cop:smt:djm:8.부서업무함등록.png|}}
+
+저장 : 신규 부서업무함을 등록하기 위해서는 부서업무함 속성을 입력한 뒤 상단의 **저장 버튼**을 통해서 부서업무함을 등록한다.\\
+목록 : 부서업무함의 목록조회 화면으로 이동한다.\\
+----
+
+=== 부서업무함 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/cop/smt/djm/modifyDeptJobBx.do|updateDeptJobBx|"DeptJobDAO.updateDeptJobBx"|
+
+부서업무함의 속성정보를 변경한 후 저장한다. 
+
+{{:egovframework:com:cop:smt:djm:9.부서업무함수정.png|}}
+
+저장 : 기 등록된 부서업무함 속성을 수정한 뒤 상단의 **저장 버튼**을 통해서 부서업무함을 수정한다.\\
+삭제 : 기 등록된 부서업무함을 삭제한다.\\
+목록 : 부서업무함 목록조회 화면으로 이동한다.\\
+----
+
+=== 부서업무 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/cop/smt/djm/selectDeptJobList.do|selectDeptJobList|"DeptJobDAO.selectDeptJobList"|
+| | | |"DeptJobDAO.selectDeptJobListCnt"|
+
+부서업무 목록은 페이지당 10건씩 조회되며 페이징은 10페이지목 이루어진다. 
+검색조건은 제목, 내용, 담당자에 대해서 수행된다.
+
+{{:egovframework:com:cop:smt:djm:10.부서업무목록.png|}}
+
+조회 : 기 등록된 부서업무의 목록을 조회한다.\\
+등록 : 신규 부서업무를 등록하기 위해서는 상단의 등록 버튼을 통해서 **부서업무 등록** 화면으로 이동한다.\\
+제목클릭 : 해당 **부서업무 상세조회** 화면으로 이동한다.\\
+----
+
+=== 부서업무 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/cop/smt/djm/addDeptJob.do|insertDeptJob|"DeptJobDAO.insertDeptJob"|
+
+부서업무의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:cop:smt:djm:12.부서업무등록.png|}}
+
+저장 : 신규 부서업무를 등록하기 위해서는 부서업무 속성을 입력한 뒤 상단의 **저장 버튼**을 통해서 부서업무를 등록한다.\\
+목록 : 부서업무 목록조회 화면으로 이동한다.\\
+----
+
+=== 부서업무 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/cop/smt/djm/modifyDeptJob.do|updateDeptJob|"DeptJobDAO.updateDeptJob"|
+
+부서업무의 속성정보를 변경한 후 저장한다. 
+
+{{:egovframework:com:cop:smt:djm:13.부서업무수정.png|}}
+
+저장 : 기 등록된 부서업무 속성을 수정한 뒤 상단의 **저장 버튼**을 통해서 부서업무를 수정한다.\\
+목록 : 부서업무 목록조회 화면으로 이동한다.\\
+----
+
+=== 부서업무 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/cop/smt/djm/selectDeptJob.do|selectDeptJob|"DeptJobDAO.selectDeptJob"|
+|삭제|/cop/smt/djm/deleteDeptJob.do|deleteDeptJob|"DeptJobDAO.deleteDeptJob"|
+
+부서업무의 속성정보를 조회한다. 
+
+{{:egovframework:com:cop:smt:djm:11.부서업무상세보기.png|}}
+
+수정 : 기 등록된 부서업무 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 부서업무수정화면으로 이동한다.\\
+삭제 : 기 등록된 부서업무를 삭제한다.\\
+목록 : 부서업무 목록조회 화면으로 이동한다.\\
+----

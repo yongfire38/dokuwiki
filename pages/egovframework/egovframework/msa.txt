@@ -1,0 +1,49 @@
+====== 표준프레임워크 MSA 적용 개발 가이드 ======
+===== 마이크로 서비스 아키텍처 (MSA) =====
+  * [[egovframework:msa:definition|MSA 정의]]
+  * [[egovframework:msa:goal|MSA 목적]]
+  * [[egovframework:msa:12factors|12-Factor App 방법론]]
+  * [[egovframework:msa:consideration|MSA 적용시 고려사항]]
+
+
+===== Spring Cloud 기반 마이크로서비스 이해 =====
+  * [[egovframework:msa:background|배경]]
+  * [[egovframework:msa:springboot|Spring Boot]]
+    * [[egovframework:msa:springboot-starter|Spring Boot Starters]]
+  * [[egovframework:msa:springcloud|Spring Cloud]]
+    * [[egovframework:msa:springcloud-comp|Spring Cloud 컴포넌트]]
+
+===== Spring Cloud 기반 마이크로 서비스 활용 =====
+  * [[egovframework:msa:springboot-msa|Spring Boot를 활용한 MSA 애플리케이션 제작]]
+    * [[egovframework:msa:springboot-msa-catalogs|Catalogs 서비스]]
+    * [[egovframework:msa:springboot-msa-customers|Customers 서비스]]
+    * [[egovframework:msa:springboot-msa-catalogs-customers-test|Catalogs & Customers 서비스 연동 및 테스트]]
+  * [[egovframework:msa:springcloud-comps|Spring Cloud의 컴포넌트 활용]]
+    * [[egovframework:msa:springcloud-comps-netflix-hystrix|Circuit Breaker – Hystrix]]
+    * [[egovframework:msa:springcloud-comps-netflix-ribbon|Client Load Balancer – Ribbon]]
+    * [[egovframework:msa:springcloud-comps-netflix-eureka|Service Registry – Eureka]]
+    * [[egovframework:msa:springcloud-comps-netflix-zuul|API Gateway – Zuul]]
+    * [[egovframework:msa:springcloud-comps-configserver|Config Server]]
+    * [[egovframework:msa:springcloud-comps-sidecar|Polyglot Support – Sidecar]]
+
+===== 마이크로 서비스 배포 =====
+  * [[egovframework:msa:container|컨테이너]]
+  * [[egovframework:msa:docker|도커(DOCKER)의 개념과 구성요소]]
+    * [[egovframework:msa:docker-engine|도커 엔진]]
+    * [[egovframework:msa:docker-architecture|도커 아키텍처]]
+    * [[egovframework:msa:docker-installation|도커 설치]]
+  * [[egovframework:msa:docker-springboot-image|Spring Boot 애플리케이션 도커 이미지 변환]]
+    * [[egovframework:msa:docker-dockerizing|도커라이징]]
+    * [[egovframework:msa:docker-dockerfile|Dockerfile]]
+    * [[egovframework:msa:docker-convert-image|도커 이미지 변환]]
+  * [[egovframework:msa:deploy2cloud|클라우드로의 배포]]
+    * [[egovframework:msa:deploy2cloud-passta|PaaS-TA]]
+    * [[egovframework:msa:deploy2cloud-k8s|Kubernetes]]
+
+===== 마이크로 서비스 운영 =====
+  * [[egovframework:msa:container-orchestration|컨테이너 오케스트레이션]]
+  * [[egovframework:msa:k8s|쿠버네티스 (KUBERNETES)]]
+    * [[egovframework:msa:k8s-features|쿠버네티스의 기본 기능]]
+    * [[egovframework:msa:k8s-comps|쿠버네티스 컴포넌트 및 상세]]
+    * [[egovframework:msa:k8s-docker-diff|도커와의 차이점]]
+    * [[egovframework:msa:k8s-springcloud-mapping|쿠버네티스와 Spring Cloud의 기술 요소 매핑]]

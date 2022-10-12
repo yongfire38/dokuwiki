@@ -1,0 +1,57 @@
+====== 설문참여 ======
+
+===== 개요 =====
+설문관리 시스템 구축시 사용되는 설문참여 기능을 제공하며, 설문참여를 통하여 설문조사(응답결과), 설문응답자정보를 등록 할수 있으며, 통계기능을 통하여 설문지 정보별 통계를 한눈에 볼수 있도록 구현 되어있다.
+
+본 기능은 전자정부 표준프레임워크 실행환경의 **ID Generation** 기능을 활용하여 구성되어있다.
+**ID Generation**을 활용하기 위한 기본 설정이 필요하며 해당 설정은 [[egovframework:rte:fdl:id_generation]] 문서를 통해서 확인이 가능하다.
+
+===== 설명 =====
+  * 설문참여는 설문지를 관리하기 위한 목적으로 **등록**, **목록조회**의 기능을 수반한다.
+
+== 관련소스 ==
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.olp.qri.web.EgovQustnrRespondInfoController.java|설문참여 Controller Class|
+|Service|egovframework.com.uss.olp.qri.service.EgovQustnrRespondInfoService.java|설문참여 Service Class|
+|VO|egovframework.com.uss.olp.qri.service.QustnrRespondInfoVO.java|설문참여 VO Class|
+| |egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.uss.olp.qri.service.impl.EgovQustnrRespondInfoServiceImpl.java|설문참여 ServiceImpl Class|
+|DAO|egovframework.com.uss.olp.qri.service.impl.QustnrRespondInfoDao.java|설문참여 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qnn/EgovQustnrRespondInfoList.jsp|설문참여 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qnn/EgovQustnrRespondInfoRegist.jsp|설문참여 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qnn/EgovQustnrRespondInfoManageStatistics.jsp|설문참여 통계 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/olp/qri/EgovQustnrRespondInfo.xml|설문참여 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olp/qri/EgovQustnrRespondInfo.xml|설문참여 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|설문참여 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|설문참여 Id생성 Idgen XML|
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|설문템플릿|COMTNQUSTNRTMPLAT|설문템플릿를(을) 조회 한다.|
+|설문관리|COMTNQESTNRINFO|설문관리를(을) 조회 한다.|
+|설문문항|COMTNQUSTNRQESITM|설문문항를(을) 조회 한다.|
+|설문항목|COMTNQUSTNRIEM|설문항목를(을) 조회 한다.|
+|설문응답결과|COMTNQUSTNRRSPNSRESULT|설문응답결과를 관리 한다.|
+
+== 관련코드 == 
+^코드분류^코드분류명^코드ID^코드명^
+|COM014|성별코드|M|기능설명|
+|COM014|성별코드|F|절차설명|
+|COM034|작업유형코드|1|학생|
+|COM034|작업유형코드|2|대학생|
+|COM034|작업유형코드|3|군인|
+|COM034|작업유형코드|4|교사|
+|COM034|작업유형코드|5|기타|
+
+===== 사용방법 =====
+설문참여 세부적인 기능 사용방법은 다음을 참조한다.
+
+  - [[설문참여 목록]]
+  - [[설문참여 등록]]
+  - [[설문통계]]
+  
+
+===== 참고자료 =====
+N/A 

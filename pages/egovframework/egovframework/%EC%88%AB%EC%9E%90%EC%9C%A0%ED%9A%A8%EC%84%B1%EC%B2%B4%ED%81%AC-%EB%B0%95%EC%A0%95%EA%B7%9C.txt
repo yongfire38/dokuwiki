@@ -1,0 +1,46 @@
+====== 요소기술 - 숫자유효성체크 ======
+
+===== 개요 =====
+특정 숫자가 숫자인지 아닌지 체크하는 기능을 제공한다.
+
+===== 설명 =====
+숫자이면  True, 아니면  False를 반환하는 기능으로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovNumberUtil.java|Number 관련 유틸리티| |
+|Controller|egovframework.com.cmm.web.EgovComUtlController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovNumberValidCeck.jsp|숫자유효성체크 테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|Boolean|getNumberValidCheck(String checkStr)|숫자유효성체크|숫자인지여부를 체크하는 기능|
+
+== Input ==
+  * 특정숫자: Integer 타입의 숫자
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * Boolean
+
+===== 환경설정 =====
+
+**해당없음**
+
+===== 사용방법 =====
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovNumberUtil;
+...
+
+// 체크하고자 하는 숫자문자열
+String checkStr = safeGetParameter(request,"checkStr");
+
+String	resultStr = String.valueOf(EgovNumberUtil.getNumberValidCheck(checkStr));
+
+</code>
+
+
+===== 참고자료 =====
+
+ N/A

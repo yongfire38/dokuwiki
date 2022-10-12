@@ -1,0 +1,55 @@
+====== 요소기술 - 숫자변환 ======
+
+===== 개요 =====
+숫자 타입을 문자열이나 데이터 타입으로 변환 하는 기능을 제공한다.
+
+===== 설명 =====
+숫자타입을 문자열로  변환하는 기능 및 숫자타입을 데이터타입으로 변환하는 기능으로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovNumberUtil.java|Number 관련 유틸리티| |
+|Controller|egovframework.com.cmm.web.EgovComUtlController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovNumberCnvr.jsp|숫자변환 테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|getNumToStrCnvr(int srcNumber)|문자열변환|숫자타입을 문자열 타입으로 변환|
+|String|getNumToDateCnvr(int srcNumber)|데이트변환|숫자타입을 데이터 타입으로 변환|
+
+
+== Input ==
+  * 변환하고자하는 숫자: Integer 타입의 숫자
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * String
+
+
+===== 환경설정 =====
+
+**해당없음**
+
+===== 사용방법 =====
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovNumberUtil;
+...
+
+// 숫자타입을 문자열타입으로 변환
+int    cnvrNumber = Integer.parseInt(safeGetParameter(request,"cnvrNumber"));
+
+String	resultStr = EgovNumberUtil.getNumToStrCnvr(cnvrNumber);
+
+// 숫자타입을 Date타입으로 변환
+int    cnvrNumber = Integer.parseInt(safeGetParameter(request,"cnvrNumber"));
+
+// Date형식으로 변환 후 다시  String형태로 다시 변환("YYYY-MM-DD");
+String	resultStr = EgovNumberUtil.getNumToDateCnvr(cnvrNumber);
+
+</code>
+
+
+===== 참고자료 =====
+
+ N/A

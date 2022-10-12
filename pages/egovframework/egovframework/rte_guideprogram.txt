@@ -1,0 +1,15 @@
+====== 가이드 프로그램 ======
+
+===== 개요 =====
+egovframework 기반의 개발을 수행하기 위해 설치방법, 실행환경 Layer 별 기능적용사항을 제공한다.
+
+===== 목적 =====
+egovframework 기반의 본격적인 개발에 착수하기 전, 가이드에 따라 간단한 실습을 진행 하므로써 보다 쉽게 실행환경에 접근 할 수 있다.
+
+실행환경에 대한 자세한 설명은 실행환경 가이드에서 더 자세히 제공한다.
+egovframework 기반에서 어플리케이션을 쉽게 개발할 수 있는 방법을 제공하고 있다.
+
+
+===== 가이드 프로그램 설명 =====
+  * [[egovframework:rte:sample:civilappeal|CivilAppeal]]
+  * [[egovframework:rte:sample:UtilApp|UtilApp(FileUpload/download, mail)]]

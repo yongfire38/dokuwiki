@@ -1,0 +1,106 @@
+====== 사용자지원 - 당직체크관리 ======
+===== 개요 =====
+
+**당직체크관리**는 시스템에서 당직근무자가 당직시 점검해야할 항목을 관리하는 기능으로 당직체크 항목을 코드화하여 해당 정보를 관리한다.
+
+===== 설명 =====
+
+  * **당직체크관리**는 당직일지 작성시 당직체크항목을 코드화하여 관리하기 위한 목적으로 당직체크코드 등록, 수정, 삭제, 조회, 당직체크목록조회의 기능을 수반한다.
+
+    ① 당직체크관리목록 : 당직체크관리 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 당직체크등록 : 당직체크정보를 등록하고, 등록 결과를 조회한다.
+    ③ 당직체크수정 : 기 등록된 당직체크정보의 항목들을 수정한다.
+    ④ 당직체크삭제 : 기 등록된 당당직체크정보를 삭제한다.
+    ⑤ 당직체크상세조회 : 등록된 당직체크 상세정보를 조회한다.
+
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.btn.web.EgovBndtManageController..java|당직 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.uss.ion.btn.service.EgovBndtManageService.java|당직 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.ion.btn.service.impl.EgovBndtManageServiceImpl.java|당직 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.uss.ion.btn.service.impl.BndtManageDAO.java|당직 관리를 위한 데이터처리 클래스|
+|VO|egovframework.com.uss.ion.btn.service.BndtCeckManageVO.java|당직체크 관리를 위한 VO 클래스|
+|Model|egovframework.com.uss.ion.btn.service.BndtCeckManage.java|당직체크 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/btn/EgovBndtCeckManageList.jsp|당직체크관리 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/btn/EgovBndtCeckManageRegist.jsp|당직체크 등록를 위한 jsp페이지| 
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/btn/EgovBndtCeckManageDetail.jsp|등록된 당직체크 상세조회/반영하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/btn/EgovBndtCeckManageUpdt.jsp|당직체크 수정을 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/uss/ion/btn/EgovBndtManage_SQL_*.xml|당직관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:uss:ion:btn:당직체크관리클래스이미지.png|클래스다이어그램}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|당직체크관리정보|COMTNBNDTCECKMANAGE|당직체크정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 당직체크관리 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/ion/btn/selectBndtManageList.do|selectBndtManageList|"bndtManageDAO.selectBndtManageList"|
+|조회|/uss/ion/btn/selectBndtManageList.do|selectBndtManageList|"bndtManageDAO.selectBndtManageListTotCnt"|
+
+당직체크관리 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다.\\ 
+검색조건은 당직체크명에 대해서 수행된다.\\
+
+{{:egovframework:com:uss:ion:btn:당직체크관리목록.png}}
+
+조회 : 기 등록된 당직체크관리의 목록을 조회한다.\\
+등록 : 신규 당직체크을 등록하기 위해서는 상단의 등록 버튼을 통해서 **당직체크 등록** 화면으로 이동한다.\\
+상세조회: 등록된 당직체크 목록(당직체크 코드명)을 클릭하면 상세정보 화면으로 이동한다.\\
+----
+
+=== 당직체크 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/uss/ion/btn/insertBndtManage.do|insertBndtManage|"bndtManageDAO.insertBndtManage"|
+|등록|/uss/ion/btn/insertBndtManage.do|insertBndtManage|"bndtManageDAO.insertBndtManageFxtrs"|
+
+당직체크구분이 **기타**인 경우, 당직일지 작성시 텍스트로 당직일지 내용을 입력하게 되며(최종퇴실자, 특이사항등 서술내용등록시), \\
+그외는 당직일지 결과를 양호, 불량 선택(라디오버튼) 필드로  입력하게 된다.\\
+사용여부필드는 **사용**일 경우만  당직일지 작성화면에 조회된다.\\
+당직체크의 속성정보를 입력한 뒤 등록한다.\\
+
+
+{{:egovframework:com:uss:ion:btn:당직체크등록.png}}
+
+등록 : 신규 당직체크을 등록하기 위해서는 당직체크 속성을 입력한 뒤 상단의 **당직체크 버튼**을 통해서 당직체크을 등록한다.\\
+목록 : 당직체크 목록조회 화면으로 이동한다.\\
+----
+
+=== 당직체크 상세 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/uss/ion/btn/selectBndtManage.do|selectBndtManage|"bndtManageDAO.selectBndtManage"|
+|삭제|/uss/ion/btn/deleteBndtManage.do|deleteBndtManage|"bndtManageDAO.deleteBndtManage"|
+
+당직체크의 상세조회화면이다. **수정 버튼**을 통해서 수정화면으로 이동하고, **삭제 버튼**을 통해서 당직체크을 삭제한다.\\
+
+{{:egovframework:com:uss:ion:btn:당직체크상세조회.png}}
+
+수정 : 당직체크 수정 화면으로 이동한다.\\ 
+삭제 : **삭제 버튼**을 통해서 기 등록된 당직체크정보를 삭제한다.\\ 
+목록 : 당직체크 목록조회 화면으로 이동한다.\\
+----
+
+=== 당직체크 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/ion/btn/updtBndtManage.do|updateBndtManage|"bndtManageDAO.updtBndtManage"|
+|상세조회|/uss/ion/btn/selectBndtManage.do|selectBndtManage|"bndtManageDAO.selectBndtManage"|
+
+당직체크의 속성정보를 변경한 후 저장한다. 다음 화면은 당직체크 상세조회 화면과 동일하다.\\
+
+{{:egovframework:com:uss:ion:btn:당직체크수정.png|당직체크수정}}
+
+수정 : 기 등록된 당직체크 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 당직체크 정보를 수정한다.\\
+목록 : 당직체크 목록조회 화면으로 이동한다.\\
+----

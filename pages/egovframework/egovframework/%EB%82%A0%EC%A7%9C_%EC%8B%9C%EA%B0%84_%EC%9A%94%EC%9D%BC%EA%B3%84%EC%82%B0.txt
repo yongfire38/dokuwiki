@@ -1,0 +1,60 @@
+====== 요소기술 - 날짜/시간/요일 계산 ======
+
+===== 개요 =====
+주어진 일자, 시간을 계산하는 기능을 제공한다.
+
+===== 설명 =====
+입력일시에 계산될  연, 월, 일, 시간을 계산하는 기능을 제공한다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovDateUtil.java|Date 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovDateUtilController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovWeekCalc.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|addYMDtoDayTime(String sDate, String sTime, int year, int month, int day, int hour, int minute, String formatStr)|날짜/시간 계산|입력일시에 연, 월, 일, 시, 분을 계산하는 기능|
+|String|addYMDtoWeek(String sDate, int year, int month, int day)|요일계산|입력일자에 연,월,일을 계산하여 요일을 확인하는 기능|
+
+== Input ==
+  * 일자 : String 타입의 날짜 (예, 20090501)
+  * 시간 : String 타입의 시간 (예, 2035)
+  * 연 : int 타입의 연 (예, 1)
+  * 월 : int 타입의 월 (예, 2)
+  * 일 : int 타입의 일 (예, 10)
+  * 시 : int 타입의 시 (예, 5)
+  * 분 : int 타입의 분 (예, 30)
+  * 포멧스트링 : String 타입의 Date 포멧스트링 (예, yyyy년 MM월 dd일 HH시 mm분 ss초)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * String
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovDateUtil;
+
+...
+String	sDate   = "20080820";
+int     sDay    = Integer.parseInt(request.getParameter("sDay"));
+String resDate  = EgovDateUtil.addYMDtoDayTime(sDate, "0000", 0, 0, sDay, 0, 0, "yyyyMMdd");
+
+...
+String	sDate   = "20080820";
+String	sTime   = "2030";
+int     sHour   = 2;
+String resDate  = EgovDateUtil.addYMDtoDayTime(sDate, sTime, 0, 0, 0, sHour, 0, "yyyyMMddHHmm");
+
+...
+String	sDate   = "20080820";
+int     sYear   = 1;
+int     sMonth  = 0;
+int     sDay    = 5;
+String resDate  = EgovDateUtil.addYMDtoWeek(sDate, sYear, sMonth, sDay);
+
+...
+
+</code>

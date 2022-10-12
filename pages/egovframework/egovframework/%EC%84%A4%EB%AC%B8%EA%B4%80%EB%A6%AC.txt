@@ -1,0 +1,82 @@
+====== 공통서비스 - 설문관리 ======
+
+===== 개요 =====
+설문관리 시스템 구축시 사용되는 관리 기능과 조사 기능으로  기본적인 관리와 조사 PROCESS는 다음과 같다.  
+
+  * 설문 기능 흐름도 
+{{:egovframework:com:uss:olp:설문관리_기능흐름도.jpg|}}
+
+== 1. 설문템플릿등록  ==
+    설문템플릿 기본정보 입력후 등록한다. / 설문참여 양식 결정 
+== 2. 설문지등록(설문등록) ==  
+    설문템플릿선택하고 설문지 기본정보 입력후 등록한다.  
+== 3. 설문문항등록 ==
+    설문지정보를 선택하고 설문문항 기본정보 입력후 등록한다.  
+== 4. 설문항목등록 ==
+    설문지정보, 설문문항정보 선택하고 설문항목 입력후 등록한다.  
+== 5. 설문참여 ==
+    설문참여 등록에서 설문조사에 응한다.   
+    설문참여 통계를 이용하여 설문참여결과를 확인한다.  
+== 6. 설문조사(응답결과) 확인 == 
+   설문참여 응답 결과를 확인다.  
+== 7. 설문응답자관리 결과 확인 == 
+    설문참여 설문응답자 결과를 확인다.  
+
+본 기능은 전자정부 표준프레임워크 실행환경의 **ID Generation** 기능 활용하여 구성되어있다.(사용자 관리용 고유아이디 등록시 사용) 
+
+===== 관련 설정 사항 =====
+
+  * ID Generation Service에서 사용할 테이블 및 필드 생성
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 추가해야함.
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( 
+  		   table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+ </code>
+ 
+== 1.설문템플릿관리 ==
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('QUSTNRTMPLA_ID','0');
+ </code>
+ 
+== 2.설문지관리 ==
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('QESTNR_ID','0');
+ </code>
+ 
+== 3.설문문항관리 ==
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('QUSTNRQESTN_ID','0');
+ </code>
+ 
+== 4.설문항목관리 ==
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('QESTNR_QESITM_ID','0');
+ </code>
+ 
+== 5.설문조사(응답결과) ==
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('QESTNR_RPD_ID','0');
+ </code>
+ 
+== 6.설문응답자결과 ==
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('QESRSPNS_ID','0');
+ </code>
+
+===== 관련기능 =====
+
+  * [[설문템플릿관리]]
+  * [[설문 관리]]
+  * [[설문문항관리]]
+  * [[설문항목관리]]
+  * [[설문응답자관리]]
+  * [[설문조사(응답결과)관리]]
+  * [[설문참여]]
+
+===== 비고 =====
+
+N/A
+

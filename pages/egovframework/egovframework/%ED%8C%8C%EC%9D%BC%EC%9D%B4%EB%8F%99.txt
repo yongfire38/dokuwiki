@@ -1,0 +1,46 @@
+====== 파일 이동 ======
+
+===== 개요 =====
+비즈니스 로직을 처리하면서 필요시 파일을 이동할 수 있는 공통 기능을 제공한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 원본 파일을을 타겟 파일로 이동하는 기능
+  
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 툴 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovDrctryMvmn.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean |moveFile(String fileOriginalPath, String fileTargetPath)|디렉토리 이동|원본파일(fileOriginalPath)를 입력받아 타겟파일(dirTargetPath)로 이동한다. 타겟파일이 이미 존재하는 경우는 실패로 처리된다. 성공시 TRUE, 실패시 FALSE 리턴|
+
+== Input == 
+  * fileOriginalPath: String 타입의 절대경로를 포함하는 원본파일 경로(예, /product/jeus/egovProps/tmp/file1.txtt)
+  * fileTargetPath: String 타입의 절대경로를 포함하는 타겟파일 경로(예, /product/jeus/egovProps/tmp/move1.txt)
+
+== Output ==
+  * boolean 타입 : 성공여부 true / flase
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+
+    import egovframework.com.utl.sim.service.EgovFileTool;
+
+    String fileOriginalPath1  = "/user/com/file1.txt";
+    String fileTargetPath1    = "/user/com/move1.txt";
+    boolean result1           = EgovFileTool.moveFile(fileOriginalPath1  , fileTargetPath1);
+
+</code>
+
+===== 참고자료 =====
+N/A

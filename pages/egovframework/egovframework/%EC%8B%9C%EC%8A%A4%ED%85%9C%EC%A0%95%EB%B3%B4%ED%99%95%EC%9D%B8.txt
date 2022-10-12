@@ -1,0 +1,189 @@
+====== 시스템정보 확인 ======
+
+===== 개요 =====
+시스템 고유의 속성정보인 프로세서 ID, 호스트, 운영체제(OS), 메모리(Memory), 디스크(HDD) 정보를 확인한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 시스템의 프로세서(Processor) ID(CPU ID)를 가지고 오는 기능 
+    ② 시스템의 운영체제의 정보를 가지고 오는 기능
+    ③ 시스템의 메모리 용량 정보를 가지고 오는 기능
+    ④ 시스템의 디스크 정보를 가지고 오는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovSysInfo.java|시스템정보 확인 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovSysInfo.jsp|테스트 페이지| |
+**※ 해당 파일은 보안 상의 이유로 배포되고 있지는 않습니다. 다음 이메일로 요청해 주시면 이메일로 관련 파일을 전달 드리겠습니다.**\\
+**egovframesupport@gmail.com**
+
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|String|getProcessorID()|프로세서ID조회|시스템의 프로세서ID 리턴|
+|String|getHostName()|호스트명조회|시스템의 호스트명을 리턴|
+|String|getOSName()|OS이름조회|시스템의 OS 이름을 리턴|
+|String|getOSVersion()|OS버전조회|시스템의 OS 버전을 리턴|
+|String|getOSPrductor()|OS제조사조회|시스템의 OS 제조사를 리턴|
+|float|getMoryFullCpcty()|메모리전체용량조회|시스템의 메모리 전체용량 리턴|
+|float|getMoryUsedCpcty()|메모리사용용량조회|시스템의 메모리 사용용량 리턴|
+|float|getMoryFreeCpcty()|메모리유효용량조회|시스템의 메모리 유효용량 리턴|
+|ArrayList|getDiskName()|디스크목록조회|시스템의 디스크목록 리턴|
+|float|getDiskFullCpcty()|디스크전체용량조회|시스템의 디스크 전체용량 리턴|
+|float|getDiskUsedCpcty()|디스크사용용량조회|시스템의 디스크 사용용량 리턴|
+|float|getDiskFreeCpcty()|디스크유효용량조회|시스템의 디스크 유효용량 리턴|
+
+== Input ==
+
+== Output ==
+  * String 타입 호스트명 (예, WAS)
+  * String 타입 OS이름 (예, AIX)
+  * String 타입 OS버전 (예, 5.3.0.0)
+  * String 타입 OS제조사 (예, IBM,8204-E8A)
+  * String 타입 프로세서ID (예, 0B0AA2)
+  * String 타입 디스크명 (예, hdisk0|hdisk1|hdisk2|hdisk3)
+  * String 타입 디스크전체용량(MB) (예, 851456.0)
+  * String 타입 디스크사용용량(MB) (예, 700160.0)
+  * String 타입 디스크유효용량(MB) (예, 151296.0)
+  * String 타입 메모리전체용량(MB) (예, 18601.5)
+  * String 타입 메모리사용용량(MB) (예, 15744.2)
+  * String 타입 메모리유효용량(MB) (예, 2857.3)
+
+===== 환경설정 =====
+  * server.properties
+<code>
+#1. 프로세서ID, OS정보 조회 쉘 스크립트
+SHELL.WINDOWS.getOSInfo = C:/Documents and Settings/Administrator/egovProps/prg/getOSInfo.bat
+SHELL.UNIX.getOSInfo = /product/jeus/egovProps/prg/getOSInfo.sh
+#2. 메모리정보 조회 쉘 스크립트
+SHELL.WINDOWS.getMoryInfo = C:/Documents and Settings/Administrator/egovProps/prg/getMoryInfo.bat
+SHELL.UNIX.getMoryInfo = /product/jeus/egovProps/prg/getMoryInfo.sh
+#3. 디스크정보 조회 쉘 스크립트
+SHELL.WINDOWS.getDiskInfo = C:/Documents and Settings/Administrator/egovProps/prg/getDiskInfo.bat
+SHELL.UNIX.getDiskInfo = /product/jeus/egovProps/prg/getDiskInfo.sh
+</code>
+  * getOSInfo.bat (윈도우용 OS정보 조회 스크립트)
+<code>
+systeminfo
+</code>
+  * getOSInfo.sh (유닉스용 OS정보 조회 스크립트)
+<code>
+#echo $1 -SEARCH NAME (NAME, VERSION, PRDUCTOR)	
+
+#NAME
+if [ $1 == "NAME" ]
+then
+   uname -s
+fi
+
+#VERSION
+if [ $1 == "VERSION" ]
+then
+   oslevel
+fi
+
+#PRDUCTOR
+if [ $1 == "PRDUCTOR" ]
+then
+   prtconf | grep "시스템 모델:" | awk '{print $3}'
+fi
+
+#PROCESSOR
+if [ $1 == "PROCESSOR" ]
+then
+   uname -a | awk '{print substr($5,3,6)}'
+fi
+</code>
+  * getMoryInfo.bat (윈도우용 메모리정보 조회 스크립트)
+<code>
+systeminfo
+</code>
+  * getMoryInfo.sh (유닉스용 메모리정보 조회 스크립트)
+<code>
+#echo $1 -SEARCH NAME (FULL, USING, VALID)	
+
+#FULL
+if [ $1 == "FULL" ]
+then
+   vmstat | grep "mem=" | awk '{print $4}'
+fi
+
+#USING
+if [ $1 == "USED" ]
+then
+   vmstat | tail -1 | awk '{print $3*4096/1024/1024}'
+fi
+
+#VALID
+if [ $1 == "FREE" ]
+then
+   vmstat | tail -1 | awk '{print $4*4096/1024/1024}'
+fi
+</code>
+  * getDiskInfo.bat (윈도우용 디스크정보 조회 스크립트)
+<code>
+윈도우 환경에서는 디스크정보를 지원하지 않습니다.
+</code>
+  * getDiskInfo.sh (유닉스용 디스크정보 조회 스크립트)
+<code>
+#echo $1 -SEARCH NAME (NAME, FULL, USING, VALID)	
+
+#NAME
+if [ $1 == "NAME" ]
+then
+   lspv | awk '{print $1}'
+fi
+
+#FULL
+if [ $1 == "FULL" ]
+then
+   lspv $2 | grep "TOTAL PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+fi
+
+#USING
+if [ $1 == "USED" ]
+then
+   lspv $2 | grep "USED PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+fi
+
+#VALID
+if [ $1 == "FREE" ]
+then
+   lspv $2 | grep "FREE PPs" | awk -F"(" '{print $2}' | awk '{print $1}'
+fi
+</code>
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovSysInfo;
+
+	// 1. 호스트명, OS명, OS버전, OS제조사, 프로세서
+	hostname = EgovSysInfo.getHostName();
+	osname = EgovSysInfo.getOSName();
+	osversion = EgovSysInfo.getOSVersion();
+	osprductor = EgovSysInfo.getOSPrductor();
+	processor = EgovSysInfo.getProcessorID();
+
+	// 2. 메모리 용량
+	moryUsed = EgovSysInfo.getMoryUsedCpcty();
+	moryFree = EgovSysInfo.getMoryFreeCpcty();
+	moryFull = EgovSysInfo.getMoryUsedCpcty();
+
+	// 3. 디스크 용량
+	ArrayList list = EgovSysInfo.getDiskName();
+	for(int i = 0; i < list.size(); i++) {
+		diskName += (String)list.get(i) + " | ";
+		diskFull += EgovSysInfo.getDiskFullCpcty((String)list.get(i));
+		diskUsed += EgovSysInfo.getDiskUsedCpcty((String)list.get(i));
+		diskFree += EgovSysInfo.getDiskFreeCpcty((String)list.get(i));
+	}
+
+</code>
+
+===== 참고자료 =====
+N/A

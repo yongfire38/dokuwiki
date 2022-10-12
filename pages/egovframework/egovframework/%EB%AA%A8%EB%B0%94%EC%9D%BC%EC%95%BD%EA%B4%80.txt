@@ -1,0 +1,117 @@
+====== 공통서비스 - 약관관리======
+
+===== 개요 =====
+회원가입 시 회원약관 및 정보공유 동의여부를 확인할때 제공되는 약관정보 및 정보공유내용을 조회 할 수 있다.
+
+===== 설명 =====
+약관관리기능은 크게 **약관목록조회**, **약관상세조회** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.sam.stp.web.EgovStplatManageController.java|약관관리를 위한 컨트롤러 클래스|
+|Controller|egovframework.com.uss.sam.stp.web.EgovMblStplatManageController.java|약관관리를 위한 모바일 컨트롤러 클래스|
+|Service|egovframework.com.uss.sam.stp.service.EgovStplatManageService.java|약관관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.sam.stp.service.impl.EgovStplatManageServiceImpl.java|약관관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.uss.sam.stp.service.StplatManageVO.java|약관관리를 위한 VO 클래스|
+|  |egovframework.com.uss.sam.stp.service.StplatManageDefaultVO.java|약관관리를 위한 SearchVO 클래스|
+|DAO|egovframework.com.uss.sam.stp.service.imp.StplatManageDAO.java|약관 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/uss/sam/stp/EgovStplatListInqire.jsp|약관관리를 위한 목록조회 페이지|
+|   |/WEB-INF/jsp/egovframework/uss/sam/stp/EgovStplatDetailInqire.jsp|약관관리를 위한 상세조회 페이지|
+|   |/WEB-INF/jsp/egovframework/uss/sam/stp/EgovStplatCnRegist.jsp|약관관리를 위한 등록 페이지|
+|   |/WEB-INF/jsp/egovframework/uss/sam/stp/EgovStplatCnUpdt.jsp|약관관리를 위한 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/sam/stp/EgovStplatListInqire.jsp|모바일약관을 위한 목록조회 페이지|
+|   |/WEB-INF/jsp/egovframework/mbl/com/uss/sam/stp/EgovStplatDetailInqire.jsp|모바일약관을 위한 상세조회 페이지|
+
+|Query XML|resources/egovframework/sqlmap/com/uss/sam/stp/EgovStplatManage_SQL.xml|약관관리(조회,등록,수정,삭제)를 위한 Query XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/sam/stp/EgovStplatManage_SQL.xml|약관관리를 위한 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|약관관리를 위한 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|약관등록을 위한 Id생성 Idgen XML|
+
+**클래스다이어그램**
+
+{{:egovframework:com:uss:sam:stp:Stplat2.gif|}}
+
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|약관정보|COMTNSTPLATINFO|회원가입에 따른 이용약관 및 개인정보제공동의내용을 관리|	
+
+===== 관련기능 =====
+약관관리기능은 크게 **약관목록조회**, **약관상세조회** 기능으로 구성되어 있다.
+
+==== 약관목록조회 ====
+
+=== 비즈니스 규칙 ===
+조회조건으로 목록조회를 할 수 있다.
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/sam/stp/StplatListInqire.mdo|selectStplatList|"StplatManageDAO.selectStplatList"|
+| | |selectStplatListTotCnt|"StplatManageDAO.selectStplatListTotCnt"|
+|약관확인|/uss/umt/EgovStplatCnfirmMber.mdo|sbscrbEntrprsMber|"mberManageDAO.selectStplat_S"|
+|목록클릭|/uss/sam/stp/StplatDetailInqire.mdo|selectStplatDetail|"StplatManageDAO.selectStplatDetail"|
+
+약관 목록은 페이지 당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. 
+
+{{:egovframework:mcom:EgovStplatListInqire.jpg|}}
+
+조회: 약관를 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색문자를 입력 후 조회 버튼을 클릭한다.\\
+목록클릭: **약관상세조회** 화면으로 이동한다.
+----
+
+==== 약관상세조회 ====
+
+=== 비즈니스 규칙 ===
+약관목록조회에서 목록 클릭 시 이동되는 화면으로 약관에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/sam/stp/StplatListInqire.mdo|selectStplatList|"StplatManageDAO.selectStplatList"|
+
+약관 상세조회화면은 약관목록조회를 할 수 있다.
+
+{{:egovframework:mcom:EgovStplatDetailInqire.jpg|}}
+
+목록: **약관목록조회** 화면으로 이동한다.
+----
+
+==== 약관 확인 ====
+
+=== 비즈니스 규칙 ===
+약관목록조회에서 약관 확인 클릭 시 이동되는 화면으로 약관에 동의를 구한다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^Action^URL^Controller method^QueryID^
+|동의|/uss/sam/stp/StplatListInqire.mdo|mainBoard| |
+
+약관 상세조회화면은 약관목록조회를 할 수 있다.
+
+{{:egovframework:mcom:EgovStplatCnfirm.jpg|}}
+
+동의 : 동의 절차를 확인한 후 **약관목록조회** 화면으로 이동한다.
+비동의: **약관목록조회** 화면으로 이동한다.
+----
+
+
+===== 참고자료 =====
+  * 약관관리참조 : [[약관관리]]

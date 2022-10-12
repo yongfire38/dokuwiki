@@ -1,0 +1,74 @@
+===== 설명 =====
+
+**공통컴포넌트 전환**
+기존의 공통컴포넌트와 동일한 스키마를 사용함.
+
+* 공통컼포넌트 데이터베이스 : [[egovframework:관련_데이터베이스_구조_및_스키마 | 관련_데이터베이스_구조_및_스키마]]
+
+
+**신규공통컴포넌트**
+
+== 데이터베이스 연계 테이블 목록 ==
+
+^No.^테이블ID^테이블명^
+|1|COMTCCMMNCLCODE|공통분류코드|
+|2|COMTCCMMNCODE|공통코드|
+|3|COMTCCMMNDETAILCODE|공통상세코드|
+|4|COMTNFILE|파일속성|
+|5|COMTNFILEDETAIL|파일상세정보|
+|6|COMTECOPSEQ|ID GENERATION|
+
+== 데이터베이스 모바일 신규공통 컴포넌트 테이블 목록 ==
+^No.^테이블ID^테이블명^
+|1|COMTNREALTIMENOTICE|실시간공지서비스|
+|2|COMTNSYNC|동기화서비스|
+|3|COMTNBBS|게시판|
+|4|COMTNOFFLINEWEB|오프라인웹|
+|5|COMTNCHARTGRAPH|모바일차트그래프|
+|6|COMTNDEVICE|모바일기기식별|
+|7|COMTNPHOTOALBUM|모바일 사진앨범|
+|8|COMTNMLTMD|멀티미디어|
+|9|COMTNMMS|MMS발송이력|
+|10|COMTNMMSATTACH| MMS파일첨부|
+|11|COMTNGEOLOCATION|위치정보서비스|
+
+
+== 관련 ERD ==
+모바일 신규공통컴포넌트를 구동하기 위한 테이블 구조를 가이드한다.
+
+- {{:egovframework:mcom:신규공통컴포넌트_ERD.zip|신규공통컴포넌트 ERD.zip}}
+
+== 관련 테이블 생성 스크립트 ==
+^No.^컴포넌트명^테이블 생성 스크립트 경로^
+|1|실시간 공지 서비스|src/script/mbl/"DB명"/ddl/mbl.com.rns_create_"DB명".sql|
+|2|모바일 사진 앨범|src/script/mbl/"DB명"/ddl/mbl.com.mpa_create_"DB명".sql|
+|3|OPEN-API 연계 서비스|src/script/mbl/"DB명"/ddl/mbl.com.oas_create_"DB명".sql|
+|4|모바일 차트/그래프|src/script/mbl/"DB명"/ddl/mbl.com.mcg_create_"DB명".sql|
+|5|모바일 기기 식별|src/script/mbl/"DB명"/ddl/mbl.com.mdi_create_"DB명".sql|
+|6|동기화 서비스|src/script/mbl/"DB명"/ddl/mbl.com.syn_create_"DB명".sql|
+|7|멀티미디어 제어|src/script/mbl/"DB명"/ddl/mbl.com.mlt_create_"DB명".sql|
+|8|오프라인 웹 서비스|src/script/mbl/"DB명"/ddl/mbl.com.ows_create_"DB명".sql|
+|9|위치정보연계|src/script/mbl/"DB명"/ddl/mbl.com.geo_create_"DB명".sql|
+|10|MMS 서비스 연계|src/script/mbl/"DB명"/ddl/mbl.com.mms_create_"DB명".sql|
+
+모바일 신규공통컴포넌트를 구동하기 위한 테이블 생성 스크립트를 각 컴포넌트별로 가이드한다. Oracle과 MySQL, Altibase, Tibero버젼으로 제공된다. \\
+- Tibero는 Oracle의 테이블 생성 스크립트와 동일하나, Altibase의 경우 사이즈 지정 부분의 BYTE 또는 CHAR가 지정되지 않는다. \\
+(이 경우 BYTE는 제외시키고 CHAR의 경우는 사이즈를 3배수하여 처리하였다. 3배수의 의미는 UTF-8의 경우 한글이 3 Byte를 차지하기 때문이며 \\
+기타 한글 인코딩의 경우 2배수를 하며, Oracle 및 Tibero의 CHAR 지정은 내부적으로 인코딩에 따라 크기가 지정된다.)
+
+__**※ 데이터베이스 성능과 관련된 Index 추가 생성 및 query tuning 부분 등은 적용 프로젝트의 상황에 따라 다를 수 있으므로 각 프로젝트에 맞도록 관리(예: index 추가, query tunning 등)하셔야 합니다.**__
+
+== 모바일 신규공통컴포넌트 기본 데이터 스크립트 ==
+^No.^컴포넌트명^테이블 생성 스크립트 경로^
+|1|실시간 공지 서비스|src/script/mbl/"DB명"/ddl/mbl.com.rns_insert_"DB명".sql|
+|2|모바일 사진 앨범|src/script/mbl/"DB명"/ddl/mbl.com.mpa_insert_"DB명".sql|
+|3|OPEN-API 연계 서비스|src/script/mbl/"DB명"/ddl/mbl.com.oas_insert_"DB명".sql|
+|4|모바일 차트/그래프|src/script/mbl/"DB명"/ddl/mbl.com.mcg_insert_"DB명".sql|
+|5|모바일 기기 식별|src/script/mbl/"DB명"/ddl/mbl.com.mdi_insert_"DB명".sql|
+|6|동기화 서비스|src/script/mbl/"DB명"/ddl/mbl.com.syn_insert_"DB명".sql|
+|7|멀티미디어 제어|src/script/mbl/"DB명"/ddl/mbl.com.mlt_insert_"DB명".sql|
+|8|오프라인 웹 서비스|src/script/mbl/"DB명"/ddl/mbl.com.ows_insert_"DB명".sql|
+|9|위치정보연계|src/script/mbl/"DB명"/ddl/mbl.com.geo_insert_"DB명".sql|
+|10|MMS 서비스 연계|src/script/mbl/"DB명"/ddl/mbl.com.mms_insert_"DB명".sql|
+
+모바일 신규공통컴포넌트의 공통기술 패키지를 구동하기 위한 기본데이터 생성 스크립트를 가이드한다. Oracle과 MySQL, Altibase, Tibero버젼으로 제공된다.

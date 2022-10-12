@@ -1,0 +1,44 @@
+====== 파일 생성 ======
+
+===== 개요 =====
+비즈니스 로직을 처리하면서 필요시 파일을 생성할 수 있는 공통 기능을 제공한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 파일을 생성하는 기능(생성되는 파일은 텍스트파일임)
+  
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 툴 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovDrctryCreate.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|String|createNewFile(String fileCreationPath)|파일 생성|생성대상 파일경로(fileCreationPath)를 입력받아 생성한다. 성공시 생성된 절대경로, 실패시 블랭크를 리턴|
+
+== Input == 
+  * fileCreationPath: String 타입의 절대경로를 포함하는 생성대상 디렉토리경로(예, /product/jeus/egovProps/tmp/file1.txt)
+
+== Output ==
+  * String 타입 : 생성된 파일경로
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+
+    import egovframework.com.utl.sim.service.EgovFileTool;
+
+    String fileCreationPath = "/user/com/file1.txt";
+    String result           = EgovFileTool.createNewFile(fileCreationPath);
+
+</code>
+
+===== 참고자료 =====
+N/A

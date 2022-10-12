@@ -1,0 +1,37 @@
+=== 비즈니스 규칙 ===
+설문참여자가 기(記) 등록된 설문참여 정보를 리스트 형태로 조회 할 수 있고, 목록(설문제목)클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 설문참여 목록 ==
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/olp/qnn/EgovQustnrRespondInfoManageList.do|EgovQustnrRespondInfoManageList|QustnrRespondInfoManage.selectQustnrRespondInfoManage|
+| | | |QustnrRespondInfoManage.selectQustnrRespondInfoManageCnt|
+|목록(설문제목)클릭|/uss/olp/qnn/EgovQustnrRespondInfoManageRegist.do|EgovQustnrRespondInfoManageRegist|QustnrRespondInfo.selectQustnrRespondInfoManageComtnqestnrinfo|
+| | | |QustnrRespondInfo.selectQustnrRespondInfoManageComtnqestnrinfo|
+| | | |QustnrRespondInfo.selectQustnrRespondInfoManageComtnqustnrqesitm|
+| | | |QustnrRespondInfo.selectQustnrRespondInfoManageComtnqustnriem|
+|목록(통계)클릭|/uss/olp/qnn/EgovQustnrRespondInfoManageStatistics.do|EgovQustnrRespondInfoManageStatistics|QustnrRespondInfo.selectQustnrRespondInfoManageComtnqestnrinfo|
+| | | |QustnrRespondInfo.selectQustnrRespondInfoManageComtnqustnrqesitm|
+| | | |QustnrRespondInfo.QustnrRespondInfo.selectQustnrRespondInfoManageComtnqustnrqesitm|
+| | | |QustnrRespondInfo.selectQustnrRespondInfoManageComtnqustnrqesitm|
+| | | |QustnrRespondInfo.selectQustnrRespondInfoManageStatistics1|
+| | | |QustnrRespondInfo.selectQustnrRespondInfoManageStatistics2|
+
+
+
+설문참여 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 설문제목, 등록자에 대해서 수행된다.\\ 페이지 당 검색 범위를 변경하고자 하는 경우 \\
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:uss:olp:qqm:egovqustnrqestnmanagelist.jpg|}}
+
+조회: 조회하기 위해서는 상단의 검색조건을 선택 후 해당하는 검색문자를 입력 후 조회 버튼을 클릭한다.\\
+등록: 등록하기 위해서는 상단의 등록 버튼을 통해서 **설문참여 등록** 화면으로 이동한다. \\
+목록(설문제목)클릭: **설문참여 등록** 화면으로 이동한다. \\ 
+목록(통계)클릭: **설문참여 통계** 화면으로 이동한다.

@@ -1,0 +1,67 @@
+====== 시스템/서비스 연계 - 연계현황관리 ======
+
+===== 개요 =====
+**연계현황, 연계시스템, 연계서비스**에 관한 정보를 등록하고 관리하는 기능
+
+===== 설명 =====
+**연계현황 관리**는 체계적으로 연계현황, 연계시스템, 연계서비스를 관리하기 위하여 ** 연계현황, 연계시스템, 연계서비스를 등록, 수정, 삭제, 목록조회, 상세조회**의 기능으로 구성되어 있다.
+
+== 클래스 다이어그램 == 
+{{:egovframework:com:ssi:syi:cdd_연계현황.png?900|연계현황 클래스 다이어그램}}
+
+== 관련소스 ==
+^유형^대상소스명^비고^
+|Controller|egovframework.com.ssi.syi.ist.web.EgovCntcSttusController.java|연계현황 관리를 위한 컨트롤러 클래스|
+|Model|egovframework.com.ssi.syi.ist.service.CntcSttus.java|연계현황 정보 Model 클래스|
+|VO|egovframework.com.ssi.syi.ist.service.CntcSttusVO.java|연계현황 관리를 위한 VO 클래스|
+|Service|egovframework.com.ssi.syi.ist.service.EgovCntcSttusService.java|연계현황 관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.ssi.syi.ist.service.impl.EgovCntcSttusServiceImpl.java|연계현황 관리를 위한  서비스구현 클래스|
+|DAO|egovframework.com.ssi.syi.ist.service.impl.CntcSttusDAO.java|연계현황 정보 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/ssi/syi/ist/EgovCntcSttusList.jsp|연계현황 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/ssi/syi/ist/EgovCntcSttusDetail.jsp|연계현황 상세조회 페이지|
+
+== 관련테이블 ==
+^테이블명^테이블명(영문)^비고^
+|시스템연계|COMTNSYSTEMCNTC|시스템연계에 대한 정보|	
+|송수신로그|COMTNTRSMRCVLOG|송수신로그에 대한 정보|
+
+===== 사용방법 =====
+== 연계현황 목록 ===
+
+연계현황 목록 조회를 할 수 있는 목록조회 화면으로 URL은 다음과 같다.
+
+<code>
+/ssi/syi/ist/getCntcSttusList.do
+</code>
+
+^기능^URL^Controller^method^화면(URL)^
+|목록조회|/ssi/syi/ist/getCntcSttusList.do|EgovCntcSttusController|selectCntcSttusList|/ssi/syi/ist/EgovCntcSttusList|
+
+연계현황 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다.\\
+검색조건은 연계현황명에 대해서 수행된다.\\
+페이지당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:ssi:syi:ist:연계현황목록.png|연계현황목록 화면}}
+
+----
+
+== 연계현황 상세 조회 ===
+
+연계현황 상세 조회 할 수 있는 상세 조회 화면으로 URL은 다음과 같다.
+
+<code>
+/ssi/syi/ist/getCntcSttusDetail.do
+</code>
+
+^기능^URL^Controller^method^화면(URL)^
+|상세조회|/ssi/syi/ist/getCntcSttusDetail.do|EgovCntcSttusController|selectCntcSttusDetail|/ssi/syi/ist/EgovCntcSttusDetail|
+
+상세조회에는 삭제 처리가 포함되어 있고 삭제가 성공하면 **[[#연계현황 목록]]** 화면으로 이동한다. 
+
+{{:egovframework:com:ssi:syi:ist:연계현황상세.png|연계현황상세 화면}}
+
+===== 참고자료 =====
+    * 송수신 로그 참조 : [[egovframework:송수신로그조회]]
+    * 배포 및 테스트 관련 : [[common_component_system|Common Component System]] 및 [[배포_패키지_구성안|배포 패키지 구성안]]
+    

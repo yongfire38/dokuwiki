@@ -1,0 +1,250 @@
+
+====== 협업 - 주소록 ======
+
+===== 개요 =====
+**주소록** 서비스는 시스템에 속한 다른 사용자의 정보를 조회하여 사용자의 주소록에 등록하거나,\\
+자신의 주소록을 개인별, 부서별, 회사별로 공개하여 다른 사용자가 활용할 수 있도록 하는 기능을 제공한다. \\
+주소록을 활용하는 방법은 직접 등록하여 활용하는 방법과 다른 사용자가 부서 및 회사 공개로 지정하여 등록한 주소록을 조회한 후 활용하는 방법이 있다. \\
+주소록에 대한 수정 및 삭제는 자신이 등록한 주소록에 대해서만 가능하다. \\ 
+
+주소록 등록 시에는 Validator Rule을 통해 필수항목에 대한 조건을 검사하며, \\
+Validator Rule은 **Valator-rules.xml**과 미리 정의된 컴포넌트 Validator xml을 통해 적용된다. \\
+
+**주소록** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+또한 공통으로 지원하고 있는 jAlert가 사용되고 있으며, 아래와 같은 js 파일에 정의되어 있다.
+  * **EgovMobile.js**
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능흐름도 ====
+
+{{:egovframework:mcom:주소록_기능흐름도.jpg?740|}}
+
+
+===== 설명 =====
+주소록 기능은 크게 주소록을 생성하는 **주소록등록** 기능, 사용자가 등록한 주소록과 공개되어 열람가능한 주소록을 조회할수 있는 **주소록 목록조회** 기능, 사용자가 등록한 주소록을 조회하고 수정할수 있는 **주소록 조회수정** 기능의 3가지 기능을 제공한다.
+
+== 관련 클래스다이어그램 ==
+
+{{:egovframework:mcom:CLD_주소록.JPG?740|}}
+
+== 관련소스 ==
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.adb.web.EgovAdressBookController.java|주소록 관리를 위한 컨트롤러 클래스|
+|Controller|egovframework.mbl.com.cop.adb.web.EgovMblAdressBookController.java|모바일 주소록 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.adb.service.EgovAdressBookService.java|주소록 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.adb.service.impl.EgovAdressBookServiceImpl.java|주소록 관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.cop.adb.service.AdressBook.java|주소록 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.adb.service.AdressBookUser.java|주소록구성원 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.adb.service.AdressBookVO.java|주소록 관리를 위한 VO 클래스|
+|DAO|egovframework.com.cop.adb.service.impl.AdressBookDAO.java|주소록 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovAdressBookRegist.jsp.jsp|주소록 등록을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovAdressBookUpdt.jsp.jsp|생성된 주소록 수정을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovAdressBookList.jsp.jsp|조회가능한 주소록 조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovMyAdressBookPopup.jsp|주소록구성원을 조회 등록시키기 위한 팝업 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/adb/EgovAdressBookMainList.jsp|마이페이지 구성을 위한 목록 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/adb/EgovAdressBookRegist.jsp.jsp|주소록 등록을 위한 모바일 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/adb/EgovAdressBookUpdt.jsp.jsp|생성된 주소록 수정을 위한 모바일 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/adb/EgovAdressBookList.jsp.jsp|조회가능한 주소록 조회를 위한 모바일 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/adb/EgovMyAdressBookPopup.jsp|주소록구성원을 조회 등록시키기 위한 팝업 모바일 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/adb/EgovNcrd_SQL.xml|주소록 관리를 Query 파일|
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|주소록정보속성|COMTNADBK|주소록의 속성정보를 관리|
+|주소록구성원속성|COMTNADBKUSER|주소록의 사용정보를 관리|
+
+
+
+===== 환경설정 =====
+
+
+본 기능은 전자정부 표준프레임워크 실행환경의 **[[egovframework:rte:fdl:id_generation|ID Generation]]** 기능을 활용하여 구성되어 있다.
+
+
+
+==== 관련 설정 사항 ====
+
+  * ID Generation Service에서 사용할 테이블 및 필드 생성
+
+    *   ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 ADBK_ID , ADBKUSER_ID 항목을 추가해야 한다. 테이블이 생성되어 있는 경우라면 insert 구문만을 수행한다.
+
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('ADBK_ID','0');
+  INSERT INTO COMTECOPSEQ VALUES('ADBKUSER_ID','0');
+ </code>
+
+
+===== 사용방법 =====
+
+
+==== 주소록 목록조회 ====
+
+
+=== 비즈니스 규칙 ===
+
+- 검색조건을 지정하여 목록을 조회 할 수 있다. \\
+- 등록버튼을 클릭하여 주소록 등록 화면으로 이동할 수 있다.  \\
+- X(삭제) 이미지를 클릭하여 주소록을 삭제할 수 있다.
+
+주소록 목록조회 화면으로 이동하기 위한 URL은 다음과 같다.
+
+<code>
+/cop/adb/adbkList.mdo
+</code>
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/cop/adb/selectAdbkList.mdo|EgovMblAdressBookController|selectAdressBookList|.../cop/adb/EgovAdressBookList.jsp|
+
+
+주소록 목록은 페이지당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. \\
+검색 조건은 주소록명, 공개범위, 등록자명을 사용한다.
+
+{{:egovframework:mcom:EgovAdressBookList1.jpg|}}
+{{:egovframework:mcom:EgovAdressBookList2.jpg|}}
+
+주소록을 삭제하기 위해서는 목록에 생성되어 있는 X(삭제) 이미지를 클릭하면 된다. \\
+단, 주소록을 작성한 등록자와 현재의 사용자가 일치될 때에만 X(삭제) 이미지가 표시된다.
+
+홈: 홈 화면으로 이동한다. \\
+등록 : **주소록 등록** 화면으로 이동한다.\\
+검색: 주소록정보를 조회하기 위해서는 상단의 검색조건을 선택하고 해당하는 검색문자를 입력 후 검색 버튼을 클릭한다. \\
+목록클릭 : **주소록 상세조회** 화면으로 이동한다. \\
+X(삭제) 이미지 : 삭제여부를 확인하는 메세지를 보여주고 주소록에 대한 내용을 삭제처리 한다. \\
+
+----
+
+==== 주소록등록 ====
+
+=== 비즈니스 규칙 ===
+
+주소록에 대한 주소록명과 공개범위, 구성원 등을 선택하여 주소록을 등록하며, 등록이 성공되면 주소록 목록조회 화면으로 이동한다.  \\
+등록시에 입력하는 구성원 정보는 주소록구성원 조회팝업 화면을 통하여 검색 후 선택할 수 있다.
+
+주소록을 등록하기 위한 화면으로 이동하는 URL은 다음과 같다.
+
+<code>
+/cop/adb/addAdbkInf.mdo
+</code>
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(JSP)^
+|등록|/cop/adb/registAdbkInf.mdo|EgovMblAdressBookController|registadbk|.../cop/adb/EgovAdressBookRegist.jsp|
+
+
+{{:egovframework:mcom:EgovAdressBookRegist.jpg|}}
+
+공개범위가 부서인 경우는 같은 부서원들에게, 공개범위가 회사인 경우에는 같은 회사원들에게 주소록의 내용이 공개되어 볼 수 있게 된다.
+
+뒤로 : **주소록 목록조회** 화면으로 이동한다. \\
+등록 : 해당 주소록을 등록 처리한다. \\
+목록 : **주소록 목록조회** 화면으로 이동한다.
+
+----
+
+==== 주소록 조회수정 ====
+
+=== 비즈니스 규칙 ===
+
+주소록에 대한 상세내용을 변경한 뒤 수정 버튼을 누르면 주소록 정보가 수정되고 주소록 목록조회 화면으로 이동한다.  \\
+수정시에 입력하는 구성원 정보는 주소록구성원 조회팝업 화면을 통하여 검색 후 선택할 수 있다.
+
+주소록을 수정하기 위한 화면으로 이동하는 URL은 다음과 같다.
+
+<code>
+/cop/adb/updateAdbkInf.mdo
+</code>
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(JSP)^
+|수정|/cop/adb/UpdateAdressBook.mdo|EgovMblAdressBookController|UpdateAdressBook|.../cop/adb/EgovAdbkUpdt.jsp|
+
+{{:egovframework:mcom:EgovAdressBookUpdt.jpg|}}
+
+뒤로 : **주소록 상세조회** 화면으로 이동한다. \\
+수정 : 해당 주소록을 수정 처리한다. \\
+목록 : **주소록 목록조회** 화면으로 이동한다.
+
+----
+
+==== 주소록구성원 조회팝업 ====
+
+=== 비즈니스 규칙 ===
+
+사전에 등록된 사용자를 조회하여 주소록 구성원으로 선택하고 등록시킬수 있다.  \\
+
+주소록구성원 조회팝업 화면으로 이동하는 URL은 다음과 같다.
+
+<code>
+/cop/adb/openPopup.mdo
+</code>
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^기능^URL^Controller^method^화면(JSP)^
+|조회팝업|/cop/adb/selectManList.mdo|EgovMblAdressBookController|selectUserList|.../cop/adb/EgovAdressBookPopup.jsp|
+
+{{:egovframework:mcom:EgovAdressBookPopup1.jpg|}}
+{{:egovframework:mcom:EgovAdressBookPopup2.jpg|}}
+
+뒤로 : **주소록 등록** 화면 또는 **주소록 수정** 화면으로 이동한다. \\
+검색 : 사용자정보를 조회하기 위해서는 상단의 검색조건을 선택하고 해당하는 검색문자를 입력 후 검색 버튼을 클릭한다. \\
+목록 클릭 : 해당 사용자가 주소록의 구성원에 추가된다.
+
+
+
+===== 참고자료 =====
+
+  * 주소록 관리 참조(기존 웹 버전) : [[주소록 관리]]
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]]및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]
+

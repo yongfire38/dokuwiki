@@ -1,0 +1,170 @@
+
+
+
+===== 개요 =====
+
+OAuth 연동은 전자정부 표준프레임워크 공통컴포넌트의 로그인을 Facebook과 Twitter 계정으로 인증하는 기능입니다.\\
+또한, 계정정보의 일부분을 일반회원 테이블에 저장합니다.
+
+===== 특징 =====
+
+OAuth 연동은 다음과 같은 특징을 제공합니다.\\
+  * 공통컴포넌트의 로그인, 사용자관리 컴포넌트의 dependency\\
+  * facebook, twitter 계정을 로그인
+== 관련소스 ==
+^유형^대상소스^설명^비고^
+|Util|egovframework.com.ext.oauth.service.impl.EgovSignInAdapterServiceImpl.java|소셜 로그인 구현 클래스| |
+|Util|egovframework.com.ext.oauth.service.impl.EgovSignupServiceImpl.java|소셜 계정으로 일반회원 가입을 처리하는 컨트롤러 클래스| |
+|Util|egovframework.com.ext.oauth.service.impl.EgovUserIdSourceServiceImpl.java|사용자Id를 받아서 반환하는 비즈니스 구현 클래스| |
+|Util|egovframework.com.ext.oauth.service.EgovSignupService.java|소셜 계정으로 일반회원 가입을 처리하는 비즈니스 인터페이스 클래스| |
+|Util|egovframework.com.ext.oauth.web.EgovSignupController.java|소셜 계정으로 일반회원 가입을 처리하는 컨트롤러 클래스| |
+
+{{:egovframework:com:v3:social.zip|관련 DB}}
+
+===== 설정방법 =====
+==== 1. Maven 설정 ====
+<code xml>
+<!-- oauth -->
+<dependency>
+    <groupId>org.springframework.social</groupId>
+    <artifactId>spring-social-facebook-web</artifactId>
+    <version>1.1.1.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework.social</groupId>
+    <artifactId>spring-social-twitter</artifactId>
+    <version>1.1.0.RELEASE</version>
+</dependency>
+<dependency>
+    <groupId>org.apache.httpcomponents</groupId>
+    <artifactId>httpclient</artifactId>
+    <version>4.3.4</version>
+    <exclusions>
+        <exclusion>
+            <artifactId>commons-logging</artifactId>
+            <groupId>commons-logging</groupId>
+        </exclusion>
+    </exclusions>
+</dependency>
+<dependency>
+    <groupId>com.h2database</groupId>
+    <artifactId>h2</artifactId>
+    <version>1.4.180</version>
+</dependency>
+</code>
+==== 2. Properties 설정(globals.properties) ====
+<code properties>
+# Social(Facebook, Oauth 컴포넌트 사용시 활용)
+facebook.appId         = 
+facebook.appSecret     = 
+twitter.consumerKey    = 
+twitter.consumerSecret = 
+</code>
+
+==== 3. ApplicationContext 설정(context-social.xml) ====
+<code xml>
+    <!-- facebook 연동 컴포넌트 사용시 주석처리 -->
+    <facebook:config app-id="${facebook.appId}" app-secret="${facebook.appSecret}" />
+    <twitter:config app-id="${twitter.consumerKey}" app-secret="${twitter.consumerSecret}" />
+
+    <social:jdbc-connection-repository data-source-ref="social.dataSource" />
+    
+    <bean id="textEncryptor" class="org.springframework.security.crypto.encrypt.Encryptors" factory-method="noOpText" />
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder" factory-method="getInstance" />
+    <!-- facebook 연동 컴포넌트 사용시 주석처리 끝-->
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate" c:_-ref="social.dataSource" />
+
+    <jdbc:embedded-database id="social.dataSource" type="H2">
+        <jdbc:script location="classpath:/social.sql" />
+    </jdbc:embedded-database>
+</code>
+※ jdbc:embedded-database 의 id를 social:jdbc-connection-repository, jdbcTemplate 에서 참고하는 dataSource 설정에 사용되는 id와 동일해야 합니다.\\
+※ userConnection(소셜 계정에 대한 정보를 저장하는 table)을 memoryDB(H2)를 기본으로 사용하여 필요시 사용자DB(mysql 등)에 table를 생성해서 저장이 가능합니다.
+
+==== 4. WebApplicationContext 설정(egov-com-social.xml) ====
+<code xml>
+    <mvc:resources mapping="/css/**" location="/css/" />
+    <mvc:resources mapping="/html/**" location="/html/" />
+    <mvc:resources mapping="/images/**" location="/images/" />
+    <mvc:resources mapping="/js/**" location="/js/" />
+    
+    <!-- OAuth 컴포넌트 -->
+    <bean id="disconnectController" class="org.springframework.social.facebook.web.DisconnectController" 
+        c:_0-ref="usersConnectionRepository" c:_1="${facebook.appSecret}" />
+        
+     <bean class="org.springframework.social.connect.web.ProviderSignInController" autowire="constructor" />
+</code>
+
+==== 5. web.xml 설정(web.xml) ====
+<code xml>
+    <!-- OAuth 및 facebook 연동-->
+    <filter>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>hiddenHttpMethodFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <servlet-mapping>
+        <servlet-name>action</servlet-name>
+        <!-- <url-pattern>*.do</url-pattern> -->
+        <!-- OAuth 및 facebook 연동 사용시 / 로 변경 -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+</code>
+
+==== 6. OAuth 로그인 버튼 구현(EgovLoginUsr.jsp) ====
+<code html>
+  <!-- OAuth -->
+  <table width="700">
+    <tr>
+      <td class="title_left"><img src="<c:url value='/images/egovframework/com/cmm/icon/tit_icon.gif'/>" width="16" height="16" hspace="3" align="middle" alt="">&nbsp;OAuth 로그인</td>
+    </tr>
+  </table>
+    <!-- TWITTER SIGNIN -->
+    <form id="tw_signin" action="<c:url value="/signin/twitter"/>" method="POST" target="_blank">
+        <button type="submit" style="width:151px; height:26px; background-image: url('<c:url value="/images/egovframework/com/ext/oauth/twitter/sign-in-with-twitter-d.png"/>');"/>
+    </form>
+    <form id="disconnect" action="/connect/twitter" method="post">
+        <button type="submit">Disconnect from Twitter</button>  
+        <input type="hidden" name="_method" value="delete" />
+    </form>
+    <!-- FACEBOOK SIGNIN -->
+    <form name="fb_signin" id="fb_signin" action="<c:url value="/signin/facebook"/>" method="POST" target="_blank">
+        <input type="hidden" name="scope" value="publish_stream,email,offline_access" />
+        <button type="submit" style="width:151px; height:26px; background-image: url('<c:url value="/images/egovframework/com/ext/oauth/facebook/sign-in-with-facebook.png"/>');"/>
+    </form>
+    <form id="disconnect" action="/connect/facebook" method="post">
+        <button type="submit">Disconnect from Facebook</button> 
+        <input type="hidden" name="_method" value="delete" />
+    </form>
+</code>
+
+==== 7. facebook 계정 등록 및 설정 ====
+facebook 계정을 등록하여야 합니다.\\
+계정등록 후 facebook은 https://developers.facebook.com/ 에서 app을 생성 후 App ID, App Secret를 받아야 합니다.\\
+Site URL은 facebook 계정으로 로그인을 할 URL 사이트를 적어야 합니다.\\
+{{:egovframework:facebook.png?600x400|}}
+
+==== 8. twitter 계정 등록 및 설정 ====
+twitter는 https://dev.twitter.com/ 에서 Manage Your Apps 에서 Consumer Key, Consumer Secret를 받아야 합니다.\\
+WebSite와 CallbakURL은 twitter 계정으로 로그인을 할 URL 사이트를 적어야 합니다.\\
+{{:egovframework:twitter.png?600x400|}}
+
+===== 사용방법 =====
+  * 접속 URL은 facebook과 twitter에서 지정한 URL과 웹어플리케이션에 접속하는 URL이 동일하여야 사용이 가능합니다.\\
+{{:egovframework:oauthtest.png?600x400|}}\\
+  * 각 속성 항목에 대한 설명은 다음과 같습니다.
+
+^버튼^Description^Note^
+|Sign in with twitter|twitter계정으로 로그인| |
+|Disconnection from Twitter|연결된 UserConnection 정보 삭제|UserConnection 테이블에 저장|
+|Sign in with facebook|Facebook 계정으로 로그인| |
+|Disconnection from Facebook|연결된 UserConnection 정보 삭제|UserConnection 테이블에 저장|
+
+**☛ 컴포넌트 사용시 주의사항**
+   페이스북 연동 컴포넌트와 같이 사용하면, twitter 계정 로그인이 불가함(facebook 계정 로그인 가능)
+
+===== 참고자료 =====
+[[http://projects.spring.io/spring-social/|Spring Social]]

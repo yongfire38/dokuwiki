@@ -1,0 +1,26 @@
+=== 비즈니스 규칙 ===
+- 입력명 우측의 빨간* 표시는 수정 시 반드시 입력해야 할 항목을 표시한다. \\
+
+
+=== 관련코드  ===
+N/A
+
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 설문조사 수정 ==
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olp/qri/EgovQustnrRespondInfoList.do|EgovQustnrRespondInfoList|QustnrRespondInfo.selectQustnrRespondInfo|
+| | | |QustnrRespondInfo.selectQustnrRespondInfoCnt|
+|저장|/uss/olp/qri/EgovQustnrRespondInfoModify.do|EgovQustnrRespondInfoModify|QustnrRespondInfo.updateQustnrRespondInfo|
+
+입력한 설문조사 정보를(을) 저장 처리한다.
+
+{{:egovframework:com:uss:olp:qri:egovqustnrrespondinfomodify.jpg|}}
+
+수정: 수정된 정보들이 저장 처리된다.  \\ 
+목록: **설문조사 목록** 화면으로 이동한다. \\ 
+----
+ 

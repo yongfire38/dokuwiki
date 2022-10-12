@@ -1,0 +1,41 @@
+====== 요소기술 - 특수문자열처리 ======
+
+===== 개요 =====
+HTML 특수문자를 변화처리하는 기능을 제공한다.
+
+===== 설명 =====
+'<' 문자열을 '&LT;'로 변환 하는 기능. 또는 '&' 문자열을 '&amp' 로 처리하는 기능으로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovStringUtil.java|String 관련 유틸리티| |
+|Controller|egovframework.com.cmm.web.EgovComUtlController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovSpclStrProcess.jsp|특수문자열처리 테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|String|getSpclStrCnvr(String srcString)|특수문자열처리|특수문자('<','&')을 다른 문자열 처리하는 기능|
+
+
+===== 환경설정 =====
+
+**해당없음**
+
+===== 사용방법 =====
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovStringUtil;
+...
+
+// 문자열형태로 입력받아 변환해서 리턴
+String srcString = safeGetParameter(request,"srcString");
+
+String	resultStr = EgovStringUtil.getSpclStrCnvr(srcString);
+
+</code>
+
+
+===== 참고자료 =====
+
+ N/A

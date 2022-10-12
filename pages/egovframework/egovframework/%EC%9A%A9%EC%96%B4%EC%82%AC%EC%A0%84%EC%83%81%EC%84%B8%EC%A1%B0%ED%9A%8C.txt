@@ -1,0 +1,27 @@
+=== 비즈니스 규칙 ===
+일반사용자가 아닌 관리자가 사용하는 화면으로 조회조건으로 목록조회를 할 수 있고, 등록버튼을 클릭하여 용어사전등록 화면으로 \\
+이동하여 용어사전을 등록 처리 할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 2. 용어사전 상세조회 ==
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/olh/wor/WordDicaryUpdtView.do|WordDicaryUpdtView|"wordDicaryDAO.updateWordDicary_S"|
+|삭제|/uss/olh/wor/WordDicaryDelete.do|deleteWordDicary|"wordDicaryDAO.deleteWordDicary_S"|
+|목록|/uss/olh/wor/WordDicaryListInqire.do|selectWordDicaryList|"WordDicaryDAO.selectWordDicaryList_D"|
+
+용어사전 상세조회화면은 용어사전목록조회에서 목록클릭 시 상세조회화면으로 이동된다.
+
+{{:egovframework:com:uss:olh:wor:WordDicaryDetailInqire.gif|}}
+
+수정: 수정버튼 클릭 시 용어사전을 수정할 수 있는 화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **용어사전목록조회** 화면으로 이동한다.
+----

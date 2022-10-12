@@ -1,0 +1,74 @@
+====== 파일파싱 ======
+
+===== 개요 =====
+사용자가 업로드한 파일 및 서버(Server)의 텍스트 파일을 특정 구분자(',',  '|', 'TAB')에 의해 파싱 하여 정보를 추출하는 기능이다. 또는 파일의 텍스트 라인을 일정 길이(Size) 별로 파싱 하여 정보를 추출하는 기능이다. 사용자 정보, 제품목록 정보를 CSV파일로 작성하여 서버(Server)에 업로드 후 파싱 하여 일괄적으로 데이터베이스에 입력할 경우 사용 가능하다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+  ① 텍스트 파일을 구분자에 의해 파싱 하는 기능
+  ② 텍스트 파일을 일정 길이에 의해 파싱 하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovFilePars.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|Vector|parsFileByChar(String parFile, String parChar, int parField)|특정구분자 파일파싱|파일을 특정 구분자(',', 'TAB')로 파싱|
+|Vector|parsFileBySize(String parFile, int[] parLen, int parLine)|일정길이 파일파싱|파일을 일정 길이로 파싱|
+
+== Input ==
+  * 파일: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/file1.txt)
+  * 구분자: String 타입의 파싱 구분자 (예, $)
+  * 필드수: Integer 타입의 파싱 필드수 (예, 3)
+  * 필드길이: Integer 타입의 파싱할 필드길이 (예, 3:3:3)
+  * 라인수: Integer 타입의 읽어낼 라인수 (예, 10)
+
+== Output ==
+  * Vector 타입 파싱결과 구조체
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovFileTool;   
+
+	// 1. 특정구분자 파일파싱
+	String parFile = request.getParameter("file");
+	String parChar = request.getParameter("char");
+	int parField = Integer.parseInt(request.getParameter("field"));
+	Vector list = new Vector();
+	if (parFile != null && parFile.length() > 0
+		&& parChar != null && parChar.length() > 0
+		&& parField > 0) {
+		list = EgovFileTool.parsFileByChar(parFile, parChar, parField);
+	}
+
+	// 2. 일정길이 파일파싱
+	String parFile = request.getParameter("file");
+	String[] parSize = request.getParameter("len").split(":");
+	String line = request.getParameter("line");
+	int [] parLen = null;
+	int parLine = 0;
+	Vector list = new Vector();
+	if (parFile != null && parFile.length() > 0
+		&& parSize != null && parSize.length > 0
+		&& line != null && line.length() > 0) {
+		parLen = new int [parSize.length];
+		for (int i = 0; i < parSize.length; i++) {
+			parLen[i] = Integer.parseInt(parSize[i]);
+		}
+		parLine = Integer.parseInt(line);
+		list = EgovFileTool.parsFileBySize(parFile, parLen, parLine);
+	}
+</code>
+
+===== 참고자료 =====
+N/A

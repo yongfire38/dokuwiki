@@ -1,0 +1,50 @@
+====== 요소기술 - 숫자치환 ======
+
+===== 개요 =====
+특정 숫자를 다른 숫자로 치환 하는 기능을 제공한다.
+
+===== 설명 =====
+특정숫자집합, 변환하고자하는 숫자를 입력받아 변환숫자로 변환하는 기능으로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovNumberUtil.java|Number 관련 유틸리티| |
+|Controller|egovframework.com.cmm.web.EgovComUtlController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovNumberReplc.jsp|숫자변환 테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|int|getNumberCnvr(int srcNumber, int cnvrSrcNumber, int cnvrTrgtNumber)|숫자변환|특정숫자로 변환하는 기능|
+
+== Input ==
+  * 특정숫자: Integer 타입의 숫자
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+== Output ==
+  * int
+
+===== 환경설정 =====
+
+**해당없음**
+
+===== 사용방법 =====
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovNumberUtil;
+...
+
+// 원래 숫자
+int srcNumber = Integer.parseInt(safeGetParameter(request,"srcNumber"));
+// 변환하고자 하는 숫자
+int cnvrSrcNumber = Integer.parseInt(safeGetParameter(request,"cnvrSrcNumber"));
+// 변환숫자
+int cnvrTrgtNumber = Integer.parseInt(safeGetParameter(request,"cnvrTrgtNumber"));
+
+int	resultInt = EgovNumberUtil.getNumberCnvr(srcNumber, cnvrSrcNumber, cnvrTrgtNumber);
+
+</code>
+
+
+===== 참고자료 =====
+
+ N/A

@@ -1,0 +1,223 @@
+====== 협업 - 일지관리 ======
+
+===== 개요 =====
+**일지관리** 서비스는 사용자가 일정관리와 부서일정관리를 이용하면서 일정에 대한 기록을 남길 경우 이용하며, \\
+지시사항, 보고문서, 업무일지, 특이사항 등에 관한 일지를 관리할 수 있다. \\ 
+일지관리 기능은 해당 일지별로 진척률을 관리함으로써 일정의 진행사항을 파악할 수 있다. \\
+
+일지 등록 시에는 Validator Rule을 통해 필수항목에 대한 조건을 검사하며, \\
+Validator Rule은 **Valator-rules.xml**과 미리 정의된 컴포넌트 Validator xml을 통해 적용된다. \\
+
+**일지관리** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+또한 공통으로 지원하고 있는 jAlert가 사용되고 있으며, 아래와 같은 js 파일에 정의되어 있다.
+  * **EgovMobile.js**
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능흐름도 ====
+{{egovframework:mcom:일지관리_기능흐름도.jpg?740|}}
+
+===== 설명 =====
+일지관리 기능은 크게 **일지관리 목록조회**, **일지관리 상세조회**, **일지관리 내용등록**, **일지관리 내용수정** 기능으로 구성되어 있다.
+
+== 클래스 다이어그램 == 
+
+{{:egovframework:mcom:CLD_일지관리.jpg?740|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.cop.smt.dsm.web.EgovDiaryManageController.java|일지관리관리 Controller Class|
+|Controller|egovframework.mbl.com.cop.smt.dsm.web.EgovMblDiaryManageController.java|일지관리관리 모바일 Controller Class|
+|Service|egovframework.com.cop.smt.dsm.service.EgovDiaryManageService.java|일지관리관리 Service Class|
+|VO|egovframework.com.cop.smt.dsm.service.DiaryManageVO.java|일지관리관리  VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.cop.smt.dsm.service.impl.EgovDiaryManageServiceImpl.java|일지관리관리 ServiceImpl Class|
+|DAO|egovframework.com.cop.smt.dsm.service.impl.DiaryManageDao.java|일지관리관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/dsm/EgovDiaryManageList.jsp|일지관리관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/dsm/EgovDiaryManageRegist.jsp|일지관리관리 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/dsm/EgovDiaryManageModify.jsp|일지관리관리 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/dsm/EgovDiaryManageDetail.jsp|일지관리관리 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/smt/dsm/EgovDiaryManageList.jsp|모바일일지관리관리 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/smt/dsm/EgovDiaryManageRegist.jsp|모바일일지관리관리 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/smt/dsm/EgovDiaryManageModify.jsp|모바일일지관리관리 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/smt/dsm/EgovDiaryManageDetail.jsp|모바일일지관리관리 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/com/cop/smt/dsm/EgovDiaryManage.xml|일지관리관리 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/cop/smt/dsm/EgovDiaryManage.xml|일지관리관리 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|일지관리관리 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|일지관리관리 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 EXTRLHRINFO_ID 항목을 추가해야 한다. 
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('EXTRLHRINFO_ID','0');
+ </code>
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|일지관리관리|COMTNMTGINFO|일지관리를 관리 한다.|	
+
+===== 관련기능 =====
+
+==== 일지관리 목록 ====
+=== 비즈니스 규칙 ===
+ 부서일정 및 개인일정에 대해 등록된 일지정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할 수 있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/cop/smt/dsm/EgovDiaryManageList.mdo|EgovDiaryManageList|DiaryManage.selectDiaryManage|
+| | | |DiaryManage.selectDiaryManageCnt|
+|등록|/cop/smt/dsm/EgovDiaryManageList|EgovDiaryManageList| |
+|목록클릭|/cop/smt/dsm/EgovDiaryManageDetail.mdo|EgovDiaryManageDetail|DiaryManage.selectDiaryManageDetail|
+
+일지관리 목록은 페이지 당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. \\ 
+검색조건은 일지명, 지시사항, 특이사항을 사용한다.\\ 
+
+{{:egovframework:mcom:EgovDiaryManageList1.jpg|}}
+{{:egovframework:mcom:EgovDiaryManageList2.jpg|}}
+
+홈: 홈 화면으로 이동한다.\\
+검색: 일지정보를 조회하기 위해서는 상단의 검색조건을 선택하고 해당하는 검색문자를 입력 후 검색 버튼을 클릭한다.\\
+등록: 일지정보를 등록하기 위해서는 상단의 등록 버튼을 통해서 **일지관리 등록** 화면으로 이동한다. \\
+목록클릭: **일지관리 상세조회** 화면으로 이동한다.
+
+----
+
+==== 일지관리 상세조회 ====
+
+=== 비즈니스 규칙 ===
+일지관리 목록화면에서 목록 클릭 시 이동되는 화면으로 일지에 대한 상세정보를 보여준다.
+
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/cop/smt/dsm/EgovDiaryManageList.mdo|EgovDiaryManageList|DiaryManage.selectDiaryManage|
+| | | |DiaryManage.selectDiaryManageCnt|
+|수정|/cop/smt/dsm/EgovDiaryManageDetail.mdo|EgovDiaryManageDetail|DiaryManage.selectDiaryManageDetail|
+|삭제|/cop/smt/dsm/EgovDiaryManageModify.mdo|EgovDiaryManageModify|DiaryManage.deleteDiaryManage|
+
+{{:egovframework:mcom:EgovDiaryManageDetail.jpg|}}
+
+뒤로: **일지관리 목록** 화면으로 이동한다. \\
+수정: 수정버튼 클릭 시 **일지관리 수정** 화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **일지관리 목록** 화면으로 이동한다.
+
+----
+
+==== 일지관리 등록 ====
+
+=== 비즈니스 규칙 ===
+부서일정과 개인일정에 대한 일지정보를 입력 저장처리한다.
+일지등록시에 입력하는 일정정보는 **일지관리 목록조회 팝업(Dialog)**을 통하여 검색 후 선택할 수 있다.
+
+저장처리 시 DIARY_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 Primary Key => DIARY_ID(20자리) : DIARY_(6자리) + 일련번호(14자리)로 자동생성 부여된다.
+
+	<!-- IdGnrService... START-->			
+	<bean name="diaryManageIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="DiaryManageInfotrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="DIARY_ID"/>
+	</bean>
+	<bean name="DiaryManageInfotrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="DIARY_" />
+		<property name="cipers" value="14" />
+		<property name="fillChar" value="0" />
+	</bean>
+	<!-- IdGnrService... END-->	
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/cop/smt/dsm/EgovDiaryManageList.mdo|EgovDiaryManageList|DiaryManage.selectDiaryManage|
+| | | |DiaryManage.selectDiaryManageCnt|
+|저장|/cop/smt/dsm/EgovDiaryManageRegist.mdo|EgovDiaryManageRegist|DiaryManage.insertDiaryManage|
+
+{{:egovframework:mcom:EgovDiaryManageRegist.jpg|}}
+{{:egovframework:mcom:EgovDeptSchdulManageListPopup.jpg|}}
+
+뒤로: **일지관리 목록** 화면으로 이동한다. \\
+등록: 입력한 일지관리 정보들이 저장 처리된다. \\
+목록: **일지관리 목록** 화면으로 이동한다. \\
+
+----
+
+==== 일지관리 수정 ====
+
+=== 비즈니스 규칙 ===
+
+수정된 일지관리 정보를 저장 처리한다.
+
+=== 관련코드  ===
+N/A
+
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/cop/smt/dsm/EgovDiaryManageList.mdo|EgovDiaryManageList|DiaryManage.selectDiaryManage|
+| | | |DiaryManage.selectDiaryManageCnt|
+|저장|/cop/smt/dsm/EgovDiaryManageModify.mdo|EgovDiaryManageModify|DiaryManage.updateDiaryManage|
+
+{{:egovframework:mcom:EgovDiaryManageModify.jpg|}}
+
+뒤로: **일지관리 상세조회** 화면으로 이동한다. \\
+수정: 수정된 정보들이 저장 처리된다.  \\ 
+목록: **일지관리 목록** 화면으로 이동한다. \\ 
+
+----
+
+
+
+===== 참고자료 =====
+
+  * 일지관리 참조(기존 웹 버전) : [[일지관리]]
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

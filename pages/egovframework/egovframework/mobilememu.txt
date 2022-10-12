@@ -1,0 +1,108 @@
+====== 사용자 지원 - 모바일 메뉴관리 ======
+
+===== 개요 =====
+
+**모바일 메뉴관리**는 원하는 프로그램 메뉴명으로 생성하여 해당 화면을 사용 할 수 있도록 메뉴목록을 관리하는데 목적이 있다.\\
+
+**모바일 메뉴관리**는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이며, \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovDev.css**가 사용된다.
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+
+
+===== 설명 =====
+모바일 메뉴관리는 **모바일 메뉴 목록조회**, **모바일 메뉴 상제조회**, **모바일 메뉴 등록**, **모바일 메뉴 수정** 기능으로 구성되어 있다.
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.mbl.com.mgr.web.EgovMobileMenuController.java|모바일 메뉴관리를 위한 모바일 컨트롤러 클래스|
+|Service|egovframework.mbl.com.mgr.service.EgovMobileMenuService.java|모바일 메뉴관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.mbl.com.mgr.service.impl.EgovMobileMenuServiceImpl.java|모바일 메뉴관리를 위한 서비스 구현 클래스|
+|VO|egovframework.mbl.com.mgr.service.MenuVO.java|모바일 메뉴관리를 위한 VO 클래스|
+|DAO|egovframework.mbl.com.mgr.service.impl.MenuDAO.java|모바일 메뉴관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mgr/EgovMainMenu.jsp|모바일 메뉴관리를 위한 모바일 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mgr/EgovMenuListDetail.jsp|모바일 메뉴관리를 위한 모바일 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mgr/EgovMenuRegist.jsp|모바일 메뉴관리를 위한 모바일 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/mgr/EgovMenuUpdate.jsp|모바일 메뉴관리를 위한 모바일 수정 페이지|
+|Query XML|resources/egovframework/sqlmap/mbl/com/mgr/EgovMenu_SQL.xml|모바일 메뉴관리(조회,등록,수정,삭제)를 위한 Query XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/mbl/com/mgr/EgovMobileMenuRegist.xml|모바일 메뉴관리를 위한 Validator XML|
+|Idgen XML|resources/egovframework/spring/mbl/context-idgen-mgr.xml|모바일 메뉴 등록을 위한 Id생성 Idgen XML|
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|모바일 메뉴정보|COMTNMOBILEMENUINFO|모바일 메뉴에 대한 제목, 설명을 관리|	
+
+===== 관련기능 =====
+
+==== 모바일 메뉴 목록조회 ====
+
+=== 비즈니스 규칙 ===
+상위메뉴, 메뉴얼명으로 구성된 메뉴정보를 일반사용자가 리스트 형태로 조회 할 수 있다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+{{:egovframework:egovmainmenu.jpg|}}{{:egovframework:egovmenulist.jpg|}}
+
+^Action^URL^Controller method^QueryID^
+|조회|/mgr/EgovMainMenu.mdo|showFirstPage|"menuDAO.selectUseList"|
+|메뉴관리 목록클릭|/mgr/EgovMenuList.mdo|selectMenuList|"menuDAO.selectMenuList"|
+
+홈: 홈 화면으로 이동한다.\\
+등록: 메뉴를 등록하기 위한 화면으로 이동한다.\\
+목록클릭: 메뉴제목을 클릭하면 **메뉴정보상세조회** 화면으로 이동한다.
+----
+
+==== 모바일 메뉴 상세조회 ====
+
+=== 비즈니스 규칙 ===
+메뉴관리 화면에서 메뉴목록조회 클릭 후 메뉴목록조회 화면으로 이동한다. \\
+메뉴목록조회 화면에서는 제목을 클릭하면 메뉴에 대한 상세한 정보를 조회 할 수 있다. 
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+{{:egovframework:egovmenulistdetail.jpg|}}
+^Action^URL^Controller method^QueryID^
+|목록|/mgr/EgovMenuListDetail.mdo|selectMenuDetail|"menuDAO.selectMenuDetail"|
+
+
+홈: 홈 화면으로 이동한다.\\
+뒤로: **메뉴목록조회** 화면으로 이동한다.\\
+수정: **메뉴수정** 화면으로 이동한다.\\
+삭제: **메뉴목록**을 삭제한다.\\
+----
+
+===== 참고자료 =====
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

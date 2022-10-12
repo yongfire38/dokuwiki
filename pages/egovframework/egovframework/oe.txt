@@ -1,0 +1,108 @@
+====== Manual - Draft ======
+
+===== 개발프레임워크 운영환경 =====
+표준프레임워크 운영환경 개요
+
+표준프레임워크 운영환경의 목표, 제공 서비스 및 환경설정 관련한 도구(JDK, WAS, DB, OpenSource)의 스펙 정보 등을 안내한다.
+
+
+==== 커뮤니케이션 관리 ====
+  * [[eGovframework:oe1:커뮤니케이션 관리 Version 2]]
+  * [[eGovframework:oe1:커뮤니케이션 관리 Version 1]]
+
+
+
+
+
+==== 설정관리 도구 ====
+  * [[eGovframework:oe1:설정관리:소개]] \\ 설정관리 도구 소개
+
+
+  * [[eGovframework:oe1:설정관리:설치]]  \\ 설정관리 도구 설치
+  * 가이드 \\ 설정관리 도구 사용 가이드 
+    * [[eGovframework:oe1:설정관리:가이드:ID GEN 설정관리]]
+    * [[eGovframework:oe1:설정관리:가이드:프로퍼티 설정관리]]
+    * [[eGovframework:oe1:설정관리:가이드:데이터소스 설정관리]]
+    * [[eGovframework:oe1:설정관리:가이드:스케줄 설정관리]]
+    * [[eGovframework:oe1:설정관리:가이드:캐시 설정관리]]
+    * [[eGovframework:oe1:설정관리:가이드:캐시관리(템플릿)]]
+    * [[eGovframework:oe1:설정관리:가이드:스케줄 이력관리]]
+
+==== 이행관리 ====
+  * [[eGovframework:oe1:이행관리:소개]] \\ 이행관리 도구 소개
+  * 가이드 \\ 이행관리 도구 사용 가이드 
+    * [[eGovframework:oe1:이행관리:가이드: 신규컴포넌트등록요청]]
+    * [[eGovframework:oe1:이행관리:가이드: 신규컴포넌트요청심사]]
+    * [[eGovframework:oe1:이행관리:가이드: 신규컴포넌트게시승인]]
+    * [[eGovframework:oe1:이행관리:가이드: LessonsLearned관리]]
+
+
+
+
+ 
+==== 모니터링 도구 ====
+  * [[eGovframework:oe2:소개]] \\ 모니터링 도구 소개
+
+  * 설치 \\ 모니터링 도구 설치
+    * [[eGovframework:oe2:설치:Quick Start]]
+    * [[eGovframework:oe2:설치:설치환경]]
+    * [[eGovframework:oe2:설치:모니터링 운영관리 도구 설치]]
+    * [[eGovframework:oe2:설치:에이전트 설치]]
+
+  * [[eGovframework:oe2:환경설정]] \\ 모니터링 도구 환경설정
+
+
+  * 가이드 \\ 모니터링도구 사용 가이드 
+    * [[eGovframework:oe2:가이드:로그인]]
+    * [[eGovframework:oe2:가이드:메인]]
+    * [[eGovframework:oe2:가이드:프레임워크]]
+      * [[eGovframework:oe2:가이드:프레임워크:종합]]
+      * [[eGovframework:oe2:가이드:프레임워크:CPU(VM)]]
+      * [[eGovframework:oe2:가이드:프레임워크:OS Runtime]]
+      * [[eGovframework:oe2:가이드:프레임워크:메모리 및 GC]]
+      * [[eGovframework:oe2:가이드:프레임워크:세션]]
+      * [[eGovframework:oe2:가이드:프레임워크:쓰레드]]
+      * [[eGovframework:oe2:가이드:프레임워크:JDBC Pool]]
+      * [[eGovframework:oe2:가이드:프레임워크:로딩 클래스]]
+      * [[eGovframework:oe2:가이드:프레임워크:프레임워크 클래스]]
+      * [[eGovframework:oe2:가이드:프레임워크:스케줄]]
+      * [[eGovframework:oe2:가이드:프레임워크:캐쉬]]
+      * [[eGovframework:oe2:가이드:프레임워크:통계정보 다운로드]]
+    * [[eGovframework:oe2:가이드:어플리케이션]]
+      * [[eGovframework:oe2:가이드:어플리케이션:종합]]
+      * [[eGovframework:oe2:가이드:어플리케이션:HTTP 서비스]]
+      * [[eGovframework:oe2:가이드:어플리케이션:어플리케이션 서비스]]
+      * [[eGovframework:oe2:가이드:어플리케이션:JDBC 서비스]]
+      * [[eGovframework:oe2:가이드:어플리케이션:SQL 서비스]]
+      * [[eGovframework:oe2:가이드:어플리케이션:Exception]]
+      * [[eGovframework:oe2:가이드:어플리케이션:Sequence 현황]]
+      * [[eGovframework:oe2:가이드:어플리케이션:OS 사용현황]]
+      * [[eGovframework:oe2:가이드:어플리케이션:브라우저 사용현황]]
+      * [[eGovframework:oe2:가이드:어플리케이션:어플리케이션 선택]]
+    * [[eGovframework:oe2:가이드:시스템]]
+      * [[eGovframework:oe2:가이드:시스템:종합]]
+      * [[eGovframework:oe2:가이드:시스템:DB서비스 정보]]
+      * [[eGovframework:oe2:가이드:시스템:HTTP서비스 정보]]
+      * [[eGovframework:oe2:가이드:시스템:프로세스 정보]]
+      * [[eGovframework:oe2:가이드:시스템:네트워크서비스 정보]]
+      * [[eGovframework:oe2:가이드:시스템:파일시스템 정보]]
+    * [[eGovframework:oe2:가이드:어드민]]
+      * [[eGovframework:oe2:가이드:어드민:WAS관리]]
+        * [[eGovframework:oe2:가이드:어드민:WAS관리:서버]]
+        * [[eGovframework:oe2:가이드:어드민:WAS관리:컨테이너]]
+      * [[eGovframework:oe2:가이드:어드민:어플리케이션관리]]
+      * [[eGovframework:oe2:가이드:어드민:사용자관리]]
+      * [[eGovframework:oe2:가이드:어드민:설정관리]]
+        * [[eGovframework:oe2:가이드:어드민:설정관리:Mbean 에이전트]]
+        * [[eGovframework:oe2:가이드:어드민:설정관리:어플리케이션 에이전트]]
+      * [[eGovframework:oe2:가이드:어드민:모니터링정보관리]]
+        * [[eGovframework:oe2:가이드:어드민:모니터링정보관리:DB서비스]]
+        * [[eGovframework:oe2:가이드:어드민:모니터링정보관리:HTTP서비스]]
+        * [[eGovframework:oe2:가이드:어드민:모니터링정보관리:프로세스]]
+        * [[eGovframework:oe2:가이드:어드민:모니터링정보관리:네트워크서비스]]
+        * [[eGovframework:oe2:가이드:어드민:모니터링정보관리:파일시스템]]
+      * [[eGovframework:oe2:가이드:어드민:초기화]]
+    * [[eGovframework:oe2:가이드:배치]]
+
+
+

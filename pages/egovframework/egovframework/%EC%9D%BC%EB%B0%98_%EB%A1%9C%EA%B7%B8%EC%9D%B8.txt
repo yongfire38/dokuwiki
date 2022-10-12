@@ -1,0 +1,90 @@
+====== 일반 로그인 서비스 ======
+
+
+===== 개요 =====
+
+로그인 방식은 크게 두가지로 분류되어 있다. 첫번째가 가입시 작성한 아이디와 비밀번호를 통한 로그인(이하 일반로그인)이며 두번째가 NPKI 또는 GPKI 같은 인증서를 통하여 로그인(이하 GPKI로그인)이다. 일반로그인은 사용자의 분류(일반 회원, 기업 회원, 업무 사용자)에 따라 접속하는 화면이 다르게 구성되어 있다.
+
+=== 기능흐름 ==
+^기능명^기능 흐름^
+|일반 로그인|아이디/비밀번호 입력 -> 로그인 요청 -> //**권한조회**// -> //**세션설정**// -> //**로그인로그 생성**// -> //**권한별 메뉴설정**// -> 권한별 화면로딩|
+
+===== 설명 =====
+시스템 사용자의 접근을 허락하고 보안상의 목적으로, 시스템 또는 응용프로그램에 접속을 시도하는 사용자에 대한 정보의 확보를 지원하기 위한 서비스 컴포넌트로, 로그인한 사용자의 로그인 정보(사용자ID/패스워드)를 입력받아 기존에 저장된 사용자 정보를 조회하여 사용자의 인증을 처리하는 방식이다.
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uat.uia.web.EgovLoginController.java|로그인을 위한 컨트롤러 클래스|
+|Service|egovframework.com.uat.uia.service.EgovLoginService.java|로그인을 위한 서비스 인터페이스|
+|Service|egovframework.com.sym.log.service.EgovLogManageService.java|로그인 로그생성을 위한 서비스 인터페이스|
+|Service|egovframework.com.sym.mpm.service.EgovMenuManageService.java|로그인 후 메뉴조회를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uat.uia.service.impl.EgovLoginServiceImpl.java|로그인을 위한 서비스 구현 클래스|
+|VO|egovframework.com.uat.uia.service.LoginVO.java|로그인을 위한 VO 클래스|
+|DAO|egovframework.com.uat.uia.service.impl.LoginDAO.java|로그인을 위한 데이터 처리 클래스|
+|Query XML|resources/egovframework/sqlmap/com/uat/uia/EgovLoginUsr_SQL.xml|로그인을 위한 Query XML|
+|JSP|WEB_INF/jsp/egovframework/cmm/uat/uia/EgovLoginUsr.jsp|로그인 페이지|
+
+=== 클래스다이어그램 ===
+
+{{:egovframework:com:uat:login1.gif|}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|업무사용자|COMTNEMPLYRINFO|업무사용자 정보를 관리|
+|기업회원|COMTNENTRPRSMBER|기업회원 정보를 관리|
+|일반회원|COMTNGNRLMBER|일반회원 정보를 관리|
+|로그인로그|COMTNLOGINLOG|로그인로그 정보를 관리|
+|메뉴|COMTNMENUINFO|메뉴 정보를 관리|
+
+=== 관련설정 ===
+GPKI 인증서 로그인 없이 일반 로그인 기능만 구현하려고 하는 경우에는 EgovLoginController.java를 다음과 같이 변경한다.
+  * 로그인 화면 처리 부분을 다음과 같이 수정한다.
+<code java>
+public String loginUsrView(@ModelAttribute("loginVO") LoginVO loginVO,
+    HttpServletRequest request,
+    HttpServletResponse response,
+    ModelMap model) 
+    throws Exception {
+	// # GPKI 인증 없이 일반 로그인만 처리하는 경우
+	return "cmm/uat/uia/EgovLoginUsr";
+}
+</code>
+  * 인증서 로그인 처리 부분을 다음과 같이 수정한다.
+<code java>
+public String actionCrtfctLogin(@ModelAttribute("loginVO") LoginVO loginVO, 
+    HttpServletRequest request,
+    HttpServletResponse response,
+    ModelMap model)
+    throws Exception {
+	// # GPKI 인증 없이 일반 로그인만 처리하는 경우
+	return "cmm/uat/uia/EgovLoginUsr";
+}
+</code>
+
+
+===== 관련화면 및 수행매뉴얼 =====
+=== 사용자 일반 로그인 ===
+^Action^URL^Controller method^QueryID^
+|로그인화면|/uat/uia/egovLoginUsr.do|loginUsrView| |
+|일반로그인|/uat/uia/actionLogin.do|actionLogin|loginDAO.actionLogin|
+
+일반 로그인은 아이디와 비밀번호를 가지고 사용자 구분별 사용자정보를 조회한다. \\
+조회된 사용자 정보를 통해 로그인 로그를 생성하며, Spring Security를 호출하여 권한 인증 및 세션 설정을 한다. \\
+메뉴 정보를 조회하여 메인화면을 구성한다. \\
+
+{{:egovframework:com:uat:author10.jpg|}}
+
+업무구분 선택: 사용자 업무구분을 선택한다. \\
+아이디 입력: 아이디를 입력한다. \\
+비밀번호 입력: 비밀번호를 입력한다. \\
+로그인: 아이디와 비밀번호를 통해 사용자 로그인 인증 작업을 수행한다. \\
+회원가입: 선택한 업무구분에 맞는 회원가입 페이지로 이동한다. \\
+아이디/비밀번호찾기: 아이디와 비밀번호 찾기 페이지로 이동한다. \\
+인증서로그인: GPKI 인증서로그인 팝업을 호출한다. \\
+인증서안내: GPKI 인증서 안내 팝업을 호출한다. \\
+아이디저장: 다음 접속시 아이디 정보를 기억한다. \\
+
+===== 참고자료 =====
+N/A

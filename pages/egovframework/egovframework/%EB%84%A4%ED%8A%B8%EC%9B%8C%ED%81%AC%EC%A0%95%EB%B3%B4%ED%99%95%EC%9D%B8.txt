@@ -1,0 +1,116 @@
+====== 네트워크정보확인 ======
+
+===== 개요 =====
+네트워크 정보인 IP ADDRESS, MAC ADDRESS, PortScan 리스트 를 확인한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 시스템의 IP ADDRESS를 가지고 오는 기능 
+    ② 시스템의 MAC ADDRESS를 가지고 오는 기능
+    ③ 시스템의 PortScan 정보를 가지고 오는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovNetworkState.java|네트워크정보 확인 요소기술 클래스|네트워크 정보 |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovNetworkInfo.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|String|getMyIPaddress()|IP ADDRESS 검색|시스템의 IP ADDRESS 리턴|
+|String|getMyMACAddress(String IP_ADDRESS)|시스템 MACAddress 검색|시스템의 MACAddress 리턴|
+|List|getMyPortScan()|Port 사용정보|Port 사용내역을 리턴|
+
+===== 환경설정 =====
+  * (Ip 주소 정보 조회)
+<code java>
+InetAddress InetA = InetAddress.getLocalHost ();
+addrIP = InetA.getHostAddress();
+</code>
+  * (윈도우용 MAC 주소 정보 조회)
+<code>
+  String [] execStr = { "nbtstat", "-A", localIP };
+</code>
+  * (윈도우용 Port 사용 정보 조회)
+<code>
+  String [] execStr = { "netstat", "-an" };
+</code>
+  * (윈도우용 Port 사용 정보 조회)
+<code>
+  String [] execStr = { "netstat", "-an" };
+</code>
+  * getNetWorkInfo.sh (유닉스용 네트워크정보 조회 스크립트)
+
+<code>
+# 네트워크 정보 쉘 스크립트
+SHELL.UNIX.getNetWorkInfo= /product/jeus/egovProps/prg/getNetWorkInfo.sh
+</code>
+<code>
+#MAC
+if [ $1 == "MAC" ]
+then
+   netstat -v $2 | grep "하드웨어 주소" | awk '{print $3}'
+fi
+
+#IP
+if [ $1 == "IP" ]
+then
+   prtconf | grep "IP 주소" | awk '{print $3}'
+fi
+
+#SM
+if [ $1 == "SM" ]
+then
+   prtconf | grep "서브넷 마스크" | awk '{print $3}'
+fi
+
+#GW
+if [ $1 == "GW" ]
+then
+   prtconf | grep "게이트웨이" | awk '{print $2}'
+fi
+
+#도메인명
+if [ $1 == "DN" ]
+then
+   hostname
+fi
+
+#DNS
+if [ $1 == "DNS" ]
+then
+   host $2 | awk '{print $2}'
+fi
+
+if [ $1 == "SCAN" ]
+then
+   netstat -na | egrep 'tcp|udp'
+fi
+</code>
+
+
+===== 사용방법 =====
+
+<code java>
+	import egovframework.com.utl.sim.service.EgovNetworkState;
+
+	// 1. IP 주소 조회
+    myIPAddress = EgovNetworkState.getMyIPaddress();
+
+	// 2. Mac 주소 조회
+    myMACAddress = EgovNetworkState.getMyMACAddress(myIPAddress);
+
+	// 3. port 사용정보 조회
+    List<String > list = EgovNetworkState.getMyPortScan();
+    Iterator<String> it = list.iterator();
+    while (it.hasNext()) {
+       String text = (String) it.next();
+    }
+
+</code>
+
+===== 참고자료 =====
+N/A

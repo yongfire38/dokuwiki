@@ -1,0 +1,25 @@
+=== 비즈니스 규칙 ===
+FAQ목록조회에서 목록 클릭 시 이동되는 화면으로 FAQ에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+== 2. FAQ상세조회 ==
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/olh/faq/FaqCnUpdtView.do|updateFaqCnView||
+|삭제|/uss/olh/faq/FaqCnDelete.do|deleteFaqCn|"FaqManageDAO.deleteFaqCn"|
+|목록|/uss/olh/faq/FaqListInqire.do|selectFaqList|"FaqManageDAO.selectFaqList"|
+
+FAQ 상세조회화면은 FAQ내용수정, FAQ내용삭제, FAQ목록조회를 할 수 있다.
+
+{{:egovframework:com:uss:olh:faq:FaqDetailInqire.gif|}}
+
+수정: 수정버튼 클릭 시 FAQ를 수정할 수 있는 화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **FAQ목록조회** 화면으로 이동한다.
+----

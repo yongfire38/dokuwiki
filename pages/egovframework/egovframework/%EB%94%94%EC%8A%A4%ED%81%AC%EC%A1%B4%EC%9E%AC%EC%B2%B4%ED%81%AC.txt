@@ -1,0 +1,60 @@
+====== 디스크 존재체크 ======
+
+===== 개요 =====
+시스템에 존재하는 DISK, CD, USB에 대한 존재를 확인한다. 
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 디스크 존재를 확인하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovSysInfo.java|시스템 정보 확인 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovDiskExst.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|ArrayList|getExistDisk(String diskName)|디스크존재 조회|DISK, CD, USB에 대한 존재정보를 조회한다. disk, cdrom, usb에 대한 갯수를 확인하여 리턴|
+
+
+== Input == 
+  * diskName : 디스크종류 (예, "disk")
+  
+== Output ==
+  * ArrayList 타입 : 디스크 갯수정보 목록 {"4"}
+
+===== 환경설정 =====
+
+getExistDisk 메소드는 쉘스크립트의 실행결과를 활용하여 정보를 확인한다. 호출시 활용되는 쉘스크립트의 정보는 globals.properties에 등록한다.
+
+  * globals.properties
+
+<code>
+#getDiskAttribute 메소드에 해당되는 쉘 스크립트
+SHELL.UNIX.getDiskExst= /product/jeus/egovProps/prg/getDiskExst.sh
+</code>
+
+
+  * getDiskExst.sh (유닉스용 디스크존재 조회 스크립트)
+
+<code>
+lsdev -Cc $1 | wc -l
+</code>
+
+===== 사용방법 =====
+
+<code java>
+     import egovframework.com.utl.sim.service.EgovSysInfo;
+
+     //디스크갯수가 등록됨
+     ArrayList result = EgovSysInfo.getDiskExst();
+    String diskCnt = (String)result.get(0);
+    
+</code>
+
+===== 참고자료 =====
+N/A

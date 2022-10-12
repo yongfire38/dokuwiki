@@ -1,0 +1,106 @@
+====== 시스템관리 - 공통코드관리 - 공통코드관리 ======
+
+===== 개요 =====
+
+공통코드 관리는 공통코드를 등록, 수정, 목록조회, 상세조회를 제공한다.
+
+===== 설명 =====
+
+공통코드의 관리는 목록조회, 상세조회, 등록, 수정, 삭제 처리 할 수 있도록 구성되어있다.
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.sym.ccm.cca.web.EgovCcmCmmnCodeManageController.java|공통코드 관리를 위한 컨트롤러 클래스|
+|Model|egovframework.com.sym.ccm.cca.service.CmmnCode.java|공통코드 정보 Model 클래스|
+|VO|egovframework.com.sym.ccm.cca.service.CmmnCodeVO.java|공통코드 관리를 위한 VO 클래스|
+|Service|egovframework.com.sym.ccm.cca.service.EgovCcmCmmnCodeManageService.java|공통코드 관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.sym.ccm.cca.service.impl.EgovCcmCmmnCodeManageServiceImpl.java|공통코드 관리를 위한 위한 서비스구현 클래스|
+|DAO|egovframework.com.sym.ccm.cca.service.impl.CmmnCodeManageDAO.java|공통코드 정보 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/cmm/sym/ccm/EgovCcmCmmnCodeDetail.jsp|공통코드 상세보기를 위한 JSP 페이지|
+|JSP|/WEB-INF/jsp/egovframework/cmm/sym/ccm/EgovCcmCmmnCodeList.jsp|공통코드 목록을 위한 JSP 페이지|
+|JSP|/WEB-INF/jsp/egovframework/cmm/sym/ccm/EgovCcmCmmnCodeModify.jsp|공통코드 수정을 위한 JSP 페이지|
+|JSP|/WEB-INF/jsp/egovframework/cmm/sym/ccm/EgovCcmCmmnCodeRegist.jsp|공통코드 등록을 위한 JSP 페이지|
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|공통분류코드|COMTCCMMNCLCODE|공통분류코드 정보를 관리|
+|공통코드|COMTCCMMNCODE|공통코드 정보를 관리|
+
+===== 사용방법 =====
+
+설명
+
+== 공통코드 목록 ===
+
+공통코드 목록 조회를 할 수 있는 목록조회 화면으로 URL은 다음과 같다.
+
+<code>
+/sym/ccm/cca/EgovCcmCmmnCodeList.do
+</code>
+
+^기능^URL^Controller^method^화면(URL)^
+|목록조회|/sym/ccm/cca/EgovCcmCmmnCodeList.do|EgovCcmCmmnCodeManageController|selectCmmnCodeList|/cmm/sym/ccm/EgovCcmCmmnCodeList|
+
+공통코드 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다.\\
+검색조건은 코드ID, 코드ID명에 대해서 수행된다.\\
+페이지 당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:sym:cca:cmmncodelist.jpg|공통코드목록 화면}}
+
+----
+
+== 공통코드 등록 ===
+
+공통코드 등록 할 수 있는 등록 화면으로 URL은 다음과 같다.
+
+<code>
+/sym/ccm/cca/EgovCcmCmmnCodeRegist.do
+</code>
+
+^기능^URL^Controller^method^화면(URL)^
+|등록|/sym/ccm/cca/EgovCcmCmmnCodeRegist.do|EgovCcmCmmnCodeManageController|insertCmmnCode|/cmm/sym/ccm/EgovCcmCmmnCodeRegist|
+
+공통코드에 대한 상세내용을 등록한다.\\
+등록이 성공하면 **[[#공통코드 목록]]** 화면으로 이동한다. 
+
+{{:egovframework:com:sym:cca:cmmncoderegist.jpg|공통코드등록 화면}}
+
+----
+
+== 공통코드 수정 ===
+공통코드 수정 할 수 있는 수정 화면으로 URL은 다음과 같다.
+
+<code>
+/sym/ccm/cca/EgovCcmCmmnCodeModify.do
+</code>
+
+^기능^URL^Controller^method^화면(URL)^
+|수정|/sym/ccm/cca/EgovCcmCmmnCodeModify.do|EgovCcmCmmnCodeManageController|updateCmmnCode|/cmm/sym/ccm/EgovCcmCmmnCodeModify|
+
+수정이 성공하면 **[[#공통코드 목록]]** 화면으로 이동한다. 
+
+{{:egovframework:com:sym:cca:cmmncodemodify.jpg|공통코드수정 화면}}
+
+----
+
+== 공통코드 상세 조회 ===
+
+공통코드 상세 조회 할 수 있는 상세 조회 화면으로 URL은 다음과 같다.
+
+<code>
+/sym/ccm/cca/EgovCcmCmmnCodeDetail.do
+</code>
+
+^기능^URL^Controller^method^화면(URL)^
+|상세조회|/sym/ccm/cca/EgovCcmCmmnCodeDetail.do|EgovCcmCmmnCodeManageController|selectCmmnCodeDetail|/cmm/sym/ccm/EgovCcmCmmnCodeDetail|
+|삭제|/sym/ccm/cca/EgovCcmCmmnCodeRemove.do|EgovCcmCmmnCodeManageController|deleteCmmnCode|/cmm/sym/ccm/EgovCcmCmmnCodeDetail|
+
+상세조회에는 삭제 처리가 포함되어 있고 삭제가 성공하면 **[[#공통코드 목록]]** 화면으로 이동한다. 
+
+{{:egovframework:com:sym:cca:cmmncodedetail.jpg|공통코드상세 화면}}
+
+----
+

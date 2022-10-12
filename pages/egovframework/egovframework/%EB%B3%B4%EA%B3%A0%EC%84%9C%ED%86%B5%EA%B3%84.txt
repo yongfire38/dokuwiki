@@ -1,0 +1,85 @@
+====== 통계/리포팅 - 보고서통계 ======
+===== 개요 =====
+
+**보고서통계**는 각종 보고서현황에 대한 통계자료를 특정 조건에 맞게 제공한다.
+
+===== 설명 =====
+
+  * **보고서통계**는 생성된 보고서에 대한 기간별, 유형별, 진행상태별 통계자료를 제공한다.
+
+    ① 보고서현황목록조회 : 등록된 보고서정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 보고서현황상세조회 : 보고서목록을 조회한 뒤 특정 보고서를 선택하면, 해당 보고서의 상세현황이 조회된다.
+    ③ 보고서현황통계등록 : 등록된 보고서를 대상으로 통계 정보를 생성한다.  
+===== 관련 리소스 =====
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.sts.web.EgovReprtStatsController.java|보고서통계를 위한 컨트롤러 클래스|
+|Service|egovframework.com.sts.service.EgovReprtStatsService.java|보고서통계를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.sts.service.impl.EgovReprtStatsServiceImpl.java|보고서통계를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.sts.service.impl.ReprtStatsDAO.java|보고서통계를 위한 데이터처리 클래스|
+|VO|egovframework.com.sts.service.ReprtStatsVO.java|보고서통계를 위한 VO 클래스|
+|Model|egovframework.com.sts.service.ReprtStats.java|보고서통계를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/sts/EgovReprtStatsList.jsp|보고서통계 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/sts/EgovReprtStatsDetail.jsp|보고서통계 상세조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/sts/EgovReprtStatsRegis.jsp|보고서통계 등록을 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/sts/EgovReprtStats_SQL_*.xml|보고서통계 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:sts:reprtstats.png?900|클래스다이어그램}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|보고서통계|COMTNREPRTSTATS|각종 보고서현황에 대한 통계자료를 특정 조건에 맞게 제공하기 위한 속성을 정의한다.|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **RS_ID** 항목을 추가한다. 
+
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('RS_ID','0');
+ </code>
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 보고서통계 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/com/sts/selectReprtStatsList.do|selectReprtStatsList|"reprtStatsDAO.selectReprtStatsList"|
+|조회|/com/sts/selectReprtStatsList.do|selectReprtStatsList|"reprtStatsDAO.selectReprtStatsListTotCnt"|
+
+보고서통계 목록은 페이지당 5건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 유형, 기간구분, 기간에 대해서 수행된다.
+
+{{:egovframework:com:sts:reprtstatsimg1.jpg|보고서통계 목록조회}}
+
+조회 : 기 생성된 보고서통계 목록을 조회한다.\\
+등록 : 신규 보고서통계를 등록하기 위해서는 등록버튼을 선택하여 **보고서 등록** 화면으로 이동한다.\\
+----
+
+=== 보고서통계 상세정보 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/com/sts/getReprtStats.do|selectReprtStats|"reprtStatsDAO.selectReprtStats"|
+
+보고서통계 정보에 해당하는 보고서 정보를 조회한다.\\
+
+{{:egovframework:com:sts:reprtstats-image01.jpg|보고서통계 상세정보}}
+
+목록 : 보고서통계 목록조회 화면으로 이동한다.\\
+----
+
+=== 보고서 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/com/sts/addReprtStats.do|insertReprtStats|"reprtStatsDAO.insertReprtStats"|
+
+보고서통계 속성정보를 입력한 뒤 저장한다.\\
+
+{{:egovframework:com:sts:reprtstats-image02.jpg|보고서 등록}}
+
+등록 : 보고서통계 속성을 입력한 뒤 상단의 **등록 버튼**을 통해서 보고서통계정보를 등록한다.\\
+목록 : 보고서통계 목록조회 화면으로 이동한다.\\
+----    

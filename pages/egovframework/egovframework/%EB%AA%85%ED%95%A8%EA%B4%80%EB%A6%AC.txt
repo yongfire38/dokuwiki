@@ -1,0 +1,169 @@
+====== 공통서비스 - 명함관리 ======
+
+===== 개요 =====
+시스템에 속한 다른 사용자가 등록한 명함을 조회하여 사용자의 명합리스트에 등록하거나 자신이 명함을 공개, 비공개로 등록하여
+다른 사용자가 활용할 수 있도록 하는 기능을 제공한다.
+
+{{:egovframework:com:cop:ncrdoutline.jpg|명함관리 업무흐름}}
+
+명함을 등록하여 활용하는 방법은 직접 등록하는 방법과 다른 사람이 공개로 지정하여 등록한 명함들을 조회한 후 사용등록하는 방법 2가지를 제공한다.
+본인이 직접 등록하면서 공개여부를 공개로 한 명함은 다른 사람 또한 사용등록을 통해 활용할 수 있는 것이다.
+
+
+===== 설명 =====
+명함관리는 명함을 생성하는 **[[#명함등록]]** 기능, 다른 사람이 공개한 명함을 확인하고 내 명함으로 등록할 수 있는 **[[#명함 목록조회]]** 기능, 내가 등록한 명함을 확인하는 조회할 수 있는 **[[#내 명함목록]]** 기능의 3가지 기능을 제공한다.
+
+
+== 관련소스 ==
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.ncm.web.EgovNcrdManageController.java|명함 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.ncm.service.EgovNcrdManageService.java|명함 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.ncm.service.impl.EgovNcrdManageService.java|명함 관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.cop.ncm.service.NameCard.java|명함 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.ncm.service.NameCardUser.java|명함 사용자 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.ncm.service.NameCardVO.java|명함 관리를 위한 VO 클래스|
+|DAO|egovframework.com.cop.ncm.service.impl.NcrdManageDAO.java|명함 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/ncm/EgovNcrdRegist.jsp.jsp|명함 등록을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/ncm/EgovNcrdUpdt.jsp.jsp|생성된 명함 수정을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/ncm/EgovNcrdList.jsp.jsp|공개된 명함 조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/ncm/EgovMyNcrdList.jsp|내 명함목록 조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/ncm/EgovNcrdInqirePopup.jsp|명함 상세정보 조회를 위한 팝업 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/ncm/EgovNcrd_SQL.xml|명함 관리를 Query 파일|
+
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|명함정보속성|COMTNNCRD|명함의 속성정보를 관리|
+|명함사용자속성|COMTNNCRDUSER|명함의 사용정보를 관리|
+
+
+
+===== 환경설정 =====
+
+
+본 기능은 전자정부 표준프레임워크 실행환경의 **[[egovframework:rte:fdl:id_generation|ID Generation]]** 기능을 활용하여 구성되어있다.
+
+
+
+==== 관련 설정 사항 ====
+
+  * ID Generation Service에서 사용할 테이블 및 필드 생성
+
+    *   ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 NCRD_ID 항목을 추가해야 한다. 테이블이 생성되어 있는 경우라면 인서트 구문만을 수행한다.
+
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('NCRD_ID','0');
+ </code>
+
+
+===== 사용방법 =====
+
+
+
+
+
+==== 명함 목록조회 ====
+공개된 명함 목록조회를 할 수 있는 목록조회 화면으로 URL은 다음과 같다.
+
+<code>
+/cop/ncm/selectNcrdInfs.do
+</code>
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/cop/ncm/selectNcrdInfs.do|EgovNcrdManageController|selectNcrdItems|.../cop/ncm/EgovNcrdList.jsp|
+
+
+
+명함 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 이름, 회사명, 부서명에 대해서 수행된다. 페이지 당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:cop:ncrdlist.jpg|명함 목록조회}}
+
+내 명함으로 등록하기 위해서는 사용등록 버튼을 선택하여 사용 등록을 처리해야 한다. 사용등록이 되면 **[[#내 명함목록]]** 화면으로 이동된다.
+
+
+----
+
+==== 명함등록 ====
+
+명함을 등록하기 위한 화면으로 URL은 다음과 같다.
+
+<code>
+/cop/ncm/addNcrdInf.do
+</code>
+
+^기능^URL^Controller^method^화면(JSP)^
+|등록|/cop/ncm/addNcrdItem.do|EgovNcrdManageController|addBBSMaster|.../cop/ncm/EgovNcrdRegist.jsp|
+
+
+명함에 대한 상세내용과 공개여부 등을 선택하여 명함을 등록한다. 등록이 성공되면 **[[#내 명함목록]]** 화면으로 이동한다.
+
+{{:egovframework:com:cop:ncrdregist.jpg|명함 등록}}
+
+공개여부가 공개인 경우는 다른 사람이 해당 명함 정보를 사용할 수 있게 된다.
+
+
+----
+
+==== 내 명함목록 ====
+
+내가 사용하는 명함에 대하여 목록을 조회할 수 있는 화면으로 URL은 다음과 같다.
+
+<code>
+/cop/ncm/selectMyNcrdUseInf.do
+</code>
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/cop/ncm/selectMyNcrdUseInf.do|EgovNcrdManageController|selectNcrdUseInf|.../cop/ncm/EgovMyNcrdList.jsp|
+
+
+{{:egovframework:com:cop:ncrdmylist.jpg|내 명함 목록조회}}
+
+
+검색조건은 이름, 회사명, 부서명에 대해서 수행되며, 명함 이름 선택시 명함정보를 수정할 수 있는 **[[#명함 수정]]** 호면으로 이동한다.
+
+
+----
+
+==== 명함 수정 ====
+
+^기능^URL^Controller^method^화면(JSP)^
+|수정|/cop/ncm/selectNcrdInf.do|EgovNcrdManageController|selectNcrdItem|.../cop/ncm/EgovNcrdUpdt.jsp|
+
+{{:egovframework:com:cop:ncrdupdt.jpg|명함 수정}}
+
+명함에 대한 상세내용을 변경한 뒤 수정 버튼을 누르면 명함 정보가 수정되고 **[[#내 명함목록]]** 화면으로 이동한다.
+
+
+----
+
+==== 명함정보 조회팝업 ====
+
+공개된 명함을 조회할 수 있는 **[[#명함 목록조회]]**화면에서 명함 이름을 선택하면 명함에 대한 상세한 정보를 조회할 수 있는 명함정보 조회팝업을 표시된다.
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|조회팝업|/cop/ncm/selectNcrdInfPopup.do|EgovNcrdManageController|selectNcrdItemforPop|.../cop/ncm/EgovNcrdInqirePopup.jsp|
+
+
+{{:egovframework:com:cop:ncrdinqirepopup.jpg|명함 상세조회}}
+
+
+
+
+
+===== 참고자료 =====
+
+  * 실행환경 참조 : [[egovframework:rte:fdl:id_generation#Table Id Generation Service|ID Generation Service]]
+  * 배포 및 테스트 관련 : [[common_component_system|Common Component System]] 및 [[배포_패키지_구성안|배포 패키지 구성안]]
+
+
+

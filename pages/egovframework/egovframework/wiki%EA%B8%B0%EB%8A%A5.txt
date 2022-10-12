@@ -1,0 +1,28 @@
+====== 트위터 ======
+===== 개요 =====
+
+**Wiki기능**는 사용자가 위키를 서비스를 이용하기 위해서 JAVA/JSP기반의 오픈소스 JspWiki를 제공합니다.
+
+JspWiki는 Apache License 2.0 라이센스 채택하여 라이센스 정책을 읽어보시고 JspWiki을 사용하시기 바랍니다.
+
+JspWiki 특징
+<code>
+* WikiMarkup/구조적 텍스트 
+	o 텍스트 효과: 굵게, 기울임꼴, monotyped, CSS 스타일 o Bracketed 하이퍼링크 및 좋은 오래된 표기법 사용.
+          o 글머리 기호 목록, 번호 매기기 및 정의 o 테이블 및 정렬 테이블을 o 각주 [1] o 3 수준의 제목.
+          o 인터 위키 연결 입니다.
+          o 탭 및 축소 가능 목록을 * 첨부 파일 * 템플릿 지원 - 그래서 자신만의 테마 또는 레이아웃을 디자인할 수 있습니다. ContributedTemplate 목록을 참조하십시오.
+* 데이터 저장소: JSPWiki 세 WikiPageProviders 함께 와서 다른 사람이 연결할 수 있습니다.
+    o MySQL 또는 기타 데이터베이스 서버 필요하지 않습니다! Wiki 페이지 일반 텍스트 파일을 - 중-기본 파일로 저장됩니다.
+    o 데이터베이스 공급자 별로  사용할 수 있고, 타사 ContributedProviders 통해 페이지를 사용할수 있습니다.
+* 보안 o 위키 및 페이지 권한 제어.
+    o 보안 개별 사용자가 아니라 전체 그룹에 적용할 수 있습니다.
+    o 인증: 간단한 XML 파일 기반 데이터베이스 기반, 컨테이너 관리, 사용자 지정 인증 모듈을 사용할 수 있습니다.
+    o 인증: 보안 정책 및 ACL 적용할 수 (익명, 쿠키 기반, 인증된) 인증 상태, 컨테이너 역할 또는 임시 위키 그룹 위로 자신을 설정할 * 자신의 추가 쓰기 쉬운 플러그인 인터페이스를.
+    o 일부 핵심 JSPWiki 함께 배포되는 플러그인 있습니다: 카운터, CurrentTimePlugin, 이미지, InsertPage, TableOfContentsPlugin, VotePlugin, WikiFormsPlugin, 및 블로깅: WeblogArchivePlugin, WeblogEntryPlugin, WeblogPlugin.
+    o 몇 사용할 수 있는 많은 ContributedPlugins A: CalendarPlugin, ColorCodePlugin, EmailNotifierPlugin, GoogleMapsPlugin, ImageGenJFreeChart, QuotationPlugin, TasksPlugin. 
+* UTF-8을 지원 합니다.
+* JavaServerPages 기반 * (이제까지 있는:-) 다른 JSP-기반 응용 프로그램, 설치된 경우 Easy-ish 설치
+* 페이지 편집 않도록 잠금 충돌 
+* 여러 위키 지원
+</code>

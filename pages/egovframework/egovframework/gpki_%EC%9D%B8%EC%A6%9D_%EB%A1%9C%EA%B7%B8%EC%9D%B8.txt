@@ -1,0 +1,17 @@
+=== 비즈니스 규칙 ===
+일반사용자가 아닌 관리자가 로그인하기 위한 기능으로 인증을 위해 발급된 GPKI 인증서를 통해 업무 화면으로 로그인 처리할 수 있다.
+
+
+=== 관련화면 및 수행매뉴얼 ===
+== 1. GPKI 인증 로그인 ==
+^Action^URL^Controller method^QueryID^
+|로그인화면|/uat/uia/egovLoginUsr.do|loginUsrView| |
+|인증로그인|/uat/uia/actionCrtfctLogin.action|actionCrtfctLogin|loginDAO.actionCrtfctLogin|
+
+GPKI 인증서 로그인은 개인이 갖고 있는 인증서와 비밀번호를 가지고 인증을 확인한 뒤, 인증 성공 시 dn값을 추출한다. \\
+dn값을 가지고 업무사용자 테이블에서 해당 사용자의 정보(ID 및 비밀번호 등)를 조회한다. \\
+조회된 사용자 정보를 통해 로그인 로그를 생성하며, Spring Security를 호출하여 권한 인증 및 세션 설정을 한다. \\
+
+
+
+----

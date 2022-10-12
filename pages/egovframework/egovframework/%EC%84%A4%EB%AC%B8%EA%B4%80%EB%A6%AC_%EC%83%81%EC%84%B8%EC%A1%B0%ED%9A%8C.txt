@@ -1,0 +1,22 @@
+=== 비즈니스 규칙 ===
+설문관리 목록에서 목록 클릭 시 이동되는 화면으로 설문관리에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+== 설문관리 상세조회 ==
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olp/qmc/QustnrManageList.do|EgovQustnrManageList|QustnrManage.EgovQustnrManageList|
+| | | |QustnrManage.selectQustnrManageCnt|
+|수정|/uss/ion/sit/EgovQustnrManageModify.do|EgovQustnrManageModify|QustnrManage.selectQustnrManageDetail|
+|삭제|/uss/olp/qmc/EgovQustnrManageDetail.do|EgovQustnrManageDetail|QustnrManage.deleteQustnrManage|
+
+{{:egovframework:com:uss:olp:qmc:egovqustnrmanagedetail.jpg|}}
+
+수정: 수정버튼 클릭 시 **설문관리 수정** 화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. \\
+목록: **설문관리 목록** 화면으로 이동한다.
+----

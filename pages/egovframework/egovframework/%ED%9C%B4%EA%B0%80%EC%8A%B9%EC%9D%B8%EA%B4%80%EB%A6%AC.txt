@@ -1,0 +1,82 @@
+====== 사용자지원 - 휴가승인관리 ======
+===== 개요 =====
+
+**휴가관승인리**는 시스템에서 개인 휴가정보에 대한 관리자(승인권자)가 승인여부를 처리및 관리하는 기능으로 \\
+개인의 휴가신청에 대한 승인권자의 승인/반려처리 기능을 제공한다.
+
+===== 설명 =====
+
+  * **휴가승인관리**는 휴가을 등록하기 위한 목적으로 휴가 등록, 수정, 삭제, 조회, 목록조회, 승인처리 기능을 수반한다.
+
+    ① 휴가관리목록 : 휴가관리 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 휴가등록 : 휴가정보를 등록하고, 등록 결과를 조회한다.
+    ③ 휴가수정 : 기 등록된 휴가정보의 항목들을 수정한다.
+    ④ 휴가삭제 : 기 등록된 휴가정보를 삭제한다.
+    ⑤ 휴가상세조회 : 등록된 휴가 상세정보를 조회한다.
+    ⑥ 휴가승인목록 : 휴가승인 목록을 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ⑦ 휴가승인 : 등록된 휴가 승인/반려 처리를 한다.
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.vct.web.EgovVcatnManageController.java|휴가 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.uss.ion.vct.service.EgovVcatnManageService.java|휴가 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.ion.vct.service.impl.EgovVcatnManageServiceImpl.java|휴가 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.uss.ion.vct.service.impl.VcatnManageDAO.java|휴가 관리를 위한 데이터처리 클래스|
+|VO|egovframework.com.uss.ion.vct.service.VcatnManageVO.java|휴가 관리를 위한 VO 클래스|
+|Model|egovframework.com.uss.ion.vct.service.VcatnManage.java|휴가 관리를 위한 Model 클래스|
+|Model|egovframework.com.uss.ion.vct.service.IndvdlYrycManage.java|연도별 연차 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/vct/EgovVcatnManageList.jsp|휴가 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/vct/EgovVcatnRegist.jsp|휴가 등록를 위한 jsp페이지| 
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/vct/EgovVcatnDetail.jsp|등록된 휴가를 상세조회/반영하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/vct/EgovVcatnUpdt.jsp|휴가 수정를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/vct/EgovVcatnConfmList.jsp|휴가 승인 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/vct/EgovVcatnConfm.jsp|휴가 승인/반려처리를 위한 jsp페이지| 
+|XML|/egovframework/sqlmap/com/uss/ion/vct/EgovVcatnManage_SQL_*.xml|휴가관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:uss:ion:vct:휴가관리클래스이미지.png|클래스다이어그램}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|휴가관리|COMTNVCATNMANAGE|휴가정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+|개인별연차관리|COMTNINDVDLYRYCMANAGE|개인별 연차를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 휴가승인 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/ion/vct/EgovVcatnConfmList.do|selectVcatnManageConfmList|"vcatnManageDAO.selectVcatnManageConfmList"|
+|조회|/uss/ion/vct/EgovVcatnConfmList.do|selectVcatnManageConfmList|"vcatnManageDAO.selectVcatnManageConfmListTotCnt"|
+
+휴가승인 목록은 기 등록된 휴가정보의 승인처리를 위한 화면으로 승인권자로 지정된 목록만 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다.\\ 
+검색조건은 휴가구분, 신청기간, 신청자, 진행구분에 대해서 수행된다.\\
+
+{{:egovframework:com:uss:ion:vct:휴가승인목록.png}}
+
+조회 : 기 등록된 휴가승인의 목록을 조회한다.\\
+승인 : 기 등록된 휴가의 승인처리를 위해서는 해당 리스트에 승인처리 버튼을 통해서 **휴가 승인** 화면으로 이동한다.\\
+----
+
+=== 휴가 승인 ===
+
+^Action^URL^Controller method^QueryID^
+|승인|/uss/ion/vct/updtVcatnConfm.do|updtVcatnManageConfm|"vcatnManageDAO.updtVcatnManageConfm"|
+|반려|/uss/ion/vct/updtVcatnConfm.do|updtVcatnManageConfm|"vcatnManageDAO.updtVcatnManageConfm"|
+
+기 신청된 휴가정보를 승인/반려처리 버튼을 클릭후 승인사유/반려사유를 등록후 승인/반려 처리한다.\\
+
+{{:egovframework:com:uss:ion:vct:휴가승인.png}}
+
+{{:egovframework:com:uss:ion:vct:승인팝업.png}}
+
+{{:egovframework:com:uss:ion:vct:반려팝업.png}}
+
+승인 : 기 휴가의 승인권자가 승인사유를 등록 후 승인처리 한다.\\
+반려 : 기 휴가의 승인권자가 반려사유를 등록 후 반려처리 한다.\\
+목록 : 휴가승인 목록조회 화면으로 이동한다.\\
+----

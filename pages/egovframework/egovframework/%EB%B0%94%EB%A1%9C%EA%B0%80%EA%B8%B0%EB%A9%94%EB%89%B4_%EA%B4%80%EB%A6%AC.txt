@@ -1,0 +1,145 @@
+
+====== 시스템관리 - 바로가메뉴관리 ======
+
+===== 개요 =====
+
+사용자가 접근할수 있는 권한의 메뉴를 링크로서 한번에 갈수 있도록 바로가기메뉴를 관리할 수 있는 기능을 제공한다.
+
+{{:egovframework:com:sym:mpm:bkmk.png|기능흐름표}}
+
+
+바로가기메뉴를 등록하여 활용하는 방법은 사용자가 접근할수 있는 메뉴들의 목록을 표시하는 팝업창에서 메뉴를 선택하여 등록할수가 있다.
+
+
+===== 설명 =====
+바로가기메뉴 관리는 바로가기메뉴를 생성하는 **[[#바로가기메뉴등록]]** 기능, 사용자가 등록한 바로가기메뉴를 확인하고 조회할수 있는**[[#바로가기메뉴 목록조회]]** 기능, 내가 등록한 바로가기메뉴를 미리보기할수 있는 **[[#바로가기메뉴 미리보기]]** 기능의 3가지 기능을 제공한다.
+
+
+== 관련소스 ==
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.sym.mpm.web.EgovBkmkMenuManageController.java|바로가기메뉴 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.sym.mpm.service.EgovBkmkMenuManageService.java|바로가기메뉴 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.sym.mpm.service.impl.EgovBkmkMenuManageServiceImpl.java|바로가기메뉴 관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.sym.mpm.service.BkmkMenuManage.java|바로가기메뉴 관리를 위한 모델 클래스|
+|VO|egovframework.com.sym.mpm.service.BkmkMenuManageVO.java|바로가기메뉴 관리를 위한 VO 클래스|
+|DAO|egovframework.com.sym.mpm.service.impl.BkmkMenuManageDAO.java|바로가기메뉴 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/sym/mpm/EgovBkmkMenuManageRegist.jsp.jsp|바로가기메뉴 등록을 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/sym/mpm/EgovBkmkMenuManageList.jsp.jsp|조회가능한 바로가기메뉴목록을 조회하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/sym/mpm/EgovBkmkMenuPopup.jsp|바로가기메뉴에 등록할 기존 메뉴들을 조회하여 선택하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/sym/mpm/EgovBookMarkMenuPopup.jsp|바로가기메뉴를 미리보기형태로 보여주기 위한 팝업 jsp페이지|
+
+
+== 관련 클래스다이어그램 ==
+
+{{:egovframework:com:sym:mpm:bkmkClass.png?900|클래스다이어그램}}
+
+
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|바로가기메뉴정보속성|COMTNBKMKMENUMANAGERESULT|바로가기메뉴의 속성정보를 관리|
+
+
+
+
+===== 환경설정 =====
+
+
+없음
+
+
+
+==== 관련 설정 사항 ====
+
+없음
+
+
+===== 사용방법 =====
+
+
+
+
+
+==== 바로가기메뉴 목록조회 ====
+조회가 가능한 바로가기메뉴 목록조회를 할 수 있는 목록조회 화면으로 URL은 다음과 같다.
+
+<code>
+/sym/mpm/selectBkmkMenuManageList.do
+</code>
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/sym/mpm/selectBkmkMenuManageList.do|EgovBkmkMenuManageController|selectBkmkMenuManageList|.../sym/mpm/EgovBkmkMenuManageList.jsp|
+
+
+바로가기메뉴 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 메뉴명에 대해서 수행된다. 페이지당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+{{:egovframework:com:sym:mpm:bkmklist.jpg|바로가기메뉴 목록조회화면}}
+
+바로가기메뉴를 삭제하기 위해서는 삭제할 메뉴를 체크박스로 체크한 이후에 삭제 버튼을 클릭을 하면 삭제가 이루어진다.
+----
+
+==== 바로가기메뉴 등록 ====
+
+바로가기메뉴를 등록하기 위한 화면으로 이동하는 URL은 다음과 같다.
+
+<code>
+/sym/mpm/addBkmkInf.do
+</code>
+
+^기능^URL^Controller^method^화면(JSP)^
+|등록|/sym/mpm/registBkmkInf.do|EgovAdressBookController|registBkmkInf|.../sym/mpm/EgovBmkmMenuManageRegist.jsp|
+
+
+**[[#메뉴목록 조회팝업]]**** 에서 바로가기메뉴에 등록할 메뉴를 선택하면 자동으로 메뉴명과 URL이 자동 매핑이 된다. 등록버튼을 통하여 등록을 성공할시에 [[#바로가기메뉴 목록조회]]** 화면으로 이동한다.
+
+{{:egovframework:com:sym:mpm:bkmkregist.jpg|바로가기메뉴 등록화면}}
+
+등록메뉴 목록조회에는 사용자가 접근권한이 가능한 메뉴들만 조회하고 보여지게 설정되어 있다.
+
+----
+
+==== 바로가기메뉴 미리보기 ====
+
+
+바로가기메뉴를 미리보기 위한 화면으로 이동하는 URL은 다음과 같다.
+
+<code>
+/sym/mpm/previewBkmkInf.do
+</code>
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|수정|/sym/mpm/previewBkmkInf.do|EgovAdressBookController|previewBkmkInf|.../sym/mpm/EgovBookMarkMenuPopup.jsp|
+
+{{:egovframework:com:sym:mpm:bkmkpreview.jpg|바로가기메뉴 미리보기 화면}}
+
+바로가기메뉴 미리보기에서 메뉴명을 클릭할 시에는 선택된 메뉴에 해당하는 화면으로 부모창이 이동을 하게 된다.
+
+
+----
+
+==== 메뉴목록 조회팝업 ====
+
+**[[#주소록등록]]** 이나 **[[#주소록 조회수정]]** 에서 기등록된 사용자나 명함을 조회하여 주소록 구성원으로 선택하여 등록시킬수 있는 화면을 제공한다.
+
+^기능^URL^Controller^method^화면(JSP)^
+|조회팝업|/sym/mpm/selectMenuList.do|EgovAdressBookController|selectMenuList|.../sym/mpm/EgovBkmkMenuPopup.jsp|
+
+
+{{:egovframework:com:sym:mpm:bkmkmenu.jpg|메뉴목록 조회팝업 화면}}
+
+
+사용자가 접근권한이 있는 메뉴와, 바로가기메뉴에 기등록되지 않은 메뉴들을 조회할수 있다.
+
+===== 참고자료 =====
+
+  * 실행환경 참조 : 
+  * 배포 및 테스트 관련 : [[common_component_system|Common Component System]] 및 [[배포_패키지_구성안|배포 패키지 구성안]]
+
+
+

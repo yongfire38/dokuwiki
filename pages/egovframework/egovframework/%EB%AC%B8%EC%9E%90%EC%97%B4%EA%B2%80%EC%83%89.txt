@@ -1,0 +1,66 @@
+====== 요소기술 - 문자열검색 ======
+
+===== 개요 =====
+주어진 문자열을 중 검색대상 문자열의 존재여부를 제공한다.
+
+===== 설명 =====
+문자열 객체에 대한 특정 문자열 존재여부 및 특정 문자열의 위치(index) 정보를 제공한다.
+
+== 관련소스 ==
+
+^유형^대상소스^설명^비고^
+|Service|egovframework.com.utl.fcc.service.EgovStringUtil.java|문자열 데이터 처리 관련 유틸리티| |
+|Controller|egovframework.com.utl.fcc.web.EgovComUtlTestController.java|테스트용 controller| |
+|JSP|/WEB-INF/jsp/egovframework/cmm/utl/EgovStringIndex.jsp|테스트 페이지| |
+
+== 메소드 ==
+^결과값^메소드^설명^내용^
+|int|indexOf(String source, String search)|문자열 검색|문자열 객체에 대한 특정 문자열 위치 제공|
+
+ 
+== Input ==
+  * source : 검색 문자열 객체
+  * search: 검색 대상 문자열 객체
+  * Validation 체크: [[요소기술_validation_체크|요소기술 Validation 체크]]
+== Output ==
+  * int : 검색 대상 문자열이 나타나는 위치로 검색되지 않거나 source, search 중 하나라도 null이면 -1로 리턴
+
+===== 환경설정 =====
+
+**해당없음**
+
+
+===== 사용방법 =====
+
+
+<code java>
+import egovframework.com.utl.fcc.service.EgovStringUtil;
+
+...
+
+// -1
+System.out.println(EgovStringUtil.indexOf(null, "*"));
+// -1
+System.out.println(EgovStringUtil.indexOf("*", null));
+// 0
+System.out.println(EgovStringUtil.indexOf("", ""));
+// 0
+System.out.println(EgovStringUtil.indexOf("aabaabaa", "a"));
+// 2
+System.out.println(EgovStringUtil.indexOf("aabaabaa", "b"));
+// 1
+System.out.println(EgovStringUtil.indexOf("aabaabaa", "ab"));
+// 0
+System.out.println(EgovStringUtil.indexOf("aabaabaa", ""));
+
+</code>
+
+
+===== 참고자료 =====
+
+  * 문자열변환 참조: [[egovframework:문자열변환]]
+  * 문자열치환 참조: [[egovframework:문자열치환]]
+  * 문자열유효성체크 참조: [[egovframework:문자열유효성체크]]
+
+
+

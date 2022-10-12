@@ -1,0 +1,290 @@
+
+====== 협업 - 스크랩 기능 ======
+
+===== 개요 =====
+**스크랩 기능** 서비스는 사용자가 선택하여 등록한 여러 게시판의 특정 글들을 한 곳에 모아 조회할 수 있는 기능을 제공한다. \\
+스크랩기능은 **[[게시판관리]]** 기능을 기반으로 운영되며, 
+게시판관리 기능에서 게시판 생성시 게시판 추가기능을 활성화시킨 경우는 댓글 관리, 스크랩 기능을 추가로 사용할 수 있다.\\
+각 게시판의 게시글 하단에 있는 스크랩 버튼을 누르면 스크랩 등록 페이지로 이동하고 스크랩명을 입력 후 저장하면 사용자의 스크랩 게시판에 등록된다.\\
+
+스크랩 등록 시에는 Validator Rule을 통해 필수항목에 대한 조건을 검사하며, \\
+Validator Rule은 **Valator-rules.xml**과 미리 정의된 컴포넌트 Validator xml을 통해 적용된다. \\
+
+**스크랩 기능** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능 흐름도 ====
+
+{{:egovframework:mcom:mscrapoutline.jpg|}}
+
+===== 설명 =====
+스크랩 기능은 크게 **스크랩 등록**, **스크랩 목록조회**, **스크랩 상세조회**, **스크랩 수정** 기능으로 구성되어 있다. \\
+스크랩 환경설정 부분의 옵션을 추가하면 일반 게시판, 익명 게시판, 유효 게시판, 공지 게시판에서 스크랩 기능을 사용할 수 있다.\\
+
+
+== 클래스다이어그램 ==
+
+{{:egovframework:mcom:CLD_스크랩.jpg?740|}}
+
+
+== 관련소스 ==
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.bbs.web.EgovBBSScrapController.java|스크랩기능을 위한 컨트롤러 클래스|
+|Controller|egovframework.mbl.com.cop.bbs.web.EgovMblBBSScrapController.java|모바일 스크랩기능을 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.bbs.service.EgovBBSScrapService.java|스크랩기능을 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovBBSScrapServiceImpl.java|스크랩기능을 위한 서비스 구현 클래스|
+|VO|egovframework.com.cop.bbs.service.Scrap.java|스크랩기능을 위한 모델 클래스|
+|VO|egovframework.com.cop.bbs.service.ScrapVO.java|스크랩기능을 위한 VO 클래스|
+|DAO|egovframework.com.cop.bbs.service.impl.BBSScrapDAO.java|스크랩기능을 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovScrapList.jsp|스크랩기능을 위한 목록조회 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovScrapRegist.jsp|스크랩기능을 위한 등록 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovScrapDetail.jsp|스크랩기능을 위한 상세조회 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovScrapUpdt.jsp|스크랩기능을 위한 수정 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovScrapMainList.jsp|스크랩기능을 위한 [[마이페이지]] jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/bbs/EgovScrapList.jsp|스크랩기능을 위한 목록조회 모바일용 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/bbs/EgovScrapRegist.jsp|스크랩기능을 위한 등록 모바일용 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/bbs/EgovScrapDetail.jsp|스크랩기능을 위한 상세조회 모바일용 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/cop/bbs/EgovScrapUpdt.jsp|스크랩기능을 위한 수정 모바일용 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSScrap_SQL.xml|스크랩기능을 Query 파일|
+
+ 
+
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|스크랩|COMTNSCRAP|스크랩 정보를 관리|
+
+
+
+
+===== 환경설정 =====
+
+
+본 스크랩기능을 포함한 [[모바일댓글_관리|댓글 관리]] 를 사용하기 위해서는 globals.properties 속성 파일에 추가 속성을 설정하여야 한다.
+
+globals.properties에 관련된 내용은 [[요소기술 프로퍼티 및 명령어 쉘스크립트]] 부분을 참조한다.
+
+
+==== 관련 설정 사항 ====
+
+  * Globals.addedOptions 추가
+
+<code>
+...
+# 2단계 게시판 추가 기능 (댓글, 만족도조사, 스크랩)
+Globals.addedOptions = true
+...
+</code>
+
+참고로 위 설정이 없는 경우도 운영에 문제가 되지 않도록 구축되어 있다.
+
+위와 같이 설정이 추가되면 일반 게시판, 익명 게시판, 유효 게시판, 공지 게시판의 게시글에 스크랩을 등록할 수 있는 기능버튼이 나타난다.
+
+  * ID Generation Service에서 사용할 테이블 및 필드 생성
+
+    *   ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 BBS_ID 항목을 추가해야 한다. 테이블이 생성되어 있는 경우라면 삽입 구문만을 수행한다.
+
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('SCRAP_ID','0');
+ </code>
+
+  * ID Generation Service의 경우 context-idgen.xml(예시)에 다음과 같은 설정을 추가한다.
+
+<code xml>
+	<bean name="egovScrapIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy" ref="scrapStrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="SCRAP_ID"/>
+	</bean>
+	<bean name="scrapStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="SCRIP_" />
+		<property name="cipers" value="14" />
+		<property name="fillChar" value="0" />
+	</bean>	 
+</code>
+
+===== 사용방법 =====
+
+
+==== 스크랩 등록 ====
+
+
+=== 비즈니스 규칙 ===
+
+사용자가 선택한 게시글에 대해 스크랩 등록 처리를 할 수 있다. 
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|등록|/mbl/com/cop/bbs/insertScrap.mdo|EgovMblBBSScrapController|insertScrap|.../mbl/com/cop/bbs/EgovScrapRegist.jsp|
+
+
+
+스크랩의 등록을 위해 스크랩기능이 설정된 일반 게시판, 익명 게시판, 유효 게시판, 공지 게시판의 게시물 상세조회 화면에 스크랩 버튼을 제공한다.\\
+
+
+{{:egovframework:mcom:egovscrap_scrapbutton.jpg|}}
+
+스크랩: 스크랩을 등록할 수 있는 **스크랩 등록** 화면으로 이동한다.  \\
+
+게시글에서 스크랩 버튼을 선택하면 다음과 같이 스크랩 등록 화면으로 이동한다.\\
+
+
+
+{{:egovframework:mcom:egovscrapregist.jpg|}}
+
+
+정상적으로 등록이 되면 스크랩 목록조회 화면으로 이동한다.
+
+뒤로: **게시물 상세조회** 화면으로 이동한다. \\
+등록: 입력한 정보들이 저장 처리된다. \\
+
+
+----
+
+
+==== 스크랩 목록조회 ====
+
+
+=== 비즈니스 규칙 ===
+
+스크랩 목록조회 화면은 현재 사용자가 등록한 스크랩에 대한 목록을 제공한다.
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/mbl/com/cop/bbs/selectScrapList.mdo|EgovMblBBSScrapController|selectScrapList|.../mbl/com/cop/bbs/EgovScrapList.jsp|
+
+
+
+스크랩 목록은 페이지당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. \\
+
+{{:egovframework:mcom:egovscraplist1.jpg|}}{{:egovframework:mcom:egovscraplist2.jpg|}}
+
+홈: 홈 메뉴로 이동한다.\\
+검색: 스크랩을 조회하기 위해서는 상단의 검색조건을 선택하고 해당하는 검색문자를 입력 후 검색 버튼을 클릭한다.\\
+목록클릭: 게시내용을 확인하기 위해서는 제목을 선택하면 상세화면을 제공하는 **스크랩 상세조회** 화면으로 이동한다.
+
+----
+
+
+==== 스크랩 상세조회 ====
+
+
+=== 비즈니스 규칙 ===
+
+스크랩 목록조회 화면에서 목록 클릭 시 이동되는 화면으로 게시물에 대한 상세정보를 보여준다. \\
+수정버튼을 클릭하면 스크랩 수정 화면으로 이동하여 스크랩 수정 처리를 할 수 있고, 삭제버튼을 클릭하면 스크랩 삭제 처리를 할 수 있다. 
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+
+스크랩 상세조회 화면은 스크랩에 정보(제목)뿐만 아니라 해당 게시글에 대한 전체 정보를 제공한다.
+
+해당 게시글에 정보가 변경된 경우 스크랩 상세조회에 나오는 내용도 변경이 된다.
+
+^기능^URL^Controller^method^화면(JSP)^
+|상세조회|/mbl/com/cop/bbs/selectScrap.mdo|EgovMblBBSScrapController|selectScrap|.../mbl/com/cop/bbs/EgovScrapDetail.jsp|
+
+
+{{:egovframework:mcom:egovscrapdetail.jpg|}}
+
+
+뒤로: **스크랩 목록조회** 화면으로 이동한다. \\
+수정: 수정버튼 클릭 시 스크랩을 수정할 수 있는 **스크랩 수정**  화면으로 이동한다. \\
+삭제: 삭제버튼 클릭 시 삭제여부를 확인하는 메세지를 보여주고 삭제처리를 할 수 있다. 삭제처리 후 스크랩 목록화면으로 이동한다. 원래의 게시글 정보는 삭제되지 않는다.\\
+목록: **스크랩 목록조회** 화면으로 이동한다.
+
+
+
+----
+
+
+==== 스크랩 수정 ====
+
+
+=== 비즈니스 규칙 ===
+
+스크랩에 대한 수정 처리를 할 수 있다. 
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+스크랩에 대한 수정은 스크랩 자체 정보(제목)에 대한 수정 기능만을 제공한다.\\
+
+^기능^URL^Controller^method^화면(JSP)^
+|수정|/mbl/com/cop/bbs/updateScrap.mdo|EgovMblBBSScrapController|updateScrap|.../mbl/com/cop/bbs/EgovScrapUpdt.jsp|
+
+
+{{:egovframework:mcom:egovscrapupdt.jpg|}}
+
+뒤로: **스크랩 상세조회** 화면으로 이동한다. \\
+수정: 수정 입력한 정보들이 저장 처리된다. \\
+목록: **스크랩 목록조회** 화면으로 이동한다. \\
+
+
+----
+
+
+
+
+
+===== 참고자료 =====
+
+  * 스크랩 기능 참조(기존 웹 버전) : [[스크랩 기능]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]]및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

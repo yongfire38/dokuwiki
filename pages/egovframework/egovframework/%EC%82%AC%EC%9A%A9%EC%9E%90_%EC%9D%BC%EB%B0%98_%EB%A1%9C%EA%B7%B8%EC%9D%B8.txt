@@ -1,0 +1,79 @@
+=== 비즈니스 규칙 ===
+일반 회원, 기업 회원, 업무담당자 세 개의 사용자 구분에 따라 로그인 및 사용자 권한을 인증하고 로그인 성공 시 로그를 생성 처리할 수 있다.
+
+=== 관련코드 ===
+== jsp ==
+<code html>
+1. 사용자 업무구분 처리
+<tr>
+  <td class="title" nowrap><input name="rdoSlctUsr" type=radio value=radio checked onClick="checkLogin('GNR');" style="border:0;">일반</td>
+  <td class="title" nowrap><input name="rdoSlctUsr" type=radio value=radio unchecked onClick="checkLogin('ENT');" style="border:0;">기업</td>
+  <td class="title" nowrap><input name="rdoSlctUsr" type=radio value=radio unchecked onClick="checkLogin('USR');" style="border:0;">업무</td>
+</tr>
+
+2. 아이디, 비밀번호, 아이디저장 입력 화면 구성
+<tr>
+  <td class="required_text" nowrap>아이디&nbsp;&nbsp;</td>
+  <td><input type="text" name="id" style="height: 16px; width: 85px; border: 1px solid #CCCCCC; margin: 0px; padding: 0px; ime-mode: disabled;" tabindex="1" maxlength="10"/></td>
+  <td/>
+</tr>
+<tr>
+  <td class="required_text" nowrap>비밀번호&nbsp;&nbsp;</td>
+  <td><input type="password" name="password" style="height: 16px; width: 85px; border: 1px solid #CCCCCC; margin: 0px; padding: 0px; ime-mode: disabled;" maxlength="12" tabindex="2" onKeyDown="javascript:if (event.keyCode == 13) { actionLogin(); }"/></td>
+  <td class="title"><input type="checkbox" name="checkId" class="check2" onClick="javascript:fnSetCookieId();"/>ID저장</td>
+</tr>
+</code>
+
+== controller ==
+<code java>
+1. 일반 로그인 처리
+LoginVO resultVO = loginService.actionLogin(loginVO);
+
+2. 로그인로그 생성
+LoginLog loginLog = new LoginLog();
+loginLog.setLoginId(resultVO.getId());
+loginLog.setLoginIp(userIp);
+loginLog.setLoginMthd("POST");
+loginLog.setErrOccrrAt("N");
+loginLog.setErrorCode("");
+logManageService.logInsertLoginLog(loginLog);
+
+3. 사용자 권한 인증
+return "redirect:/j_spring_security_check?j_username=" + resultVO.getUserSe() + resultVO.getId()
+       + "&j_password=" + resultVO.getUniqId();
+
+4. 메뉴조회
+MenuManageVO menuManageVO = new MenuManageVO();
+menuManageVO.setTmp_Id(user.getId());
+menuManageVO.setTmp_UserSe(user.getUserSe());
+menuManageVO.setTmp_Name(user.getName());
+menuManageVO.setTmp_Email(user.getEmail());
+menuManageVO.setTmp_OrgnztId(user.getOrgnztId());
+menuManageVO.setTmp_UniqId(user.getUniqId());
+List list_headmenu = menuManageService.selectMainMenuHead(menuManageVO);
+model.addAttribute("list_headmenu", list_headmenu);
+</code>
+입력한 아이디와 비밀번호를 가지고 사용자 테이블에서 정보를 조회한다. 조회된 사용자 정보를 가지고 로그인로그를 생성하며 메인화면으로 들어가기전에 사용자 권한을 체크한다. 사용자 권한 및 세션정보를 설정하고 해당 권한에 맞는 메뉴정보를 조회하여 메인화면으로 이동한다.
+
+=== 관련화면 및 수행매뉴얼 ===
+== 1. 사용자 일반 로그인 ==
+^Action^URL^Controller method^QueryID^
+|로그인화면|/uat/uia/egovLoginUsr.do|loginUsrView| |
+|일반로그인|/uat/uia/actionLogin.do|actionLogin|loginDAO.actionLogin|
+
+일반 로그인은 아이디와 비밀번호를 가지고 사용자 구분별 사용자정보를 조회한다. \\
+조회된 사용자 정보를 통해 로그인 로그를 생성하며, Spring Security를 호출하여 권한 인증 및 세션 설정을 한다. \\
+메뉴 정보를 조회하여 메인화면을 구성한다. \\
+
+{{:egovframework:com:uat:author10.jpg|}}
+
+업무구분 선택: 사용자 업무구분을 선택한다. \\
+아이디 입력: 아이디를 입력한다. \\
+비밀번호 입력: 비밀번호를 입력한다. \\
+로그인: 아이디와 비밀번호를 통해 사용자 로그인 인증 작업을 수행한다. \\
+회원가입: 선택한 업무구분에 맞는 회원가입 페이지로 이동한다. \\
+아이디/비밀번호찾기: 아이디와 비밀번호 찾기 페이지로 이동한다. \\
+인증서로그인: GPKI 인증서로그인 팝업을 호출한다. \\
+인증서안내: GPKI 인증서 안내 팝업을 호출한다. \\
+아이디저장: 다음 접속시 아이디 정보를 기억한다. \\
+----

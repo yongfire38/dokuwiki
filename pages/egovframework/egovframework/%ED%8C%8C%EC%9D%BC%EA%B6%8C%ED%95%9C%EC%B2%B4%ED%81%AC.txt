@@ -1,0 +1,51 @@
+====== 파일/디렉토리 권한 체크 ======
+
+===== 개요 =====
+비즈니스 로직을 처리하면서 필요한 파일 또는 디렉토리의 권한을 확인하기 위한 공통 기능을 제공한다.
+
+본 기능은 전자정부 표준프레임워크 공통컴포넌트 요소기술 내에 구성되어 있다.
+
+===== 설명 =====
+
+    ① 파일 또는 디렉토리의 읽기 권한을 조회하는 기능 
+    ② 파일 또는 디렉토리의 쓰기 권한을 조회하는 기능
+
+== 관련소스 ==
+
+^유형^대상소스명^설명^비고^
+|Service|egovframework.com.utl.service.EgovFileTool.java|파일관리 툴 요소기술 클래스| |
+|JSP|WEB_INF/jsp/egovframework/cmm/utl/EgovFileAuthor.jsp|테스트 페이지| |
+
+== 메소드 ==
+
+^결과값^메소드명^설명^내용^
+|boolean|checkReadAuth(String file)|읽기권한 체크|파일경로를 입력받아 읽기권한 가능(true), 불가(false) 리턴|
+|boolean|checkWriteAuth(String file)|쓰기권한 체크|파일경로를 입력받아 쓰기권한 가능(true), 불가(false) 리턴|
+
+== Input ==
+  * 파일명: String 타입의 절대경로를 포함한 파일명 (예, /user/com/test/file1.txt)
+  * Validation 체크: [[egovframework:요소기술_validation_체크]]
+
+== Output ==
+  * Boolean 타입 true / false
+
+
+===== 환경설정 =====
+N/A
+
+===== 사용방법 =====
+
+<code java>
+
+    import egovframework.com.utl.sim.service.EgovFileTool;
+
+    String filePath = "/user/com/sample/test.txt";
+    // 읽기 권한 확인
+    boolean readVal = EgovFileTool.checkReadAuth(filePath);
+    // 쓰기 권한 확인
+    boolean writeVal = EgovFileTool.checkWriteAuth(filePath);
+
+</code>
+
+===== 참고자료 =====
+N/A

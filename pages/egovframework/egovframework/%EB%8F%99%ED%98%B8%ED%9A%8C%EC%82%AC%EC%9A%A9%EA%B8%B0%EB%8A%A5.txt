@@ -1,0 +1,166 @@
+====== 공통서비스 - 동호회 사용기능 ======
+
+===== 개요 =====
+동호회 사용기능을 통해 각종 게시판 관리, 사용자 관리 등의 기본적인 동호회 기능을 제공한다.
+
+===== 설명 =====
+동호회는 협업의 게시판기능과 커뮤니티 기능을 통해 동호회 서비스를 제공한다.
+
+
+== 관련소스 ==
+
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.clb.web.EgovClubManageController.java|동호회 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.clb.service.EgovClubManageService.java|동호회 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.clb.service.impl.EgovClubManageServiceImpl.java|동호회 관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.cop.clb.service.club.java|동호회 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.clb.service.clubVO.java|동호회 관리를 위한 VO 클래스|
+|DAO|egovframework.com.cop.clb.service.impl.ClubManageDAO.java|동호회 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/com/template/EgovClbBaseTmpl.jsp|동호회 기본 템플릿 메인화면 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/com/template/EgovClbBaseTmplContents.jsp|동호회 기본 템플릿 메인화면 컨텍츠 부분 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/clb/EgovClub_SQL.xml|동호회 관리를 위한 Query|
+
+
+== 관련소스 (운영자 메뉴 관련)==
+
+
+^유형^대상소스^비고^
+|Controller|egovframework.com.cop.bbs.web.EgovBBSAttributeManageController.java|동호회 관련 게시판 관리를 위한 컨트롤러 클래스|
+|Controller|egovframework.com.cop.com.web.EgovCopUserInfController.java|동호회 관련 사용자 관리를 위한 컨트롤러 클래스|
+|Controller|egovframework.com.cop.com.web.EgovBBSUseInfoManageController.java|동호회 관련 게시판 사용 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.cop.bbs.service.EgovBBSAttributeManageService.java|동호회 관련 게시판 관리를 위한  서비스 인터페이스|
+|Service|egovframework.com.cop.com.service.EgovUserInfManageService.java|동호회 관련 사용자 관리를 위한  서비스 인터페이스|
+|Service|egovframework.com.cop.com.service.EgovBBSUseInfoManageService.java|동호회 관련 게시판 사용 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.cop.bbs.service.impl.EgovBBSAttributeManageServiceImpl.java|동호회 관련 게시판 관리를 위한 서비스 구현 클래스|
+|ServiceImpl|egovframework.com.cop.com.service.impl.EgovUserInfManageServiceImpl.java|동호회 관련 사용자 관리를 위한 서비스 구현 클래스|
+|ServiceImpl|egovframework.com.cop.com.service.impl.EgovBBSUseInfoManageServiceImpl.java|동호회 관련 게시판 사용 관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.cop.bbs.service.BoardMaster.java|동호회 관련 게시판 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.bbs.service.BoardMasterVO.java|동호회 관련 게시판 관리를 위한 VO 클래스|
+|VO|egovframework.com.cop.com.service.UserInfVO.java|동호회 관련 사용자 관리를 위한 VO 클래스|
+|VO|egovframework.com.cop.com.service.BoardUseInf.java|동호회 관련 게시판 사용 관리를 위한 모델 클래스|
+|VO|egovframework.com.cop.com.service.BoardUseInfVO.java|동호회 관련 게시판 사용 관리를 위한 VO 클래스|
+|DAO|egovframework.com.cop.bbs.service.impl.BBSAttributeManageDAO.java|동호회 관련 게시판 관리를 위한 데이터처리 클래스|
+|DAO|egovframework.com.cop.com.service.impl.EgovUserInfManageDAO.java|동호회 관련 사용자 관리를 위한 데이터처리 클래스|
+|DAO|egovframework.com.cop.com.service.impl.BBSUseInfoManageDAO.java|동호회 관련 게사판 사용 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/bbs/EgovBBSListByTrget.jsp|동호회 관련 게시판 관리 화면 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/com/EgovUserList.jsp|동호회 관련 사용자 관리 화면 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/cop/com/EgovBdUseInfListByTrget.jsp|동호회 관련 게시판 사용 관리 화면 jsp페이지|
+|Query XML|resources/egovframework/sqlmap/com/cop/bbs/EgovBBSMaster_SQL.xml|동호회 관련 게시판 관리를 위한 Query|
+|Query XML|resources/egovframework/sqlmap/com/cop/com/EgovUserInf_SQL.xml|동호회 관련 사용자 관리를 위한 Query|
+|Query XML|resources/egovframework/sqlmap/com/cop/com/EgovBBSUse_SQL.xml|동호회 관련 게시판 사용 관리를 위한 Query|
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|동호회속성|COMTNCLUB|동호회의 속성정보를 관리|
+|동호회사용자|COMTNCLUBUSER|동호회 사용자 관리|
+|템플릿|COMTNTMPLATINFO|템플릿 관리|
+
+관련된 참조 소스 및 테이블은 다음을 참조한다.
+  * 게시판 기능 : **[[게시판사용기능#설명|게시판 설명]]**을 참조
+  * 커뮤니티 기능 : **[[커뮤니티사용기능#설명|커뮤니티 설명]]**을 참조
+
+===== 환경설정 =====
+
+게시판을 사용하기 위해서는 **[[게시판관리기능|게시판 관리기능]]**에 의해 게시판이 생성되어야 한다.
+
+동호회가 새롭게 생성이 될 때에 다음과 같은 기본적인 게시판을 생성된다.
+
+^게시판 이름^게시판 유형^게시판 속성^비고^
+|방명록|방명록|일반게시판| |
+|공지게시판|공지게시판|유효게시판|게시 시작일/종료일|
+|자유게시판|일반게시판|일반게시판| |
+|자료실|일반게시판|일반게시판| |
+|갤러리|일반게시판|갤러리| |
+
+게시판 유형 및 속성에 대한 내용은 **[[게시판관리기능#게시판 속성|게시판 관리기능]]**을 참조한다.
+
+===== 사용방법 =====
+
+동호회에 대한 접근은 커뮤니티를 통해 접근할 수도 있고 별도의 URL 링크를 통해 제공될 수도 있다. 첫 메인 화면은 템플릿으로 지정된 화면이 나타나며 운영자인 경우 별도의 관리자 메뉴가 나타난다.
+왼쪽에는 동호회에 사용되는 게시판 목록이 나타난다.
+
+이 부분은 템플릿을 통해 수정 가능하다.
+
+
+==== 동호회 메인화면 ====
+동호회에 대한 메인 화면은 다음과 같은 URL로 접근한다.
+
+<code>
+/cop/cus/ClubMainPage.do?param_clbId=동호회ID
+</code>
+
+{{:egovframework:com:clubmain.gif|}}
+
+----
+
+==== 동호회 게시판관리 목록조회 ====
+
+동호회 관리자 메뉴에 해당되는 게시판관리는 해당 동호회에 생성된 게시판을 관리할 수 있다.
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/cop/bbs/selectBdMstrListByTrget.do|EgovBBSAttributeManageController|selectBdMstrListByTrget|.../cop/bbs/EgovBBSListByTrget.jsp|
+
+
+게시판관리 목록은 기본적인 페이징 처리가 되며 다음과 같은 정보를 제공한다.
+
+{{:egovframework:com:bbslistbytrget.gif|}}
+
+게시판을 새롭게 생성하기 위해서는 상단의 등록 버튼을 통해서 **[[#동호회 게시판관리 등록]]** 화면으로 이동하고 기존 게시판 속성정보를 수정하고자 하는 경우
+해당 게시판 명을 클릭하여 상세 조회 및 수정기능을 제공하는 **[[#동호회 게시판관리 수정]]** 화면으로 이동한다.
+
+----
+
+==== 동호회 게시판관리 등록 ====
+
+^기능^URL^Controller^method^화면(JSP)^
+|등록|/cop/bbs/addBBSMasterByTrget.do|EgovBBSAttributeManageController|addBBSMasterByTrget|.../cop/bbs/EgovBdMstrRegistByTrget.jsp|
+
+
+게시판관리 목록조회 화면에서 상단의 등록 버튼을 선택하면 다음과 같은 등록화면으로 이동한다.
+
+{{:egovframework:com:bbsregistbytrget.gif|}}
+
+게시판 생성에 대한 내용은 **[[게시판관리기능]]**를 참조한다.
+
+----
+
+
+==== 동호회 게시판관리 수정 ====
+
+^기능^URL^Controller^method^화면(JSP)^
+|수정|/cop/bbs/SelectBBSMasterInfByTrget.do|EgovBBSAttributeManageController|selectBBSMasterInfByTrget|.../cop/bbs/EgovBdMstrUpdtByTrget.jsp|
+
+
+게시판관리 목록에서 게시판명을 선택하면 게시판에 대한 속성정보를 수정할 수 있는 수정화면으로 이동한다.
+
+{{:egovframework:com:bbsupdtbytrget.gif|}}
+
+
+----
+
+==== 동호회 사용자관리 목록조회 ====
+
+동호회 관리자 메뉴에 해당되는 사용자관리는 해당 동호회에 소속된 사용자를 관리할 수 있다.
+
+^기능^URL^Controller^method^화면(JSP)^
+|목록조회|/cop/com/selectCmmntyUserList.do|EgovCopUserInfController|selectCmmntyUserList|.../cop/com/EgovUserList.jsp|
+
+{{:egovframework:com:userlistbytrget.gif|}}
+
+사용자 목록은 페이지 당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 사용자명 대해서 수행된다. 페이지 당 검색 범위를 변경하고자 하는 경우
+context-properties.xml 파일의 pageUnit, pageSize를 변경한다.(단 해당 설정은 전체 공통서비스 기능에 영향을 미친다.)
+
+사용자별로 처리할 수 있는 이벤트는 탈퇴처리, 운영진등록, 재가입이 가능하다.
+
+----
+
+
+
+===== 참고자료 =====
+
+  * 게시판 관리기능 참조 : [[게시판관리기능|게시판 관리기능]]
+  * 커뮤니티 관리기능 참조 : [[커뮤니티관리기능|커뮤니티 관리기능]]
+  * 동호회 관리기능 참조 : [[동호회관리기능|동호회 관리기능]]

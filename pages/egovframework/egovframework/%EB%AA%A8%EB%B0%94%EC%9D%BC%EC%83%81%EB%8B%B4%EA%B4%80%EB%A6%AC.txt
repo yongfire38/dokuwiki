@@ -1,0 +1,217 @@
+====== 사용자 지원 - 상담관리 ======
+
+===== 개요 =====
+**상담관리** 서비스는 사용자가 상담 내역을 등록 할 수 있으며, 관리자가 상담에 대한 답변을 등록하면 해당 상담 내용과 함께 답변 내역을 조회 할 수 있다. \\
+상담정보를 수정 및 삭제할 경우에는 작성시의 비밀번호 입력이 필요하며, 공개여부에 따라 상세정보를 조회할 경우에도 비밀번호 입력이 필요할 수 있다.\\
+
+상담내역 등록 시에는 Validator Rule을 통해 필수항목에 대한 조건을 검사하며, \\
+Validator Rule은 **Valator-rules.xml**과 미리 정의된 컴포넌트 Validator xml을 통해 적용된다. \\
+
+**상담관리** 서비스는 **HTML5**, **jQuery**와 함께 **jQM(jQuery Mobile)**을 바탕으로 개발된 모바일 공통 컴포넌트이다. \\
+자세한 사항은 [[http://www.egovframe.go.kr/html/egovframework/mbl/mguide/mguide.html|모바일 실행환경 가이드]]를 통해 안내되고 있다. \\
+
+컴포넌트와 관련된 css로는 기본적으로 적용되는 **EgovMobile.css**와 함께 **egovBoard.css**, **ussCommon.css**가 사용된다.\\
+또한 공통으로 지원하고 있는 jAlert와 jPassword가 사용되고 있으며, 아래와 같은 js 파일에 정의되어 있다.
+  * **EgovMobile.js**
+  * **EgovCom.js**
+
+
+==== 지원대상 ====
+
+본 컴포넌트는 모바일 디바이스에서 사용 가능한 브라우저를 대상으로 개발 및 테스트를 완료하였으며 \\
+PC용 브라우저와 mobile용 브라우저의 HTML5, CSS3 에 대한 지원이 상이함으로 개발, 적용 시에 주의가 필요하다.
+
+개발 및 테스트를 위해 갤럭시S2, 갤럭시S, 갤럭시탭, iPad2, iPhone4 등의 모바일 기기와 \\
+Android 기본 브라우저, Firefox, Safari, Opera Mobile 등의 모바일 브라우저를 사용하였다.
+
+=== Android === 
+테스트 디바이스로는 갤럭시S, 갤럭시S2, 갤럭시탭을 사용하였으며,\\
+브라우저는 Android 기본 브라우저, Firefox(6.xx), Opera Mobile 브라우저를 사용하였다.\\
+
+  * Android OS 2.3 (GingerBread) : HTML5, CSS3 및 컴포넌트의 실행을 안정적으로 지원하였다.
+  * Android OS 2.1 (Eclair), 2.2 (Froyo) : HTML5, CSS3 지원이 부족하여 컴포넌트의 UI 구현이 원할하지 못하였다.
+
+하지만, Opera Mobile의 경우에는 색상 및 이벤트 처리에 일부 문제가 발생하여 3종지원 브라우저 대상에서 제외되었다.\\
+
+=== iOS === 
+테스트 디바이스로는 iPhone4, iPad2를 사용하였다.
+  * iOS 4.2, 4.3 : 두 버전 모두 HTML5, CSS3를 비교적 원활하게 지원하였다. \\
+
+==== 기능흐름도 ====
+{{:egovframework:mcom:상담관리_기능흐름도.jpg?740|}}
+
+===== 설명 =====
+상담 관리기능은 크게 **상담목록조회**, **상담상세조회**, **상담내역등록**, **상담내역수정** 기능으로 구성되어있다.
+
+==클래스다이어그램==
+
+{{:egovframework:mcom:CLD_상담관리.JPG?740|}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.sam.stp.web.EgovCnsltManageController.java|상담관리를 위한 컨트롤러 클래스|
+|Controller|egovframework.mbl.com.uss.olp.cns.web.EgovMblCnsltManageController.java|상담관리를 위한 모바일 컨트롤러 클래스|
+|Service|egovframework.com.uss.sam.stp.service.EgovCnsltManageService.java|상담관리를 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.sam.stp.service.impl.EgovCnsltManageServiceImpl.java|상담관리를 위한 서비스 구현 클래스|
+|VO|egovframework.com.uss.sam.stp.service.CnsltManageVO.java|상담관리를 위한 VO 클래스|
+|VO|egovframework.com.uss.sam.stp.service.CnsltManageDefaultVO.java|상담관리를 위한 SearchVO 클래스|
+|DAO|egovframework.com.uss.sam.stp.service.imp.CnsltManageDAO.java|상담 관리를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/cns/EgovCnsltListInqire.jsp|상담관리를 위한 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/cns/EgovCnsltDetailInqire.jsp|상담관리를 위한 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/cns/EgovCnsltDtlsRegist.jsp|상담관리를 위한 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/cns/EgovCnsltDtlsUpdt.jsp|상담관리를 위한 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olp/cns/EgovCnsltManageListInqire.jsp|상담관리를 위한 모바일 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olp/cns/EgovCnsltManageDetailInqire.jsp|상담관리를 위한 모바일 상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olp/cns/EgovCnsltDtlsRegist.jsp|상담관리를 위한 모바일 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/mbl/com/uss/olp/cns/EgovCnsltDtlsUpdt.jsp|상담관리를 위한 모바일 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/cns/EgovCnsltAnswerListInqire.jsp|상담관리를 위한 답변목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/cns/EgovCnsltAnswerDetailInqire.jsp|상담관리를 위한 답변상세조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/cns/EgovCnsltDtlsAnswerRegist.jsp|상담관리를 위한 답변등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/com/uss/olp/cns/EgovCnsltDtlsAnswerUpdt.jsp|상담관리를 위한 답변수정 페이지|
+|Query XML|resources/egovframework/sqlmap/com/uss/olp/cns/EgovCnsltManage_SQL.xml|상담관리(조회,등록,수정,삭제)를 위한 Query XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olp/cns/EgovCnsltManage_SQL.xml|상담관리를 위한 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|상담관리를 위한 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|상담등록을 위한 Id생성 Idgen XML|
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|상담내역|COMTNCNSLTLIST|상담내용 및 조치처리내용(조치내용,조치일자)을 관리|
+
+===== 관련기능 =====
+
+==== 상담목록조회 ====
+
+=== 비즈니스 규칙 ===
+작성자명, 상담제목을 검색조건으로 목록을 조회 할 수 있으며, 등록버튼을 클릭하여 상담등록 화면으로 이동할 수 있다.
+
+
+
+=== 관련코드  ===
+
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/olp/cns/CnsltListInqire.mdo|selectCnsltManageList|"CnsltManageDAO.selectCnsltList"|
+| | | |"CnsltManageDAO.selectCnsltListTotCnt"|
+|등록|/uss/olp/cns/CnsltDtlsRegistView.mdo|insertCnsltDtlsView| |
+|목록클릭|/uss/olp/cns/EgovCnsltManageDetailInqire.mdo|selectCnsltListDetail|"CnsltManageDAO.selectCnsltListDetail"|
+| |/uss/olp/cns/EgovCnsltManageOthbcAtConfirm.mdo|selectOthbcAtConfirm|"CnsltManageDAO.selectCnsltListDetail"|
+| |/uss/olp/cns/CnsltPasswordConfirm.mdo|selectPasswordConfirm|"CnsltManageDAO.selectCnsltPasswordConfirmCnt"|
+
+상담 목록은 페이지 당 10건씩 조회되며 페이징은 1페이지씩 이루어진다. \\
+목록 클릭시 공개여부에 따라 비밀번호를 확인한다.
+
+{{:egovframework:mcom:egovcnsltmanagelistinqire_1.jpg|}}
+{{:egovframework:mcom:egovcnsltmanagelistinqire_2.jpg|}}
+
+홈: 홈 화면으로 이동한다.\\
+등록: 질문을 등록하기 위해서는 상단의 등록 버튼을 통해서 **상담내역등록** 화면으로 이동한다. \\
+검색: 상담을 조회하기 위해서는 상단의 검색조건을 선택하고 해당하는 검색문자를 입력 후 검색 버튼을 클릭한다.\\
+목록클릭: **상담상세조회** 화면으로 이동한다. 비공개 글인 경우에는 비밀번호를 확인 후에 상세조회 화면으로 이동한다.
+
+
+==== 상담상세조회 ====
+
+=== 비즈니스 규칙 ===
+상담목록조회 화면에서 목록 클릭 시 이동되는 화면으로 상담에 대한 상세정보를 보여준다.\\
+수정버튼을 클릭하면 상담수정 화면으로 이동하여 상담수정 처리를 할 수 있고 삭제버튼을 클릭하면 상담삭제 처리를 할 수 있다. \\
+상담에서 사용되는 진행처리상태는 접수대기, 접수, 완료(답변완료)이며, 완료일 때 상담을 등록한 사용자가 답변을 조회할 수 있다. \\
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/olp/cns/CnsltDtlsUpdt.mdo|updateCnsltDtls| |
+|삭제|/uss/olp/cns/CnsltDtlsDelete.mdo|deleteCnsltDtls|"CnsltManageDAO.deleteCnsltDtls"|
+|비밀번호확인|/uss/olp/cns/CnsltPasswordConfirm.mdo|selectPasswordConfirm|"CnsltManageDAO.selectCnsltPasswordConfirmCnt"|
+|목록|/uss/olp/cns/CnsltListInqire.mdo|selectCnsltManageList|"CnsltManageDAO.selectCnsltList"|
+
+{{:egovframework:mcom:EgovCnsltManageDetailInqire_1.jpg|}}
+
+수정 및 삭제 버튼을 클릭하면 작성시에 입력한 비밀번호를 확인한 후 상담을 수정하거나 삭제 하도록 구성되어 있다.
+
+뒤로: **상담목록조회** 화면으로 이동한다. \\
+수정: 수정버튼 클릭 시 상담을 수정할 수 있는 **상담수정** 화면으로 이동한다. \\
+삭제: 삭제버튼을 클릭하면 삭제여부를 확인하는 메세지를 보여주고 작성시에 입력한 비밀번호를 확인한 후 상담에 대한 내용을 삭제처리 한다. 삭제처리 후에는 상담목록조회 화면으로 이동한다.\\
+목록: **상담목록조회** 화면으로 이동한다.
+
+----
+
+==== 상담내역등록 ====
+
+=== 비즈니스 규칙 ===
+작성자에 관한 기본정보와 상담내용을 등록하며, 등록이 성공적으로 처리되면 상담목록조회 화면으로 이동된다.
+
+저장처리 시 CNSLT_ID 컬럼은 "egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"를 통하여 Primary Key => CNSLT_ID(20자리) : CNSLT__(6자리) + 일련번호(14자리)로 자동생성 부여된다.
+
+	<bean name="egovCnsltManageIdGnrService"
+		class="egovframework.rte.fdl.idgnr.impl.EgovTableIdGnrService"
+		destroy-method="destroy">
+		<property name="dataSource" ref="dataSource" />
+		<property name="strategy"   ref="cnsltManageStrategy" />
+		<property name="blockSize" 	value="10"/>
+		<property name="table"	   	value="COMTECOPSEQ"/>
+		<property name="tableName"	value="CNSLT_ID"/>
+	</bean>
+
+	<bean name="cnsltManageStrategy"
+		class="egovframework.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl">
+		<property name="prefix" value="CNSLT_" />
+		<property name="cipers" value="14" />
+		<property name="fillChar" value="0" />
+	</bean>
+
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|저장|/uss/olp/cns/EgovCnsltDtlsRegist.mdo|insertCnsltDtls|"CnsltManageDAO.insertCnsltDtls"|
+|목록|/uss/olp/cns/CnsltListInqire.mdo|selectCnsltManageList|"CnsltManageDAO.selectCnsltList"|
+
+{{:egovframework:mcom:EgovCnsltDtlsRegist_1.jpg|}} 
+{{:egovframework:mcom:EgovCnsltDtlsRegist_2.jpg|}}
+
+뒤로: **상담목록조회** 화면으로 이동한다. \\
+등록: 입력한 정보들이 저장 처리된다. \\
+목록: **상담목록조회** 화면으로 이동한다. \\
+----
+
+==== 상담내역수정 ====
+
+=== 비즈니스 규칙 ===
+일반사용자는 작성자 정보와 상담내용에 대한 정보를 수정할 수 있으며, 상담에 대한 답변내용은 수정할 수 없다. 수정이 성공적으로 처리되면 상담목록조회 화면으로 이동된다. \\
+
+=== 관련코드  ===
+
+ N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/olp/cns/CnsltDtlsUpdt.mdo|updateCnsltDtls|"CnsltManageDAO.updateCnsltDtls"|
+|목록|/uss/olp/cns/CnsltListInqire.mdo|selectCnsltManageList|"CnsltManageDAO.selectCnsltList"|
+
+{{:egovframework:mcom:EgovCnsltDtlsUpdt_1.jpg|}}
+{{:egovframework:mcom:EgovCnsltDtlsUpdt_2.jpg|}}
+
+뒤로: **상담상세조회** 화면으로 이동한다. \\
+수정: 수정 입력한 정보들이 저장 처리된다. \\
+목록: **상담목록조회** 화면으로 이동한다. \\
+
+
+
+===== 참고자료 =====
+  * 상담관리 참조(기존 웹 버전) : [[상담관리]]
+  * 배포 및 테스트 관련 : [[egovframework:mcom:모바일 공통컴포넌트란?|모바일 공통컴포넌트란]] 및 [[모바일_배포_패키지_구성안|배포 패키지 구성안]]

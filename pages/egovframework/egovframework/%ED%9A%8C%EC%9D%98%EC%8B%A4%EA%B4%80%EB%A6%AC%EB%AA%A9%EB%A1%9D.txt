@@ -1,0 +1,108 @@
+====== 사용자지원 - 회의실관리 ======
+===== 개요 =====
+
+**회의실관리**는 시스템에서 회의실을 관리하는 기능으로 회의실 이용정보와 비품상태, 회의실 위치및 회의실 이미지등을 관리하는 기능을 제공한다. 
+
+===== 설명 =====
+
+  * **회의실관리**는 회의실을 등록하기 위한 목적으로 회의실 등록, 수정, 삭제, 조회, 목록조회의 기능을 수반한다.
+
+    ① 회의실관리목록 : 회의실관리 정보를 최근 등록 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 회의실등록 : 회의실정보를 등록하고, 등록 결과를 조회한다.
+    ③ 회의실수정 : 기 등록된 회의실정보의 항목들을 수정한다.
+    ④ 회의실삭제 : 기 등록된 회의실정보를 삭제한다.
+    ⑤ 회의실상세조회 : 등록된 회의실 상세정보를 조회한다.
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.ion.mtg.web.EgovMtgPlaceManageController.java|회의실 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.uss.ion.mtg.service.EgovMtgPlaceManageService.java|회의실 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.ion.mtg.service.impl.EgovMtgPlaceManageServiceImpl.java|회의실 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.uss.ion.mtg.service.impl.MtgPlaceManageDAO.java|회의실 관리를 위한 데이터처리 클래스|
+|VO|egovframework.com.uss.ion.mtg.service.MtgPlaceManageVO.java|회의실 관리를 위한 VO 클래스|
+|VO|egovframework.com.uss.ion.mtg.service.MtgPlaceFxtrsVO.java|회의실 비품 관리를 위한 VO 클래스|
+|Model|egovframework.com.uss.ion.mtg.service.MtgPlaceManage.java|회의실 관리를 위한 Model 클래스|
+|Model|egovframework.com.uss.ion.mtg.service.MtgPlaceFxtrs.java|회의실 비품 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/mtg/EgovMtgPlaceManageList.jsp|회의실 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/mtg/EgovMtgPlaceRegist.jsp|회의실 등록를 위한 jsp페이지| 
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/mtg/EgovMtgPlaceDetail.jsp|등록된 회의실를 상세조회/반영하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/ion/mtg/EgovMtgPlaceUpdt.jsp|회의실 수정를 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/uss/ion/mtg/EgovMtgPlaceManage_SQL_*.xml|회의실관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:uss:ion:mtg:회의실클래스다이어그램.png}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|회의실관리|COMTNMTGPLACEMANAGE|회의실정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+|회의실비품|COMTNMTGPLACEFXTRS|회의실비품정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 회의실관리 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/ion/mtg/selectMtgPlaceManageList.do|selectMtgPlaceManageList|"mtgPlaceManageDAO.selectMtgPlaceManageList"|
+|조회|/uss/ion/mtg/selectMtgPlaceManageList.do|selectMtgPlaceManageList|"mtgPlaceManageDAO.selectMtgPlaceManageListTotCnt"|
+
+회의실관리 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 회의실명에 대해서 수행된다.
+
+{{:egovframework:com:uss:ion:mtg:회의실관리목록.png}}
+
+조회 : 기 등록된 회의실관리의 목록을 조회한다.\\
+등록 : 신규 회의실을 등록하기 위해서는 상단의 등록 버튼을 통해서 **회의실 등록** 화면으로 이동한다.\\
+상세조회: 등록된 회의실 목록(회의실명)을 클릭하면 상세정보 화면으로 이동한다.\\
+----
+
+
+=== 회의실 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/uss/ion/mtg/insertMtgPlace.do|insertMtgPlaceManage|"mtgPlaceManageDAO.insertMtgPlaceManage"|
+|등록|/uss/ion/mtg/insertMtgPlace.do|insertMtgPlaceManage|"mtgPlaceManageDAO.insertMtgPlaceFxtrs"|
+
+
+회의실의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:uss:ion:mtg:회의실등록.png}}
+
+등록 : 신규 회의실을 등록하기 위해서는 회의실 속성을 입력한 뒤 상단의 **회의실 버튼**을 통해서 회의실을 등록한다.\\
+목록 : 회의실 목록조회 화면으로 이동한다.\\
+----
+
+
+=== 회의실 상세 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/uss/ion/mtg/selectMtgPlaceManage.do|selectMtgPlaceManage|"mtgPlaceManageDAO.selectMtgPlaceManage"|
+|삭제|/uss/ion/mtg/deleteMtgPlaceManage.do|deleteMtgPlaceManage|"mtgPlaceManageDAO.deleteMtgPlaceManage"|
+
+회의실의 상세조회화면이다. **수정 버튼**을 통해서 수정화면으로 이동하고, **삭제 버튼**을 통해서 회의실을 삭제한다.
+
+{{:egovframework:com:uss:ion:mtg:회의실상세.png}}
+
+수정 : 회의실 수정 화면으로 이동한다.\\ 
+삭제 : **삭제 버튼**을 통해서 기 등록된 회의실정보를 삭제한다.\\ 
+목록 : 회의실 목록조회 화면으로 이동한다.\\
+----
+
+
+=== 회의실 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/uss/ion/mtg/updtMtgPlace.do|updateMtgPlaceManage|"mtgPlaceManageDAO.updtMtgPlaceManage"|
+|상세조회|/uss/ion/mtg/selectMtgPlaceManage.do|selectMtgPlaceManage|"mtgPlaceManageDAO.selectMtgPlaceManage"|
+
+회의실의 속성정보를 변경한 후 저장한다. 다음 화면은 회의실 상세조회 화면과 동일하다.
+
+{{:egovframework:com:uss:ion:mtg:회의실수정.png|회의실수정}}
+
+수정 : 기 등록된 회의실 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 배너정보를 수정한다.\\
+
+목록 : 회의실 목록조회 화면으로 이동한다.\\
+----

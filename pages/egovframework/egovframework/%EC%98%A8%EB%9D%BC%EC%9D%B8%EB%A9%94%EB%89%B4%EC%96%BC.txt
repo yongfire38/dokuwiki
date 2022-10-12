@@ -1,0 +1,96 @@
+====== 공통서비스 - 온라인메뉴얼 ======
+
+===== 개요 =====
+기 등록된 응용 프로그램의 온라인 메뉴얼을 조회 할수 있는 기능
+
+===== 설명 =====
+온라인메뉴얼기능은 크게 **온라인메뉴얼 목록조회**, **온라인메뉴얼 상세조회** 기능으로 구성되어 있다.(관련기능 부분참조)
+
+== 온라인메뉴얼 콤포넌트 구성도 == 
+{{:egovframework:com:uss:olh:omm:온라인메뉴얼_컴포넌트_구성도.jpg|온라인메뉴얼 콤포넌트 구성도}}
+
+== 온라인메뉴얼 기능 흐름도 == 
+{{:egovframework:com:uss:olh:omm:기능흐름도.jpg|온라인메뉴얼 기능 흐름도}}
+
+== 클래스 다이어그램 == 
+{{:egovframework:com:uss:olh:omm:classdiagram.png|온라인메뉴얼 클래스 다이어그램}}
+
+== 관련소스 ==
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.olh.omm.web.EgovOnlineManualController.java|온라인메뉴얼관리 Controller Class|
+|Service|egovframework.com.uss.olh.omm.service.EgovOnlineManualService.java|온라인메뉴얼관리 Service Class|
+|VO|egovframework.com.uss.olh.omm.service.OnlineManualVO.java|온라인메뉴얼관리  VO Class|
+|VO|egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.uss.olh.omm.service.impl.EgovOnlineManualServiceImpl.java|온라인메뉴얼관리 ServiceImpl Class|
+|DAO|egovframework.com.uss.olh.omm.service.impl.OnlineManualDao.java|온라인메뉴얼관리 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/uss/olh/omn/EgovOnlineManualList.jsp|온라인메뉴얼 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olh/omn/EgovOnlineManualDetail.jsp|온라인메뉴얼 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/olh/omm/EgovOnlineManual.xml|온라인메뉴얼관리 QUERY XML| 
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olh/omm/EgovOnlineManual.xml|온라인메뉴얼관리 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|온라인메뉴얼관리 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|온라인메뉴얼관리 Id생성 Idgen XML|
+
+ 
+== ID Generation ==
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 SRCHWRD_ID 항목을 추가해야 한다. 
+ <code sql>
+  CREATE TABLE COMTECOPSEQ ( table_name varchar(16) NOT NULL, 
+  		   next_id DECIMAL(30) NOT NULL,
+  		   PRIMARY KEY (table_name));
+  INSERT INTO COMTECOPSEQ VALUES('ONLINE_MUL_ID','0');
+ </code>
+
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|온라인메뉴얼관리|COMTNOnlineManual |개인정보보호정책을 관리 한다.|	
+
+===== 관련기능 =====
+온라인메뉴얼관리기능은 크게 **온라인메뉴얼관리 목록조회**, **온라인메뉴얼관리 상세조회**, **온라인메뉴얼관리 내용등록**, **온라인메뉴얼관리 내용수정**기능으로 구성되어 있다.
+
+==== 온라인메뉴얼 목록조회 ====
+
+=== 비즈니스 규칙 ===
+관리자가 기(記) 등록된 온라인메뉴얼관리 정보를 리스트 형태로 조회 할 수 있고, 등록버튼을 클릭하여 등록화면으로 이동할수있다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록 온라인메뉴얼명|/uss/olh/omn/detailOnlineManual.do|EgovOnlineManualDetail|OnlineManual.selectOnlineManualDetail|
+|온라인메뉴얼명 베너|/uss/olh/omn/detailOnlineManual.do|EgovOnlineManualDetail|OnlineManual.selectOnlineManualDetail|
+
+{{:egovframework:com:uss:olh:omm:온라인메뉴얼_목록.jpg|온라인메뉴얼 목록}}
+
+목록 온라인메뉴얼명: **온라인메뉴얼관리 상세조회** 화면으로 이동한다 \\
+온라인메뉴얼명 베너: **온라인메뉴얼** 절차 설명 페이지로 이동한다.
+
+----
+
+==== 온라인메뉴얼 상세조회 ====
+
+=== 비즈니스 규칙 ===
+온라인메뉴얼관리 목록에서 목록 클릭 시 이동되는 화면으로 온라인메뉴얼관리에 대한 상세정보를 보여준다.
+
+=== 관련코드  ===
+N/A
+
+=== 관련화면 및 수행매뉴얼 ===
+
+^Action^URL^Controller method^QueryID^
+|목록|/uss/olh/omn/listOnlineManual.do|EgovOnlineManualList|OnlineManual.selectOnlineManual|
+
+{{:egovframework:com:uss:olh:omm:온라인메뉴얼_상세조회.jpg|온라인메뉴얼 상세조회}}
+
+목록: **온라인메뉴얼관리 목록** 화면으로 이동한다.
+
+----
+
+===== 참고자료 =====
+N/A

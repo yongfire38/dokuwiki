@@ -1,0 +1,84 @@
+====== 사용자 디렉토리/로그인 - 로그인정책 관리 ======
+===== 개요 =====
+
+**로그인정책관리**는 사용자 로그인 정책을 정의하고, 그 정책에 맞게 로그인을 제한하는 기능을 제공한다. (특정 IP에 대한 로그인 제한, 중복로그인 방지 및 허용)
+===== 설명 =====
+
+  * **로그인정책관리**는 로그인정책정보를 등록하여 모든 사용자에게 로그인에 대한 정책을 관리하기 위한 목적으로 로그인정책정보의 **등록, 수정, 삭제, 조회, 목록조회**의 기능을 수반한다.
+
+    ① 로그인정책목록조회 : 사용자 로그인 정책으로 정의된 정보를 최근 등록 순서대로 조회하고, 그 결과를 화면에 반영한다.
+    ② 로그인정책등록 : 사용자 로그인 정책으로 정의된 항목을 입력하고, 정합성을 체크한 뒤 저장한다.
+    ③ 로그인정책수정 : 정의된 사용자 로그인 정책에 대한 변경항목을 수정 후 저장한다.
+    ④ 로그인정책삭제 : 기 등록된 사용자 로그인 정책을 삭제한다.
+    ⑤ 로그인정책반영결과조회 : 등록된 사용자 로그인 정책을 운영시스템에 반영하고 그 결과를 조회한다.
+   
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uat.uia.web.EgovLoginPolicyController.java|로그인정책 관리를 위한 컨트롤러 클래스|
+|Service|egovframework.com.uat.uia.service.EgovLoginPolicyService.java|로그인정책 관리를 위한  서비스 인터페이스|
+|ServiceImpl|egovframework.com.uat.uia.service.impl.EgovLoginPolicyServiceImpl.java|로그인정책 관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.uat.uia.service.impl.LoginPolicyDAO.java|로그인정책 관리를 위한 데이터처리 클래스|
+|VO|egovframework.com.uat.uia.service.LoginPolicyVO.java|로그인정책 관리를 위한 VO 클래스|
+|Model|egovframework.com.uat.uia.service.LoginPolicy.java|로그인정책 관리를 위한 Model 클래스|
+|JSP|/WEB-INF/jsp/egovframework/cmm/uat/uia/EgovLoginPolicyList.jsp|로그인정책 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cmm/uat/uia/EgovLoginPolicyRegist.jsp|로그인정책 등록를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cmm/uat/uia/EgovLoginPolicyUpdt.jsp|로그인정책 수정를 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/uat/uia/EgovLoginPolicy_SQL_*.xml|로그인정책 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:uat:uia:loginpolicy.png?900|클래스다이어그램}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|로그인정책|COMTNLOGINPOLICY|사용자 로그인 정책에 맞게 로그인을 제한하는 기능을 위한 속성을 관리한다.|
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 로그인정책 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/com/uat/uia/selectLoginPolicyList.do|selectLoginPolicyList|"loginPolicyDAO.selectLoginPolicyList"|
+|조회|/com/uat/uia/selectLoginPolicyList.do|selectLoginPolicyList|"loginPolicyDAO.selectLoginPolicyListTotCnt"|
+
+로그인정책 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 사용자명 대해서 수행된다.
+
+{{:egovframework:com:uat:uia:loginpolicyimg1.jpg|로그인정책 목록조회}}
+
+조회 : 기 등록된 로그인정책 목록을 조회한다.\\
+등록 : 신규 로그인정책를 등록하기 위해서는 IP 정보가 없는 사용자ID를 선택하여 **로그인정책 등록** 화면으로 이동한다.\\
+----
+
+=== 로그인정책 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/com/uat/uia/addLoginPolicy.do|insertLoginPolicy|"loginPolicyDAO.insertLoginPolicy"|
+
+로그인정책의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:uat:uia:loginpolicyimg2.jpg|로그인정책 등록}}
+
+등록 : 신규 로그인정책을 등록하기 위해서는 로그인정책 속성을 입력한 뒤 상단의 **등록 버튼**을 통해서 로그인정책을 등록한다.\\
+목록 : 로그인정책 목록조회 화면으로 이동한다.\\
+----
+
+=== 로그인정책 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/com/uat/uia/updtLoginPolicy.do|updateUserAbsnce|"loginPolicyDAO.updateLoginPolicy"|
+|상세조회|/com/uat/uia/getLoginPolicy.do|selectLoginPolicy|"loginPolicyDAO.selectLoginPolicy"|
+|삭제|/com/uat/uia/removeLoginPolicy.do|deleteLoginPolicy|"loginPolicyDAO.deleteLoginPolicy"|
+
+로그인정책의 속성정보를 변경한 후 저장한다. 다음 화면은 로그인정책 상세조회 화면과 동일하다.
+
+{{:egovframework:com:uat:uia:loginpolicyimg3.jpg|로그인정책 수정}}
+
+수정 : 기 등록된 로그인정책 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 로그인정책정보를 수정한다.\\
+삭제 : 기 등록된 로그인정책정보를 삭제한다.\\
+목록 : 로그인정책 목록조회 화면으로 이동한다.\\
+----    
+    

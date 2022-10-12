@@ -1,0 +1,47 @@
+====== 사이트맵 기능 ======
+
+
+===== 개요 =====
+
+사이트맵은 메뉴생성화면의 사이트맵 생성에서 만들어진 사이트맵 JSP를 로그인한 사용자의 권한에 대한 사용가능한 메뉴를 한눈에 보여주고 해당 메뉴를 클릭시 해당 메뉴로 링크 제공하다. \\
+
+=== 기능흐름 ===
+{{:egovframework:com:sym:mpm:egovsitemap_.gif|}}
+
+===== 관련 리소스 =====
+
+=== 클래스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.umt.web.EgovSiteMapngController.java|사용자 권한별 사이트맵을 조회하기 위한 컨트롤러 클래스|
+|Service|egovframework.com.uss.umt.service.EgovSiteMapngService.java|사용자 권한별 사이트맵을 조회하기 위한 서비스 인터페이스|
+|ServiceImpl|egovframework.com.uss.umt.service.impl.EgovSiteMapngServiceImpl.java|사용자 권한별 사이트맵을 조회하기 위한 서비스 구현 클래스|
+|VO|egovframework.com.uss.umt.service.SiteMapngVO.java|사용자 권한별 사이트맵 조회를 위한 VO 클래스|
+|DAO|egovframework.com.uss.umt.service.impl.SiteMapngDAO.java|사용자 권한별 사이트맵 조회를 위한 데이터처리 클래스|
+|JSP|/WEB-INF/jsp/egovframework/cmm/uss/umt/| |
+| |EgovSiteMapng.jsp|사용자 권한별 사이트맵 조회를 위한 목록조회 페이지|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:uss:umt:egovsitemap.gif|}}
+
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|사이트맵|COMTNSITEMAP|사이트맵 정보를 관리|
+===== 관련화면 및 수행메뉴얼 =====
+
+
+=== 사이트맵 조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/uss/umt/EgovSiteMap.do|selectSiteMapByUser|"menuManageDAO.selectSiteMapByUser"|
+
+로긴시 사용자 권한에 따른 사이트맵이 조회됨
+
+{{:egovframework:com:uss:umt:sitemap.jpg|}}
+
+해당 메뉴를 클릭시 해당 메뉴로 이동된다.
+
+----
+

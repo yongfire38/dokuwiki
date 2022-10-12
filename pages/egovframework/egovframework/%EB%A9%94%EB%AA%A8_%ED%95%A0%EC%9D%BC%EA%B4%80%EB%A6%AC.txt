@@ -1,0 +1,122 @@
+====== 협업 - 메모/할일관리 ======
+
+===== 개요 =====
+
+**메모할일관리**는 사용자가 해야 할 일을 일별로 관리하며, 오늘의 할일을 알려주는 기능을 제공한다.
+
+===== 설명 =====
+
+  * **메모할일관리**는 메모할일 정보를 관리하기 위한 목적으로 메모할일 정보의 등록, 수정, 삭제, 조회, 목록조회의 기능을 수반한다.
+
+    ① 메모할일목록조회 : 메모할일로 정의된 정보를 할일 일자/시간 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+    ② 메모할일등록 : 메모할일정보를 등록하고, 등록 결과를 조회한다.
+    ③ 메모할일수정 : 기 등록된 메모할일정보의 항목들을 수정한다.
+    ④ 메모할일삭제 : 기 등록된 메모할일정보를 삭제한다.
+    ⑤ 메모할일상세조회 : 등록된 메모할일정보를 조회한다. 
+    ⑥ 오늘의할일목록조회 : 오늘의 할일을 할일시간 순서대로 조회하고, 그 결과 목록을 화면에 반영한다.
+
+=== 관련소스 ===
+
+^유형^대상소스명^비고^
+|Controller|egovframework.com.cop.smt.mtm.web.EgovMemoTodoController.java|메모할일관리를 위한 controller 클래스|
+|Service|egovframework.com.cop.smt.mtm.service.EgovMemoTodoService.java|메모할일관리를 위한 Service Interface|
+|ServiceImpl|egovframework.com.cop.smt.mtm.service.impl.EgovMemoTodoServiceImpl.java|메모할일관리를 위한 서비스 구현 클래스|
+|DAO|egovframework.com.cop.smt.mtm.service.impl.MemoTodoDAO.java|메모할일관리를 위한 데이터처리 클래스|
+|Model|egovframework.com.cop.smt.mtm.service.MemoTodo.java|메모할일관리를 위한 Model 클래스|
+|VO|egovframework.com.cop.smt.mtm.service.MemoTodoVO.java|메모할일관리를 위한 VO 클래스|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/mtm/EgovMemoTodoList.jsp|메모할일 목록조회를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/mtm/EgovMemoTodoRegist.jsp|메모할일 등록를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/mtm/EgovMemoTodoUpdt.jsp|메모할일 수정를 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/mtm/EgovMemoTodoDetail.jsp|등록된 메모할일를 조회하기 위한 jsp페이지|
+|JSP|/WEB-INF/jsp/egovframework/cop/smt/mtm/EgovMemoTodoListToday.jsp|메모할일 중 오늘의할일 목록조회를 위한 jsp페이지|
+|XML|/egovframework/sqlmap/com/cop/smt/mtm/EgovMemoTodo_SQL_*.xml|메모할일관리 QUERY XML|
+
+=== 클래스 다이어그램 ===
+
+{{:egovframework:com:cop:smt:mtm:cdd_메모할일관리.png?740|}}
+
+=== 관련테이블 ===
+
+^테이블명^테이블명(영문)^비고^
+|메모할일정보|COMTNMEMOTODO|메모할일정보를 관리하기 위한 속성정보를 정의하고, 관리한다.|
+
+=== ID Generation ===
+
+  * ID Generation Service를 활용하기 위해서 Sequence 저장테이블인  COMTECOPSEQ에 **MEMO_TODO_ID** 항목을 추가한다. 
+
+ <code sql>
+  INSERT INTO COMTECOPSEQ VALUES('MEMO_TODO_ID','0');
+ </code>
+
+
+===== 관련화면 및 수행메뉴얼 =====
+
+=== 메모할일 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/cop/smt/mtm/selectMemoTodoList.do|selectMemoTodoList|"MemoTodoDAO.selectMemoTodoList"|
+| | | |"MemoTodoDAO.selectMemoTodoListCnt"|
+
+메모할일 목록은 페이지당 10건씩 조회되며 페이징은 10페이지씩 이루어진다. 
+검색조건은 할일일자, 작성일자, 할일제목, 할일내용에 대해서 수행된다.
+
+{{:egovframework:com:cop:smt:mtm:18.메모할일목록.png|}}
+
+오늘의할일 : 기 등록된 메모할일 중 오늘의 할일 목록을 조회한다.\\
+조회 : 기 등록된 메모할일의 목록을 조회한다.\\
+등록 : 신규 메모할일를 등록하기 위해서는 상단의 등록 버튼을 통해서 **메모할일 등록** 화면으로 이동한다.\\
+할일제목클릭 : 해당 **메모할일 상세조회** 화면으로 이동한다.\\
+----
+
+=== 메모할일 등록 ===
+
+^Action^URL^Controller method^QueryID^
+|등록|/cop/smt/mtm/addMemoTodo.do|insertMemoTodo|"MemoTodoDAO.insertMemoTodo"|
+
+메모할일의 속성정보를 입력한 뒤 등록한다.
+
+{{:egovframework:com:cop:smt:mtm:20.메모할일등록.png|}}
+
+저장 : 신규 메모할일를 등록하기 위해서는 메모할일 속성을 입력한 뒤 상단의 **저장 버튼**을 통해서 메모할일를 등록한다.\\
+조회 : 메모할일 상세조회 화면으로 이동한다.\\
+----
+
+=== 메모할일 수정 ===
+
+^Action^URL^Controller method^QueryID^
+|수정|/cop/smt/mtm/modifyMemoTodo.do|updateMemoTodo|"MemoTodoDAO.updateMemoTodo"|
+
+메모할일의 속성정보를 변경한 후 저장한다. 
+
+{{:egovframework:com:cop:smt:mtm:21.메모할일수정.png|}}
+
+저장 : 기 등록된 메모할일 속성을 수정한 뒤 상단의 **저장 버튼**을 통해서 메모할일를 수정한다.\\
+조회 : 메모할일 상세조회 화면으로 이동한다.\\
+----
+
+=== 메모할일 상세조회 ===
+
+^Action^URL^Controller method^QueryID^
+|상세조회|/cop/smt/mtm/selectMemoTodo.do|selectMemoTodo|"MemoTodoDAO.selectMemoTodo"|
+|삭제|/cop/smt/mtm/deleteMemoTodo.do|deleteMemoTodo|"MemoTodoDAO.deleteMemoTodo"|
+
+메모할일의 속성정보를 조회한다. 
+
+{{:egovframework:com:cop:smt:mtm:19.메모할일상세보기.png|}}
+
+수정 : 기 등록된 메모할일 속성을 수정한 뒤 상단의 **수정 버튼**을 통해서 메모할일수정화면으로 이동한다.\\
+삭제 : 기 등록된 메모할일를 삭제한다.\\
+목록 : 메모할일 목록조회 화면으로 이동한다.\\
+----
+
+=== 오늘의할일 목록조회 ===
+
+^Action^URL^Controller method^QueryID^
+|조회|/cop/smt/mtm/selectMemoTodoListToday.do|selectMemoTodoListToday|"MemoTodoDAO.selectMemoTodoListToday"|
+
+등록된 메모할일 중 오늘의 할일을 조회한다. 
+
+{{:egovframework:com:cop:smt:mtm:22.오늘의할일목록.png|}}
+
+전체목록 : 기 등록된 메모할일의 목록조회 화면으로 이동한다.\\
+----

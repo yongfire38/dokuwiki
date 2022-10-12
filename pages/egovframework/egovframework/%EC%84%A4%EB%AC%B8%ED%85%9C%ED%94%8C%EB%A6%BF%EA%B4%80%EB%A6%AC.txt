@@ -1,0 +1,55 @@
+====== 설문템플릿관리 ======
+
+===== 개요 =====
+설문관리 시스템 구축시 사용되는 설문템플릿관리 기능을 제공하며 이기능은 설문참여에서 사용되는 디자인 템플릿을 관리를 담당한다.
+
+
+본 기능은 전자정부 표준프레임워크 실행환경의 **ID Generation** 기능을 활용하여 구성되어있다.
+
+**ID Generation**을 활용하기 위한 기본 설정이 필요하며 해당 설정은 [[egovframework:rte:fdl:id_generation]] 문서를 통해서 확인이 가능하다.
+
+===== 설명 =====
+  * 설문템플릿관리는 설문 템플릿을 관리하기 위한 목적으로 **등록**, **수정**, **삭제**, **조회**, **목록조회**의 기능을 수반한다.
+
+    ① 설문템플릿관리 목록 : 기(記) 등록된 설문템플릿관리 정보를 리스트 형태로 조회한다..
+    ② 설문템플릿관리 등록 : 설문템플릿관리 등록 화면에서 입력하여 입력항목의 정합성을 체크하고 데이터베이스에 기(記) 등록한다.
+    ③ 설문템플릿관리 수정 : 화면에 조회된 사용자 설문템플릿관리를 수정하여 항목의 정당(正當)한지 체크하고 수정된 데이터를 데이터베이스에 반영한다.
+    ④ 설문템플릿관리 상세조회 : 기(記) 등록된 설문템플릿관리 정보를 조회한다.
+    ⑤ 설문템플릿관리 삭제: 기(記) 등록된 설문템플릿관리 정보를 화면에 조회하여 데이터베이스에서 삭제한다.
+
+== 클래스 다이어그램 == 
+{{:egovframework:com:uss:olp:qtm:설문템플릿diagramclass.gif|}}
+
+== 관련소스 ==
+^유형^대상소스명^비고^
+|Controller|egovframework.com.uss.olp.qtm.web.EgovQustnrTmplatManageController.java|설문템플릿 Controller Class|
+|Service|egovframework.com.uss.olp.qtm.service.EgovQustnrTmplatManageService.java|설문템플릿 Service Class|
+|VO|egovframework.com.uss.olp.qtm.service.QustnrTmplatManageVO.java|설문템플릿  VO Class|
+| |egovframework.com.cmm.ComDefaultVO.java|검색 VO Class|
+|ServiceImpl|egovframework.com.uss.olp.qtm.service.impl.EgovQustnrTmplatManageServiceImpl.java|설문템플릿 ServiceImpl Class|
+|DAO|egovframework.com.uss.olp.qtm.service.impl.QustnrTmplatManageDao.java|설문템플릿 Dao Class|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qtm/EgovQustnrTmplatManageList.jsp|설문템플릿 목록조회 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qtm/EgovQustnrTmplatManageRegist.jsp|설문템플릿 등록 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qtm/EgovQustnrTmplatManageModify.jsp|설문템플릿 수정 페이지|
+|JSP|/WEB-INF/jsp/egovframework/uss/olp/qtm/EgovQustnrTmplatManageDetail.jsp|설문템플릿 상세조회 페이지|
+|QUERY XML|/egovframework/sqlmap/com/uss/olp/qtm/EgovQustnrTmplatManage.xml|설문템플릿 QUERY XML|
+|Validator Rule XML|resources/egovframework/validator/validator-rules.xml|Validator Rule을 정의한 XML|
+|Validator XML|resources/egovframework/validator/com/uss/olp/qtm/EgovQustnrTmplatManage.xml|설문템플릿 Validator XML|
+|Message properties|resources/egovframework/message/message-common_ko_KR.properties|설문템플릿 Message properties|
+|Idgen XML|resources/egovframework/spring/context-idgen.xml|설문템플릿 Id생성 Idgen XML|
+ 
+== 관련테이블 ==
+
+^테이블명^테이블명(영문)^비고^
+|설문템플릿|COMTNQUSTNRTMPLAT|설문 템플릿을 관리|
+
+===== 사용방법 =====
+설문템플릿관리 세부적인 기능 사용방법은 다음을 참조한다.
+
+  * [[설문템플릿관리 목록]]
+  * [[설문템플릿관리 등록]]
+  * [[설문템플릿관리 수정]]
+  * [[설문템플릿관리 상세조회]]
+
+===== 참고자료 =====
+N/A
